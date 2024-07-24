@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_wizard_purchase_contract_inherit_sd_vietnam" model="ir.ui.view">
+        <field name="name">view_wizard_purchase_contract_inherit_sd_vietnam</field>
+        <field name="model">wizard.purchase.contract</field>
+        <field name="inherit_id" ref="sd_purchase_contract.view_wizard_purchase_contract"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group" position="after">
+                <group>
+                    <div colspan="12"><p name="explanation-text">
+                        Bạn cần lưu ý về SVNP cuối cùng cho đợt Convert để gắn số lượng không ứng cho SVNP đó. Hãy lưu ý điều này
+                    </p></div>
+                </group>
+                <group>
+                    <div colspan="2"><p name="explanation-text">
+                    Mặc định sẽ là số lượng Qty No Advance mà bạn đã nhập cho NPE. Nếu chưa phải là SVNP cuối cùng, hãy nhập 0 vào cột Qty No Advance, nếu là SVNP cuối cùng, hãy kiểm tra số lượng chính xác trước khi Convert
+                    </p></div>
+                </group>
+            </xpath>
+            <xpath expr="//field[@name='contract_line_ids']/tree/field[@name='product_qty']" position="after">
+                <field name="open_qty" string="Qty No Advance"/>
+            </xpath>
+            <xpath expr="//button[@name='button_convert']" position="attributes">
+                <attribute name="confirm">Bạn có chắc muốn Convert không? Hãy kiểm tra lại lượng Qty No Advance trước khi Convert, nếu đã chắc, vui lòng nhấn OK, nếu không xin hãy kiểm tra lại lượng Qty No Advance 1 lần nữa. Khi Convert hoàn thành, sẽ không thể chỉnh sửa lượng Qty No Advance</attribute>
+            </xpath>
+
+        </field>
+    </record>
+</odoo>

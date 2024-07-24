@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="view_picking_internal_search_inherit_vietnam_sucden" model="ir.ui.view">
+        <field name="name">view_picking_internal_search_inherit_vietnam_sucden</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="sd_inventory.view_picking_internal_search_sucden_inherit"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='to_do_transfers']" position="before">
+            	<filter name="today" string="Today"  domain="[('scheduled_date', '&gt;=', datetime.datetime.now().strftime('%Y-%m-%d 00:00:00')),('scheduled_date', '&lt;=',datetime.datetime.now().strftime('%Y-%m-%d 23:23:59'))]"/>
+            </xpath>
+
+        </field>
+    </record>
+
+    <record id="vpicktree_inherit_add_total_qty_inherit_vietnam_sucden" model="ir.ui.view">
+        <field name="name">vpicktree_inherit_add_total_qty_inherit_vietnam_sucden</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="sd_inventory.vpicktree_inherit_add_total_qty"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='lot_id']" position="after">
+            	<field name="stack_type"/>
+            </xpath>
+
+        </field>
+    </record>
+
+    <record id="view_picking_tree_gip_good_tree_inherit_vietnam_sucden" model="ir.ui.view">
+        <field name="name">view_picking_tree_gip_good_tree_inherit_vietnam_sucden</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="sd_inventory.view_picking_tree_gip_good_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='lot_id']" position="after">
+            	<field name="stack_type"/>
+            </xpath>
+
+        </field>
+    </record>
+
+    <record id="view_picking_form_inherit_vietnam_sucden" model="ir.ui.view">
+        <field name="name">view_picking_form_inherit_vietnam_sucden</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='warehouse_id']" position="after">
+            	<field name="shipping_instruction_id" attrs="{'invisible': [('picking_type_code', '!=', 'production_in')]}" groups="sd_inventory_vietnam.group_access_shipping_instruction_grp"/>
+            </xpath>
+
+        </field>
+    </record>
+
+    <record id="view_picking_tree_grp_good_tree_inherit_vietnam_sucden" model="ir.ui.view">
+        <field name="name">view_picking_tree_grp_good_tree_inherit_vietnam_sucden</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="sd_inventory.view_picking_tree_grp_good_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='production_id']" position="after">
+            	<field name="shipping_instruction_id"/>
+            </xpath>
+
+        </field>
+    </record>
+
+    <record id="view_picking_inherit_sucden_form_inherit_vietnam_sucden" model="ir.ui.view">
+        <field name="name">view_picking_inherit_sucden_form_inherit_vietnam_sucden</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="sd_inventory.view_picking_inherit_sucden_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='move_ids_without_package']/tree/field[@name='first_weight']" position="attributes">
+            	<attribute name="attrs">{'readonly': [('state', '!=', 'draft')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='move_ids_without_package']/tree/field[@name='second_weight']" position="attributes">
+            	<attribute name="attrs">{'readonly': [('state', '!=', 'draft')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='move_ids_without_package']/tree/field[@name='bag_no']" position="attributes">
+            	<attribute name="attrs">{'readonly': [('state', '!=', 'draft')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='move_ids_without_package']/tree/field[@name='init_qty']" position="attributes">
+            	<attribute name="attrs">{'readonly': [('state', '!=', 'draft')]}</attribute>
+            </xpath>
+
+        </field>
+    </record>
+
+    <record id="stock.view_stock_move_line_detailed_operation_tree" model="ir.ui.view">
+            <field name="name">stock.move.line.operations.tree</field>
+            <field name="model">stock.move.line</field>
+            <field name="priority">1000</field>
+            <field name="arch" type="xml">
+                <tree editable="bottom" default_order="id desc" decoration-muted="(state == 'done' and is_locked == True)" decoration-danger="qty_done&gt;reserved_uom_qty and state!='done' and parent.picking_type_code != 'incoming'" decoration-success="qty_done==reserved_uom_qty and state!='done' and not result_package_id">
+                    <field name="product_id" required="1"
+                    	context="{'default_detailed_type': 'product'}"
+                    	attrs="{'readonly': ['|', ('state', '=', 'done'), ('move_id', '!=', False)]}"/>
+                    <field name="company_id" invisible="1"/>
+
+
+                    <field name="move_id" invisible="1"/>
+                    <field name="picking_id" invisible="1"/>
+                    <field name="product_uom_category_id" invisible="1"/>
+                    <field name="package_id" invisible="1"/>
+                    <field name="result_package_id" invisible="1"/>
+                    <field name="location_id" invisible="1"/>
+                    <field name="location_dest_id" invisible="1"/>
+                    <field name="location_id" optional="hide" options="{'no_create': True}"
+                    	attrs="{'column_invisible': [('parent.picking_type_code', '=', 'incoming')]}" groups="stock.group_stock_multi_locations"
+                    	domain="[('id', 'child_of', parent.location_id), '|', ('company_id', '=', False), ('company_id', '=', company_id), ('usage', '!=', 'view')]"/>
+                    <field name="location_dest_id" optional="hide"
+                    	options="{'no_create': True}" attrs="{'column_invisible': [('parent.picking_type_code', '=', 'outgoing')]}" groups="stock.group_stock_multi_locations" domain="[('id', 'child_of', parent.location_dest_id), '|', ('company_id', '=', False), ('company_id', '=', company_id), ('usage', '!=', 'view')]"/>
+                    <field name="package_id" groups="stock.group_tracking_lot" optional="hide" />
+                    <field name="result_package_id" groups="stock.group_tracking_lot" optional="hide" />
+                    <field name="lots_visible" invisible="1"/>
+                    <field name="owner_id" groups="stock.group_tracking_owner" optional="hide"  attrs="{'column_invisible': [('parent.picking_type_code', '=', 'incoming')]}"/>
+                    <field name="state" invisible="1"/>
+                    <field name="zone_id" optional="hide"/>
+                    <field name="lot_id"  string="Stack" domain="[('stack_wip', '!=', True), ('warehouse_id', '=', parent.warehouse_id)]"
+                    context="{'default_product_id': product_id, 'default_company_id': company_id, 'active_picking_id': picking_id}" />
+
+                    <field name="stack_empty" invisible="1"/>
+                    <field name="lot_name" groups="stock.group_production_lot" invisible="1"/>
+                    <field name="is_initial_demand_editable" invisible="1"/>
+                    <field name="is_locked" invisible="1"/>
+
+
+					<button name="%(sd_inventory.action_view_create_stock_stack)d"
+	                      string="Create stack" type="action"
+	                      states="draft,waiting,confirmed,assigned"
+	                      groups="stock.group_stock_user" invisible="0"/>
+					<field name="packing_id"/>
+					<field name="first_weight" sum="first_weight" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+					<field name="second_weight" sum="second_weight" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+					<field name="bag_no" sum="bag_no" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+					<field name="tare_weight" sum="tare_weight" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+					<field name="init_qty" sum="init_qty" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+					<field name="qty_done" attrs="{'readonly': [('state', 'in', ('done', 'cancel')), ('is_locked', '=', True)]}" force_save="1" optional="hide" />
+					<field name="reserved_uom_qty" attrs="{'readonly': [('state', 'in', ('done', 'cancel')), ('is_locked', '=', True)]}" force_save="1" optional="hide" />
+
+
+                    <field name="product_uom_id" force_save="1" attrs="{'readonly': [('state', '!=', 'draft'), ('id', '!=', False)]}" groups="uom.group_uom" optional="hide"/>
+                </tree>
+            </field>
+        </record>
+</odoo>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="source_of_goods_tree" model="ir.ui.view">
+        <field name="name">source_of_goods_tree</field>
+        <field name="model">source.goods</field>
+        <field name="arch" type="xml">
+            <tree string="Source Of Goods" editable ='top'>
+				<field name="district_id"/>
+				<field name="name"/>
+				<field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+     <record id="action_source_of_goods" model="ir.actions.act_window">
+        <field name="name">Source Of Goods</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">source.goods</field>
+        <field name="view_id" ref="source_of_goods_tree"/>
+        <field name="view_mode">tree</field>
+    </record>
+
+    <menuitem id="menu_source_of_goods"
+            name="Source Of Goods"
+            action="action_source_of_goods"
+            parent="sd_master.menu_master_data_sucden_root"
+            sequence="105"/>
+</odoo>

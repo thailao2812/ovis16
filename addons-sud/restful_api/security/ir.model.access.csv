@@ -1,0 +1,11 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+,,,,,,,
+sud_packing_branch_user,sud_packing_branch_user,model_sud_packing_branch,mrp.group_mrp_user,1,1,1,0
+sud_packing_branch_manager,sud_packing_branch_manager,model_sud_packing_branch,mrp.group_mrp_manager,1,1,1,1
+,,,,,,,
+sud_packing_branch_line_user,sud_packing_branch_line_user,model_sud_packing_branch_line,mrp.group_mrp_user,1,1,1,0
+sud_packing_branch_line_manager,sud_packing_branch_line_manager,model_sud_packing_branch_line,mrp.group_mrp_manager,1,1,1,1
+,,,,,,,
+access_mrp_operation_result_scale_user,access_mrp_operation_result_scale_user,model_mrp_operation_result_scale,mrp.group_mrp_user,1,1,1,0
+access_mrp_operation_result_scale_manager,access_mrp_operation_result_scale_manager,model_mrp_operation_result_scale,mrp.group_mrp_manager,1,1,1,1
+,,,,,,,

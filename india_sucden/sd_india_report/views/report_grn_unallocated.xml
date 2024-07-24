@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+	
+    <record id="report_grn_unallocated_view_tree" model="ir.ui.view">
+            <field name="name">report_grn_unallocated_view_tree</field>
+            <field name="model">report.grn.unallocated</field>
+            <field name="arch" type="xml">
+                <tree >
+                    <field name="grade_id"/>
+                    <field name="product_id"/>
+                    <field name="unallocated"/>
+                    <field name="picking_id"/>
+                    <field name="date_done"/>
+                    <field name="origin"/>
+                </tree>
+             </field>
+        </record>
+
+    <record id="report_grn_unallocated_search" model="ir.ui.view">
+            <field name="name">report_grn_unallocated_search</field>
+            <field name="model">report.grn.unallocated</field>
+            <field name="arch" type="xml">
+                <search string="Search Report GRN Unallocated">
+                    <field name="grade_id" string="Grade"/>
+                    <field name="product_id" string="Product"/>
+                    <field name="picking_id" string="Picking"/>
+                    <separator/>
+                	<filter string="Grade" name="filter_grade_id" context="{'group_by':'grade_id'}"/>
+                	<filter string="Product" name="filter_product_id" context="{'group_by':'product_id'}"/>
+               </search>
+            </field>
+        </record>
+
+    <record id="action_report_grn_unallocated" model="ir.actions.act_window">
+            <field name="name">Report GRN Unallocated</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">report.grn.unallocated</field>
+            <field name="view_mode">tree</field>
+            <field name="domain">[]</field>
+            <field name="context">{'search_by_field_date': ['date_done']}</field>
+            <field name="search_view_id" ref="report_grn_unallocated_search"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+              </p>
+            </field>
+        </record>
+
+    
+</odoo>

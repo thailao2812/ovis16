@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    
+    	<!-- Shipping Instruction-->
+        <record id="view_shipping_instruction_kcs_tree" model="ir.ui.view">
+            <field name="name">shipping.instruction.kcs.tree</field>
+            <field name="model">shipping.instruction</field>
+            <field name="arch" type="xml">
+                <tree string="Shipping Instruction" default_order="id desc" decoration-info="state == 'draft'" decoration-muted="state in ('cancel','done')" 
+                											decoration-danger="state in ('waiting','approved')">
+    				<field name="name" string="Shipping"/>
+    				<field name="date"/>
+    				<field name="contract_id" string="Scontract"/>
+                    <field name="status" string="Ship by"/>
+    				<field name="prodcompleted"/>
+    				<field name="partner_id"/>
+    				
+    				<field name="license_list"/>
+					<field name="certificated_ids" widget="many2many_tags"/>
+    				
+    				<field name="product_id"/>
+                    <field name="shipment_date"/>
+                    <field name="factory_etd"/>
+    				<field name="total_line_qty" sum="total_line_qty" string="Qty"/>
+    				<field name="packing_id"/>
+    	 			<field name="origin" invisible="1"/>
+    	 			<field name="materialstatus"/>
+                    <field name="production_status" string="Production status"/>
+    	 			<field name="pss_condition"/>
+                    <field name="pss_send_schedule"/>
+    	 			<field name="pss_sent" string="PSS Sent" invisible='1'/>
+    	 			<field name="date_sent" invisible='1'/>
+    	 			<field name="pss_approved" string="PSS Approved" invisible='1'/>
+    	 			<field name="fumigation_id"/>
+	            	<field name="push_off_etd"/>
+	            	<field name="booking_date"/>
+	            	<field name="certificate_id" invisible="1"/>
+                    <field name="remarks" readonly="1"/>
+    				<field name="state" invisible="1"/>
+    			</tree>
+            </field>
+        </record>
+        
+        <record id="view_shipping_instruction_kcs_form" model="ir.ui.view">
+            <field name="name">shipping.instruction.kcs.form</field>
+            <field name="model">shipping.instruction</field>
+            <field name="arch" type="xml">
+                <form string="Shipping Instruction">
+	                <header>
+	                    <field name="state" widget="statusbar" statusbar_visible="draft,waiting,approved" invisible="1"/>
+	                </header>
+	                <sheet>
+	                	<div class="oe_button_box" name="button_box" attrs="{'invisible': [('state','in',('draft','waiting'))]}">
+							<field name="contract_ids" invisible="1"/>
+							<button type="object" name="action_view_contract_nvs" class="oe_stat_button" icon="fa-truck" 
+									attrs="{'invisible': [('contract_count','=',0)]}">
+								<field name="contract_count" widget="statinfo" string="NVS"/>
+							</button>
+						</div>
+	                    <div class="oe_title">
+	                        <h1>
+	                            <field name="name" readonly="1"/>
+	                        </h1>
+	                    </div>
+	                	<group>
+	                		<group>
+	                			<field name="partner_id" domain="[('customer_rank','=',True),('type','=','company')]" readonly="1"/>
+	                			<label for="contract_id"/>
+								<div name="contract_id" class="o_row">
+									<field name="contract_id"
+										options="{'no_write': True, 'no_create': True}" readonly="1"/>
+								</div>
+								<field name="pss_condition" readonly="1"/>
+                                <field name="pss_send_schedule" readonly="1"/>
+								<field name="pss_sent" string="PSS Sent" invisible='1'/>
+								<field name="date_sent" invisible='1'/>
+	            				<field name="pss_approved" string="PSS Approved" invisible='1'/>
+	                		</group>
+	                		<group>
+	                			<field name="date" readonly="1"/>
+	                    		<field name="deadline" readonly="1"/>
+                    			<field name="origin" readonly="1"/>
+                    			<field name="materialstatus" readonly="1"/>
+                    			<field name="prodcompleted" readonly="1"/>
+                    			<field name="company_id" options="{'no_write': True, 'no_create': True}" invisible="1" readonly="1"/>
+                    			
+	                		</group>
+	                	</group>
+	                	<notebook>
+	                		<page string="Products" name="product">
+	                    		<field name="shipping_ids" context="{'default_shipping_id': active_id}" readonly="1">
+	                    			<tree editable="top">
+	                    				<field name="sequence" widget="handle"/>
+					    				<field name="shipping_id" invisible="1"/>
+					    				<field name="product_id"/>
+					    				<field name="name"/>
+					    				<field name="product_qty" sum="product_qty"/>
+					    				<field name="product_uom"/>
+					    				<field name="price_unit" invisible="1"/>
+    									<field name="tax_id" invisible="1" widget="many2many_tags" domain="[('type_tax_use','=','sale'),('company_id','=',parent.company_id)]"/>
+	                    			</tree>
+	                    		</field>
+	                            <field name="note" class="oe_inline" placeholder="Setup default terms and conditions in your company settings."/>
+	                            <div class="oe_clear"/>
+	                            <group col="4" name="users_validate">
+	                            	<field name="create_uid"/>
+	                    			<field name="create_date"/>
+	                    			<field name="date_confirm"/>
+	                    			<field name="user_confirm"/>
+	                    			<field name="user_approve" attrs="{'invisible': [('state','in',('draft','waiting'))]}"/>
+	                    			<field name="date_approve" attrs="{'invisible': [('state','in',('draft','waiting'))]}"/>
+	                    		</group>
+	                    	</page>
+	                	</notebook>
+	                </sheet>
+                </form>
+            </field>
+        </record>
+        
+         <record id="action_shipping_instruction_kcs" model="ir.actions.act_window">
+            <field name="name">Shipping Instruction</field>
+            <field name="res_model">shipping.instruction</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+              		Create a Shipping Instruction, the first step of a new SI.
+              </p>
+            </field>
+        </record>
+        
+        <record model="ir.actions.act_window.view" id="action_shipping_instruction_kcs_view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_shipping_instruction_kcs_tree"/>
+            <field name="act_window_id" ref="action_shipping_instruction_kcs"/>
+        </record>
+        <record model="ir.actions.act_window.view" id="action_shipping_instruction_kcs_form">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_shipping_instruction_kcs_form"/>
+            <field name="act_window_id" ref="action_shipping_instruction_kcs"/>
+        </record>
+        
+       
+		
+	
+    	
+    
+    	
+    	
+    </data>
+</odoo>

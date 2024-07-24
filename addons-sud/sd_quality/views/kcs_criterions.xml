@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    
+    	<!-- KCS Criterions -->
+    	<record id="view_kcs_criterions_tree" model="ir.ui.view">
+            <field name="name">kcs.criterions.tree</field>
+            <field name="model">kcs.criterions</field>
+            <field name="arch" type="xml">
+                <tree string="KCS Criterions">
+					<field name="crop_id"/>
+                    <field name="name" string="Criterion"/>
+                    <field name="x_warehouse_id" widget="many2many_tags" />  
+                    <field name="type_warehouse"/>
+                    <field name="categ_id"/>
+                    <field name="product_id"/>
+                    <field name="from_date"/>
+                    <field name="to_date"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id="view_kcs_criterions_form" model="ir.ui.view">
+            <field name="name">kcs.criterions.form</field>
+            <field name="model">kcs.criterions</field>
+            <field name="arch" type="xml">
+                <form string="QC Criterions">
+                	<header>
+	                    <button name="button_approve" type="object" states='draft' string="Approve"
+	                    	groups="sd_quality.group_kcs_user" class="oe_highlight"/>
+	                    
+	                    <button name="button_draft" states="approved" string="Set to draft" type="object" 
+	                    	confirm="Are you sure want to cancel Criterion?" class="oe_highlight" groups="sd_quality.group_kcs_manager"/>
+	                    <field name="state" widget="statusbar" statusbar_visible="draft,approved"/>
+	                </header>
+	                <sheet>
+	                	<group>
+	                		<group>
+								<field name="type_warehouse"/>
+		                		<field name="name" string="Criterions"/>
+		                		<field name="categ_id"/>
+			                    <field name="x_warehouse_id" widget="many2many_tags"/>  
+		                	</group>
+		                	<group>
+			                    <div class="oe_edit_only">
+		            			 	 <div class="d-flex">
+		                                Period: 
+		                                <span class="mx-1"/> <field name="from_date" class="oe_inline"/> <span class="mx-1"/>
+		                                -
+		                                <span class="mx-1"/> <field name="to_date" class="oe_inline"/>
+		                            </div>
+		                		</div>
+		                		<newline/>
+		                		<group>
+										<field name="crop_id"/>
+					                    <field name="product_id"/>
+					                    <field name="reject_rule"/>
+					                    <field name="special" invisible="1"/>
+					                    <field name="is_factory" invisible="1"/>
+					                    <field name="is_grn" invisible="1"/>
+					                    <field name="is_grp" invisible="1"/>
+					                    
+			                	</group>
+	                		</group>
+	                	</group>
+	                	
+	                <notebook>
+	                	<page string="Standard KCS" name="standard_kcs">
+	                		<group >
+	                			<group >
+			                		<separator string="Example"/>
+			            			 <div class="oe_edit_only">
+			            			 	 <div class="d-flex" invisible="1">
+			                                Burned_%: 
+			                                <span class="mx-1"/> <field name="standard_excelsa" class="oe_inline"/> <span class="mx-1"/>
+			                                -
+			                                <span class="mx-1"/> <field name="percent_excelsa" class="oe_inline" style="color: #704A66; font-weight: bold"/>
+			                                %
+			                            </div>
+			                            
+			                             <div class="d-flex">
+			                                Burned_%: 
+			                                <span class="mx-1"/> <field name="standard_burned" class="oe_inline"/> <span class="mx-1"/>
+			                                -
+			                                <span class="mx-1"/> <field name="degree_mc" class="oe_inline" style="color: #704A66; font-weight: bold"/>
+			                                -
+			                                <field name="percent_burned" class="oe_inline"/>
+			                                %
+			                            </div>
+			                            
+			                            <div class="d-flex">
+			                            	Degree_Mc:<span class="mx-1"/> <field name="degree_mc" class="oe_inline"/> <span class="mx-1"/> %
+			            			 	</div>
+			            			 </div>
+		                		</group>
+		                		
+	                		<group>
+		            			 <field name="finished_products"/> 
+	                		</group>
+	                		<newline/>
+	                		<div>
+		                			<separator string="Degree"/>
+			                		<field name="mc_line" nolabel="1">
+	            						<tree editable="top">
+	            							<field name="name"/>
+	            							<field name="percent"/>
+	            							<field name="rule"/>
+	            						</tree>
+	            					</field>
+	                			</div>
+	                			<div>
+		                			<separator string="Burned Deduct"/>
+			                		<field name="burned_deduct_ids" nolabel="1">
+	            						<tree editable="top">
+	            							<field name="range_start"/>
+	            							<field name="range_end"/>
+	            							<field name="percent"/>
+	            						</tree>
+	            					</field>
+	                			</div>
+	                		
+	                		<newline/>
+	                			<div>
+		                			<separator string="BB Deduct"/>
+			                		<field name="broken_standard_ids" nolabel="1">
+	            						<tree editable="top">
+	            							<field name="range_start"/>
+	            							<field name="range_end"/>
+	            							<field name="percent"/>
+	            							<field name="rule"/>
+	            						</tree>
+	            					</field>
+	                			</div>
+	                			
+	                			<div>
+		                			<separator string="Mold Deduct"/>
+			                		<field name="mold_standard_ids" nolabel="1">
+	            						<tree editable="top">
+	            							<field name="range_start"/>
+	            							<field name="range_end"/>
+	            							<field name="percent"/>
+	            						</tree>
+	            					</field>
+	                			</div>
+	                			
+	                			<div>
+		                			<separator string="Brown Deduct"/>
+			                		<field name="brown_standard_ids" nolabel="1">
+	            						<tree editable="top">
+	            							<field name="range_start"/>
+	            							<field name="range_end"/>
+	            							<field name="percent"/>
+	            						</tree>
+	            					</field>
+	                			</div>
+	                			
+	                			<div>
+		                			<separator string="Foreign Matter"/>
+			                		<field name="foreign_matter_ids" nolabel="1">
+	            						<tree editable="top">
+	            							<field name="range_start"/>
+	            							<field name="range_end"/>
+	            							<field name="percent"/>
+	            							<field name="rule" required="1"/>
+	            						</tree>
+	            					</field>
+	                			</div>
+	                			
+	                			<div>
+		                			<separator string="Insect bean Bean"/>
+			                		<field name="insect_bean_ids" nolabel="1">
+	            						<tree editable="top">
+	            							<field name="range_start"/>
+	            							<field name="range_end"/>
+	            							<field name="percent"/>
+	            						</tree>
+	            					</field>
+	                			</div>
+	                			
+	                			<div>
+		                			<separator string="Excelsa"/>
+			                		<field name="excelsa_standard_ids" nolabel="1">
+	            						<tree editable="top">
+	            							<field name="range_start"/>
+	            							<field name="range_end"/>
+	            							<field name="percent"/>
+	            						</tree>
+	            					</field>
+	                			</div>
+	                			
+	                			<div>
+		                			<separator string="Ligh Burnded Bean"/>
+			                		<field name="ligh_burnded_bean_ids" nolabel="1">
+	            						<tree editable="top">
+	            							<field name="range_start"/>
+	            							<field name="range_end"/>
+	            							<field name="rule" required="1"/>
+	            						</tree>
+	            					</field>
+	                			</div>
+                		</group>
+	            		</page>
+	            		
+	            		<page string="Over Screen" name="over_screen">
+		                	
+		                	<group>
+	                			<group >
+			                		<separator string="Standard screen13"/>
+			            			 <div class="oe_edit_only">
+			            			 	 <div class="d-flex">
+			                                OverScreen13_%
+			                                <span class="mx-1"/> <field name="standard_screen13" class="oe_inline"/> <span class="mx-1"/>
+			                                -
+			                                <span class="mx-1"/> <field name="percent_screen13" class="oe_inline" style="color: #704A66; font-weight: bold"/>
+			                                %
+			                            </div>
+			                            
+			            			 </div>
+		                		</group>
+		                		
+		                		<group >
+			                		<separator string="SCR16 + SCR18 :"/>
+			            			 <div class="oe_edit_only">
+			                            <div class="d-flex">
+											SCR16+SCR18
+			                                <span class="mx-1"/> <field name="standard_screen18_16" class="oe_inline"/> <span class="mx-1"/>
+			                                -
+			                                <span class="mx-1"/> <field name="percent_screen18_16" class="oe_inline" style="color: #704A66; font-weight: bold"/>
+			                                %
+			                            </div>
+			            			 </div>
+		                		</group>
+		                		
+		                		<group >
+			                		<separator string="Standard screen18"/>
+			            			 <div class="oe_edit_only">
+			                            <div class="d-flex">
+			                                OverScreen18_%
+			                                <span class="mx-1"/> <field name="standard_screen18" class="oe_inline"/> <span class="mx-1"/>
+			                                -
+			                                <span class="mx-1"/> <field name="percent_screen18" class="oe_inline" style="color: #704A66; font-weight: bold"/>
+			                                %
+			                            </div>
+			            			 </div>
+		                		</group>
+		                		
+		                	</group>
+		                	
+		                	<div>
+	                			<separator string="OverScreen12"/>
+		                		<field name="over_screen12_ids" nolabel="1">
+            						<tree editable="top">
+            							<field name="range_start"/>
+            							<field name="range_end"/>
+            							<field name="percent"/>
+            						</tree>
+            					</field>
+            				</div>
+	            		</page>
+	            		
+            		</notebook>
+	                	
+	                	
+	                </sheet>
+                </form>
+            </field>
+        </record>
+        
+        <record id="action_kcs_criterions" model="ir.actions.act_window">
+            <field name="name">QC Criterions</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">kcs.criterions</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+              		Create a QC Criterions, the first step of a new QC Criterions.
+              </p>
+            </field>
+        </record>
+        
+        
+    	
+    	
+    </data>
+</odoo>

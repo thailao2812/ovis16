@@ -1,0 +1,16 @@
+version: '2'
+services:
+  web:
+    image: sud16c:latest
+    volumes:
+      - odoo-web-data:/var/lib/odoo
+      - ./config:/etc/odoo
+      - ./addons-sud:/opt/odoo/sud16c/addons-sud
+      - ./india_sucden:/opt/odoo/sud16c/india_sucden
+      - ./vietnam_sucden:/opt/odoo/sud16c/vietnam_sucden
+      - ./tools:/opt/odoo/sud16c/tools
+      - ./gg_map:/opt/odoo/sud16c/vietnam_sucden/gg_map
+      - ./example:/opt/odoo/sud16c/vietnam_sucden/gg_map/web_view_google_map_drawing/example
+
+volumes:
+  odoo-web-data:

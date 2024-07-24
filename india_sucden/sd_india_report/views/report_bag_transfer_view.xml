@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="report_bag_transfer_view_tree" model="ir.ui.view">
+            <field name="name">report_bag_transfer_view_tree</field>
+            <field name="model">report.bag.transfer</field>
+            <field name="arch" type="xml">
+                <tree >
+                    <field name="partner_id"/>
+                    <field name="product_id"/>
+                    <field name="bag_in"/>
+                    <field name="bag_out"/>
+                    <field name="balance"/>
+                </tree>
+             </field>
+        </record>
+
+    <record id="report_bag_transfer_search" model="ir.ui.view">
+            <field name="name">report_bag_transfer_search</field>
+            <field name="model">report.bag.transfer</field>
+            <field name="arch" type="xml">
+                <search string="Search Report Bag Transfer">
+                    <field name="partner_id" string="Supplier"/>
+                    <field name="product_id" string="Product"/>
+                    <separator/>
+                	<filter string="Supplier" name="filter_partner_id" context="{'group_by':'partner_id'}"/>
+                	<filter string="Product" name="filter_product_id" context="{'group_by':'product_id'}"/>
+               </search>
+            </field>
+        </record>
+
+    <record id="action_report_bag_transfer" model="ir.actions.act_window">
+            <field name="name">Report Bag Transfer</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">report.bag.transfer</field>
+            <field name="view_mode">tree</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+            <field name="search_view_id" ref="report_bag_transfer_search"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+              </p>
+            </field>
+        </record>
+</odoo>

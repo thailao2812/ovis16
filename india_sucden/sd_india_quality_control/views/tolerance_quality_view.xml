@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="tolerance_quality_tree" model="ir.ui.view">
+            <field name="name">tolerance_quality_tree</field>
+            <field name="model">tolerance.quality</field>
+            <field name="arch" type="xml">
+                <tree string="Tolerance Quality" editable="top">
+                    <field name="product_category_id" options="{'no_create': True}"/>
+<!--                    <field name="deduction_quality_id" options="{'no_create': True}"/>-->
+                    <field name="tolerance_percent"/>
+                    <field name="after_deduction"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="tolerance_quality_search" model="ir.ui.view">
+            <field name="name">tolerance_quality_search</field>
+            <field name="model">tolerance.quality</field>
+            <field name="arch" type="xml">
+                <search string="Tolerance Quality">
+                    <field name="product_category_id"/>
+                    <group expand="1" string="Group By">
+                        <filter string="Category" name="product_category_id"
+                                context="{'group_by':'product_category_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="tolerance_quality_act_window" model="ir.actions.act_window">
+            <field name="name">Tolerance Quality</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">tolerance.quality</field>
+            <field name="view_mode">tree</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    There is no examples click here to add new Tolerance Quality.
+                </p>
+            </field>
+        </record>
+
+        <menuitem id="menu_tolerance_quality"
+            name="Tolerance Quality"
+            action="tolerance_quality_act_window"
+            parent="sd_master.menu_master_data_sucden_root"
+            sequence="101"/>
+
+    </data>
+</odoo>

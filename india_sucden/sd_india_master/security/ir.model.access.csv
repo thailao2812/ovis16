@@ -1,0 +1,9 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_condition_contract,access_condition_contract,model_condition_contract,base.group_user,1,1,1,1
+
+access_document_contract,access_document_contract,model_document_contract,base.group_user,1,1,1,1
+access_interest_configuration,access_interest_configuration,model_interest_configuration,base.group_user,1,1,1,1
+
+access_analysis_batch_report,access_analysis_batch_report,model_analysis_batch_report,base.group_user,1,1,1,1
+
+access_financial_year,access_financial_year,model_financial_year,base.group_user,1,1,1,1

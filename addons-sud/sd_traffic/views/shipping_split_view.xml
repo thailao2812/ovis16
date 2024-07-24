@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record model="ir.ui.view"
+                id="view_shipping_split_form_inherit_sd_sale_contract">
+            <field name="name">view_shipping_split_form_inherit_sd_sale_contract</field>
+            <field name="model">shipping.split</field>
+            <field name="inherit_id" ref="sd_sale_contract.view_shipping_split_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='scontract_id']" position="after">
+                    <field name="traffic_id" />
+                </xpath>
+            </field>
+        </record>
+    </data>
+
+</odoo>

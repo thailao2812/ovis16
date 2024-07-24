@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+		
+        <record id="view_shipping_instruction_add_page_certificate_allocation_form" model="ir.ui.view">
+		        <field name="name">view.shipping.instruction.add.page.certificate.allocation.form</field>
+		        <field name="model">shipping.instruction</field>
+		        <field name="inherit_id" ref="sd_sale_contract.view_shipping_instruction_form"/>
+		        <field name="arch" type="xml">
+					<xpath expr="//page[@name='bl_information']" position="after">
+						<page string="License Certificate Allocation" name="allocated_license">
+		                        <field name="license_allocation_ids">
+		                            <tree editable="top">
+		                                <field name="shipping_id" readonly="1"/>
+		                                <field name="license_id" context="{'certificated_ids': parent.certificated_ids}"/>
+		                                <field name="product_id" readonly="1"/>
+		                                <field name="grade_id" readonly="1"/>
+		                                <field name="state" readonly="1"/>
+		                                <field name="crop_id"/>
+		                                <field name="allocation_qty"/>
+		                            </tree>
+		                        </field>
+		                    </page>
+					</xpath>
+					
+					<xpath expr="//field[@name='pss_condition']" position="after">
+						<field name="license_list"/>
+					</xpath>
+					
+		        </field>
+		    </record>
+		    
+		    <record id="view_shipping_instruction_add_license_list_tree" model="ir.ui.view">
+		        <field name="name">view.shipping.instruction.add.license.list.tree</field>
+		        <field name="model">shipping.instruction</field>
+		        <field name="inherit_id" ref="sd_sale_contract.view_shipping_instruction_tree"/>
+		        <field name="arch" type="xml">
+					<xpath expr="//field[@name='allowed_franchise']" position="before">
+						 <field name="license_list"/>
+						 <field name="certificated_ids" widget="many2many_tags" invisible="1"/>
+					</xpath>
+					
+		        </field>
+		    </record>
+		    
+		    
+    </data>
+    
+    
+</odoo>

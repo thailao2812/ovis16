@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+         <record id="view_stock_production_lot_inherit_add_fields_stack_wip" model="ir.ui.view">
+	        <field name="name">stock.production.lot.inherit.add.fields.stack.wip</field>
+	        <field name="model">stock.lot</field>
+	        <field name="inherit_id" ref="sd_inventory.view_stock_production_lot_inherit_add_fields"/>
+	        <field name="arch" type="xml">
+				<xpath expr="//page[@name='stack_his_ids']" position="after">
+					<page string="Stack Wip" name='stack_wip'>
+					 	<field name="result_grp_line_ids" readonly="1">
+							<tree>
+								<field name="operation_result_id" readonly="1"/>
+								<field name="product_id" readonly="1"/>
+	                            <field name="product_uom" />
+	                            <field name="product_qty" string="Net Weight" sum="product_qty"/>
+	                            <field name="zone_id"/>
+	                            <field name="stack_wip_id"/>
+	                            <field name="packing_id"/>
+	                            <field name="qty_bags" sum="qty_bags"/>
+	                            <field name="picking_id"/>
+	                            <field name="notes"/>
+							</tree>
+						</field>
+					 </page>
+					
+				</xpath>
+	        </field>
+         </record>
+         
+        
+        
+    </data>
+</odoo>

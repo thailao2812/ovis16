@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_security_gate_queue_form_inherit_india" model="ir.ui.view">
+        <field name="name">view_security_gate_queue_form_inherit_india</field>
+        <field name="model">ned.security.gate.queue</field>
+        <field name="inherit_id" ref="sd_security_gate.view_security_gate_queue_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='state']" position="attributes">
+                <attribute name="statusbar_visible">draft,pur_approved,qc_approved,commercial,wh_approved,approved</attribute>
+            </xpath>
+            <xpath expr="//button[@name='button_approve']" position="replace">
+            </xpath>
+            <xpath expr="//button[@name='button_reject']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='ligh_burnded_bean_result']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='ligh_burnded_bean_result']" position="after">
+                <field name="quality_slip_no"/>
+            </xpath>
+            <xpath expr="//button[@name='button_qc_approved']" position="attributes">
+                <attribute name="string">Approve</attribute>
+                <attribute name="groups">sd_india_master.group_purchase_india</attribute>
+            </xpath>
+            <xpath expr="//field[@name='security_id']" position="attributes">
+                <attribute name="string">Created By</attribute>
+            </xpath>
+            <xpath expr="//field[@name='security_id']" position="after">
+                <field name="type_contract" required="1"/>
+            </xpath>
+            <xpath expr="//button[@name='button_wh_approved']" position="after">
+                <button name="button_commercial" type="object" string="Approve" states="qc_approved" groups="sd_india_master.group_quality_india"/>
+                <button name="button_approve" type="object" states="wh_approved" string="Approve" class="oe_highlight" groups="sd_india_master.group_warehouse_india"/>
+                <button name="%(sd_india_security_gate.action_view_reject_security_gate)d" type="action" string="Reject" states="pur_approved,qc_approved,commercial,wh_approved"/>
+            </xpath>
+            <xpath expr="//button[@name='button_wh_approved']" position="attributes">
+                <attribute name="states">commercial</attribute>
+                <attribute name="groups">sd_india_master.group_commercial_dr_india</attribute>
+            </xpath>
+            <xpath expr="//field[@name='product_ids']" position="attributes">
+                <attribute name="context">{'delivery_registration': True}</attribute>
+            </xpath>
+			 <xpath expr="//field[@name='driver_name']" position="attributes">
+                 <attribute name="string">Driver's Name</attribute>
+            </xpath>
+            <xpath expr="//field[@name='product_ids']" position="after">
+                <field name="template_qc" readonly="1"/>
+            </xpath>
+            <xpath expr="//field[@name='link_fot_id']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='supplier_id']" position="attributes">
+                <attribute name="groups">sd_india_security_gate.allow_to_see_field_supplier</attribute>
+            </xpath>
+            <xpath expr="//field[@name='supplier_id']" position="after">
+                <field name="estate_name"/>
+            </xpath>
+            <xpath expr="//field[@name='picking_type_id']" position="attributes">
+                <attribute name="force_save">1</attribute>
+            </xpath>
+            <xpath expr="//page[@name='quality_test']" position="replace">
+                <page string="Quality Test" name="quality_test_india">
+                    <group>
+                        <group col="6">
+                           <field name="sample_weight_india"/>
+                            <field name="outturn_gram" attrs="{'readonly': [('state', '=', 'approved')]}"/>
+                            <field name="sleeve_6_up" attrs="{'invisible': [('template_qc', 'not in', ['c_grade'])]}"/>
+                            <field name="sleeve_5_5_up" attrs="{'invisible': [('template_qc', 'not in', ['c_grade'])]}"/>
+                            <field name="sleeve_5_5_down" attrs="{'invisible': [('template_qc', 'not in', ['c_grade'])]}"/>
+                            <field name="sleeve_5_down" attrs="{'invisible': [('template_qc', 'not in', ['c_grade'])]}"/>
+                            <field name="aaa_gram" attrs="{'invisible': [('template_qc', 'not in', ['raw', 'clean', 'bulk', 'clean_bulk'])]}"/>
+                            <field name="aa_gram" attrs="{'invisible': [('template_qc', 'not in', ['raw', 'clean', 'bulk', 'clean_bulk'])]}"/>
+                            <field name="a_gram" attrs="{'invisible': [('template_qc', 'not in', ['raw', 'clean', 'bulk', 'clean_bulk'])]}"/>
+                            <field name="b_gram" attrs="{'invisible': [('template_qc', 'not in', ['raw', 'clean', 'bulk', 'clean_bulk'])]}"/>
+                            <field name="c_gram" attrs="{'invisible': [('template_qc', 'not in', ['raw', 'clean', 'bulk', 'clean_bulk'])]}"/>
+                            <field name="pb_gram" attrs="{'invisible': [('template_qc', 'in', ['pb_grade', 'lower'])]}"/>
+                            <field name="flat_gram" attrs="{'invisible': [('template_qc', '!=', 'pb_grade')]}"/>
+                            <field name="pb1_gram" attrs="{'invisible': [('template_qc', '!=', 'pb_grade')]}"/>
+                            <field name="pb2_gram" attrs="{'invisible': [('template_qc', '!=', 'pb_grade')]}"/>
+                            <field name="bb_gram"/>
+                            <field name="bleached_gram" attrs="{'invisible': [('template_qc', '=', 'lower')]}"/>
+                            <field name="idb_gram"/>
+                            <field name="bits_gram"/>
+                            <field name="hulks_gram"/>
+                            <field name="stone_gram"/>
+                            <field name="skin_out_gram" attrs="{'invisible': [('template_qc', '=', 'lower')]}"/>
+                            <field name="triage_gram"/>
+                            <field name="wet_bean_gram" attrs="{'invisible': [('template_qc', '=', 'lower')]}"/>
+                            <field name="red_beans_gram" attrs="{'invisible': [('template_qc', '=', 'lower')]}"/>
+                            <field name="stinker_gram" attrs="{'invisible': [('template_qc', '=', 'lower')]}"/>
+                            <field name="faded_gram" attrs="{'invisible': [('template_qc', '=', 'lower')]}"/>
+
+                            <field name="sleeve_5_up" attrs="{'invisible': [('template_qc', 'not in', ['clean', 'lower', 'clean_bulk'])]}"/>
+                            <field name="unhulled" attrs="{'invisible': [('template_qc', 'not in', ['clean', 'lower','bulk', 'clean_bulk'])]}"/>
+                            <field name="remaining_coffee" attrs="{'invisible': [('template_qc', 'not in', ['clean', 'lower', 'clean_bulk'])]}"/>
+                            <field name="blacks" attrs="{'invisible': [('template_qc', 'not in', ['clean', 'lower', 'clean_bulk'])]}"/>
+                            <field name="half_monsoon" attrs="{'invisible': [('template_qc', 'not in', ['clean', 'clean_bulk'])]}"/>
+                            <field name="good_beans" attrs="{'invisible': [('template_qc', 'not in', ['clean', 'lower', 'clean_bulk'])]}"/>
+
+                            <field name="total_gram"/>
+                        </group>
+                        <group>
+                            <field name="moisture_percent"/>
+                            <field name="outturn_percent" readonly="1"/>
+                            <field name="sleeve_6_up_percent" readonly="1" attrs="{'invisible': [('template_qc', 'not in', ['c_grade'])]}"/>
+                            <field name="sleeve_5_5_up_percent" readonly="1" attrs="{'invisible': [('template_qc', 'not in', ['c_grade'])]}"/>
+                            <field name="sleeve_5_5_down_percent" readonly="1" attrs="{'invisible': [('template_qc', 'not in', ['c_grade'])]}"/>
+                            <field name="sleeve_5_down_percent" readonly="1" attrs="{'invisible': [('template_qc', 'not in', ['c_grade'])]}"/>
+                            <field name="aaa_percent" readonly="1" attrs="{'invisible': [('template_qc', 'not in', ['raw', 'clean', 'bulk', 'clean_bulk'])]}"/>
+                            <field name="aa_percent" readonly="1" attrs="{'invisible': [('template_qc', 'not in', ['raw', 'clean', 'bulk', 'clean_bulk'])]}"/>
+                            <field name="a_percent" readonly="1" attrs="{'invisible': [('template_qc', 'not in', ['raw', 'clean', 'bulk', 'clean_bulk'])]}"/>
+                            <field name="b_percent" readonly="1" attrs="{'invisible': [('template_qc', 'not in', ['raw', 'clean', 'bulk', 'clean_bulk'])]}"/>
+                            <field name="c_percent" readonly="1" attrs="{'invisible': [('template_qc', 'not in', ['raw', 'clean', 'bulk', 'clean_bulk'])]}"/>
+                            <field name="pb_percent" readonly="1" attrs="{'invisible': [('template_qc', 'in', ['pb_grade', 'lower'])]}"/>
+                            <field name="flat_percent" readonly="1" attrs="{'invisible': [('template_qc', '!=', 'pb_grade')]}"/>
+                            <field name="pb1_percent" readonly="1" attrs="{'invisible': [('template_qc', '!=', 'pb_grade')]}"/>
+                            <field name="pb2_percent" readonly="1" attrs="{'invisible': [('template_qc', '!=', 'pb_grade')]}"/>
+                            <field name="bb_percent" readonly="1"/>
+                            <field name="bleached_percent" readonly="1" attrs="{'invisible': [('template_qc', '=', 'lower')]}"/>
+                            <field name="idb_percent" readonly="1"/>
+                            <field name="bits_percent" readonly="1"/>
+                            <field name="hulks_percent" readonly="1"/>
+                            <field name="stone_percent" readonly="1"/>
+                            <field name="skin_out_percent" readonly="1" attrs="{'invisible': [('template_qc', '=', 'lower')]}"/>
+                            <field name="triage_percent" readonly="1"/>
+                            <field name="wet_bean_percent" readonly="1" attrs="{'invisible': [('template_qc', '=', 'lower')]}"/>
+                            <field name="red_beans_percent" readonly="1" attrs="{'invisible': [('template_qc', '=', 'lower')]}"/>
+                            <field name="stinker_percent" readonly="1" attrs="{'invisible': [('template_qc', '=', 'lower')]}"/>
+                            <field name="faded_percent" readonly="1" attrs="{'invisible': [('template_qc', '=', 'lower')]}"/>
+
+                            <field name="sleeve_5_up_percent" readonly="1" attrs="{'invisible': [('template_qc', 'not in', ['clean', 'lower', 'clean_bulk'])]}"/>
+                            <field name="unhulled_percent" readonly="1" attrs="{'invisible': [('template_qc', 'not in', ['clean', 'lower', 'bulk', 'clean_bulk'])]}"/>
+                            <field name="remaining_coffee_percent" readonly="1" attrs="{'invisible': [('template_qc', 'not in', ['clean', 'lower', 'clean_bulk'])]}"/>
+                            <field name="blacks_percent" readonly="1" attrs="{'invisible': [('template_qc', 'not in', ['clean', 'lower', 'clean_bulk'])]}"/>
+                            <field name="half_monsoon_percent" readonly="1" attrs="{'invisible': [('template_qc', 'not in', ['clean', 'clean_bulk', 'clean_bulk'])]}"/>
+                            <field name="good_beans_percent" readonly="1" attrs="{'invisible': [('template_qc', 'not in', ['clean', 'lower', 'clean_bulk'])]}"/>
+
+                            <field name="total_percent" readonly="1"/>
+                            <field name="visual_quality_ids" options="{'no_create': True, 'no_open': True}" widget="many2many_tags"/>
+                        </group>
+                    </group>
+                    <div class="oe_clear"/>
+                </page>
+                <page string="Deduction" name="deduction" invisible="1">
+                    <field name="deduction_ids" attrs="{'readonly': [('state', 'not in', ['qc_approved', 'commercial'])]}">
+						 <tree editable="top" create="false">
+							 <field name="name" options="{'no_create': True}"/>
+							 <field name="percent"/>
+							 <field name="remark"/>
+						 </tree>
+					 </field>
+                </page>
+            </xpath>
+
+            <xpath expr="//group" position="after">
+                <group string="Reject Reason">
+                    <field name="reject_purchase" readonly="1"/>
+                    <field name="reject_qc" readonly="1"/>
+                    <field name="reject_commercial" readonly="1"/>
+                    <field name="reject_warehouse" readonly="1"/>
+                    <field name="remark_note"/>
+                </group>
+            </xpath>
+            <xpath expr="//field[@name='districts_id']" position="attributes">
+                <attribute name="domain">[('location', '=', True)]</attribute>
+            </xpath>
+
+
+
+        </field>
+    </record>
+
+
+    <record id="view_security_gate_queue_tree_inherit_india" model="ir.ui.view">
+        <field name="name">view_security_gate_queue_tree_inherit_india</field>
+        <field name="model">ned.security.gate.queue</field>
+        <field name="inherit_id" ref="sd_security_gate.view_security_gate_queue_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='product_ids']" position="attributes">
+                <attribute name="context">{'delivery_registration': True}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='mc']" position="replace">
+                <field name="moisture_percent"/>
+            </xpath>
+            <xpath expr="//field[@name='security_id']" position="attributes">
+                <attribute name="string">Created By</attribute>
+            </xpath>
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="quality_slip_no"/>
+                <field name="type_contract"/>
+            </xpath>
+            <xpath expr="//field[@name='approx_quantity']" position="after">
+                <field name="estimated_bags"/>
+            </xpath>
+            <xpath expr="//field[@name='supplier_id']" position="after">
+                <field name="estate_name"/>
+            </xpath>
+
+
+        </field>
+    </record>
+
+</odoo>

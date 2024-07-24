@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_security_gate_contract_queue_tree" model="ir.ui.view">
+            <field name="name">view_security_gate_contract_queue_tree</field>
+            <field name="model">ned.security.gate.queue</field>
+            <!-- <field name="groups_id" eval="[(4,ref('sd_traffic.group_traffic_user'))]"/> create="false" -->
+            <field name="arch" type="xml">
+                <tree decoration-muted="state in ('closed','reject')" decoration-info="state == 'draft'" decoration-danger="state == 'approved'" string="Security Gate Queue">
+                    <field name="name"/>
+                    <field name="license_plate" />
+                    <field name="first_cont" />
+                    <field name="last_cont" />
+                    <field name="shipping_id"/>
+                    <field name="arrivial_time" />
+                    <field name="time_in" />
+                    <field name="time_out" />
+                    <field name="customer_id" string="Customer" />
+                    <field name="parking_order" />
+                    <field name="product_id"/>
+                    <field name="packing_id"/>
+                    <field name="remarks" />
+                    <field name="security_id" />
+                    <field name="warehouse_id" options="{'no_create': True, 'no_edit': True, 'no_create_edit':True}" />
+                    <field name="state" />
+                    <field name="issue_state" />
+                </tree>
+            </field>
+        </record>
+
+        <!-- Security gate queue Ex-Store form view -->
+        <record id="view_security_gate_queue_contract_form" model="ir.ui.view">
+            <field name="name">view_security_gate_queue_contract_form</field>
+            <field name="model">ned.security.gate.queue</field>
+            <field name="arch" type="xml">
+                <form string="Delivery Registration In-Store KTN">
+                    <header>
+                        <button name="button_pur_approved" type="object" states="draft" string="Purchase" class="oe_highlight" groups="base.user_root,sd_purchase_contract.group_purchase_contract_user"/>
+                    </header>
+                    <sheet>
+                    	<div class="oe_title">
+	                        <h1>
+	                            <field name="name"/>
+	                        </h1>
+	                    </div>
+                        <group>
+                            <group string="Truck Data">
+                                <field name="state" invisible="1"/>
+                            	<field name="type_transfer" invisible ='1'/>
+                            	<field name="warehouse_id" required = "1" options="{'no_create': True, 'no_edit': True, 'no_create_edit':True}" />
+                                <field name="supplier_id" required = "1" options="{'no_create': True, 'no_edit': True, 'no_create_edit':True}" />
+                                <field name="districts_id" required ="1" options="{'no_create': True, 'no_edit': True, 'no_create_edit':True}"/>
+                                <field name="license_plate" />
+                                <field name="driver_name" string="Tên Tài Xế"/>
+<!--                                <field name="picking_type_id" options="{'no_create': True, 'no_edit': True, 'no_create_edit':True}" invisible ='0'/>-->
+                                <field name="product_ids" required = "1" widget="many2many_tags"
+		        				options="{'no_create': True, 'no_open': True}" class="oe_inline"/>
+                            </group>
+                            <group>
+                                <field name="arrivial_time" />
+                                <field name="estimated_bags" />
+ 	    						<field name="approx_quantity" required = "1" />
+                                <field name="security_id" />
+                                <label for="picking_ktn_id"/>
+                                <div name="picking_ktn_id" class="o_row">
+                                    <field name="picking_ktn_id" readonly="0"/>
+                                    <button name="button_link_grn_ktn" type="object" string="Link GRN KTN"/>
+                                </div>
+                            </group>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+
+         <!-- Security gate queue action -->
+        <record model="ir.actions.act_window" id="action_security_gate_queue_ktn">
+            <field name="name">Delivery Registration KTN</field>
+            <field name="res_model">ned.security.gate.queue</field>
+            <!-- <field name="type">ir.actions.act_window</field> -->
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="sd_security_gate.ned_security_gate_queue_search"/>
+            <field name="domain">[('type_transfer','=','other')]</field>
+            <field name="context">{'filter_by_company':True,'default_type_transfer':'other'}</field>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="action_queue_ktn_view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_security_gate_contract_queue_tree"/>
+            <field name="act_window_id" ref="action_security_gate_queue_ktn"/>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="action_queue_ktn_form">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_security_gate_queue_contract_form"/>
+            <field name="act_window_id" ref="action_security_gate_queue_ktn"/>
+        </record>
+
+    <menuitem action="action_security_gate_queue_ktn"
+					id="menu_delivery_registration_contract"
+					parent="sd_purchase_contract.menu_purchase_contract_root"
+					sequence="20"
+					name="Delivery Registration KTN"/>
+</odoo>

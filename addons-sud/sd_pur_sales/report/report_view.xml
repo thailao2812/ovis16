@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+		<!-- Commercial Invoice    -->
+		<record id="report_commercial_invoice" model="ir.actions.report">
+	        <field name="name">Report Commercial Invoice</field>
+	        <field name="type">ir.actions.report</field>
+	        <field name="model">shipping.instruction</field>
+	        <field name="binding_model_id" ref="sd_pur_sales.model_shipping_instruction"/>
+	        <field name="report_name">report_commercial_invoice</field>
+	        <field name="report_type">aeroo</field>
+	        <field name="in_format">oo-odt</field>
+	        <field name="out_format" model="report.mimetypes" search="[('code','=','oo-doc'),('compatible_types','=','oo-odt')]"/>
+	        <field name="preview">True</field>
+	        <field name="parser_state">loc</field>
+	        <field name="parser_loc">sd_pur_sales/report/report_commercial_invoice_parser.py</field>
+	        <field name="report_file">sd_pur_sales/report/report_commercial_invoice.odt</field>
+	        <field name="tml_source">file</field>
+	        <field name="print_report_name">'Commercial Invoice'</field>
+	    </record>	      
+	    
+	    <!-- Trucking_list_report    -->
+	    <record id="trucking_list_report" model="ir.actions.report">
+	        <field name="name">Report Trucking List</field>
+	        <field name="type">ir.actions.report</field>
+	        <field name="model">shipping.instruction</field>
+	        <field name="binding_model_id" ref="sd_pur_sales.model_shipping_instruction"/>
+	        <field name="report_name">trucking_list_report</field>
+	        <field name="report_type">aeroo</field>
+	        <field name="in_format">oo-odt</field>
+	        <field name="out_format" model="report.mimetypes" search="[('code','=','oo-doc'),('compatible_types','=','oo-odt')]"/>
+	        <field name="preview">True</field>
+	        <field name="parser_state">loc</field>
+	        <field name="parser_loc">sd_pur_sales/report/trucking_list_parser.py</field>
+	        <field name="report_file">sd_pur_sales/report/trucking_list.odt</field>
+	        <field name="tml_source">file</field>
+	        <field name="print_report_name">'Trucking list'</field>
+	    </record>	    
+	    
+	    
+	    <!-- printout_nvs_report  -->
+    	<record id="printout_nvs_report" model="ir.actions.report">
+	        <field name="name">Report NVS</field>
+	        <field name="type">ir.actions.report</field>
+	        <field name="model">sale.contract</field>
+	        <field name="binding_model_id" ref="sd_pur_sales.model_sale_contract"/>
+	        <field name="report_name">printout_nvs_report</field>
+	        <field name="report_type">aeroo</field>
+	        <field name="in_format">oo-odt</field>
+	        <field name="out_format" model="report.mimetypes" search="[('code','=','oo-doc'),('compatible_types','=','oo-odt')]"/>
+	        <field name="preview">True</field>
+	        <field name="parser_state">loc</field>
+	        <field name="parser_loc">sd_pur_sales/report/printout_nvs_parser.py</field>
+	        <field name="report_file">sd_pur_sales/report/printout_nvs.odt</field>
+	        <field name="tml_source">file</field>
+	        <field name="print_report_name">'Printout nvs'</field>
+	    </record>	   
+	    
+	    <!-- printout_nvs_nls_report  -->
+	    <record id="printout_nvs_nls_list" model="ir.actions.report">
+	        <field name="name">Nvs Nls List</field>
+	        <field name="type">ir.actions.report</field>
+	        <field name="model">sale.contract</field>
+	        <field name="binding_model_id" ref="sd_pur_sales.model_sale_contract"/>
+	        <field name="report_name">printout_nvs_nls_list</field>
+	        <field name="report_type">aeroo</field>
+	        <field name="in_format">oo-ods</field>
+	        <field name="out_format" model="report.mimetypes" search="[('code','=','oo-xls'),('compatible_types','=','oo-ods')]"/>
+	        <field name="preview">True</field>
+	        <field name="parser_state">loc</field>
+	        <field name="parser_loc">sd_pur_sales/report/printout_nvs_nls_parser.py</field>
+	        <field name="report_file">sd_pur_sales/report/printout_nvs_nls_list.ods</field>
+	        <field name="tml_source">file</field>
+	        <field name="print_report_name">'Printout nvs'</field>
+	    </record>	
+	    
+    	
+    	<record id="report_delivery_orders" model="ir.actions.report">
+	        <field name="name">Report Delivery Orders</field>
+	        <field name="type">ir.actions.report</field>
+	        <field name="model">delivery.order</field>
+	        <field name="binding_model_id" ref="sd_pur_sales.model_delivery_order"/>
+	        <field name="report_name">report_delivery_orders</field>
+	        <field name="report_type">aeroo</field>
+	        <field name="in_format">oo-odt</field>
+	        <field name="out_format" model="report.mimetypes" search="[('code','=','oo-pdf'),('compatible_types','=','oo-odt')]"/>
+	        <field name="preview">True</field>
+	        <field name="parser_state">loc</field>
+	        <field name="parser_loc">sd_pur_sales/report/delivery_order_parser.py</field>
+	        <field name="report_file">sd_pur_sales/report/delivery_order.odt</field>
+	        <field name="tml_source">file</field>
+	        <field name="print_report_name">'Delivery Order'</field>
+	    </record>		   
+	    
+	</data>
+</odoo>

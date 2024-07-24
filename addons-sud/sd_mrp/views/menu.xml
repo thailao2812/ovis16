@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+    <!--
+    	<menuitem id="menu_master_code_form_action"
+                  action="master_code_action_view"
+                  parent="mrp.menu_mrp_bom"/>
+                  -->
+        
+        <record model="ir.ui.menu" id="mrp.menu_mrp_traceability">
+		    <field name="name">Stack</field>
+		</record>
+		
+		<record model="ir.ui.menu" id="mrp.menu_procurement_compute_mrp">
+		    <field eval='False' name="active"/>
+		</record>
+		
+		
+		
+		
+         <record model="ir.ui.menu" id="mrp.menu_mrp_scrap">
+		    <field eval='False' name="active"/>
+		</record> 
+		<record model="ir.ui.menu" id="mrp.menu_mrp_unbuild">
+		    <field eval='False' name="active"/>
+		</record> 
+		
+        
+     	<menuitem id="menu_mrp_traceability"
+          name="Master Code"
+          parent="mrp.menu_mrp_bom"
+          action="master_code_action_view"
+          sequence="50"/>
+        
+        <menuitem id="menu_name_capacity_action_view"
+          name="NameTemplate Capacity"
+          parent="mrp.menu_mrp_bom"
+          action="name_capacity_action_view"
+          sequence="60"/>
+         
+         <menuitem id="menu_available_operation_time_action"
+          name="Available Operation Time"
+          parent="mrp.menu_mrp_bom"
+          action="available_operation_time_action"
+          sequence="70"/>
+         
+         <menuitem id="menu_planed_operation_time_action"
+          name="Planed Operation Time"
+          parent="mrp.menu_mrp_bom"
+          action="planed_operation_time_action"
+          sequence="80"/>
+          
+         <!--
+         <menuitem action="action_mrp_bom_premium" 
+        	id="menu_action_mrp_bom_premium"
+            parent="mrp.menu_mrp_bom"
+        	sequence="100"/>
+        -->
+        
+        <menuitem action="action_mrp_bom_premium" 
+			id="menu_master_data_action_mrp_bom_premium" 
+			parent="sd_master.menu_master_coffee_root" 
+			sequence="100"
+			/>
+        	
+		
+		<!-- production.stage -->
+	    <menuitem action="action_production_stage" 
+	    	id="menu_action_production_stage"  
+	    	parent="mrp.menu_mrp_configuration" sequence="26"/>
+	    
+	     <menuitem name="Request Materials" 
+	     	parent="mrp.menu_mrp_manufacturing"
+	        id="menu_mrp_action_request_materials"
+	        action="sd_inventory.action_request_materials"
+	        sequence="50"/>
+	     
+	    
+	      <menuitem action="sd_inventory.action_request_stock_material" 
+		     	id="menu_action_request_stock_material_stock_mrp" 
+        		parent="mrp.menu_mrp_manufacturing" 
+        		sequence="60"/>
+	        
+	     <!-- GRP -->  	
+	      	<menuitem action="sd_inventory.action_finished_good_receipt" 
+	           	id="menu_action_finished_good_receipt_mrp"
+	           	parent="mrp.menu_mrp_manufacturing" sequence="35"/>
+	     
+	      <!-- sd_inventory.action_gdns_good -->
+	      	<menuitem action="sd_inventory.action_material_issue" 
+	           	id="menu_action_material_issue_mrp"
+	           	parent="mrp.menu_mrp_manufacturing" 
+	           	sequence="36"/>
+	           	
+	           	
+	    <!-- sd_inventory.action_gdns_good -->
+	      	<menuitem action="sd_inventory.action_gdns_good" 
+	           	id="menu_action_gdns_good_mrp"
+	           	parent="mrp.menu_mrp_manufacturing" sequence="39"/>
+	       
+	     
+	     <!--
+	     <menuitem id="menu_import_mrequest" 
+        	action="action_import_mrequest" 
+        	sequence="55" 
+        	parent="mrp.menu_mrp_manufacturing" 
+        	name="Import Material Request"/>
+	    -->
+	    
+	    <menuitem name="Production Result" 
+	     	parent="mrp.menu_mrp_manufacturing"
+	        id="menu_action_mrp_operation_result"
+	        action="action_mrp_operation_result"
+	        sequence="60"/>
+	    
+	    <menuitem id="menu_action_mrp_operation_result_produced_product_line"
+            action="action_mrp_operation_result_produced_product_line" sequence="400" 
+            parent="mrp.menu_mrp_manufacturing"/>
+        
+        <menuitem action="action_view_wizard_import_production_result" 
+        	id="menu_action_view_wizard_import_production_result" 
+        	parent="mrp.menu_mrp_manufacturing" sequence="500"/>
+
+
+        <menuitem action="action_processing_loss_aproval" id="menu_action_processing_loss_aproval" 
+        	parent="mrp.menu_mrp_manufacturing" sequence="800"/>
+        	
+        
+        <!-- Report -->
+        
+		 <menuitem id="menu_action_report_mrp_stock_movement" 
+		 	action="sd_quality.action_report_ned_stock_stack_tree" 
+		 	sequence="100" 
+        	parent="mrp.menu_mrp_reporting" 
+        	name="Stock Movement"
+        	groups="mrp.group_mrp_user"/>
+        	
+       
+       <menuitem id="menu_action_request_materials_warehouse_mrp" 
+	            action="sd_inventory.action_view_wizard_print_request_materials_form" sequence="108" 
+	            parent="mrp.menu_mrp_reporting"
+	            groups="stock.group_stock_manager,stock.group_stock_user"
+	            name="Print Request Materials"/>
+        
+        <menuitem id="menu_action_report_mrp_stock_material_report" 
+            action="sd_inventory.action_report_stock_material" 
+            sequence="110" 
+            parent="mrp.menu_mrp_reporting"
+            name="Material Stock Balance"/>
+	
+		
+		<!-- Planning -->
+		<menuitem id="menu_action_shipping_instruction_mrp"
+	        action="sd_sale_contract.action_shipping_instruction"
+	        parent="mrp.mrp_planning_menu_root"
+	        sequence="135"/>
+	    
+	    <menuitem id="menu_action_request_kcs_line_history_mrp"
+	        action="sd_quality.action_request_kcs_line_history"
+	        parent="mrp.mrp_planning_menu_root"
+	        sequence="145"/>
+	    
+	    <menuitem id="menu_action_ned_packing_mrp"
+	        action="sd_master.action_ned_packing"
+	        parent="mrp.mrp_planning_menu_root"
+	        sequence="155"/>
+	        
+	        
+
+	        
+	        
+
+
+
+	
+    </data>
+</odoo>

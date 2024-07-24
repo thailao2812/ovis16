@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_wizard_search_purchase_contract" model="ir.ui.view">
+	        <field name="name">view_wizard_search_purchase_contract</field>
+	        <field name="model">wizard.search.purchase.contract</field>
+	        <field name="arch" type="xml">
+		       	<form string="Purchase Contract - FOB Link">
+		        	<sheet>
+			            <group>
+		            		<label for="date_from" string="Date from"/>
+							<div>
+								<field name="date_from" class="oe_inline"/>
+								<span>       </span><span>   Date to</span>
+								<field name="date_to" class="oe_inline ms-3"/>
+							</div>
+							<field name="purchase_contract_ids" widget="many2many_tags" domain="['|', ('fob_management_id', '=', False), ('state_fob', '=', 'draft')]" options="{'no_create': true}"/>
+		                </group>
+		                <group>
+
+		                </group>
+		                <footer>
+		                	<button string="Search" name="button_search" type="object" class="oe_highlight"/>
+		                    <button string="Cancel" class="btn-default" special="cancel"/>
+		                </footer>
+	                </sheet>
+	            </form>
+	        </field>
+	    </record>
+
+    	<record id="action_view_search_purchase_contract" model="ir.actions.act_window">
+            <field name="name">Purchase Contract - FOB Link</field>
+            <field name="res_model">wizard.search.purchase.contract</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+</odoo>

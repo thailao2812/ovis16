@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_report_average_price" model="ir.ui.view">
+        <field name="name">Report Average Price</field>
+        <field name="model">report.average.price</field>
+        <field name="arch" type="xml">
+             <form string="Report Average Price">
+                <group>
+					<field name="partner_id"/>
+                    <field name="date_from"/>
+                    <field name="date_to"/>
+                </group>
+                <group>
+                </group>
+                <footer>
+                    <button name="button_generate" string="Generate" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action of Reimbursement Report -->
+     <record id="action_report_average_price" model="ir.actions.act_window">
+            <field name="name">Report Average Price</field>
+            <field name="res_model">report.average.price</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_report_average_price"/>
+            <field name="target">new</field>
+        </record>
+
+    <menuitem id="menu_report_average_price"
+            name="Report Average Price"
+            action="action_report_average_price"
+              parent="sd_purchase_contract.purchase_contract_root_menu"
+            sequence="11"/>
+</odoo>

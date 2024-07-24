@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_ned_certificate_form_inherit_india" model="ir.ui.view">
+        <field name="name">view_ned_certificate_form_inherit_india</field>
+        <field name="model">ned.certificate</field>
+        <field name="inherit_id" ref="sd_master.view_ned_certificate_form"/>
+        <field name="arch" type="xml">
+			 <xpath expr="//sheet" position="inside">
+                 <notebook>
+                     <page string='Sale Premium' name="sale_premium">
+                         <field name="sale_premium_line">
+                             <tree editable="top">
+                                 <field name="item_group_id"/>
+                                 <field name="sale_premium"/>
+                             </tree>
+                         </field>
+                     </page>
+                     <page string='Purchase Premium' name="purchase_premium">
+                         <field name="purchase_premium_line">
+                             <tree editable="top">
+                                 <field name="item_group_id"/>
+                                 <field name="purchase_premium"/>
+                             </tree>
+                         </field>
+                     </page>
+                 </notebook>
+            </xpath>
+
+        </field>
+    </record>
+</odoo>

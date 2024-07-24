@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    
+    
+    	<record id="view_x_external_warehouse_tree" model="ir.ui.view">
+            <field name="name">view.x.external.warehouse.tree</field>
+            <field name="model">x_external.warehouse</field>
+            <field name="arch" type="xml">
+                <tree string="Ex Warehouse">
+                	<field name="x_name" invisible="1"/>
+                	<field name="name"/>
+                	<field name="x_warehouse_id" string="Zone"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id="action_x_external_warehouse" model="ir.actions.act_window">
+            <field name="name">Ex Warehouse</field>
+            <field name="res_model">x_external.warehouse</field>
+            <field name="view_mode">tree</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+              		Create a External Warehouse, the first step of a External Warehouse.
+              </p>
+            </field>
+        </record>
+       
+    </data>
+</odoo>

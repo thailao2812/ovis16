@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="moisture_configuration_tree" model="ir.ui.view">
+            <field name="name">moisture_configuration_tree</field>
+            <field name="model">moisture.configuration</field>
+            <field name="arch" type="xml">
+                <tree string="Quality Rule Configuration">
+                    <field name="product_category_id"/>
+                    <field name="crop_id"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+
+    <record id="view_moisture_configuration_form_india" model="ir.ui.view">
+            <field name="name">view_moisture_configuration_form_india</field>
+            <field name="model">moisture.configuration</field>
+            <field name="arch" type="xml">
+                <form string="Quality Rule Configuration">
+                    <header>
+                        <button name="set_to_draft" string='Set To Draft' type="object" class="oe_highlight" states="approve"/>
+                        <button name="button_approve" string='Approve' type="object" class="oe_highlight" states="draft"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,approve"/>
+                    </header>
+                	<sheet>
+                		<div class="oe_title">
+                			<label for="product_category_id" string="Category" class="oe_edit_only"/>
+	                        <h1>
+	                            <field name="product_category_id" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+	                        </h1>
+	                    </div>
+                        <group>
+                            <group>
+                                <field name="crop_id" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                		    </group>
+                            <group>
+                		    </group>
+                        </group>
+                        <notebook>
+                            <page string="Configuration">
+                                <separator string="Moisture Configuration"/>
+                                <group>
+                                    <group>
+                                        <field name="reject_percent" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                        <field name="standard" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                    </group>
+                                    <group></group>
+                                </group>
+                                <field name="line_ids" attrs="{'readonly': [('state', '!=', 'draft')]}">
+                                    <tree editable="top">
+                                        <field name="from_percent"/>
+                                        <field name="to_percent"/>
+                                        <field name="deduction_percent"/>
+                                    </tree>
+                                </field>
+                                <separator string="A/AB Configuration"/>
+                                <group>
+                                    <group>
+                                        <field name="standard_ab_percent" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                        <field name="deduction_percent_ab" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                    </group>
+                                    <group></group>
+                                </group>
+                                <separator string="Outturn Configuration"/>
+                                <group>
+                                    <group>
+                                        <field name="using_deduction" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                        <field name="standard_outturn_percent" attrs="{'readonly': [('state', '!=', 'draft')], 'invisible': [('using_deduction', '=', False)]}"/>
+                                    </group>
+                                    <group></group>
+                                </group>
+                                <separator string="FM Configuration"/>
+                                <group>
+                                    <group>
+                                        <field name="using_deduction_fm" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                        <field name="use_category_id" options="{'no_create': True}" attrs="{'readonly': [('state', '!=', 'draft')], 'invisible': [('using_deduction_fm', '=', False)]}"/>
+                                        <field name="standard_for_fm" attrs="{'readonly': [('state', '!=', 'draft')], 'invisible': [('using_deduction_fm', '=', False)]}"/>
+                                    </group>
+                                    <group></group>
+                                </group>
+                            </page>
+                        </notebook>
+	                </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="moisture_configuration_search" model="ir.ui.view">
+            <field name="name">moisture_configuration_search</field>
+            <field name="model">moisture.configuration</field>
+            <field name="arch" type="xml">
+                <search string="Moisture Configuration">
+                    <field name="product_category_id"/>
+                    <field name="crop_id"/>
+                    <group expand="1" string="Group By">
+                        <filter string="Category" name="product_category_id"
+                                context="{'group_by':'product_category_id'}"/>
+                        <filter string="Season" name="crop_id"
+                                context="{'group_by':'crop_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="moisture_configuration_act_window" model="ir.actions.act_window">
+            <field name="name">Quality Rule Configuration</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">moisture.configuration</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    There is no examples click here to add new Moisture Configuration Quality.
+                </p>
+            </field>
+        </record>
+
+        <menuitem id="menu_moisture_configuration"
+            name="Quality Rule Configuration"
+            action="moisture_configuration_act_window"
+            parent="sd_master.menu_master_data_sucden_root"
+            sequence="105"/>
+
+</odoo>

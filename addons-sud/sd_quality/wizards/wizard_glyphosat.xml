@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+		
+		<record id="wizard_wizard_pss_management_nestle_form" model="ir.ui.view">
+	        <field name="name">wizard.wizard.pss.management.nestle.form</field>
+	        <field name="model">wizard.pss.management.nestle</field>
+	        <field name="arch" type="xml">
+		        <form string="Import Pss Management Nestle">
+		        	<sheet>
+		        	<h1>
+		        		Import Pss Management Nestle
+		        	</h1>
+		        	  <group col="4">
+			                 <field name="file" filename="file_name"/>
+	               			 <field name="file_name" invisible="1"/>
+		                 </group>
+	                <footer>
+	                	<button string="Import" name="import_pss_management" type="object" class="oe_highlight"/>
+	                    <button string="_Cancel" class="btn-default" special="cancel"/>
+	                </footer>
+                </sheet>
+	            </form>
+	        </field>
+	    </record>
+
+    	<record id="action_wizard_pss_management" model="ir.actions.act_window">
+            <field name="name">Import PSS Management Nestle</field>
+            <field name="res_model">wizard.pss.management.nestle</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+    
+    
+	    <record id="wizard_kcs_glyphosat_form_view" model="ir.ui.view">
+	        <field name="name">wizard.kcs.glyphosat.form.view</field>
+	        <field name="model">wizard.kcs.glyphosat</field>
+	        <field name="arch" type="xml">
+		        <form string="Transfer">
+		        	<sheet>
+		        	<h1>
+		        		Import Glyphosat
+		        	</h1>
+		        	  <group col="4">
+			                 <field name="file" filename="file_name"/>
+	               			 <field name="file_name" />
+		                 </group>
+	                <footer>
+	                	<button string="Import" name="import_glyphosat" type="object" class="oe_highlight"/>
+	                    <button string="_Cancel" class="btn-default" special="cancel"/>
+	                </footer>
+                </sheet>
+	            </form>
+	        </field>
+	    </record>
+	    	
+    	<record id="action_wizard_kcs_glyphosat" model="ir.actions.act_window">
+            <field name="name">Import Glyphosa</field>
+            <field name="res_model">wizard.kcs.glyphosat</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+        
+        
+    </data>
+</odoo>

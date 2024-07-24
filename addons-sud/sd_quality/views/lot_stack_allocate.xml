@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    
+    	<record id="view_lot_stack_allocation_tree" model="ir.ui.view">
+            <field name="name">view.lot.stack.allocation.tree</field>
+            <field name="model">lot.stack.allocation</field>
+            <field name="arch" type="xml">
+                <tree string="Lot stack allocation" default_order="id desc" editable="top" decoration-info="state == 'draft'" decoration-muted="state in ('approve')">
+                	<field name="lot_id" required="1" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                	<field name="product_id" readonly="1"/>
+                	<field name="contract_id" readonly="1" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                	<field name="nvs_id"/>
+                	<field name="delivery_id" required="0" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                	<field name="packing_id" required="0" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                	<field name="shipping_id" required="0" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                	<field name="grp_id" invisible="1" required="0" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                	<field name="zone_id" readonly="1" domain="[('warehouse_id', '=',warehouse_id),('location_wip', '!=', True)]" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                	<field name="warehouse_id"/>
+                    <field name="stack_id" required="1" attrs="{'readonly': [('state', '=', 'approve')]}" domain="[('product_id','=',product_id),('stack_wip', '!=', True)]" />
+                    <field name="quantity" required="1" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                    <field name="no_of_bag" required="1" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                    <field name="rel_lot_kcs_approved" invisible="1"/>
+                    <field name="mc_on_despatch"/>
+                    <field name="defects"/>
+                    <field name="defects_tcvn"/>
+                    <field name="cuptaste"/>
+                    <field name="gdn_id"/>
+                    <button name="btt_confirm" string="Confirm" type="object" states="draft"/>
+                    <button name="btt_settodraft" string="Set to Draft" type="object" states="approve"/>
+                    <field name="state" readonly="1"/>
+                </tree>
+            </field>
+        </record>
+        
+    	<record id="view_lot_stack_allocation_search" model="ir.ui.view">
+            <field name="name">view.lot.stack.allocation.tree</field>
+            <field name="model">lot.stack.allocation</field>
+            <field name="arch" type="xml">
+                <search string="Lot stack search">
+                	<field name="lot_id"/>
+                	<field name="contract_id"/>
+                	<field name="delivery_id"/>
+                	<field name="grp_id"/>
+                    <field name="stack_id"/>
+                    <group expand="1" string="Group By">
+                    	<filter string="Lot" name="filter_lot_id" domain="[]" context="{'group_by':'lot_id'}"/>
+                    	<filter string="SContract" name="filter_contract_id" domain="[]" context="{'group_by':'contract_id'}"/>
+                    	<filter string="Stack" name="filter_stack_id" domain="[]" context="{'group_by':'stack_id'}"/>
+                    	<filter string="State" domain="[]" name="filter_state" context="{'group_by':'state'}"/>
+                    	<filter domain="[('state','=','draft')]" name="filter_state_draft" string="Draft"/>
+                    	<filter domain="[('state','=','approve')]" name="filter_state_dapprove" string="Approve"/>
+                	</group>
+                </search>
+            </field>
+        </record>
+    	
+    	<record id="action_lot_stack_allocation" model="ir.actions.act_window">
+            <field name="name">Lot Allocation</field>
+            <field name="res_model">lot.stack.allocation</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+              		Create a DO, the first step of a new DO.
+              </p>
+            </field>
+        </record>
+        
+       
+        
+        
+        
+    	
+    </data>
+</odoo>

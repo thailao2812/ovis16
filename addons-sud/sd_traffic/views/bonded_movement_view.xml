@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="view_bonded_movement_traffic_tree" model="ir.ui.view">
+            <field name="name">view_bonded_movement_traffic_tree</field>
+            <field name="model">stock.lot</field>
+            <field name="arch" type="xml">
+                <tree string="Bonded Movement" editable="top">
+                	<field name="p_contract_id"/>
+                    <field name="zone_id" invisible="0" readonly="1"/>
+                    <field name="name" readonly="1" string="Stack No."/>
+                    <field name="stack_on_hand"/>
+                    <field name="date" readonly="1"/>
+                    <field name="production_id" readonly="1"/>
+                    <field name="categ_id" invisible="1"/>
+                    <field name="product_id" readonly="1"/>
+					<field name="certificate_id" readonly="1"/>
+                    <field name="packing_id" readonly="1"/>
+                    <field name="districts_id" readonly="1" string="Nguồn Hàng"/>
+					<field name="net_qty" string="Stock Weight" sum="net_qty" readonly="1"/>
+                    <field name="gdn_net" sum="gdn_net" readonly="1"/>
+                    <field name="allocate_qty" sum="allocate_qty" readonly="1"/>
+                    <field name="init_qty" sum="init_qty" string="Balance Net" readonly="1"/>
+                    <field name="bag_qty" sum="bag_qty" readonly="1"/>
+                    <field name="mc" avg="mc" readonly="1"/>
+                    <field name="fm" avg="fm" readonly="1"/>
+                    <field name="black" avg="black" readonly="1"/>
+                    <field name="broken" avg="broken" readonly="1"/>
+                    <field name="brown" avg="brown" readonly="1"/>
+                    <field name="mold" avg="mold" readonly="1"/>
+                    <field name="cherry" avg="cherry" readonly="1"/>
+                    <field name="excelsa" avg="excelsa" readonly="1"/>
+                    <field name="screen20" avg="screen20" readonly="1"/>
+                    <field name="screen19" avg="screen19" readonly="1"/>
+                    <field name="screen18" avg="screen18" readonly="1"/>
+                    <field name="screen17" avg="screen17" readonly="1"/>
+                    <field name="screen16" avg="screen16" readonly="1"/>
+                    <field name="screen15" avg="screen15" readonly="1"/>
+                    <field name="screen14" avg="screen14" readonly="1"/>
+                    <field name="screen13" avg="screen13" readonly="1"/>
+                    <field name="greatersc12" avg="greatersc12" readonly="1"/>
+                    <field name="screen12" avg="screen12" readonly="1"/>
+<!--                    <field name="x_buk_density" readonly="1"/>-->
+                    <field name="immature" avg="immature" readonly="1"/>
+                    <field name="burn" avg="burn" readonly="1"/>
+                    <field name="eaten" avg="eaten" readonly="1"/>
+                    <field name="stone_count" readonly="1"/>
+                    <field name="stick_count" readonly="1"/>
+                    <field name="remarks"/>
+                    <field name="remarks_note"/>
+					<field name="sampler" readonly="1"/>
+                    <field name="remaining_qty" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+    <record id="view_bonded_movement_traffic_search" model="ir.ui.view">
+            <field name="name">view_bonded_movement_traffic_search</field>
+            <field name="model">stock.lot</field>
+            <field name="arch" type="xml">
+                <search string="Bonded Movement">
+                    <field name="p_contract_id"/>
+                    <field name="zone_id"/>
+					<field name="name" string="Lot/Stack"/>
+					<field name="product_id"/>
+					<separator/>
+                	<filter name ="groupby_zone_id" string="Zone" domain="[]" context="{'group_by':'zone_id'}"/>
+                	<filter name ="groupby_product_id" string="Product" domain="[]" context="{'group_by':'product_id'}"/>
+               </search>
+            </field>
+        </record>
+
+    <record id="action_bonded_movement_traffic" model="ir.actions.act_window">
+            <field name="name">Bonded Movement</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">stock.lot</field>
+            <field name="view_mode">tree</field>
+            <field name="domain">[('product_id.hide_report','=',False), ('p_contract_id', '!=', False)]</field>
+            <field name="search_view_id" ref="view_bonded_movement_traffic_search"/>
+            <field name="context">{}</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+              		Create a Stack, the first step of a new Stack.
+              </p>
+            </field>
+        </record>
+
+     <record id="action_bonded_movement_traffic_tree" model="ir.actions.act_window.view">
+            <field eval="100" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_bonded_movement_traffic_tree"/>
+            <field name="act_window_id" ref="action_bonded_movement_traffic"/>
+		</record>
+</odoo>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+    
+         <record id="seq_kcs_sample" model="ir.sequence">
+            <field name="name">KCS Sample Sequence</field>
+            <field name="code">kcs.sample</field>
+            <field name="prefix">SAMPLE</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        
+        <record id="seq_lot_kcs_seq" model="ir.sequence">
+            <field name="name">Lot Manager Sequence</field>
+            <field name="code">lot.kcs.seq</field>
+            <field name="prefix"></field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        
+        
+        
+    </data>
+</odoo>

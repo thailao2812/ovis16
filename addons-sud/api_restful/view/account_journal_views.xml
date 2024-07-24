@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view"
+                id="view_account_journal_form_inherit_api_restfull">
+            <field name="name">view_account_journal_form_inherit_api_restfull</field>
+            <field name="model">account.journal</field>
+            <field name="inherit_id" ref="account.view_account_journal_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='type']" position="after">
+                    <field name="is_api" />
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>

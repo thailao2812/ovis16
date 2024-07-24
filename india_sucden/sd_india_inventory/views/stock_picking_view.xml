@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_picking_inherit_sucden_form_inherit_india" model="ir.ui.view">
+            <field name="name">view_picking_inherit_sucden_form_inherit_india</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="sd_inventory.view_picking_inherit_sucden_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='districts_id']" position="attributes">
+            	    <attribute name="string">Source of Goods</attribute>
+                </xpath>
+                <xpath expr="//field[@name='crop_id']" position="attributes">
+            	    <attribute name="readonly">0</attribute>
+            	    <attribute name="required">1</attribute>
+                </xpath>
+                <xpath expr="//button[@name='button_qc_assigned']" position="after">
+                    <button name="print_grn_india" attrs="{'invisible': [('picking_type_code', '!=', 'incoming')]}" string="Print Invoice" type="object" class="oe_highlight" groups="sd_india_inventory.prinout_grn_with_price"/>
+                    <button name="print_grn_india_without_price" attrs="{'invisible': [('picking_type_code', '!=', 'incoming')]}" string="Print GRN" type="object" class="oe_highlight" groups="sd_india_inventory.prinout_grn_without_price"/>
+                    <button name="print_grn_bag_in" attrs="{'invisible': ['|', ('template_qc', '!=', 'bag'), ('picking_type_code', '!=', 'material_in')]}" string="Print Bag IN" type="object" class="oe_highlight"/>
+                    <button name="print_grn_bag_out" attrs="{'invisible': ['|', ('template_qc', '!=', 'bag'), ('picking_type_code', '!=', 'material_out')]}" string="Print Bag OUT" type="object" class="oe_highlight"/>
+                </xpath>
+                <xpath expr="//button[@name='button_qc_assigned']" position="attributes">
+                    <attribute name="groups">sd_india_master.group_warehouse_india</attribute>
+                </xpath>
+                <xpath expr="//button[@name='button_sd_validate']" position="attributes">
+                    <attribute name="groups">sd_india_master.group_warehouse_india</attribute>
+                </xpath>
+
+                <xpath expr="//button[@name='%(stock.action_report_delivery)d']" position="replace">
+                </xpath>
+                <xpath expr="//field[@name='crop_id']" position="after">
+                    <field name="template_qc" readonly="1" invisible="1"/>
+                </xpath>
+                <xpath expr="//label[@for='partner_id'][3]" position="attributes">
+                    <attribute name="string">Supplier</attribute>
+                    <attribute name="attrs">{'invisible': [('picking_type_code', '!=', 'material_in')]}</attribute>
+                </xpath>
+                <xpath expr="//label[@for='partner_id'][3]" position="after">
+                     <label for="partner_id" string="Delivery To" style="font-weight:bold;" attrs="{'invisible': [('picking_type_code', '!=', 'material_out')]}"/>
+                </xpath>
+                <xpath expr="//button[@name='action_cancel']" position="attributes">
+                    <attribute name="confirm">Do you want to cancel this transfer?</attribute>
+                    <attribute name="groups">sd_india_master.group_admin_india</attribute>
+                </xpath>
+                <xpath expr="//field[@name='warehouse_id']" position="attributes">
+                    <attribute name="attrs">{'readonly': [('state', '!=', 'draft')]}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='crop_id']" position="attributes">
+                    <attribute name="attrs">{'readonly': [('state', '!=', 'draft')]}</attribute>
+                </xpath>
+
+            </field>
+    </record>
+
+    <record id="view_picking_form_inherit_ned_trucking_cost_inherit_india" model="ir.ui.view">
+            <field name="name">view_picking_form_inherit_ned_trucking_cost_inherit_india</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="sd_inventory.view_picking_form_inherit_ned_trucking_cost"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='cost']" position="attributes">
+            	    <attribute name="invisible">1</attribute>
+                </xpath>
+            </field>
+    </record>
+
+    <record id="action_bag_receipt_sucden" model="ir.actions.act_window">
+            <field name="name">Bag Receipt</field>
+            <field name="res_model">stock.picking</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('picking_type_id.bag_transfer','=',True), ('picking_type_id.code','=', 'incoming')]</field>
+            <field name="search_view_id" ref="stock.view_picking_internal_search"/>
+            <field name="context" eval="{'bag_receipt':True}"/>
+        </record>
+
+    <record id="action_bag_delivery_sucden" model="ir.actions.act_window">
+            <field name="name">Bag Delivery</field>
+            <field name="res_model">stock.picking</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('picking_type_id.bag_transfer','=',True), ('picking_type_id.code','=', 'outgoing')]</field>
+            <field name="search_view_id" ref="stock.view_picking_internal_search"/>
+            <field name="context" eval="{'bag_delivery':True}"/>
+        </record>
+
+    <menuitem action="action_bag_receipt_sucden"
+	           	id="menu_action_bag_receipt_sucden"
+	           	parent="sd_inventory.menu_action_good_notes" sequence="181" active="False"/>
+    <menuitem action="action_bag_delivery_sucden"
+	           	id="menu_action_bag_delivery_sucden"
+	           	parent="sd_inventory.menu_action_good_notes" sequence="185" active="False"/>
+
+    <record model="ir.ui.menu" id="sd_inventory.menu_action_material_in_good">
+		    <field name="name">Material Receipt Note (Include Bag)</field>
+		</record>
+    <record model="ir.ui.menu" id="sd_inventory.menu_action_material_out_good">
+		    <field name="name">Material Issue Note (Include Bag)</field>
+		</record>
+
+     <record id="sd_inventory.action_material_in_good" model="ir.actions.act_window">
+            <field name="name">Material Receipt Note (Include Bag)</field>
+        </record>
+    <record id="sd_inventory.action_material_out_good" model="ir.actions.act_window">
+            <field name="name">Material Issue Note (Include Bag)</field>
+        </record>
+
+    <record id="view_picking_tree_material_good_inherit_india" model="ir.ui.view">
+            <field name="name">view_picking_tree_material_good_inherit_india</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="sd_inventory.view_picking_tree_material_good"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='date_done']" position="after">
+            	    <field name="partner_id" string="Supplier/Delivery To"/>
+                    <field name="vehicle_no"/>
+                </xpath>
+
+            </field>
+    </record>
+
+    <record id="view_wizard_stock_picking_consumable_inherit_india" model="ir.ui.view">
+            <field name="name">view_wizard_stock_picking_consumable_inherit_india</field>
+            <field name="model">wizard.stock.picking</field>
+            <field name="inherit_id" ref="sd_inventory.view_wizard_stock_picking_consumable"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='bag_qty']" position="attributes">
+            	    <attribute name="string">Number of BAGs</attribute>
+                </xpath>
+
+            </field>
+    </record>
+
+    <record id="view_picking_tree_gip_good_tree_inherit_india" model="ir.ui.view">
+            <field name="name">view_picking_tree_gip_good_tree_inherit_india</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="sd_inventory.view_picking_tree_gip_good_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='total_bag']" position="attributes">
+            	    <attribute name="sum">total_bag</attribute>
+                </xpath>
+
+            </field>
+    </record>
+    <record id="view_picking_tree_grp_good_tree_inherit_india" model="ir.ui.view">
+            <field name="name">view_picking_tree_grp_good_tree_inherit_india</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="sd_inventory.view_picking_tree_grp_good_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='total_bag']" position="attributes">
+            	    <attribute name="sum">total_bag</attribute>
+                </xpath>
+
+            </field>
+    </record>
+
+    <record id="view_picking_tree_gdn_good_inherit_india" model="ir.ui.view">
+            <field name="name">view_picking_tree_gdn_good_inherit_india</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="sd_inventory.view_picking_tree_gdn_good"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='product_id']" position="after">
+            	    <field name="total_bag" sum="total_bag"/>
+                </xpath>
+
+            </field>
+    </record>
+
+    <record id="view_stock_move_line_detailed_operation_tree_inherit_india" model="ir.ui.view">
+            <field name="name">view_stock_move_line_detailed_operation_tree_inherit_india</field>
+            <field name="model">stock.move.line</field>
+            <field name="inherit_id" ref="stock.view_stock_move_line_detailed_operation_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='lot_id']" position="after">
+            	    <field name="sup_product_id"/>
+                </xpath>
+
+            </field>
+    </record>
+
+    <record id="vpicktree_inherit_add_total_qty_inherit_india" model="ir.ui.view">
+            <field name="name">vpicktree_inherit_add_total_qty_inherit_india</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="sd_inventory.vpicktree_inherit_add_total_qty"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='lot_id']" position="after">
+                    <field name="first_weight" sum="first_weight"/>
+                    <field name="second_weight" sum="second_weight"/>
+                    <field name="tare_weight" sum="tare_weight"/>
+                </xpath>
+                <xpath expr="//field[@name='total_qty']" position="attributes">
+                    <attribute name="invisible">0</attribute>
+                    <attribute name="string">Net Weight</attribute>
+                </xpath>
+                <xpath expr="//field[@name='total_init_qty']" position="attributes">
+                    <attribute name="string">Gross Weight</attribute>
+                </xpath>
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="partner_code"/>
+                    <field name="estate_name"/>
+                </xpath>
+
+            </field>
+    </record>
+</odoo>

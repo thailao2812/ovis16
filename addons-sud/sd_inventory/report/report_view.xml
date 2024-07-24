@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+		
+		<!-- stock_balancesheet_product_report -->
+		
+		<record id="stock_balancesheet_product_report" model="ir.actions.report">
+	        <field name="name">Balance Sheet By Products</field>
+	        <field name="type">ir.actions.report</field>
+	        <field name="model">report.stock.balance.sheet</field>
+	        <field name="binding_model_id" ref="sd_inventory.model_report_stock_balance_sheet"/>
+	        <field name="report_name">stock_balancesheet_product_report</field>
+	        <field name="report_type">aeroo</field>
+	        <field name="in_format">oo-ods</field>
+	        <field name="out_format" model="report.mimetypes" search="[('code','=','oo-xls'),('compatible_types','=','oo-ods')]"/>
+	        <field name="preview">True</field>
+	        <field name="parser_state">loc</field>
+	        <field name="parser_loc">sd_inventory/report/balancesheet_report_parser.py</field>
+	        <field name="report_file">sd_inventory/report/balancesheet_by_product.ods</field>
+	        <field name="tml_source">file</field>
+	        <field name="print_report_name">'Balancesheet'</field>
+	    </record>
+	    
+	    <record id="stock_balancesheet_nxct_report" model="ir.actions.report">
+	        <field name="name">Nhap Xuat Chi tiet</field>
+	        <field name="type">ir.actions.report</field>
+	        <field name="model">report.stock.balance.sheet</field>
+	        <field name="binding_model_id" ref="sd_inventory.model_report_stock_balance_sheet"/>
+	        <field name="report_name">stock_balancesheet_nxct_report</field>
+	        <field name="report_type">aeroo</field>
+	        <field name="in_format">oo-ods</field>
+	        <field name="out_format" model="report.mimetypes" search="[('code','=','oo-xls'),('compatible_types','=','oo-ods')]"/>
+	        <field name="preview">True</field>
+	        <field name="parser_state">loc</field>
+	        <field name="parser_loc">sd_inventory/report/stock_balancesheet_nxct_report_parser.py</field>
+	        <field name="report_file">sd_inventory/report/stock_balancesheet_nxct_report.ods</field>
+	        <field name="tml_source">file</field>
+	        <field name="print_report_name">'Balancesheet'</field>
+	    </record>
+	    
+		
+		<!-- Summary Stack -->
+    	<record id="report_summary_stack" model="ir.actions.report">
+	        <field name="name">Report Summary Stack</field>
+	        <field name="type">ir.actions.report</field>
+	        <field name="model">stock.lot</field>
+	        <field name="binding_model_id" ref="sd_inventory.model_stock_lot"/>
+	        <field name="report_name">report_summary_stack</field>
+	        <field name="report_type">aeroo</field>
+	        <field name="in_format">oo-odt</field>
+	        <field name="out_format" model="report.mimetypes" search="[('code','=','oo-pdf'),('compatible_types','=','oo-odt')]"/>
+	        <field name="preview">True</field>
+	        <field name="parser_state">loc</field>
+	        <field name="parser_loc">sd_inventory/report/report_summary_stack_parser.py</field>
+	        <field name="report_file">sd_inventory/report/report_summary_stack.odt</field>
+	        <field name="tml_source">file</field>
+	        <field name="print_report_name">(object._get_printed_report_name())</field>
+	    </record>		  
+		
+		<!-- Stock CARD -->
+    	<record id="report_stock_card" model="ir.actions.report">
+	        <field name="name">Stock Card Grp</field>
+	        <field name="type">ir.actions.report</field>
+	        <field name="model">stock.picking</field>
+	        <field name="binding_model_id" ref="sd_inventory.model_stock_picking"/>
+	        <field name="report_name">report_stock_card</field>
+	        <field name="report_type">aeroo</field>
+	        <field name="in_format">oo-odt</field>
+	        <field name="out_format" model="report.mimetypes" search="[('code','=','oo-doc'),('compatible_types','=','oo-odt')]"/>
+	        <field name="preview">True</field>
+	        <field name="parser_state">loc</field>
+	        <field name="parser_loc">sd_inventory/report/report_stock_card_parser.py</field>
+	        <field name="report_file">sd_inventory/report/report_stock_card.odt</field>
+	        <field name="tml_source">file</field>
+	        <field name="print_report_name">(object._get_printed_report_name())</field>
+	    </record>		    
+		
+		<!-- QA GRN -->
+    	<record id="report_qa_grn" model="ir.actions.report">
+	        <field name="name">QA GRN</field>
+	        <field name="type">ir.actions.report</field>
+	        <field name="model">stock.picking</field>
+	        <field name="binding_model_id" ref="sd_inventory.model_stock_picking"/>
+	        <field name="report_name">report_qa_grn</field>
+	        <field name="report_type">aeroo</field>
+	        <field name="in_format">oo-odt</field>
+	        <field name="out_format" model="report.mimetypes" search="[('code','=','oo-pdf'),('compatible_types','=','oo-odt')]"/>
+	        <field name="preview">True</field>
+	        <field name="parser_state">loc</field>
+	        <field name="parser_loc">sd_inventory/report/report_qa_grn_parser.py</field>
+	        <field name="report_file">sd_inventory/report/report_qa_grn.odt</field>
+	        <field name="tml_source">file</field>
+	        <field name="print_report_name">(object._get_printed_report_name())</field>
+	    </record>		    
+		
+		
+		<!-- GRN -->
+		<record id="report_grn" model="ir.actions.report">
+	        <field name="name">GRN</field>
+	        <field name="type">ir.actions.report</field>
+	        <field name="model">stock.picking</field>
+	        <field name="binding_model_id" ref="sd_inventory.model_stock_picking"/>
+	        <field name="report_name">report_grn</field>
+	        <field name="report_type">aeroo</field>
+	        <field name="in_format">oo-odt</field>
+	        <field name="out_format" model="report.mimetypes" search="[('code','=','oo-pdf'),('compatible_types','=','oo-odt')]"/>
+	        <field name="preview">True</field>
+	        <field name="parser_state">loc</field>
+	        <field name="parser_loc">sd_inventory/report/report_grn_parser.py</field>
+	        <field name="report_file">sd_inventory/report/report_grn.odt</field>
+	        <field name="tml_source">file</field>
+	        <field name="print_report_name">(object._get_printed_report_name())</field>
+	    </record>
+	    
+	    <!-- GRN -->
+		<record id="report_gdn" model="ir.actions.report">
+	        <field name="name">GDN</field>
+	        <field name="type">ir.actions.report</field>
+	        <field name="model">stock.picking</field>
+	        <field name="binding_model_id" ref="sd_inventory.model_stock_picking"/>
+	        <field name="report_name">report_gdn</field>
+	        <field name="report_type">aeroo</field>
+	        <field name="in_format">oo-odt</field>
+	        <field name="out_format" model="report.mimetypes" search="[('code','=','oo-pdf'),('compatible_types','=','oo-odt')]"/>
+	        <field name="preview">True</field>
+	        <field name="parser_state">loc</field>
+	        <field name="parser_loc">sd_inventory/report/report_gdn_parser.py</field>
+	        <field name="report_file">sd_inventory/report/report_gdn.odt</field>
+	        <field name="tml_source">file</field>
+	        <field name="print_report_name">(object._get_printed_report_name())</field>
+	    </record>
+	    <!-- GRP -->
+		<record id="report_grp" model="ir.actions.report">
+	        <field name="name">GRP</field>
+	        <field name="type">ir.actions.report</field>
+	        <field name="model">stock.picking</field>
+	        <field name="binding_model_id" ref="sd_inventory.model_stock_picking"/>
+	        <field name="report_name">report_grp</field>
+	        <field name="report_type">aeroo</field>
+	        <field name="in_format">oo-odt</field>
+	        <field name="out_format" model="report.mimetypes" search="[('code','=','oo-pdf'),('compatible_types','=','oo-odt')]"/>
+	        <field name="preview">True</field>
+	        <field name="parser_state">loc</field>
+	        <field name="parser_loc">sd_inventory/report/report_grp_parser.py</field>
+	        <field name="report_file">sd_inventory/report/report_grp.odt</field>
+	        <field name="tml_source">file</field>
+	        <field name="print_report_name">(object._get_printed_report_name())</field>
+	    </record>
+		
+		<!-- Bang in  Request Material -->
+		
+		<record id="report_materials_request_warehouse" model="ir.actions.report">
+	        <field name="name">Report Materials Request</field>
+	        <field name="type">ir.actions.report</field>
+	        <field name="model">request.materials</field>
+	        <field name="binding_model_id" ref="sd_inventory.model_request_materials"/>
+	        <field name="report_name">report_materials_request_warehouse</field>
+	        <field name="report_type">aeroo</field>
+	        <field name="in_format">oo-ods</field>
+	        <field name="out_format" model="report.mimetypes" search="[('code','=','oo-xls'),('compatible_types','=','oo-ods')]"/>
+	        <field name="preview">True</field>
+	        <field name="parser_state">loc</field>
+	        <field name="parser_loc">sd_inventory/report/report_materials_request_parser.py</field>
+	        <field name="report_file">sd_inventory/report/report_materials_request.ods</field>
+	        <field name="tml_source">file</field>
+	        <field name="print_report_name">'Request materials'</field>
+	    </record>
+		
+    	
+    	
+    			  
+		<!-- Bang in  -->
+    	<record id="report_print_request_materials" model="ir.actions.report">
+	        <field name="name">report_print_request_materials</field>
+	        <field name="type">ir.actions.report</field>
+	        <field name="model">wizard.print.request.materials</field>
+	        <field name="binding_model_id" ref="sd_inventory.model_wizard_print_request_materials"/>
+	        <field name="report_name">report_print_request_materials</field>
+	        <field name="report_type">aeroo</field>
+	        <field name="in_format">oo-ods</field>
+	        <field name="out_format" model="report.mimetypes" search="[('code','=','oo-xls'),('compatible_types','=','oo-ods')]"/>
+	        <field name="preview">True</field>
+	        <field name="parser_state">loc</field>
+	        <field name="parser_loc">sd_inventory/report/report_request_materials_parser.py</field>
+	        <field name="report_file">sd_inventory/report/report_request_materials.ods</field>
+	        <field name="tml_source">file</field>
+	        <field name="print_report_name">'Request materials'</field>
+	    </record>
+	    
+	    	
+	    
+	    <record id="report_material_request_reports" model="ir.actions.report">
+	        <field name="name">report_material_request_reports</field>
+	        <field name="type">ir.actions.report</field>
+	        <field name="model">wizard.print.request.materials</field>
+	        <field name="binding_model_id" ref="sd_inventory.model_wizard_print_request_materials"/>
+	        <field name="report_name">report_material_request_reports</field>
+	        <field name="report_type">aeroo</field>
+	        <field name="in_format">oo-ods</field>
+	        <field name="out_format" model="report.mimetypes" search="[('code','=','oo-xls'),('compatible_types','=','oo-ods')]"/>
+	        <field name="preview">True</field>
+	        <field name="parser_state">loc</field>
+	        <field name="parser_loc">sd_inventory/report/material_request_reports_parser.py</field>
+	        <field name="report_file">sd_inventory/report/material_request_reports.ods</field>
+	        <field name="tml_source">file</field>
+	        <field name="print_report_name">'Request materials'</field>
+	    </record>	
+	    
+		
+	</data>
+</odoo>

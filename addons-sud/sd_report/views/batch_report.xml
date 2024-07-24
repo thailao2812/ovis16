@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    		
+        <record id="view_ned_batch_report_form" model="ir.ui.view">
+            <field name="name">view.ned.batch.report.form</field>
+            <field name="model">batch.report</field>
+            <field name="arch" type="xml">
+                <form string="Batch Report">
+                	<header>
+						<button name="load_data" string="Load Data" type="object"/>
+						<button name="export_datas" string="Export Data" type="object"/>
+					</header>
+					
+					
+					<div class="oe_title">
+                        <h1 class="d-flex">
+                            <field name="production_id" required="1"/>
+                            <newline/>
+							<field name="name" invisible="1"/>
+                        </h1>
+                    </div>
+                    	
+                        <notebook>
+                        	<page string="INPUT">
+								<group col="5">
+									<group>
+										<field name="in_mc"/>
+										<field name="in_mold"/>
+										<field name="in_screen18"/>
+										<field name="in_burn"/>
+									</group>
+									<group>
+										<field name="in_fm"/>
+										<field name="in_cherry"/>
+										<field name="in_screen16"/>
+										<field name="in_immature"/>
+									</group>
+									<group>
+										<field name="in_black"/>
+										<field name="in_excelsa"/>
+										<field name="in_screen13"/>
+									</group>
+									<group>
+										<field name="in_broken"/>
+										<field name="in_screen20"/>
+										<field name="in_screen12"/>
+									</group>
+									<group>
+										<field name="in_brown"/>
+										<field name="in_screen19"/>
+										<field name="in_greatersc12"/>
+									</group>
+								</group>
+								
+								
+	                        	<field name="input_ids" nolabel="1" readonly="1">
+	                        		<tree>
+										<field name="date"/>
+										<field name="picking_id"/>
+										<field name="zone_id"/>
+										<field name="stack_id"/>
+										<field name="categ_id"/>
+										<field name="product_id"/>
+										<field name="packing_id"/>
+										<field name="bag_no"/>
+										<field name="net_qty" sum="net_qty"/>
+										<field name="real_qty" sum="real_qty"/>
+										<field name="mc"/>
+										<field name="fm"/>
+										<field name="black"/>
+										<field name="broken"/>
+										<field name="brown"/>
+										<field name="mold"/>
+										<field name="cherry"/>
+										<field name="excelsa"/>
+										<field name="screen20"/>
+										<field name="screen19"/>
+										<field name="screen18"/>
+										<field name="screen16"/>
+										<field name="screen13"/>
+										<field name="screen12"/>
+										<field name="greatersc12"/>
+										<field name="burn"/>
+										<field name="eaten"/>
+										<field name="stone_count"/>
+										<field name="stick_count"/>
+										<field name="immature"/>
+										<field name="state"/>
+	                        		</tree>
+	                        	</field>
+	                        </page>
+							<page string="Instore">
+								<group col="5">
+									<group>
+										<field name="ins_mc"/>
+										<field name="ins_mold"/>
+										<field name="ins_screen18"/>
+										<field name="ins_burn"/>
+									</group>
+									<group>
+										<field name="ins_fm"/>
+										<field name="ins_cherry"/>
+										<field name="ins_screen16"/>
+										<field name="ins_immature"/>
+									</group>
+									<group>
+										<field name="ins_black"/>
+										<field name="ins_excelsa"/>
+										<field name="ins_screen13"/>
+									</group>
+									<group>
+										<field name="ins_broken"/>
+										<field name="ins_screen20"/>
+										<field name="ins_screen12"/>
+									</group>
+									<group>
+										<field name="ins_brown"/>
+										<field name="ins_screen19"/>
+										<field name="ins_greatersc12"/>
+									</group>
+									<newline/>
+								
+								</group>
+	                        	<field name="instore_ids" nolabel="1" readonly="1">
+	                        		<tree>
+	                        			<field name="production_id"/>
+	                        			<field name="stack_id"/>
+										<field name="net_qty" sum="net_qty"/>
+	                        			<field name="mc"/>
+					                    <field name="fm"/>
+					                    <field name="black"/>
+					                    <field name="broken"/>
+					                    <field name="brown"/>
+					                    <field name="mold"/>
+					                    <field name="cherry"/>
+										<field name="excelsa"/>
+					                    <field name="screen20"/>
+					                    <field name="screen19"/>
+					                    <field name="screen18"/>
+					                    <field name="screen16"/>
+					                    <field name="screen13"/>
+					                    <field name="screen12"/>
+										<field name="greatersc12"/>
+										<field name="burn"/>
+										<field name="eaten"/>
+										<field name="immature"/>
+										<field name="product_id"/>
+	                        		</tree>
+	                        	</field>
+	                        </page>
+	                        <page string="OUTPUT">
+								<group col="5">
+									<group>
+										<field name="out_mc"/>
+										<field name="out_mold"/>
+										<field name="out_screen18"/>
+										<field name="out_burn"/>
+									</group>
+									<group>
+										<field name="out_fm"/>
+										<field name="out_cherry"/>
+										<field name="out_screen16"/>
+										<field name="out_immature"/>
+									</group>
+									<group>
+										<field name="out_black"/>
+										<field name="out_excelsa"/>
+										<field name="out_screen13"/>
+									</group>
+									<group>
+										<field name="out_broken"/>
+										<field name="out_screen20"/>
+										<field name="out_screen12"/>
+									</group>
+									<group>
+										<field name="out_brown"/>
+										<field name="out_screen19"/>
+										<field name="out_greatersc12"/>
+									</group>
+								</group>
+								
+	                        	<field name="outputs_ids" nolabel="1" readonly="1">
+	                        		<tree>
+										<field name="date"/>
+										<field name="picking_id"/>
+										<field name="zone_id"/>
+										<field name="stack_id"/>
+										<field name="categ_id"/>
+										<field name="product_id"/>
+										<field name="packing_id"/>
+										<field name="bag_no"/>
+										<field name="net_qty" sum="net_qty"/>
+										<field name="real_qty" sum="real_qty"/>
+										<field name="mc"/>
+										<field name="fm"/>
+										<field name="black"/>
+										<field name="broken"/>
+										<field name="brown"/>
+										<field name="mold"/>
+										<field name="cherry"/>
+										<field name="excelsa"/>
+										<field name="screen20"/>
+										<field name="screen19"/>
+										<field name="screen18"/>
+										<field name="screen16"/>
+										<field name="screen13"/>
+										<field name="screen12"/>
+										<field name="greatersc12"/>
+										<field name="burn"/>
+										<field name="eaten"/>
+										<field name="stone_count"/>
+										<field name="stick_count"/>
+										<field name="immature"/>
+										<field name="state"/>
+	                        		</tree>
+	                        	</field>
+								
+	                        </page>
+                        </notebook>
+                </form>
+            </field>
+        </record>
+
+		<record id="view_ned_batch_report_tree" model="ir.ui.view">
+            <field name="name">view.ned.batch.report.tree</field>
+            <field name="model">batch.report</field>
+            <field name="arch" type="xml">
+                <tree string="Batch Report" delete="false" create="false">
+                	<field name="production_id"/>
+	        	</tree>
+            </field>
+        </record>
+
+		<record id="view_ned_batch_report_search" model="ir.ui.view">
+            <field name="name">view.ned.batch.report.search</field>
+            <field name="model">batch.report</field>
+            <field name="arch" type="xml">
+                <search string="Batch Report">
+                    <field name = 'production_id'/>
+                </search>
+            </field>
+        </record>
+        
+		<record id="action_ned_batch_report" model="ir.actions.act_window">
+            <field name="name">Batch Report</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">batch.report</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+			<field name="search_view_id" ref="view_ned_batch_report_search"/>
+            <field name="help" type="html">
+            	<p class="oe_view_nocontent_create">
+            	</p>
+            </field>
+        </record>
+        
+    	
+        
+        
+        
+    
+    
+    </data>
+</odoo>

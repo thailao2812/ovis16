@@ -1,0 +1,13 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_status_goods,access_status_goods,model_status_goods,base.group_user,1,1,1,1
+access_status_goods_name,access_status_goods_name,model_status_goods_name,base.group_user,1,1,1,1
+access_delivery_ready,access_delivery_ready,model_delivery_ready,base.group_user,1,1,1,1
+access_delivery_ktn,access_delivery_ktn,model_delivery_ktn,base.group_user,1,1,1,1
+access_grn_ready,access_grn_ready,model_grn_ready,base.group_user,1,1,1,1
+access_grn_done_factory,access_grn_done_factory,model_grn_done_factory,base.group_user,1,1,1,1
+access_grn_done_fot,access_grn_done_fot,model_grn_done_fot,base.group_user,1,1,1,1
+access_history_payment_quantity,access_history_payment_quantity,model_history_payment_quantity,base.group_user,1,1,1,1
+access_converted_line,access_converted_line,model_converted_line,base.group_user,1,1,1,1
+
+access_user_process_state,access_user_process_state,model_user_process_state,base.group_user,1,1,1,0
+access_wizard_reason_refuse,access_wizard_reason_refuse,model_wizard_refuse_request,base.group_user,1,1,1,1

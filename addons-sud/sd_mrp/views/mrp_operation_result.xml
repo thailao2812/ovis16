@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    	
+    	<!-- Menu, Views for Production Results -->
+    	<record id="view_mrp_operation_result_search" model="ir.ui.view">
+            <field name="name">mrp.operation.result.search</field>
+            <field name="model">mrp.operation.result</field>
+            <field name="arch" type="xml">
+            	<search string="Production Result">
+                    <field name="production_id"/>
+                </search>
+            </field>
+        </record>
+	    
+	    <record id="view_mrp_operation_result_tree" model="ir.ui.view">
+            <field name="name">mrp.operation.result.tree</field>
+            <field name="model">mrp.operation.result</field>
+            <field eval="1" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Production Result" default_order="id desc">
+					<field name="name"/>
+					<field name="write_date" string="Date Result"/>
+					<field name="create_uid"/>
+					<field name="user_import_id"/>
+					<field name="state" widget="badge" optional="show" 
+						decoration-success="state == 'done'" 
+						decoration-info="state == 'draft'"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id="view_mrp_operation_result_form" model="ir.ui.view">
+            <field name="name">mrp.operation.result.form</field>
+            <field name="model">mrp.operation.result</field>
+            <field eval="2" name="priority"/>
+            <field name="arch" type="xml">
+                <form string="Production Result">
+	                <header>
+	                <!--
+	                    <button name="reset_to_draft" states="cancel" string="Reset to draft" type="object" class="oe_highlight"/>
+	                    <button name="button_confirm" states="draft" string="Confirm" type="object" class="oe_highlight"/>
+	                    <button name="button_cancel" states="draft,done" string="Cancel" type="object"/>
+	                    -->
+	                    <field name="state" widget="statusbar" statusbar_visible="draft,done"/>
+	                </header>
+	                <sheet>
+                        <h1><field name="name" readonly="1"/></h1>
+                        <label for="production_id"/>
+                        <h2><field name="production_id" domain="[('state', 'in',('confirmed','progress'))]"
+                        	options='{"no_create": True, "no_write": True}' /></h2>
+                        <group>
+	                        <group string="Duration">
+								<field name="warehouse_id"/>
+	                            <field name="date_result"/>
+	                        </group>
+	                        <group string="Product to Produce">
+	                        	<field name="calendar_id"  />
+                                <field name="resource_id" />
+                                <field name="production_shift"/>
+                                <field name="user_import_id"/>
+	                        </group>
+	                    </group>
+	                    <label for="note"/>
+                    	<field name="note" placeholder="Add an internal note..." widget='char' colspan="4"/>
+                    	<notebook>
+	                    	<page string="Produced Products">
+	                            <field name="produced_products" context="{'default_operation_result_id': active_id}">
+			                        <tree editable="top">
+			                            <field name="si_id"/>
+			                            <field name="operation_result_id" invisible="1"/>
+			                            <field name="product_id" on_change="onchange_product_id(product_id)" options="{&quot;no_create&quot;: True, &quot;no_write&quot;: True}"/>
+			                            <field name="product_uom" options="{&quot;no_create&quot;: True, &quot;no_write&quot;: True}"/>
+			                            <field name="product_qty" string="Net Weight" sum="product_qty"/>
+			                            <field name="production_weight" sum="production_weight" optional="hide"/>
+			                            <field name="zone_id"/>
+			                            <field name="lot_id"/>
+			                            <field name="packing_id"/>
+			                            <field name="qty_bags" sum="qty_bags"/>
+			                            <field name="picking_id"/>
+			                            <field name="notes"/>
+			                            <field name="pending_grn" optional="hide"/>
+			                            <field name="state_kcs" readonly="1"/>
+			                            <field name="kcs_notes" readonly="1"/>
+			                            <field name="state"/>
+			                            <button name="create_kcs" string="KCS" type="object" attrs="{'readonly': [('state_kcs','!=',False)]}"/>
+			                            <button name="button_cancel" type="object" string="Cancel" attrs="{'readonly': [('state_kcs','!=',False)]}" optional="hide"/>
+			                        </tree>
+			                        <form string="Produced Products">
+			                            <sheet>
+			                                <group string="Quantity Produced" col="4">
+			                                    <field name="operation_result_id" invisible="1"/>
+			                                    <field name="product_id" on_change="onchange_product_id(product_id)" options="{&quot;no_create&quot;: True, &quot;no_write&quot;: True}"/>
+			                                    <field name="product_qty"/>
+			                                    <field name="product_uom" options="{&quot;no_create&quot;: True, &quot;no_write&quot;: True}"/>
+			                                    <field name="pending_grn" readonly="1"/>
+			                                </group>
+			                                <label for="notes"/>
+			                                <field name="notes" placeholder="Add an internal note..." colspan="4"/>
+			                            </sheet>
+			                        </form>
+			                    </field>
+	                        </page>
+	                        <page string="QC">
+								<field name="produced_products_qc" nolabel="1">
+									<tree string="Detail of Payment" editable="top">
+			                 			<field name="product_id"/>
+			                 			<field name="mc" optional="show"/>
+			                 			<field name="fm" optional="show"/>
+			                 			<field name="black" optional="show"/>
+			                 			<field name="broken" optional="show"/>
+			                 			<field name="mold" optional="show"/>
+			                 			<field name="cherry" optional="show"/>
+			                 			<field name="excelsa" optional="show"/>
+			                 			<field name="screen20" optional="show"/>
+			                 			<field name="screen19" optional="hide"/>
+			                 			<field name="screen18" optional="hide"/>
+			                 			<field name="screen17" optional="hide"/>
+			                 			<field name="screen16" optional="hide"/>
+			                 			<field name="screen15" optional="hide"/>
+			                 			<field name="screen14" optional="hide"/>
+			                 			<field name="screen13" optional="hide"/>
+			                 			<field name="screen12" optional="hide" />
+			                 			<field name="below_screen12" optional="hide"/>
+			                 			<field name="immature" optional="hide"/>
+			                 			<field name="burn" optional="hide"/>
+			                 			<field name="insect" optional="hide"/>
+			                 			<field name="stone" optional="hide"/>
+			                 			<field name="stick" optional="hide"/>
+			                 			<field name="remarks" optional="hide"/>
+			                 			<field name="remark_note" optional="hide"/>
+			                 			<field name="sampler" optional="hide"/>
+									</tree>
+		                  	  </field>
+								
+							</page>
+	                        
+	                         <page string="Direct Labour">
+                        		<field name="direct_labour" nolabel="1"  context="{'default_production_id': production_id}">
+                        			<tree editable="top">
+										<field name="date"/>
+										<field name="production_id" optional="hide"/>
+                        				<field name="shift_foreman"/>
+                        				<field name="operating_time" readonly="1" widget="float_time" sum="operating_time"/>
+                        				<field name="running_time" widget="float_time" sum="running_time"/>
+                        				<field name="stop_time_machine" widget="float_time" sum="stop_time_machine"/>
+                        				<field name="downtimes_per_shift" widget="float_time" sum="downtimes_per_shift"/>
+                        				<field name="hour_nbr" optional="hide" invisible="1" widget="float_time"/>
+                        				<field name="notes"/>
+                        			</tree>
+                        		</field>
+	                        </page>
+	                        
+	                        <page string="Additional Info" name="page_additional_info">
+	                            <group>
+	                                <group>
+					                    <field name="create_uid" readonly="1"/>
+					                    <field name="create_date" readonly="1"/>
+					                    <field name="write_uid" readonly="1"/>
+					                    <field name="write_date" readonly="1"/>
+	                                </group>
+	                            </group>
+	                        </page>
+	                        <page string="Consumed Products" name="page_consumed_products" invisible="1">
+                        		<field name="consumed_products" nolabel="1">
+                        			<tree>
+                        				<field name="product_id"/>
+                        				<field name="product_uom"/>
+                        				<field name="product_qty" sum="product_qty"/>
+                        			</tree>
+                        		</field>
+	                        </page>
+                    	</notebook>
+	                </sheet>
+	                <!--
+                 	<div class="oe_chatter">
+	                    <field name="message_follower_ids" widget="mail_followers"/>
+	                    <field name="message_ids" widget="mail_thread"/>
+	                </div>
+	                -->
+                </form>
+            </field>
+        </record>
+        
+        
+        <record id="action_mrp_operation_result" model="ir.actions.act_window">
+            <field name="name">Production Result</field>
+            <field name="res_model">mrp.operation.result</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_mrp_operation_result_search"/>
+        </record>
+    	
+    	<record model="ir.actions.act_window.view" id="action_mrp_operation_result_tree_all">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_mrp_operation_result_tree"/>
+            <field name="act_window_id" ref="action_mrp_operation_result"/>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="action_mrp_operation_result_form_all">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_mrp_operation_result_form"/>
+        <field name="act_window_id" ref="action_mrp_operation_result"/>
+        </record>
+    	
+    
+    </data>'    
+</odoo>

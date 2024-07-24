@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	
+	
+		<!--
+		<menuitem id= "menu_purchase_contract" 
+    		parent= "bes_contract_base.menu_base_contracts" 
+    		sequence= "2" name= "Purchase Contract" 
+    		groups="bes_purchase_contract.group_purchase_contract_user"/>
+    	
+    	<menuitem id= "menu_report_purchase_contract" 
+    		parent= "bes_contract_base.menu_base_contracts" 
+    		sequence= "10" name= "Report Purchase Contract" 
+    		groups="bes_purchase_contract.group_purchase_contract_user"/>
+    		
+    		-->
+
+		<!-- Top menu item Top 0-->
+        <menuitem name="Purchase Contracts"
+            id="menu_purchase_contract_root"
+            groups="sd_purchase_contract.group_purchase_contract_user,sd_purchase_contract.group_purchase_contract_manager"
+            web_icon="sd_purchase_contract,static/description/icon_contract.jpg"
+            sequence="140"/>
+            
+      	 	<!-- Purchase Contracts Top 1-->
+	       <menuitem id="purchase_contract_root_menu"
+	            name="Purchase Contracts"
+	            parent="menu_purchase_contract_root"
+	            sequence="1"/>
+	       
+	       
+	       <menuitem id="purchase_contract_lv_1_menu"
+	            name="CONTRACTS"
+	            parent="purchase_contract_root_menu"
+	            sequence="10"/>
+	            
+	            <!-- NVP -->
+	            <menuitem id="sd_purchase_contract.menu_action_purchase_contract" 
+	            	action="sd_purchase_contract.action_purchase_contract" 
+	            	sequence="5"
+		        	parent="sd_purchase_contract.purchase_contract_lv_1_menu" 
+		        	name="SVNP Contract"
+		        	groups="sd_purchase_contract.group_purchase_contract_user,sd_purchase_contract.group_purchase_contract_manager"/>
+
+				<!-- PTBF-->
+				<menuitem action="action_ptbf_contract"
+					id="menu_pur_action_ptbf_contract"
+					parent="sd_purchase_contract.purchase_contract_lv_1_menu"
+					sequence="6"
+					name="PTBF Contract"
+					groups="sd_purchase_contract.group_purchase_contract_user,sd_purchase_contract.group_purchase_contract_manager"/>
+
+
+				<!-- NPE -->
+				<menuitem action="action_consignment_agreement" 
+					id="menu_pur_action_consignment_agreement" 
+					parent="sd_purchase_contract.purchase_contract_lv_1_menu" 
+					sequence="10"
+					name="NPE Contract"
+					groups="sd_purchase_contract.group_purchase_contract_user,sd_purchase_contract.group_purchase_contract_manager"/>
+				
+				
+				<!-- NVP QUOTA -->
+				<menuitem action="action_purchase_contract_quota" 
+					id="menu_pur_action_purchase_contract_quota" 
+					parent="sd_purchase_contract.purchase_contract_lv_1_menu" 
+					sequence="20"
+					name="NVP Quota"
+					groups="sd_purchase_contract.group_purchase_contract_user,sd_purchase_contract.group_purchase_contract_manager"/>
+					
+				
+				<!-- NVP QUOTA TEMP-->
+				<menuitem action="action_purchase_contract_quota_temp" 
+					id="menu_pur_action_purchase_contract_quota_temp" 
+					parent="sd_purchase_contract.purchase_contract_lv_1_menu" 
+					sequence="20"
+					name="NVP Quota Temp"
+					groups="sd_purchase_contract.group_purchase_contract_user,sd_purchase_contract.group_purchase_contract_manager"/>
+				
+				
+
+				
+				<!-- OWH Contract -->
+				<!-- OWH Contract Khong sài nữanữa-->
+				<!--
+				<menuitem id="menu_action_owh_contract_contract" 
+					action="action_owh_contract_contract" sequence="50" 
+		        	parent="sd_purchase_contract.purchase_contract_lv_1_menu"
+		        	groups="sd_purchase_contract.group_purchase_contract_user,sd_purchase_contract.group_purchase_contract_manager"/>
+				-->	
+					
+			<!--Allocation -->
+			<menuitem id="purchase_contract_lv_2_menu"
+	            name="ALLOCATION"
+	            parent="purchase_contract_root_menu"
+	            sequence="10"/>
+	            
+	            <menuitem action="action_nvp_contract_allocation_invoiced" 
+					id="menu_pur_menu_action_nvp_contract_allocation_invoiced" 
+					parent="sd_purchase_contract.purchase_contract_lv_2_menu" 
+					sequence="20"
+					name="Allocation"
+					groups="sd_purchase_contract.group_purchase_contract_user,sd_purchase_contract.group_purchase_contract_manager"/>
+				
+				<menuitem 
+					id="menu_action_stock_allocation" 
+					action="action_stock_allocation" sequence="30"
+		        	parent="sd_purchase_contract.purchase_contract_lv_2_menu"
+		        	groups="sd_purchase_contract.group_purchase_contract_user"/>
+		        
+		        
+		        <menuitem id="menu_action_npe_nvp_relation" 
+		        	action="action_npe_nvp_relation" 
+		        	sequence="40"
+		        	parent="sd_purchase_contract.purchase_contract_lv_2_menu"
+		        	groups="sd_purchase_contract.group_purchase_contract_user"/>
+		        
+		        <menuitem id="menu_action_payment_allocation" 
+		        	action="action_payment_allocation" sequence="100"
+		        	parent="sd_purchase_contract.purchase_contract_lv_2_menu"
+		        	groups="sd_purchase_contract.group_purchase_contract_user"/>
+		    
+		    
+		   
+		   <!-- Purchase Contracts Top 2-->
+	       <menuitem id="purchase_contract_root_master_data_menu"
+	            name="Master Data"
+	            parent="menu_purchase_contract_root"
+	            sequence="10"/>
+		    
+					   <!--Supplier menu-->
+			        <menuitem id="menu_procurement_management_supplier_name_purchase_contracr" name="Vendors"
+			            parent="purchase_contract_root_master_data_menu"
+			            action="account.res_partner_action_supplier" sequence="5"
+			            groups="sd_purchase_contract.group_purchase_contract_user"/>
+            
+            		<menuitem id="sd_purchase_action_sucden_market_price" 
+			      		action="sd_master.action_ned_market_price" 
+			      		sequence="20"
+			            parent="purchase_contract_root_master_data_menu" 
+			            name="Market List"
+			            groups="sd_purchase_contract.group_purchase_contract_user"/>
+			       
+			       	
+			       	<menuitem id="sd_purchase_action_fx_trade" 
+			      		action="sd_purchase_contract.action_fx_trade" 
+			      		sequence="30"
+			            parent="purchase_contract_root_master_data_menu" 
+			            name="Config For Location"
+			            groups="sd_purchase_contract.group_purchase_contract_user,base.group_user"/>
+			        
+			        <menuitem action="action_grades_premium"
+						id="menu_action_grades_premium" 
+						groups="sd_purchase_contract.group_purchase_contract_user,base.group_user"
+						name="Grades Premium" 
+						parent="purchase_contract_root_master_data_menu" sequence="40"/>
+					
+					<menuitem action="action_cost_fob"
+						id="menu_action_cost_fob" 
+						groups="sd_purchase_contract.group_purchase_contract_user,base.group_user"
+						name="Cost to FOB HCM" 
+						parent="purchase_contract_root_master_data_menu" sequence="40"/>
+					
+					<menuitem action="action_cert_pre"
+						id="menu_action_cert_pre" 
+						groups="sd_purchase_contract.group_purchase_contract_user,base.group_user" 
+						name="Certification Pre Configuration"
+			            parent="purchase_contract_root_master_data_menu" sequence="50"/>
+			        
+			        <menuitem action="action_stoploss"
+						id="menu_action_stoploss" 
+						groups="sd_purchase_contract.group_purchase_contract_user,base.group_user" 
+						name="Stoploss Configuration"
+	                	parent="purchase_contract_root_master_data_menu" sequence="60"/>
+	                
+	             
+	        <!-- Payment -->
+			<menuitem id="purchase_contract_lv_3_menu"
+	            name="PAYMENT"
+	            parent="purchase_contract_root_menu"
+	            sequence="10"/>  
+	                
+	            <menuitem id="menu_action_request_payment" 
+	            	action="action_request_payment" sequence="7" 
+		        	parent="purchase_contract_lv_3_menu"
+		        	groups="sd_purchase_contract.group_purchase_contract_user"/>
+		   
+		   
+		   <!-- Purchase Contracts Top 2-->
+	       <menuitem id="purchase_contract_root_good_menu"
+	            name="Goods Notes"
+	            parent="menu_purchase_contract_root"
+	            sequence="8"/>
+		       
+    				
+	    		<menuitem action="action_wizard_import_p_contract" 
+	    			id="import_p_contract" 
+	    			parent="sd_purchase_contract.purchase_contract_root_good_menu" 
+	    			sequence="100"/>
+			         
+			            
+			            
+			            
+			    	
+</odoo>

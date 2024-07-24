@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_processing_loss_aproval_tree_inherit_india" model="ir.ui.view">
+        <field name="name">view_processing_loss_aproval_tree_inherit_india</field>
+        <field name="model">processing.loss.aproval</field>
+        <field name="inherit_id" ref="sd_mrp.view_processing_loss_aproval_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='production_id']" position="after">
+                <field name="grade_id"/>
+                <field name="sub_product_id"/>
+            </xpath>
+
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+	<menuitem name="Report Control"
+            id="menu_report_control_root"
+            groups="sd_india_report.group_report_user"
+            web_icon="sd_india_report,static/description/icon.png"
+            sequence="140"/>
+
+				<menuitem id="menu_report_purchase"
+		            name="Purchase"
+		            parent="menu_report_control_root"
+		            sequence="40"/>
+					<menuitem id="menu_purchase_contract_detail_line_report_action"
+				            action="sd_purchase_contract.purchase_contract_detail_line_report_action" sequence="1"
+				            parent="menu_report_purchase"
+				            name="Purchase Contract Line Detail"/>
+
+            
+	            <!-- Configuration Contracts Top 1-->
+	            <!-- PRODUCTION REPORT -->
+		       <menuitem id="menu_report_control_root_menu_lv1"
+		            name="Production"
+		            parent="menu_report_control_root"
+		            sequence="50"/>
+		            
+		            	
+		            	 <menuitem id="menu_action_input_value_report_s" 
+				            action="action_input_value" sequence="5" 
+				            parent="menu_report_control_root_menu_lv1" 
+				            groups="sd_india_report.group_report_user"
+				            name="Input value"/>
+				         
+				         <menuitem id="menu_action_output_value_report_s" 
+				            action="action_output_value" sequence="10" 
+				            groups="sd_india_report.group_report_user"
+				            parent="menu_report_control_root_menu_lv1" name="Output value"/>
+				            
+		       	
+			       		<!-- PRODUCTION REPORT -->
+				      	<menuitem id="menu_action_production_report_s" 
+			            	action="sd_india_report.action_production_report" 
+			            	sequence="15"
+				        	parent="menu_report_control_root_menu_lv1" 
+				        	groups="sd_india_report.group_report_user"/>
+				        
+				        <menuitem id="menu_action_faq_prod_loss_tracking_report_s" 
+				            action="action_faq_prod_loss_tracking" sequence="20" 
+				            parent="menu_report_control_root_menu_lv1" name="FAQ-Prod. Loss tracking"/>
+				        
+				        <menuitem id="menu_action_view_npe_unfixed_wizard_s" 
+				            action="action_view_npe_unfixed_wizard" sequence="23" 
+				            parent="menu_report_control_root_menu_lv1" name="NPE Unfixed Quality - Grp. Supplier"/>
+				        
+				        
+				        <menuitem id="menu_v_intake_qty_week_manufacturing_s" 
+				            action="action_v_intake_qty_week" parent="menu_report_control_root_menu_lv1" 
+				            name="Weekly - Stock Intake Quality"
+				            sequence="25"/>
+				        
+				        <menuitem id="menu_v_intake_qty_supplier_manufacturing_s" 
+				            action="action_v_intake_qty_supplier" 
+				            parent="menu_report_control_root_menu_lv1" 
+				            name="Supplier - Stock Intake Quality"
+				            sequence="30" />
+				        
+				        <menuitem id="menu_action_v_faq_stack_tracking_report_s" 
+				            action="action_v_faq_stack_tracking" sequence="35" 
+				            parent="menu_report_control_root_menu_lv1" 
+				            name="Storing Loss Analysis"/>
+				        
+				        <menuitem action="production_plan_action"
+			                id="menu_production_plan_action_s" 
+			                name="Production Plan"
+			                parent="menu_report_control_root_menu_lv1" sequence="40"/>
+			             
+			             <menuitem id="menu_action_v_shipment_quality_report_s" 
+				            action="action_v_shipment_quality" sequence="45" 
+				            parent="menu_report_control_root_menu_lv1" 
+				            name="Shipment Quality Comparision"/>
+				         
+				         
+				         <menuitem id="menu_action_report_stock_material_report_s" 
+				            action="sd_inventory.action_report_stock_material" sequence="110" 
+				            parent="menu_report_control_root_menu_lv1"
+				            name="Material Stock Balance"/>
+	           
+	           
+	            <!-- Configuration Contracts Top 1-->
+	            <!-- Operations REPORT -->
+		       <menuitem id="menu_report_control_root_menu_lv2_ops"
+		            name="Operation"
+		            parent="menu_report_control_root"
+		            sequence="60"/>
+
+<!--					<menuitem id="menu_long_short_fob"-->
+<!--							  action="action_long_short_fob_v2"-->
+<!--							  parent="menu_report_control_root_menu_lv2_ops"-->
+<!--							  name="Long Short FOB"-->
+<!--							  active="False"-->
+<!--							  sequence="1"/>-->
+
+<!--					<menuitem id="menu_long_short_factory"-->
+<!--							  action="action_long_short_factory"-->
+<!--							  parent="menu_report_control_root_menu_lv2_ops"-->
+<!--							  name="Long Short Factory"-->
+<!--							  active="False"-->
+<!--							  sequence="2"/>-->
+<!--					<menuitem id="menu_cash_book"-->
+<!--							  action="action_cash_book"-->
+<!--							  parent="menu_report_control_root_menu_lv2_ops"-->
+<!--							  name="Cash Book"-->
+<!--							  active="False"-->
+<!--							  sequence="3"/>-->
+		            
+		            <menuitem id="menu_sales_shipment_r_ops" 
+			            action="action_sales_shipment" 
+			            parent="menu_report_control_root_menu_lv2_ops" 
+			            name="Shipment" 
+			            sequence="10"/>
+		            
+		            <menuitem id="sd_india_report.menu_action_production_report_ops" 
+			            	action="sd_india_report.action_production_report" 
+			            	sequence="15"
+				        	parent="menu_report_control_root_menu_lv2_ops" 
+				        	groups="sd_india_report.group_report_user"/>
+				    
+				    <!-- Stock Movement -->
+	        			 <menuitem id="menu_action_report_ned_stock_stack_ops" 
+	        			 	action="sd_quality.action_report_ned_stock_stack_tree" 
+	        			 	sequence="20" 
+				        	parent="menu_report_control_root_menu_lv2_ops" 
+				        	name="Stock Movement"
+				        	groups="sd_india_report.group_report_user"/>
+				       
+				         <menuitem id="menu_action_ned_batch_report_ops" 
+				        	action="action_ned_batch_report" 
+				        	sequence="25" 
+				        	parent="menu_report_control_root_menu_lv2_ops" 
+				        	groups="sd_india_report.group_report_user"/>
+				         
+				         
+				         <menuitem id="menu_action_ned_production_mrp_analysis_ops" 
+				                action="action_ned_production_analysis" 
+				                sequence="30" 
+				        	    parent="menu_report_control_root_menu_lv2_ops"
+				        	    groups="sd_india_report.group_report_user"/>
+			        	
+			        	  <menuitem id="menu_action_ned_batch_pnl_analysis_upgrade_ops" 
+				                action="action_ned_batch_pnl_upgrade" 
+				                sequence="35" 
+				                groups="sd_india_report.group_report_user"
+				        	    parent="menu_report_control_root_menu_lv2_ops"/>
+				       	  
+				       	 <!-- Intake Quality -->
+				        <menuitem id="menu_v_qc_details_ned_ops" 
+				            action="sd_quality.action_v_qc_details_ned" 
+				            parent="menu_report_control_root_menu_lv2_ops" 
+				            name="Intake Quality"
+				            sequence="40" />
+				        
+				        
+				        <menuitem id="menu_grn_matching_report_ops" 
+				            action="action_grn_matching_report" 
+				            parent="menu_report_control_root_menu_lv2_ops" 
+				            name="FAQ (FOT-Ned) deviation"
+				            sequence="45" />
+		     
+		     
+				     <menuitem id="menu_action_fob_deviation_report_ops" 
+				            action="action_fob_diviation" 
+				            sequence="50"
+				            parent="menu_report_control_root_menu_lv2_ops" 
+				            name="FOB Deviation"/>
+				     
+				    <menuitem id="menu_action_v_fob_weight_franchise_report_ops" 
+				            action="action_v_fob_weight_franchise" 
+				            sequence="55" 
+				            parent="menu_report_control_root_menu_lv2_ops" 
+				            name="FOB Weight Franchise"/>
+				            
+				    <menuitem 
+					    id="menu_action_report_grn_allocated_ops"
+					    action="action_report_grn_unallocated" 
+              			parent="menu_report_control_root_menu_lv2_ops" sequence="60"/>
+		            
+				
+				<menuitem id="menu_report_control_root_menu_lv2"
+		            name="Syn Data"
+		            parent="menu_report_control_root"
+		            sequence="1000"/>
+		       	
+			       		<!-- PRODUCTION REPORT -->
+				      <menuitem id="sd_india_report.menu_action_sucden_syn_config" 
+				            	action="sd_india_report.action_sucden_syn_config" 
+				            	sequence="5"
+					        	parent="menu_report_control_root_menu_lv2" 
+					        	groups="sd_india_report.group_report_user"/>
+					        	
+					        	
+					 
+					
+					
+		     <!-- Report -->
+	         <menuitem id="menu_action_ned_batch_report" 
+	        	action="action_ned_batch_report" 
+	        	sequence="900" 
+	        	parent="mrp.menu_mrp_reporting" 
+	        	groups="mrp.group_mrp_user,mrp.group_mrp_manager"/>
+	        
+	        <menuitem id="menu_action_ned_production_mrp_analysis" 
+                action="action_ned_production_analysis" 
+                sequence="950" 
+        	    parent="mrp.menu_mrp_reporting"
+        	    groups="mrp.group_mrp_user,mrp.group_mrp_manager"/>
+        	
+        	  <menuitem id="menu_action_ned_batch_pnl_analysis_upgrade" 
+                action="action_ned_batch_pnl_upgrade" 
+                sequence="955" 
+                groups="mrp.group_mrp_user,mrp.group_mrp_manager"
+        	    parent="mrp.menu_mrp_reporting"/>
+			
+			 <menuitem id="menu_action_input_value_report" 
+	            action="action_input_value" sequence="1000" 
+	            parent="mrp.menu_mrp_reporting" 
+	            name="Input value"/>
+	         
+	         <menuitem id="menu_action_output_value_report" 
+	            action="action_output_value" sequence="1010" 
+	            parent="mrp.menu_mrp_reporting" name="Output value"/>
+	         
+	        <menuitem id="menu_action_faq_prod_loss_tracking_report" 
+	            action="action_faq_prod_loss_tracking" sequence="1020" 
+	            parent="mrp.menu_mrp_reporting" name="FAQ-Prod. Loss tracking"/>
+	        
+	        <menuitem id="menu_action_view_npe_unfixed_wizard" 
+	            action="action_view_npe_unfixed_wizard" sequence="1030" 
+	            parent="mrp.menu_mrp_reporting" name="NPE Unfixed Quality - Grp. Supplier"/>
+	        
+	        <menuitem id="menu_action_npe_unfixed_master" 
+	            action="action_npe_unfixed_master" sequence="1040" 
+	            parent="mrp.menu_mrp_reporting" name="NPE Unfixed"/> 
+	        
+	        
+	        <menuitem id="menu_v_intake_qty_week_manufacturing" 
+	            action="action_v_intake_qty_week" parent="mrp.menu_mrp_reporting" 
+	            name="Weekly - Stock Intake Quality"
+	            sequence="1050"/>
+	        
+	        
+	        <menuitem id="menu_v_intake_qty_supplier_manufacturing" 
+	            action="action_v_intake_qty_supplier" 
+	            parent="mrp.menu_mrp_reporting" 
+	            name="Supplier - Stock Intake Quality"
+	            sequence="1060" />
+	         
+	         
+	         <menuitem id="menu_action_v_faq_stack_tracking_report" 
+	            action="action_v_faq_stack_tracking" sequence="1070" 
+	            parent="mrp.menu_mrp_reporting" 
+	            name="Storing Loss Analysis"/>
+	         
+	         
+	         <menuitem action="production_plan_action"
+                id="menu_production_plan_action" 
+                name="Production Plan"
+                parent="mrp.menu_mrp_reporting" sequence="1080"/>
+             
+             <menuitem id="menu_action_v_shipment_quality_report" 
+	            action="action_v_shipment_quality" sequence="1090" 
+	            parent="mrp.menu_mrp_reporting" 
+	            name="Shipment Quality Comparision"/>
+	         
+	         <menuitem id="menu_action_itn_tracking_report" 
+	            action="action_itn_tracking_report" sequence="1100" 
+	            parent="mrp.menu_mrp_reporting"  
+	            name="Internal Transfer Tracking"/>
+	            
+	        
+	         
+	         <menuitem id="menu_sales_shipment" 
+		            action="action_sales_shipment" 
+		            parent="mrp.menu_mrp_reporting" 
+		            name="Shipment" 
+		            sequence="1110" />
+		     
+		     <menuitem id="menu_grn_matching_report" 
+		            action="action_grn_matching_report" 
+		            parent="mrp.menu_mrp_reporting" 
+		            name="FAQ (FOT-Ned) deviation"
+		            sequence="1120" />
+		     
+		     
+		     <menuitem id="menu_action_fob_deviation_report" 
+		            action="action_fob_diviation" 
+		            sequence="1130"
+		            parent="mrp.menu_mrp_reporting" 
+		            name="FOB Deviation"/>
+		     
+		    <menuitem id="menu_action_v_fob_weight_franchise_report" 
+		            action="action_v_fob_weight_franchise" 
+		            sequence="1140" 
+		            parent="mrp.menu_mrp_reporting" 
+		            name="FOB Weight Franchise"/>
+	       
+	       
+	       
+	       <!-- QCCCCCCCCCCCCCCC -->
+	            
+	        <menuitem id="menu_action_ned_production_qc_analysis" 
+                action="action_ned_production_analysis" 
+                sequence="20" 
+        	    parent="sd_quality.quality_control_report_root_menu"
+        	    groups="sd_quality.group_kcs_user,sd_quality.group_kcs_manager"/>
+        	
+        	<menuitem id="menu_action_ned_batch_pnl_analysis_upgrade_for_qc" 
+                action="action_ned_batch_pnl_upgrade" 
+                sequence="30" 
+                groups="sd_quality.group_kcs_user,sd_quality.group_kcs_manager"
+        	    parent="sd_quality.quality_control_report_root_menu"/>
+	        
+	        
+	        <menuitem id="menu_v_intake_qty_week_qc" 
+	            action="action_v_intake_qty_week" 
+	            parent="sd_quality.quality_control_report_root_menu" 
+	            name="Weekly - Stock Intake Quality"
+	            groups="sd_quality.group_kcs_user,sd_quality.group_kcs_manager"
+	            sequence="160"/>
+	            
+	        
+	         <menuitem id="menu_v_intake_qty_supplier_qc" 
+	            action="action_v_intake_qty_supplier" 
+	            parent="sd_quality.quality_control_report_root_menu" 
+	            name="Supplier - Stock Intake Quality"
+	            groups="sd_quality.group_kcs_user,sd_quality.group_kcs_manager"
+	            sequence="170"/>
+	         
+	         <menuitem id="menu_sales_shipment_qc" 
+		            action="action_sales_shipment" 
+		            parent="sd_quality.quality_control_report_root_menu" 
+		            name="Shipment" 
+		            sequence="1110" />
+	         
+	
+</odoo>

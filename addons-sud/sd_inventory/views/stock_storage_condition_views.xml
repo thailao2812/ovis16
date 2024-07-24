@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="stock_storage_condition_form_view" model="ir.ui.view">
+            <field name="name">stock.storage.condition.form.view</field>
+            <field name="model">stock.storage.condition</field>
+            <field name="arch" type="xml">
+                <form string="Storage Condition">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="zone_id"/>
+                                <field name="inspection_time"/>
+                                <field name="temperature"/>
+                                <field name="temperature_unit"/>
+                                <field name="humidity"/>
+                                <field name="inspector_id"/>
+                            </group>
+                            <group></group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="stock_storage_condition_tree_view" model="ir.ui.view">
+            <field name="name">stock.storage.condition.tree.view</field>
+            <field name="model">stock.storage.condition</field>
+            <field name="arch" type="xml">
+                <tree editable="top" default_order="inspection_time desc">
+                    <field name="zone_id"/>
+                    <field name="inspection_time"/>
+                    <field name="temperature"/>
+                    <field name="temperature_unit"/>
+                    <field name="humidity"/>
+                    <field name="inspector_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="stock_storage_condition_pivot_view" model="ir.ui.view">
+            <field name="name">stock.storage.condition.pivot.view</field>
+            <field name="model">stock.storage.condition</field>
+            <field name="arch" type="xml">
+                <pivot string="Storage Condition">
+                    <field name="zone_id" type="col"/>
+                    <field name="temperature" type="measure"/>
+                    <field name="humidity" type="measure"/>
+                    <field name="inspection_time" interval="day"/>
+                    <field name="time_string"/>
+                </pivot>
+            </field>
+        </record>
+
+
+        <record id="action_stock_storage_condition" model="ir.actions.act_window">
+            <field name="name">Storage Condition</field>
+            <field name="res_model">stock.storage.condition</field>
+            <field name="view_mode">tree,form,pivot</field>
+            <field name="context">{'search_by_field_date': ['inspection_time']}</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                    Click Create to create a new Storage Condition record.
+              </p>
+            </field>
+        </record>
+        <record model="ir.actions.act_window.view" id="action_stock_storage_condition_tree_view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="stock_storage_condition_tree_view"/>
+            <field name="act_window_id" ref="action_stock_storage_condition"/>
+        </record>
+        <record model="ir.actions.act_window.view" id="action_stock_storage_condition_form_view">
+            <field name="sequence" eval="3"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="stock_storage_condition_form_view"/>
+            <field name="act_window_id" ref="action_stock_storage_condition"/>
+        </record>
+        <record model="ir.actions.act_window.view" id="action_stock_storage_condition_pivot_view">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">pivot</field>
+            <field name="view_id" ref="stock_storage_condition_pivot_view"/>
+            <field name="act_window_id" ref="action_stock_storage_condition"/>
+        </record>
+
+        <menuitem id="menu_action_stock_storage_condition"
+                  action="action_stock_storage_condition" sequence="1010"
+                  parent="stock.menu_stock_warehouse_mgmt"
+                  groups="stock.group_stock_user"/>
+
+    </data>
+</openerp>

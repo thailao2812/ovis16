@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="assets_backend" name="besco_stock assets" inherit_id="web.assets_backend">
+			<xpath expr="." position="inside">
+				<script type="text/javascript" src="/besco_stock/static/src/js/stock_barcode.js"></script>
+				<script type="text/javascript" src="/besco_stock/static/src/js/list_controller.js"></script>
+			</xpath>
+		</template>
+
+    </data>
+</odoo>

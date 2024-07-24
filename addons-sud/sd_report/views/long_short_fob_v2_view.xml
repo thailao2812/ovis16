@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+        <record id="view_long_short_fob_v2" model="ir.ui.view">
+            <field name="name">view_long_short_fob_v2</field>
+            <field name="model">long.short.fob</field>
+            <field name="arch" type="xml">
+    			<tree>
+                    <field name = "prod_group"/>
+                    <field name = 'product'/>
+
+                    <field name = 'sitting_stock' sum="Sitting Stock"/>
+                    <field name = 'faq_derivable' sum="FAQ Derivable"/>
+                    <field name = 'npe_received_unfixed' sum="NPE Unfixed"/>
+                    <!-- <field name = 'gross_ls' sum="Gross LS"/> -->
+
+                    <field name = 'nvp_receivable' sum="NVP Receivable"/>
+                    <field name = 'unshipped_qty' sum="Sales Unshipped"/>
+                    <field name = 'net_ls' sum="Net LS"/>
+
+                    <field name = 'nvp_next1_receivable' sum="Next1 NVP"/>
+                    <field name = 'sale_next1_unshipped' sum="Next1 S"/>
+                    <field name = 'next1_net_ls' sum="Next1 LS"/>
+
+                    <field name = 'nvp_next2_receivable' sum="Next2 NVP"/>
+                    <field name = 'sale_next2_unshipped' sum="Next2 S"/>
+                    <field name = 'next2_net_ls' sum="Next2 LS"/>
+
+                    <field name = 'nvp_next3_receivable' sum="Next3 NVP"/>
+                    <field name = 'sale_next3_unshipped' sum="Next3 S"/>
+                    <field name = 'next3_net_ls' sum="Next3 LS"/>
+
+                    <field name = 'nvp_next4_receivable' sum="Next4 NVP"/>
+                    <field name = 'sale_next4_unshipped' sum="Next4 S"/>
+                    <field name = 'next4_net_ls' sum="Next4 LS"/>
+
+                    <field name = 'nvp_next5_receivable' sum="Next5 NVP"/>
+                    <field name = 'sale_next5_unshipped' sum="Next5 S"/>
+                    <field name = 'next5_net_ls' sum="Next5 LS"/>
+
+                    <field name = 'nvp_next6_receivable' sum="Next6 NVP"/>
+                    <field name = 'sale_next6_unshipped' sum="Next6 S"/>
+                    <field name = 'next6_net_ls' sum="Next6 LS"/>
+
+                    <field name = 'quality'/>
+                    <field name = 'external_number'/>
+                    <field name = 'commodity_type'/>
+
+                </tree>
+	         </field>
+         </record>
+
+    <record id="long_short_fob_v2_search" model="ir.ui.view">
+            <field name="name">long_short_fob_v2_search</field>
+            <field name="model">long.short.fob</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="prod_group"/>
+                    <field name='product'/>
+                    <group expand="1" string="Group By">
+                        <filter string="Product Group" name="product_group" domain="[]" context="{'group_by':'prod_group'}"/>
+                    </group>
+                </search>
+             </field>
+         </record>
+
+        <!-- the block of code below is the action to trigger the list open -->
+        <record id="action_long_short_fob_v2" model="ir.actions.act_window">
+            <field name="name">Long Short FOB</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">long.short.fob</field>
+            <field name="view_mode">tree</field>
+            <field name="context">{'create':False,'edit':False}</field>
+        </record>
+</odoo>

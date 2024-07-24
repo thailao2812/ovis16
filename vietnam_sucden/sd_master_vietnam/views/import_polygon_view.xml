@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="import_polygon_tree" model="ir.ui.view">
+        <field name="name">import_polygon_tree</field>
+        <field name="model">import.polygon</field>
+        <field name="arch" type="xml">
+            <tree string="Import Polygon">
+				<field name="filename"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="import_polygon_form" model="ir.ui.view">
+        <field name="name">import_polygon_form</field>
+        <field name="model">import.polygon</field>
+        <field name="arch" type="xml">
+            <form string="Import Polygon">
+                <header>
+                        <button name="import_polygon" type="object" string="Import" class="oe_highlight" />
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="file" filename="filename"/>
+                            <field name="filename" invisible="1"/>
+                        </group>
+                        <group>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+     <record id="action_import_polygon" model="ir.actions.act_window">
+        <field name="name">Import Polygon</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">import.polygon</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_import_polygon"
+            name="Import Polygon"
+            action="action_import_polygon"
+            parent="sd_master.menu_master_data_sucden_root"
+              active="False"
+            sequence="100"/>
+</odoo>

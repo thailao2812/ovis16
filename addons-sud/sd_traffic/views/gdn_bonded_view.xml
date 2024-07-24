@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_gdn_bonded_traffic_tree" model="ir.ui.view">
+            <field name="name">view_gdn_bonded_traffic_tree</field>
+            <field name="model">stock.picking</field>
+            <field name="arch" type="xml">
+                <tree decoration-info="state == 'draft'" decoration-muted="state == 'cancel'"
+                      decoration-danger="state not in ('cancel', 'done') and scheduled_date &lt; current_date" string="Picking list">
+                	<field name="name"/>
+                    <field name="warehouse_id"/>
+                    <field name="zone_id"/>
+                    <field name="lot_id"/>
+                    <field name="partner_id"/>
+                    <field name="scheduled_date"/>
+                    <field name="date_done"/>
+                    <field name="origin"/>
+                    <field name="product_id"/>
+                    <field name="total_bag"/>
+                    <field name="total_init_qty"/>
+                    <field name="allocated_qty"/>
+                    <field name="qty_available"/>
+                    <field name="state"/>
+                    <field name="x_inspectator"/>
+                </tree>
+            </field>
+        </record>
+
+    <record id="view_gdn_bonded_traffic_search" model="ir.ui.view">
+            <field name="name">view_gdn_bonded_traffic_search</field>
+            <field name="model">stock.picking</field>
+            <field name="arch" type="xml">
+                <search string="GDN Bonded">
+                    <field name="name"/>
+                    <field name="warehouse_id"/>
+                    <field name="zone_id"/>
+					<field name="product_id"/>
+					<field name="partner_id"/>
+					<field name="origin"/>
+					<separator/>
+                	<filter name ="groupby_warehouse_id" string="Warehouse" domain="[]" context="{'group_by':'warehouse_id'}"/>
+                	<filter name ="groupby_product_id" string="Product" domain="[]" context="{'group_by':'product_id'}"/>
+               </search>
+            </field>
+        </record>
+
+
+        <record id="action_gdn_bonded_traffic" model="ir.actions.act_window">
+            <field name="name">GDN - Bonded</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">stock.picking</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('warehouse_id.x_is_bonded','=',True),('picking_type_id.code','=','outgoing')]</field>
+            <field name="search_view_id" ref="view_gdn_bonded_traffic_search"/>
+            <field name="context">{}</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                    Create a GDN Bonded, the first step of a new GDN Bonded.
+              </p>
+            </field>
+        </record>
+
+    <record id="action_gdn_bonded_traffic_tree" model="ir.actions.act_window.view">
+            <field eval="100" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_gdn_bonded_traffic_tree"/>
+            <field name="act_window_id" ref="action_gdn_bonded_traffic"/>
+		</record>
+</odoo>

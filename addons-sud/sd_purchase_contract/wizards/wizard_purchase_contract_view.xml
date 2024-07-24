@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+	
+		<record id="view_wizard_purchase_contract" model="ir.ui.view">
+	        <field name="name">view.wizard.purchase.contract.form</field>
+	        <field name="model">wizard.purchase.contract</field>
+	        <field name="arch" type="xml">
+	        <form string="Convert purchase contract">
+	       	<sheet>
+	       		<group>
+            		<field name="price_unit"/>
+	       		</group>
+                <newline/>
+                <notebook>
+                	<page string="Convert">
+	                	<field name="contract_line_ids" nolabel="1">
+	                		<tree editable="top">
+	                			<field name="product_qty" sum="product_qty" string="Qty Fix"/>
+	                			<field name="purchase_contract_id" string="NPE Contract" />
+	                			<field name="product_id"  force_save="1"/>
+	                			<field name="product_uom"  force_save="1"/>
+	                			
+	                			<field name="qty_received" sum="qty_received"  force_save="1" readonly="1"/>
+				            	<field name="total_qty_fixed" sum="total_qty_fixed" force_save="1" readonly="1"/>
+				            	<field name="qty_unreceived" string="UnFixed"  force_save="1" readonly="1"/>
+	                			
+	                			<field name="product_remain_qty" sum="product_qty" invisible="1"/>
+	                		</tree>
+	                	</field>
+                	</page>
+                </notebook>
+                
+                <footer>
+                    <button string="Convert NVP" name="button_convert" type="object" class="oe_highlight"/>
+                    <button string="Convert Ptbf" name="button_convert_ptbf" type="object" class="oe_highlight"/>
+                    <button string="_Cancel" class="btn-default" special="cancel" />
+                </footer>
+	       	</sheet>
+            </form>
+            
+	        </field>
+	    </record>
+	    
+	    <record id="action_view_wizard_purchase_contract" model="ir.actions.act_window">
+            <field name="name">Create NVP - Fixation</field>
+            <field name="res_model">wizard.purchase.contract</field>
+            <field name="view_id" ref="view_wizard_purchase_contract"/>
+            <field name="target">new</field>
+            <field name="view_mode">form</field>
+            <field name="binding_model_id" ref="sd_purchase_contract.model_purchase_contract" />
+            <field name="binding_view_types">list</field>
+        </record>
+	    
+      </data>
+</odoo>

@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_res_partner_area_form_inherit_sucden_vn" model="ir.ui.view">
+            <field name="name">view_res_partner_area_form_inherit_sucden_vn</field>
+            <field name="model">res.partner.area</field>
+            <field name="inherit_id" ref="contacts_area.view_res_partner_area_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='gshape_type']" position="after">
+                    <field name="deforestation"/>
+                    <field name="link_to_deforestation" widget="url"/>
+                </xpath>
+            </field>
+    </record>
+
+    <record id="view_res_partner_form_inherit_inherit_sucden_vn" model="ir.ui.view">
+            <field name="name">view_res_partner_form_inherit_inherit_sucden_vn</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="contacts_area.view_res_partner_form_inherit"/>
+            <field name="arch" type="xml">
+<!--                <xpath expr="//field[@name='shape_line_ids']" position="before">-->
+<!--                    <button name="purchase_contract" string="Purchase" type="object" class="oe_highlight" invisible="1"/>-->
+<!--                    <button name="sale_contract" string="Sale" type="object" class="oe_highlight" invisible="1"/>-->
+<!--                </xpath>-->
+<!--                <xpath expr="//field[@name='shape_line_ids']" position="after">-->
+<!--                    <separator string="Purchase"/>-->
+<!--                    <field name="list_purchase_contract" readonly="1">-->
+<!--                        <tree>-->
+<!--                            <field name="purchase_contract_id"/>-->
+<!--                            <field name="quantity" sum="quantity"/>-->
+<!--                            <field name="date"/>-->
+<!--                        </tree>-->
+<!--                    </field>-->
+<!--                    <separator string="Sale"/>-->
+<!--                    <field name="list_sale_contract" readonly="0" domain="[('type','!=','p_contract'),('status','=','Factory'),('origin_new.code','=','VN'), ('x_is_bonded', '=', False)]">-->
+<!--                        <tree>-->
+<!--                            <field name="name"/>-->
+<!--                            <field name="shipt_month"/>-->
+<!--                            <field name="status"/>-->
+<!--                            <field name="partner_id"/>-->
+<!--                            <field name="certificated_ids" widget="many2many_tags"/>-->
+<!--                            <field name="char_license"/>-->
+<!--                            <field name="total_qty"/>-->
+<!--                        </tree>-->
+<!--                    </field>-->
+<!--                </xpath>-->
+<!--                <xpath expr="//field[@name='shape_line_ids']/google_map" position="attributes">-->
+<!--                    <attribute name="deforestation">deforestation</attribute>-->
+<!--                </xpath>-->
+<!--                <xpath expr="//field[@name='shape_line_ids']/google_map/field[@name='partner_id']" position="after">-->
+<!--                    <field name="deforestation"/>-->
+<!--                </xpath>-->
+                <xpath expr="//page[7]" position="replace">
+                </xpath>
+                <xpath expr="//notebook" position="inside">
+                    <page string="Farmer Information" name="farmer_information">
+                        <field name="shape_line_ids" readonly="1" invisible="1">
+                            <kanban>
+                                    <field name="id"/>
+                                    <field name="gshape_name"/>
+                                    <field name="deforestation"/>
+                                    <field name="gshape_area"/>
+                                    <field name="gshape_description"/>
+                                    <templates>
+                                        <t t-name="kanban-box">
+                                            <div t-attf-class="oe_kanban_global_click">
+                                                <div t-attf-class="o_kanban_card_header">
+                                                    <div class="o_kanban_card_header_title">
+                                                        <div class="o_primary">
+                                                            <strong>Farm name: </strong><strong><field name="gshape_name"/></strong>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <span>Deforestation: </span><field name="deforestation"/>
+                                                </div>
+                                                <div>
+                                                    <span>Description: </span><field name="gshape_description"/>
+                                                </div>
+                                                <div>
+                                                    <span>Area: </span><field name="gshape_area"/> <span>Square Meters</span>
+                                                </div>
+                                                <div>
+                                                    <button class="btn btn-primary" name="check_deforestation" type="object">
+                                                        <span>Check Deforestation</span>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </t>
+                                    </templates>
+                                </kanban>
+                        </field >
+
+                        <separator string="Deforestation Status"/>
+                        <group>
+                            <field name="in_deforestation" readonly="1"/>
+                        </group>
+
+<!--                        <separator string="Purchase"/>-->
+<!--                        <field name="list_purchase_contract" readonly="1">-->
+<!--                            <tree>-->
+<!--                                <field name="purchase_contract_id"/>-->
+<!--                                <field name="quantity" sum="quantity"/>-->
+<!--                                <field name="date"/>-->
+<!--                            </tree>-->
+<!--                        </field>-->
+<!--                        <separator string="Sale"/>-->
+<!--                        <field name="list_sale_contract" readonly="0" domain="[('type','!=','p_contract'),('status','=','Factory'),('origin_new.code','=','VN'), ('x_is_bonded', '=', False)]">-->
+<!--                            <tree>-->
+<!--                                <field name="name"/>-->
+<!--                                <field name="shipt_month"/>-->
+<!--                                <field name="status"/>-->
+<!--                                <field name="partner_id"/>-->
+<!--                                <field name="certificated_ids" widget="many2many_tags"/>-->
+<!--                                <field name="char_license"/>-->
+<!--                                <field name="total_qty"/>-->
+<!--                            </tree>-->
+<!--                        </field>-->
+                    </page>
+                </xpath>
+            </field>
+    </record>
+
+    <record id="view_res_partner_filter_inherit_sucden_vn" model="ir.ui.view">
+            <field name="name">view_res_partner_filter_inherit_sucden_vn</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_res_partner_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="partner_code"/>
+                    <field name="in_deforestation"/>
+                </xpath>
+                <xpath expr="//filter[@name='inactive']" position="after">
+                    <filter string="In Deforestation" name="in_deforestation" domain="[('in_deforestation', '=', 'yes')]"/>
+                    <filter string="Not In Deforestation" name="not_in_deforestation" domain="[('in_deforestation', '=', 'no')]"/>
+                </xpath>
+            </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_partner_tree_inherit_vietnam_sucden">
+            <field name="name">view_partner_tree_inherit_vietnam_sucden</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_tree"/>
+            <field name="arch" type="xml">
+                <field name="partner_code" position="after">
+					<field name="in_deforestation"/>
+                </field>
+            </field>
+        </record>
+
+    <record model="ir.ui.view" id="view_partner_form_inherit_vietnam_sucden">
+            <field name="name">view_partner_form_inherit_vietnam_sucden</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//span[@name='address_name']" position="before">
+                    <field name="company_name_new"/>
+                </xpath>
+            </field>
+        </record>
+
+    <record model="ir.actions.act_window" id="account.res_partner_action_customer">
+            <field name="domain">[('is_farmer', '=', False)]</field>
+    </record>
+    <record model="ir.actions.act_window" id="account.res_partner_action_supplier">
+            <field name="domain">[('is_farmer', '=', False)]</field>
+    </record>
+</odoo>

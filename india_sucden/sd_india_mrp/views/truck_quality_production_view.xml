@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="truck_quality_product_view_form" model="ir.ui.view">
+            <field name="name">truck_quality_product_view_form</field>
+            <field name="model">truck.quality.production</field>
+            <field name="arch" type="xml">
+                <form string="Truck Quality Production">
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="name"/>
+                            <h1>
+                                <field name="name" readonly="1"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="production_id"/>
+                                <field name="date"/>
+                                <field name="product_id"/>
+                                <field name="no_of_bag"/>
+                                <field name="quantity"/>
+                            </group>
+                            <group>
+                                <field name="wb_slip_number"/>
+                                <field name="template_qc"/>
+                                <field name="truck_number" required="1"/>
+                                <field name="department_stage" required="1"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Quality Test" name="quality_test_india">
+                            <group>
+                                <group col="6">
+                                   <field name="sample_weight_india" />
+                                    <field name="outturn_gram" />
+                                    <field name="sleeve_6_up" attrs="{'invisible': [('template_qc', 'not in', ['c_grade'])]}"/>
+						    		<field name="sleeve_5_5_up" attrs="{'invisible': [('template_qc', 'not in', ['c_grade'])]}"/>
+						    		<field name="sleeve_5_5_down" attrs="{'invisible': [('template_qc', 'not in', ['c_grade'])]}"/>
+						    		<field name="sleeve_5_down" attrs="{'invisible': [('template_qc', 'not in', ['c_grade'])]}"/>
+						    		<field name="aaa_gram" attrs="{'invisible': [('template_qc', 'not in', ['raw', 'clean', 'bulk', 'clean_bulk'])]}"/>
+						    		<field name="aa_gram" attrs="{'invisible': [('template_qc', 'not in', ['raw', 'clean', 'bulk', 'clean_bulk'])]}"/>
+						    		<field name="a_gram" attrs="{'invisible': [('template_qc', 'not in', ['raw', 'clean', 'bulk', 'clean_bulk'])]}"/>
+						    		<field name="b_gram" attrs="{'invisible': [('template_qc', 'not in', ['raw', 'clean', 'bulk', 'clean_bulk'])]}"/>
+						    		<field name="c_gram" attrs="{'invisible': [('template_qc', 'not in', ['raw', 'clean', 'bulk', 'clean_bulk'])]}"/>
+						    		<field name="pb_gram" attrs="{'invisible': [('template_qc', 'in', ['pb_grade', 'lower'])]}"/>
+						    		<field name="flat_gram" attrs="{'invisible': [('template_qc', '!=', 'pb_grade')]}"/>
+						    		<field name="pb1_gram" attrs="{'invisible': [('template_qc', '!=', 'pb_grade')]}"/>
+						    		<field name="pb2_gram" attrs="{'invisible': [('template_qc', '!=', 'pb_grade')]}"/>
+						    		<field name="bb_gram" />
+						    		<field name="bleached_gram" attrs="{'invisible': [('template_qc', '=', 'lower')]}"/>
+						    		<field name="idb_gram" />
+						    		<field name="bits_gram" />
+						    		<field name="hulks_gram" />
+						    		<field name="stone_gram" />
+						    		<field name="skin_out_gram" attrs="{'invisible': [('template_qc', '=', 'lower')]}"/>
+						    		<field name="triage_gram"/>
+						    		<field name="wet_bean_gram" attrs="{'invisible': [('template_qc', '=', 'lower')]}"/>
+						    		<field name="red_beans_gram" attrs="{'invisible': [('template_qc', '=', 'lower')]}"/>
+						    		<field name="stinker_gram" attrs="{'invisible': [('template_qc', '=', 'lower')]}"/>
+						    		<field name="faded_gram" attrs="{'invisible': [('template_qc', '=', 'lower')]}"/>
+
+						    		<field name="sleeve_5_up" attrs="{'invisible': [('template_qc', 'not in', ['clean', 'lower', 'clean_bulk'])]}"/>
+									<field name="unhulled" attrs="{'invisible': [('template_qc', 'not in', ['clean', 'lower', 'bulk', 'clean_bulk'])]}"/>
+									<field name="remaining_coffee" attrs="{'invisible': [('template_qc', 'not in', ['clean', 'lower', 'clean_bulk'])]}"/>
+									<field name="blacks" attrs="{'invisible': [('template_qc', 'not in', ['clean', 'lower', 'clean_bulk'])]}"/>
+									<field name="half_monsoon" attrs="{'invisible': [('template_qc', 'not in', ['clean', 'clean_bulk'])]}"/>
+									<field name="good_beans" attrs="{'invisible': [('template_qc', 'not in', ['clean', 'lower', 'clean_bulk'])]}"/>
+        
+                                    <field name="total_gram" />
+                                </group>
+                                <group>
+                                    <field name="moisture_percent" />
+                                    <field name="outturn_percent" readonly="1"/>
+                                    <field name="sleeve_6_up_percent" readonly="1" attrs="{'invisible': [('template_qc', 'not in', ['c_grade'])]}"/>
+						    		<field name="sleeve_5_5_up_percent" readonly="1" attrs="{'invisible': [('template_qc', 'not in', ['c_grade'])]}"/>
+						    		<field name="sleeve_5_5_down_percent" readonly="1" attrs="{'invisible': [('template_qc', 'not in', ['c_grade'])]}"/>
+						    		<field name="sleeve_5_down_percent" readonly="1" attrs="{'invisible': [('template_qc', 'not in', ['c_grade'])]}"/>
+						    		<field name="aaa_percent" readonly="1" attrs="{'invisible': [('template_qc', 'not in', ['raw', 'clean', 'bulk', 'clean_bulk'])]}"/>
+						    		<field name="aa_percent" readonly="1" attrs="{'invisible': [('template_qc', 'not in', ['raw', 'clean', 'bulk', 'clean_bulk'])]}"/>
+						    		<field name="a_percent" readonly="1" attrs="{'invisible': [('template_qc', 'not in', ['raw', 'clean', 'bulk', 'clean_bulk'])]}"/>
+						    		<field name="b_percent" readonly="1" attrs="{'invisible': [('template_qc', 'not in', ['raw', 'clean', 'bulk', 'clean_bulk'])]}"/>
+						    		<field name="c_percent" readonly="1" attrs="{'invisible': [('template_qc', 'not in', ['raw', 'clean', 'bulk', 'clean_bulk'])]}"/>
+						    		<field name="pb_percent" readonly="1" attrs="{'invisible': [('template_qc', 'in', ['pb_grade', 'lower'])]}"/>
+						    		<field name="flat_percent" readonly="1" attrs="{'invisible': [('template_qc', '!=', 'pb_grade')]}"/>
+						    		<field name="pb1_percent" readonly="1" attrs="{'invisible': [('template_qc', '!=', 'pb_grade')]}"/>
+						    		<field name="pb2_percent" readonly="1" attrs="{'invisible': [('template_qc', '!=', 'pb_grade')]}"/>
+						    		<field name="bb_percent" readonly="1"/>
+						    		<field name="bleached_percent" readonly="1" attrs="{'invisible': [('template_qc', '=', 'lower')]}"/>
+						    		<field name="idb_percent" readonly="1"/>
+						    		<field name="bits_percent" readonly="1"/>
+						    		<field name="hulks_percent" readonly="1"/>
+						    		<field name="stone_percent" readonly="1"/>
+						    		<field name="skin_out_percent" readonly="1" attrs="{'invisible': [('template_qc', '=', 'lower')]}"/>
+						    		<field name="triage_percent" readonly="1"/>
+						    		<field name="wet_bean_percent" readonly="1" attrs="{'invisible': [('template_qc', '=', 'lower')]}"/>
+						    		<field name="red_beans_percent" readonly="1" attrs="{'invisible': [('template_qc', '=', 'lower')]}"/>
+						    		<field name="stinker_percent" readonly="1" attrs="{'invisible': [('template_qc', '=', 'lower')]}"/>
+						    		<field name="faded_percent" readonly="1" attrs="{'invisible': [('template_qc', '=', 'lower')]}"/>
+
+									<field name="sleeve_5_up_percent" readonly="1" attrs="{'invisible': [('template_qc', 'not in', ['clean', 'lower', 'clean_bulk'])]}"/>
+									<field name="unhulled_percent" readonly="1" attrs="{'invisible': [('template_qc', 'not in', ['clean', 'lower', 'bulk', 'clean_bulk'])]}"/>
+									<field name="remaining_coffee_percent" readonly="1" attrs="{'invisible': [('template_qc', 'not in', ['clean', 'lower', 'clean_bulk'])]}"/>
+									<field name="blacks_percent" readonly="1" attrs="{'invisible': [('template_qc', 'not in', ['clean', 'lower', 'clean_bulk'])]}"/>
+									<field name="half_monsoon_percent" readonly="1" attrs="{'invisible': [('template_qc', 'not in', ['clean', 'clean_bulk'])]}"/>
+									<field name="good_beans_percent" readonly="1" attrs="{'invisible': [('template_qc', 'not in', ['clean', 'lower', 'clean_bulk'])]}"/>
+        
+                                    <field name="total_percent" readonly="1"/>
+<!--                                    <field name="visual_quality_ids" options="{'no_create': True, 'no_open': True}" widget="many2many_tags" />-->
+                                </group>
+                            </group>
+                            <div class="oe_clear"/>
+                        </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+<!--        form normal-->
+        <record id="truck_quality_product_view_tree" model="ir.ui.view">
+            <field name="name">truck_quality_product_view_tree</field>
+            <field name="model">truck.quality.production</field>
+            <field name="arch" type="xml">
+                <tree string="Truck Quality Production">
+                    <field name="name"/>
+                    <field name="truck_number"/>
+                    <field name="date"/>
+                    <field name="department_stage"/>
+                    <field name="production_id"/>
+                    <field name="product_id"/>
+                    <field name="no_of_bag"/>
+                    <field name="quantity"/>
+                    <field name="wb_slip_number"/>
+                    <field name="template_qc"/>
+                    <field name="moisture_percent" />
+                    <field name="outturn_percent" />
+                    <field name="sleeve_6_up_percent"/>
+                    <field name="sleeve_5_5_up_percent"/>
+                    <field name="sleeve_5_5_down_percent"/>
+                    <field name="sleeve_5_down_percent" />
+                    <field name="aaa_percent" />
+                    <field name="aa_percent"/>
+                    <field name="a_percent"/>
+                    <field name="b_percent"/>
+                    <field name="c_percent"/>
+                    <field name="pb_percent"/>
+                    <field name="flat_percent" />
+                    <field name="pb1_percent"/>
+                    <field name="pb2_percent"/>
+                    <field name="bb_percent"/>
+                    <field name="bleached_percent" />
+                    <field name="idb_percent" />
+                    <field name="bits_percent" />
+                    <field name="hulks_percent" />
+                    <field name="stone_percent" />
+                    <field name="skin_out_percent" />
+                    <field name="triage_percent" />
+                    <field name="wet_bean_percent" />
+                    <field name="red_beans_percent"/>
+                    <field name="stinker_percent"/>
+                    <field name="faded_percent"/>
+
+                    <field name="sleeve_5_up_percent" />
+                    <field name="unhulled_percent" />
+                    <field name="remaining_coffee_percent"/>
+                    <field name="blacks_percent"/>
+                    <field name="half_monsoon_percent"/>
+                    <field name="good_beans_percent"/>
+                </tree>
+            </field>
+        </record>
+
+    <record id="truck_quality_product_view_search" model="ir.ui.view">
+            <field name="name">truck_quality_product_view_search</field>
+            <field name="model">truck.quality.production</field>
+            <field name="arch" type="xml">
+                <search string="Truck Quality Production">
+                    <field name="name"/>
+                    <field name="production_id"/>
+                    <field name="product_id"/>
+                    <field name="wb_slip_number"/>
+                    <field name="truck_number"/>
+                    <field name="department_stage"/>
+                    <group expand="1" string="Group By">
+                        <filter string="Template QC" name="template_qc" domain="[]"
+                                context="{'group_by':'template_qc'}"/>
+                        <filter string="Product" name="product_id" domain="[]"
+                                context="{'group_by':'product_id'}"/>
+                        <filter string="Production" name="production_id" domain="[]"
+                                context="{'group_by':'production_id'}"/>
+                        <filter string="Department" name="department_stage" domain="[]"
+                                context="{'group_by':'department_stage'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+    <record id="action_truck_quality_product" model="ir.actions.act_window">
+            <field name="name">Truck Quality Production</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">truck.quality.production</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="truck_quality_product_view_search"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    There is no examples click here to add new Truck Quality Production.
+                </p>
+            </field>
+        </record>
+
+    <menuitem id="menu_action_truck_quality_product"
+            action="action_truck_quality_product"
+            sequence="801"
+            parent="mrp.menu_mrp_manufacturing"/>
+</odoo>

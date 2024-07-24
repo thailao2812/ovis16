@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+   
+        <record id="view_output_value_tree" model="ir.ui.view">
+            <field name="name">view.output.value.tree</field>
+            <field name="model">v.output.value</field>
+            <field name="arch" type="xml">
+                <tree >
+                    <field name = 'batch_no' string="Batch No." />
+                    <field name = 'zone_name' string="ZONE" />
+                    <field name = 'stack' />
+                    <field name = 'stock_note' string="Stock Note" />
+                    <field name = 'picking_date' string="Date" />
+                    <field name = 'product' readonly='1'/>
+                    <field name = 'premium' />
+                    
+                    <field name = 'net_quantity' string = 'NET Qty. (Kg)' />
+                    <field name = 'mc' />
+                    <field name = 'fm' />
+                    <field name = 'black' />
+                    <field name = 'broken' />
+                    <field name = 'brown' />
+                    <field name = 'mold' />
+                    <field name = 'cherry' />
+                    <field name = 'excelsa' />
+                    <field name = 'screen20' />
+                    <field name = 'screen19' />
+                    <field name = 'screen18' />
+                    <field name = 'screen16' />
+                    <field name = 'screen13' />
+                    <field name = 'eaten' />
+                    <field name = 'burn' />
+                    <field name = 'immature' />
+                    <field name = 'screen12' />
+
+                </tree>
+             </field>
+        </record>
+
+        <record id="search_output_value" model="ir.ui.view">
+            <field name="name">search.output.value</field>
+            <field name="model">v.output.value</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name = "batch_no"/>
+                    <field name = "zone_name"/>
+                    <field name = "stock_note"/>
+                    <field name = "stack"/>
+                    <field name = "product"/>
+                    
+                    <group expand="1" string="Group By">
+                        <filter name="group_by_stack" string="Batch No." domain="[]" context="{'group_by':'stack'}"/>
+                        <filter name="group_by_zone_name" string="Stack" domain="[]" context="{'group_by':'zone_name'}"/>
+                        <filter name="group_by_product" string="Product" domain="[]" context="{'group_by':'product'}"/>
+                    </group>
+                </search>
+             </field>
+        </record>
+                      
+        <record id="action_output_value" model="ir.actions.act_window">
+            <field name="name">Output Value</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">v.output.value</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        
+        
+
+    </data>
+</openerp>

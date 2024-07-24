@@ -1,0 +1,756 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <menuitem id="sd_purchase_contract.menu_action_purchase_contract"
+              parent="sd_purchase_contract.purchase_contract_lv_1_menu"
+		        	name="Regular Contract"/>
+
+    <menuitem id="sd_purchase_contract.menu_pur_action_ptbf_contract"
+              parent="sd_purchase_contract.purchase_contract_lv_1_menu"
+					name="Purchase Price Fixation"/>
+    <menuitem id="sd_purchase_contract.menu_pur_action_consignment_agreement"
+              parent="sd_purchase_contract.purchase_contract_lv_1_menu"
+					name="Consignment Contract"/>
+
+    <record model="ir.actions.act_window" id="sd_purchase_contract.action_purchase_contract">
+            <field name="name">Regular Contract</field>
+        </record>
+
+    <record model="ir.actions.act_window" id="sd_purchase_contract.action_purchase_contract">
+            <field name="name">Regular Contract</field>
+        </record>
+    <record model="ir.actions.act_window" id="sd_purchase_contract.action_ptbf_contract">
+            <field name="name">Purchase Price Fixation</field>
+        </record>
+
+    <record model="ir.actions.act_window" id="sd_purchase_contract.action_consignment_agreement">
+            <field name="name">Consignment Contract</field>
+        </record>
+
+    <menuitem id="sd_purchase_contract.menu_pur_action_purchase_contract_quota"
+					parent="sd_purchase_contract.purchase_contract_lv_1_menu" active="False"/>
+    <menuitem id="sd_purchase_contract.menu_pur_action_purchase_contract_quota_temp"
+					parent="sd_purchase_contract.purchase_contract_lv_1_menu" active="False"/>
+
+    <record id="view_purchase_contract_form_inherit_india" model="ir.ui.view">
+        <field name="name">view_purchase_contract_form_inherit_india</field>
+        <field name="model">purchase.contract</field>
+        <field name="inherit_id" ref="sd_purchase_contract.view_purchase_contract_form"/>
+        <field name="arch" type="xml">
+			 <xpath expr="//field[@name='contract_line']/tree/field[@name='product_uom']" position="after">
+            	<field name="bag_no" attrs="{'readonly': [('parent.state', 'in', ['director', 'approved', 'done', 'cancel'])]}"/>
+            </xpath>
+            <xpath expr="//field[@name='origin']" position="attributes">
+            	<attribute name="attrs">{'readonly': [('state', 'in', ['director', 'approved', 'done', 'cancel'])]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='contract_line']/tree/field[@name='product_id']" position="attributes">
+            	<attribute name="attrs">{'readonly': [('parent.state', 'in', ['director', 'approved', 'done', 'cancel'])]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='contract_line']/tree/field[@name='price_unit']" position="attributes">
+            	<attribute name="attrs">{'readonly': [('parent.state', 'in', ['director', 'approved', 'done', 'cancel'])], 'invisible': [('parent.type','=','consign')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='contract_line']/tree/field[@name='name']" position="attributes">
+            	<attribute name="attrs">{'readonly': [('parent.state', 'in', ['director', 'approved', 'done', 'cancel'])]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='contract_line']/tree/field[@name='product_qty']" position="attributes">
+            	<attribute name="attrs">{'readonly': [('parent.state', 'in', ['director', 'approved', 'done', 'cancel'])]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='contract_line']/tree/field[@name='packing_id']" position="attributes">
+            	<attribute name="attrs">{'readonly': [('parent.state', 'in', ['director', 'approved', 'done', 'cancel'])]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='delivery_place_id']" position="attributes">
+                <attribute name="attrs">{'readonly': [('state', 'in', ['director', 'approved', 'done', 'cancel'])]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='partner_id']" position="after">
+            	<field name="estate_name"/>
+            </xpath>
+            <xpath expr="//field[@name='name']" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </xpath>
+            <xpath expr="//button[@name='button_approve']" position="after">
+                <button name="approve_commercial" states="draft" string="Submit" type="object" class="oe_highlight" groups="sd_india_master.group_purchase_india"/>
+                <button name="approve_account" states="commercial" string="Approve" type="object" class="oe_highlight" groups="sd_india_master.group_commercial_cm_india"/>
+                <button name="approve_director" states="accounting" string="Approve" type="object" class="oe_highlight" groups="sd_india_master.group_accounting_india"/>
+                <button name="%(sd_india_contract.action_view_reject_purchase_contract)d" states="commercial,accounting,director" string="Reject" type="action" class="oe_highlight" groups="sd_india_master.group_commercial_cm_india,sd_india_master.group_accounting_india,sd_india_master.group_director_india"/>
+            </xpath>
+            <xpath expr="//button[@name='button_approve']" position="attributes">
+                <attribute name="states">director</attribute>
+                <attribute name="groups">sd_india_master.group_director_india</attribute>
+            </xpath>
+            <xpath expr="//button[@name='button_approve']" position="attributes">
+                <attribute name="string">Approve</attribute>
+            </xpath>
+            <xpath expr="//field[@name='state']" position="attributes">
+                <attribute name="statusbar_visible">draft,commercial,accounting,director,approved,done</attribute>
+            </xpath>
+            <xpath expr="//group[1]" position="after">
+                <group string="Reject Reason">
+                    <field name="reject_by_commercial" readonly="1"/>
+                    <field name="reject_by_accounting" readonly="1"/>
+                    <field name="reject_by_director" readonly="1"/>
+                </group>
+            </xpath>
+            <xpath expr="//page[2]" position="attributes">
+                <attribute name="string">CR Allocation</attribute>
+            </xpath>
+            <xpath expr="//page[2]/field[@name='npe_ids']/tree/field[@name='contract_id']" position="attributes">
+                <attribute name="string">CR Contract</attribute>
+            </xpath>
+            <xpath expr="//page[3]" position="attributes">
+                <attribute name="string">CS Allocation</attribute>
+            </xpath>
+            <xpath expr="//page[3]/field[@name='nvp_ids']/tree/field[@name='npe_contract_id']" position="attributes">
+                <attribute name="string">CS Contract</attribute>
+            </xpath>
+            <xpath expr="//page[@name='invoice']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='npe_contract_id']" position="attributes">
+                <attribute name="string">CS Contract</attribute>
+            </xpath>
+            <xpath expr="//button[@name='button_lai']" position="attributes">
+                <attribute name="string">Refresh Interest</attribute>
+            </xpath>
+            <xpath expr="//field[@name='pay_allocation_ids']/form/group/field[@name='relation_contract_id']" position="attributes">
+                <attribute name="string">From CS Contract</attribute>
+            </xpath>
+            <xpath expr="//field[@name='pay_allocation_ids']/form/group/field[@name='allocation_amount']" position="attributes">
+                <attribute name="attrs">{'readonly': 0}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='pay_allocation_ids']/tree/field[@name='relation_contract_id']" position="attributes">
+                <attribute name="string">From CS Contract</attribute>
+            </xpath>
+            <xpath expr="//field[@name='pay_allocation_ids']/form/notebook/page/field[@name='allocation_line_ids']/tree/field[@name='total_date']" position="attributes">
+                <attribute name="string">No of Days</attribute>
+            </xpath>
+            <xpath expr="//field[@name='contract_line']/tree/field[@name='premium']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='contract_line']/tree/field[@name='hedged_fixed_level']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='contract_line']/tree/field[@name='diff_price']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='contract_line']/tree/field[@name='ex']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='contract_line']/tree/field[@name='difams']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='trader_id']" position="replace">
+                <field name="agent_id" domain="[('agent', '=', True)]" options="{'no_create': True}" attrs="{'readonly': [('state', 'in', ['director', 'approved', 'done', 'cancel'])]}"/>
+            </xpath>
+            <xpath expr="//field[@name='premium']" position="attributes">
+                <attribute name="string">Premium Certificate Price/Kg</attribute>
+                <attribute name="readonly">1</attribute>
+                <attribute name="force_save">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='certificate_id']" position="attributes">
+                <attribute name="attrs">{'invisible': [('product_id', '=', False)]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='premium']" position="after">
+                <field name="product_id" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='is_temp_quota']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='signed_by_gm']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='signed_by_supplier']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='is_according']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='according_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='request_payment_ids']" position="attributes">
+                <attribute name="attrs">{'readonly': [('state', '!=', 'approved')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='request_payment_ids']/tree/button[@name='print_printout_payment_npv']" position="replace">
+
+            </xpath>
+            <xpath expr="//field[@name='request_payment_ids']/tree/button[@name='print_payment_request']" position="replace">
+
+            </xpath>
+            <xpath expr="//field[@name='request_payment_ids']/form/notebook//field[@name='request_payment_ids']/tree/field[@name='payment_date']" position="replace">
+                <field name="date"/>
+            </xpath>
+            <xpath expr="//field[@name='request_payment_ids']/form/group/group[2]/field[@name='partner_bank_id']" position="after">
+                <field name="related_holder"/>
+            </xpath>
+            <xpath expr="//field[@name='request_payment_ids']/form/group/group[2]/field[@name='chinhanh']" position="attributes">
+                <attribute name="string">Bank Name</attribute>
+            </xpath>
+            <xpath expr="//field[@name='request_payment_ids']/form/group/group[2]/field[@name='chinhanh']" position="after">
+                <field name="branch"/>
+            </xpath>
+            <xpath expr="//field[@name='request_payment_ids']/form/group/group[2]/field[@name='request_amount_temp']" position="after">
+                <field name="deduction_quantity"/>
+                <field name="deduction_value"/>
+            </xpath>
+            <xpath expr="//field[@name='request_payment_ids']/form/group/group[1]/field[@name='partner_id']" position="after">
+                <field name="estate_name"/>
+            </xpath>
+            <xpath expr="//field[@name='request_payment_ids']/form/group/group[1]/field[@name='payment_quantity']" position="after">
+                <field name="vendor_invoice_number"/>
+                <field name="vendor_invoice_date"/>
+                <field name="product_id"/>
+                <field name="price"/>
+            </xpath>
+            <xpath expr="//field[@name='request_payment_ids']/form/group/group[1]/field[@name='type_payment']" position="attributes">
+                <attribute name="readonly">1</attribute>
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='request_payment_ids']/form/group/group[1]/field[@name='type_payment']" position="after">
+                <field name="use_payment_for" required="1"/>
+            </xpath>
+            <xpath expr="//field[@name='request_payment_ids']/form/group/group[2]/field[@name='purchase_contract_id']" position="after">
+                <field name="financial_year_id" required="1" options="{'no_create': True}"/>
+                <field name="tds_assessable_value"/>
+                <field name="tds_amount"/>
+                <field name="final_request_payment"/>
+            </xpath>
+            <xpath expr="//field[@name='request_payment_ids']/form/group/group[1]/field[@name='partner_id']" position="attributes">
+                <attribute name="readonly">1</attribute>
+                <attribute name="force_save">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='payment_ids']/tree/field[@name='payment_date']" position="replace">
+                <field name="date"/>
+            </xpath>
+            <xpath expr="//button[@name='printf_nvp']" position="replace">
+                <button name="print_cr" string="Print CR" type="object" class="oe_highlight"/>
+                <button name="print_cr_detail" string="Print Invoice" type="object" class="oe_highlight" attrs="{'invisible': [('state', '!=', 'approved')]}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_ptbf_contract_form_inherit_india" model="ir.ui.view">
+        <field name="name">view_ptbf_contract_form_inherit_india</field>
+        <field name="model">purchase.contract</field>
+        <field name="inherit_id" ref="sd_purchase_contract.view_ptbf_contract_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="estate_name"/>
+            </xpath>
+            <xpath expr="//field[@name='contract_line']/tree/field[@name='product_id']" position="attributes">
+            	<attribute name="attrs">{'readonly': [('parent.state', 'in', ['director', 'approved', 'done', 'cancel'])]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='contract_line']/tree/field[@name='name']" position="attributes">
+            	<attribute name="attrs">{'readonly': [('parent.state', 'in', ['director', 'approved', 'done', 'cancel'])]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='contract_line']/tree/field[@name='product_qty']" position="attributes">
+            	<attribute name="attrs">{'readonly': [('parent.state', 'in', ['director', 'approved', 'done', 'cancel'])]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='contract_line']/tree/field[@name='packing_id']" position="attributes">
+            	<attribute name="attrs">{'readonly': [('parent.state', 'in', ['director', 'approved', 'done', 'cancel'])]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='delivery_place_id']" position="attributes">
+                <attribute name="attrs">{'readonly': [('state', 'in', ['director', 'approved', 'done', 'cancel'])]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='request_payment_ids']" position="attributes">
+                <attribute name="attrs">{'readonly': [('state', '!=', 'approved')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='request_payment_ids']/tree/button[@name='print_printout_payment_npv']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='request_payment_ids']/tree/button[@name='print_payment_request']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='request_payment_ids']/form/notebook//field[@name='request_payment_ids']/tree/field[@name='payment_date']" position="replace">
+                <field name="date"/>
+            </xpath>
+            <xpath expr="//field[@name='request_payment_ids']/form/group/group[1]/field[@name='partner_bank_id']" position="after">
+                <field name="related_holder"/>
+            </xpath>
+            <xpath expr="//field[@name='request_payment_ids']/form/group/group[2]/field[@name='chinhanh']" position="attributes">
+                <attribute name="string">Bank Name</attribute>
+            </xpath>
+            <xpath expr="//field[@name='request_payment_ids']/form/group/group[2]/field[@name='chinhanh']" position="after">
+                <field name="branch"/>
+            </xpath>
+            <xpath expr="//field[@name='request_payment_ids']/form/group/group[2]/field[@name='request_amount_temp']" position="after">
+                <field name="deduction_quantity"/>
+                <field name="deduction_value"/>
+            </xpath>
+            <xpath expr="//field[@name='request_payment_ids']/form/group/group[1]/field[@name='partner_id']" position="after">
+                <field name="estate_name"/>
+            </xpath>
+            <xpath expr="//field[@name='request_payment_ids']/form/group/group[1]/field[@name='payment_quantity']" position="after">
+                <field name="vendor_invoice_number"/>
+                <field name="vendor_invoice_date"/>
+                <field name="product_id"/>
+                <field name="price"/>
+            </xpath>
+            <xpath expr="//field[@name='request_payment_ids']/form/group/group[1]/field[@name='type_payment']" position="attributes">
+                <attribute name="readonly">1</attribute>
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='request_payment_ids']/form/group/group[1]/field[@name='type_payment']" position="after">
+                <field name="use_payment_for" required="1"/>
+            </xpath>
+            <xpath expr="//field[@name='request_payment_ids']/form/group/group[1]/field[@name='partner_id']" position="attributes">
+                <attribute name="readonly">1</attribute>
+                <attribute name="force_save">1</attribute>
+            </xpath>
+			 <xpath expr="//field[@name='name']" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </xpath>
+            <xpath expr="//button[@name='button_approve']" position="after">
+                <button name="approve_commercial" states="draft" string="Submit" type="object" class="oe_highlight" groups="sd_india_master.group_purchase_india"/>
+                <button name="approve_account" states="commercial" string="Approve" type="object" class="oe_highlight" groups="sd_india_master.group_commercial_cm_india"/>
+                <button name="approve_director" states="accounting" string="Approve" type="object" class="oe_highlight" groups="sd_india_master.group_accounting_india"/>
+                <button name="%(sd_india_contract.action_view_reject_purchase_contract)d" states="commercial,accounting,director" string="Reject" type="action" class="oe_highlight" groups="sd_india_master.group_commercial_cm_india,sd_india_master.group_accounting_india,sd_india_master.group_director_india"/>
+            </xpath>
+            <xpath expr="//button[@name='button_approve']" position="attributes">
+                <attribute name="states">director</attribute>
+                <attribute name="groups">sd_india_master.group_director_india</attribute>
+            </xpath>
+             <xpath expr="//button[@name='button_approve']" position="attributes">
+                <attribute name="string">Approve</attribute>
+            </xpath>
+            <xpath expr="//field[@name='state']" position="attributes">
+                <attribute name="statusbar_visible">draft,commercial,accounting,director,approved,done</attribute>
+            </xpath>
+            <xpath expr="//group[1]" position="after">
+                <group string="Reject Reason">
+                    <field name="reject_by_commercial" readonly="1"/>
+                    <field name="reject_by_accounting" readonly="1"/>
+                    <field name="reject_by_director" readonly="1"/>
+                </group>
+            </xpath>
+            <xpath expr="//field[@name='npe_contract_id']" position="attributes">
+                <attribute name="string">CS Contract</attribute>
+            </xpath>
+            <xpath expr="//field[@name='payment_term_item']" position="replace">
+            </xpath>
+            <xpath expr="//separator" position="replace">
+            </xpath>
+            <xpath expr="//button[@name='button_done']" position="attributes">
+                <attribute name="string">Done</attribute>
+            </xpath>
+            <xpath expr="//page[3]" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//page[4]" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//page[6]" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </xpath>
+            <xpath expr="//field[@name='ptbf_ids']/tree/field[@name='input_centlb']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='ptbf_ids']/form/sheet/group/group/field[@name='input_centlb']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='ptbf_ids']/form/sheet/field[@name='history_rate_ids']/tree/field[@name='rate']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='ptbf_ids']/form/sheet/field[@name='history_rate_ids']/tree/field[@name='final_price_vn']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='ptbf_ids']/form/sheet/field[@name='history_rate_ids']/tree/field[@name='total_amount_en']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='ptbf_ids']/form/sheet/field[@name='history_rate_ids']/tree/field[@name='grn_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='ptbf_ids']/form/sheet/field[@name='history_rate_ids']/tree/field[@name='qty_receive']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='ptbf_ids']/form/sheet/group/group/field[@name='quantity_receive']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='ptbf_ids']/tree/field[@name='quantity_receive']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+             <xpath expr="//field[@name='premium']" position="attributes">
+                <attribute name="string">Premium Certificate Price/Kg</attribute>
+                 <attribute name="readonly">1</attribute>
+                <attribute name="force_save">1</attribute>
+            </xpath>
+                <xpath expr="//field[@name='signed_by_gm']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='signed_by_supplier']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='is_according']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='according_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+        </field>
+    </record>
+
+    <record id="view_consignment_agreement_form_inherit_india" model="ir.ui.view">
+        <field name="name">view_consignment_agreement_form_inherit_india</field>
+        <field name="model">purchase.contract</field>
+        <field name="inherit_id" ref="sd_purchase_contract.view_consignment_agreement_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="estate_name"/>
+            </xpath>
+            <xpath expr="//field[@name='contract_line']/tree/field[@name='product_id']" position="attributes">
+            	<attribute name="attrs">{'readonly': [('parent.state', 'in', ['director', 'approved', 'done', 'cancel'])]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='contract_line']/tree/field[@name='name']" position="attributes">
+            	<attribute name="attrs">{'readonly': [('parent.state', 'in', ['director', 'approved', 'done', 'cancel'])]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='contract_line']/tree/field[@name='product_qty']" position="attributes">
+            	<attribute name="attrs">{'readonly': [('parent.state', 'in', ['director', 'approved', 'done', 'cancel'])]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='contract_line']/tree/field[@name='packing_id']" position="attributes">
+            	<attribute name="attrs">{'readonly': [('parent.state', 'in', ['director', 'approved', 'done', 'cancel'])]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='delivery_place_id']" position="attributes">
+                <attribute name="attrs">{'readonly': [('state', 'in', ['director', 'approved', 'done', 'cancel'])]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='request_payment_ids']/form/notebook//field[@name='request_payment_ids']/tree/field[@name='payment_date']" position="replace">
+                <field name="date"/>
+            </xpath>
+            <xpath expr="//field[@name='request_payment_ids']" position="attributes">
+                <attribute name="attrs">{'readonly': [('state', '!=', 'approved')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='request_payment_ids']/tree/button[@name='print_printout_payment_npv']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='request_payment_ids']/tree/button[@name='print_payment_request']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='request_payment_ids']/form/group/group[2]/field[@name='partner_bank_id']" position="after">
+                <field name="related_holder"/>
+            </xpath>
+            <xpath expr="//field[@name='request_payment_ids']/form/group/group[2]/field[@name='chinhanh']" position="attributes">
+                <attribute name="string">Bank Name</attribute>
+            </xpath>
+            <xpath expr="//field[@name='request_payment_ids']/form/group/group[2]/field[@name='chinhanh']" position="after">
+                <field name="branch"/>
+            </xpath>
+            <xpath expr="//field[@name='request_payment_ids']/form/group/group[2]/field[@name='request_amount_temp']" position="after">
+                <field name="deduction_quantity"/>
+                <field name="deduction_value"/>
+            </xpath>
+            <xpath expr="//field[@name='request_payment_ids']/form/group/group[1]/field[@name='partner_id']" position="after">
+                <field name="estate_name"/>
+            </xpath>
+            <xpath expr="//field[@name='request_payment_ids']/form/group/group[1]/field[@name='payment_quantity']" position="after">
+                <field name="vendor_invoice_number"/>
+                <field name="vendor_invoice_date"/>
+                <field name="product_id"/>
+                <field name="price"/>
+            </xpath>
+            <xpath expr="//field[@name='request_payment_ids']/form/group/group[1]/field[@name='partner_id']" position="attributes">
+                <attribute name="readonly">1</attribute>
+                <attribute name="force_save">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='request_payment_ids']/form/group/group[1]/field[@name='type_payment']" position="attributes">
+                <attribute name="readonly">1</attribute>
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='request_payment_ids']/form/group/group[1]/field[@name='type_payment']" position="after">
+                <field name="use_payment_for" required="1"/>
+            </xpath>
+			 <xpath expr="//field[@name='contract_line']/tree/field[@name='product_uom']" position="after">
+            	<field name="bag_no" attrs="{'readonly': [('parent.state', 'in', ['director', 'approved', 'done', 'cancel'])]}"/>
+            </xpath>
+            <xpath expr="//field[@name='name']" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </xpath>
+            <xpath expr="//button[@name='button_approve']" position="after">
+                <button name="approve_commercial" states="draft" string="Submit" type="object" class="oe_highlight" groups="sd_india_master.group_purchase_india"/>
+                <button name="approve_account" states="commercial" string="Approve" type="object" class="oe_highlight" groups="sd_india_master.group_commercial_cm_india"/>
+                <button name="approve_director" states="accounting" string="Approve" type="object" class="oe_highlight" groups="sd_india_master.group_accounting_india"/>
+                <button name="%(sd_india_contract.action_view_reject_purchase_contract)d" states="commercial,accounting,director" string="Reject" type="action" class="oe_highlight" groups="sd_india_master.group_commercial_cm_india,sd_india_master.group_accounting_india,sd_india_master.group_director_india"/>
+            </xpath>
+            <xpath expr="//button[@name='button_approve']" position="attributes">
+                <attribute name="states">director</attribute>
+                <attribute name="groups">sd_india_master.group_director_india</attribute>
+            </xpath>
+             <xpath expr="//button[@name='button_approve']" position="attributes">
+                <attribute name="string">Approve</attribute>
+            </xpath>
+            <xpath expr="//field[@name='state']" position="attributes">
+                <attribute name="statusbar_visible">draft,commercial,accounting,director,approved,done</attribute>
+            </xpath>
+            <xpath expr="//group[1]" position="after">
+                <group string="Reject Reason">
+                    <field name="reject_by_commercial" readonly="1"/>
+                    <field name="reject_by_accounting" readonly="1"/>
+                    <field name="reject_by_director" readonly="1"/>
+                </group>
+            </xpath>
+            <xpath expr="//page[2]" position="attributes">
+                <attribute name="string">CR Allocation</attribute>
+            </xpath>
+            <xpath expr="//page[2]/field[@name='npe_ids']/tree/field[@name='contract_id']" position="attributes">
+                <attribute name="string">CR Contract</attribute>
+            </xpath>
+            <xpath expr="//page[3]" position="attributes">
+                <attribute name="string">CS Allocation</attribute>
+            </xpath>
+            <xpath expr="//page[3]/field[@name='nvp_ids']/tree/field[@name='npe_contract_id']" position="attributes">
+                <attribute name="string">CS Contract</attribute>
+            </xpath>
+            <xpath expr="//page[@name='invoice']" position="replace">
+            </xpath>
+             <xpath expr="//field[@name='premium']" position="attributes">
+                <attribute name="string">Premium Certificate Price/Kg</attribute>
+                 <attribute name="readonly">1</attribute>
+                <attribute name="force_save">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='contract_line']/tree/field[@name='premium']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='is_temp_quota']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='signed_by_gm']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='signed_by_supplier']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='is_according']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='according_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='payment_ids']/tree/field[@name='payment_date']" position="replace">
+                <field name="date"/>
+            </xpath>
+            <xpath expr="//button[@name='printf_npe']" position="replace">
+                <button name="print_cs" string="Print CS" type="object" class="oe_highlight"/>
+                <button name="print_cs_detail" string="Print Invoice" type="object" class="oe_highlight" attrs="{'invisible': [('state', '!=', 'approved')]}"/>
+            </xpath>
+            <xpath expr="//field[@name='songay']" position="after">
+                <field name="agent_id" domain="[('agent', '=', True)]" options="{'no_create': True}" attrs="{'readonly': [('state', 'in', ['director', 'approved', 'done', 'cancel'])]}"/>
+            </xpath>
+            <xpath expr="//field[@name='request_payment_ids']/form/group/group[2]/field[@name='purchase_contract_id']" position="after">
+                <field name="financial_year_id" required="1" options="{'no_create': True}"/>
+                <field name="tds_assessable_value"/>
+                <field name="tds_amount"/>
+                <field name="final_request_payment"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_nvp_contract_allocation_invoiced_form_inherit_india" model="ir.ui.view">
+        <field name="name">view_nvp_contract_allocation_invoiced_form_inherit_india</field>
+        <field name="model">purchase.contract</field>
+        <field name="inherit_id" ref="sd_purchase_contract.view_nvp_contract_allocation_invoiced_form"/>
+        <field name="arch" type="xml">
+			 <xpath expr="//button[@name='button_done']" position="attributes">
+            	<attribute name="string">Done</attribute>
+            </xpath>
+            <xpath expr="//field[@name='stock_allocation_ids']/tree/field[@name='product_id']" position="attributes">
+                <attribute name="context">{'delivery_registration': True}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='pay_allocation_ids']/tree/field[@name='relation_contract_id']" position="attributes">
+                <attribute name="string">From CS Contract</attribute>
+            </xpath>
+            <xpath expr="//field[@name='pay_allocation_ids']/form/group/field[@name='relation_contract_id']" position="attributes">
+                <attribute name="string">From CS Contract</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='stock_allocation_ids']" position="attributes">
+                <attribute name="attrs">{'readonly': [('state', '!=', 'approved')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='stock_allocation_ids']/tree/field[@name='qty_unreceived']" position="after">
+                <field name="qty_allocation_net"/>
+                <field name="qty_received_net"/>
+                <field name="qty_unreceived_net"/>
+            </xpath>
+            <xpath expr="//field[@name='warehouse_id']" position="attributes">
+                <attribute name="required">0</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='certificate_id']" position="after">
+                <field name="remark_note_done" attrs="{'readonly': [('state', '=', 'done')]}"/>
+            </xpath>
+
+        </field>
+    </record>
+
+    <record id="view_purchase_contract_tree_inherit_india" model="ir.ui.view">
+        <field name="name">view_purchase_contract_tree_inherit_india</field>
+        <field name="model">purchase.contract</field>
+        <field name="inherit_id" ref="sd_purchase_contract.view_purchase_contract_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="attributes">
+                <attribute name="string">Contract Number</attribute>
+            </xpath>
+            <xpath expr="//field[@name='state']" position="after">
+                <field name="remark_note_done"/>
+            </xpath>
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="estate_name"/>
+            </xpath>
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="crop_id"/>
+            </xpath>
+            <xpath expr="//field[@name='qty_unreceived']" position="after">
+                <field name="qty_received_net"/>
+                <field name="qty_unreceived_net"/>
+            </xpath>
+            <xpath expr="//field[@name='total_advance']" position="before">
+                <field name="total_deduction_quantity"/>
+                <field name="total_deduction_amount"/>
+            </xpath>
+
+            <xpath expr="//field[@name='product_id']" position="after">
+                <field name="packing_id"/>
+                <field name="number_of_bags"/>
+            </xpath>
+            <xpath expr="//field[@name='state']" position="after">
+                <field name="note"/>
+            </xpath>
+            <xpath expr="//field[@name='total_qty']" position="after">
+                <field name="tds" sum="tds" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='qty_unfixed']" position="after">
+                <field name="fixed_gross_qty" sum="fixed_gross_qty"/>
+                <field name="unfixed_gross_qty" sum="unfixed_gross_qty"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_nvp_contract_tree_inherit_india" model="ir.ui.view">
+        <field name="name">view_nvp_contract_tree_inherit_india</field>
+        <field name="model">purchase.contract</field>
+        <field name="inherit_id" ref="sd_purchase_contract.view_nvp_contract_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="attributes">
+                <attribute name="string">Contract Number</attribute>
+            </xpath>
+            <xpath expr="//field[@name='state']" position="after">
+                <field name="remark_note_done"/>
+            </xpath>
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="crop_id"/>
+            </xpath>
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="estate_name"/>
+            </xpath>
+            <xpath expr="//field[@name='certificate_id']" position="after">
+                <field name="agent_id"/>
+            </xpath>
+            <xpath expr="//field[@name='relation_price_unit']" position="after">
+                <field name="premium" string="Premium Certificate Price/Kg"/>
+                <field name="gross_price"/>
+                <field name="tds" string="TDS" sum="tds" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='diff_price']" position="replace">
+
+            </xpath>
+            <xpath expr="//field[@name='relation_premium']" position="replace">
+
+            </xpath>
+            <xpath expr="//field[@name='qty_unreceived']" position="after">
+                <field name="qty_received_net"/>
+                <field name="qty_unreceived_net"/>
+            </xpath>
+            <xpath expr="//field[@name='amount_deposit']" position="after">
+                <field name="total_deduction_quantity"/>
+                <field name="total_deduction_amount"/>
+            </xpath>
+            <xpath expr="//field[@name='product_id']" position="after">
+                <field name="packing_id"/>
+                <field name="number_of_bags"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_ptbf_contract_tree_inherit_india" model="ir.ui.view">
+        <field name="name">view_ptbf_contract_tree_inherit_india</field>
+        <field name="model">purchase.contract</field>
+        <field name="inherit_id" ref="sd_purchase_contract.view_ptbf_contract_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="attributes">
+                <attribute name="string">Contract Number</attribute>
+            </xpath>
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="estate_name"/>
+            </xpath>
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="crop_id"/>
+            </xpath>
+            <xpath expr="//field[@name='qty_unreceived']" position="after">
+                 <field name="qty_received_net"/>
+                <field name="qty_unreceived_net"/>
+            </xpath>
+            <xpath expr="//field[@name='product_id']" position="after">
+                <field name="number_of_bags"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_wizard_purchase_contract_inherit_india" model="ir.ui.view">
+        <field name="name">view_wizard_purchase_contract_inherit_india</field>
+        <field name="model">wizard.purchase.contract</field>
+        <field name="inherit_id" ref="sd_purchase_contract.view_wizard_purchase_contract"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='button_convert']" position="attributes">
+                <attribute name="string">Convert CR</attribute>
+            </xpath>
+            <xpath expr="//field[@name='contract_line_ids']/tree/field[@name='purchase_contract_id']" position="attributes">
+                <attribute name="string">CS Contract</attribute>
+            </xpath>
+        </field>
+    </record>
+
+     <record id="view_nvp_contract_allocation_invoiced_tree_inherit_india" model="ir.ui.view">
+        <field name="name">view_nvp_contract_allocation_invoiced_tree_inherit_india</field>
+        <field name="model">purchase.contract</field>
+        <field name="inherit_id" ref="sd_purchase_contract.view_nvp_contract_allocation_invoiced_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='amount_sub_total']" position="attributes">
+                <attribute name="sum">amount_sub_total</attribute>
+            </xpath>
+            <xpath expr="//field[@name='amount_total']" position="attributes">
+                <attribute name="sum">amount_total</attribute>
+            </xpath>
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="crop_id"/>
+            </xpath>
+        </field>
+    </record>
+
+
+    <record id="sd_purchase_contract.action_nvp_contract_allocation_invoiced" model="ir.actions.act_window">
+        <field name="domain">[('state','=','approved')]</field>
+    </record>
+
+    <function name="write" model="ir.model.data">
+        <function name="search" model="ir.model.data">
+            <value eval="[('module', '=', 'sd_purchase_contract'), ('name', '=', 'seq_purchase_contract')]"/>
+        </function>
+        <value eval="{'noupdate': False}"/>
+    </function>
+    <function name="write" model="ir.model.data">
+        <function name="search" model="ir.model.data">
+            <value eval="[('module', '=', 'sd_purchase_contract'), ('name', '=', 'seq_npe_contract')]"/>
+        </function>
+        <value eval="{'noupdate': False}"/>
+    </function>
+
+    <record id="sd_purchase_contract.seq_purchase_contract" model="ir.sequence">
+        <field name="prefix">CR-</field>
+    </record>
+    <record id="sd_purchase_contract.seq_npe_contract" model="ir.sequence">
+        <field name="prefix">CS-</field>
+    </record>
+
+    <record id="sd_purchase_contract.action_view_wizard_purchase_contract" model="ir.actions.act_window">
+        <field name="name">Create CR / PTBF Fixation</field>
+    </record>
+
+
+
+</odoo>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+		
+	 <record id="view_picking_inherit_ned_security_gate_queue" model="ir.ui.view">
+	        <field name="name">view.stock.kcs.form.inherit.ned.security.gate.queue</field>
+	        <field name="model">stock.picking</field>
+	        <field name="inherit_id" ref="sd_inventory.view_picking_inherit_sucden_form"/>
+	        <field name="arch" type="xml">
+	        	<xpath expr="//field[@name='delivery_place_id']" position="after">
+	        		<field name="transfer_picking_type" invisible="1"/>
+	        		<field name="date_done" invisible="1"/>
+	        		<label for="link_backorder_id" attrs="{'invisible': [('transfer_picking_type', '=', False)]}" groups="base.user_root,sd_purchase_contract.group_purchase_contract_user"/>
+	        		<div name="link_backorder_id" class="o_row" attrs="{'invisible': [('transfer_picking_type', '=', False)]}"  groups="base.user_root,sd_purchase_contract.group_purchase_contract_user">
+						<field name='link_backorder_id'
+                               groups="base.user_root,sd_purchase_contract.group_purchase_contract_user"
+                               attrs="{'invisible': [('transfer_picking_type', '=', False)]}"
+                               options="{'no_create': True, 'no_edit': True, 'no_create_edit':True}" context="{'back_order': True, 'date_done': date_done, 'partner_id': partner_id}"/>
+	        			<button name="button_link_backorder" states="done" string="Link Backorder" type="object" 
+                            groups="base.user_root,sd_purchase_contract.group_purchase_contract_user" attrs="{'invisible': [('transfer_picking_type', '=', False)]}"/>
+					</div>
+                </xpath>
+	        </field>
+	    </record>
+
+	<record id="vpicktree_inherit_sd_security" model="ir.ui.view">
+	        <field name="name">vpicktree_inherit_sd_security</field>
+	        <field name="model">stock.picking</field>
+	        <field name="inherit_id" ref="stock.vpicktree"/>
+	        <field name="arch" type="xml">
+                <xpath expr="//field[@name='vehicle_no']" position="after">
+                    <field name="link_backorder_id"  optional="show" invisible="not context.get('fot', False)"/>
+                </xpath>
+			</field>
+	</record>
+
+
+	<record id="view_stock_kcs_purchase_tree_inherit_ned_security_gate_queue" model="ir.ui.view">
+	        <field name="name">view_stock_kcs_purchase_tree_inherit_ned_security_gate_queue</field>
+	        <field name="model">stock.picking</field>
+	        <field name="inherit_id" ref="sd_quality.view_stock_kcs_purchase_tree"/>
+	        <field name="arch" type="xml">
+	        	<xpath expr="//field[@name='name']" position="after">
+	        			<field name='link_backorder_id'/>
+                </xpath>
+	        </field>
+	    </record>
+		
+</odoo>

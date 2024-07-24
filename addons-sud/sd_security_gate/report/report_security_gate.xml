@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+	
+	<template id="template_report_security_gate">
+	    <t t-call="report.html_container">
+	            <div class="page" style="font-size:20px;">
+	            	<div class="row">
+	            		<div style="border:1px solid black;">
+	            			<br/>
+			                <div class="col-xs-12 text-center">
+			                	<img t-if="o.company_id.logo" t-att-src="'data:image/png;base64,%s' % o.company_id.logo" style="max-height: 100px"/><br/>
+			                	<strong t-field="o.company_id.name"/><br/>
+			                	<strong style="font-size:100%;"><span t-esc="get_crop(o)"/></strong><br/>
+			                	<strong style="font-size:100%;">DELIVERY REGISTRATION</strong><br/>
+			                	<div style="font-size:100%;">PHIẾU ĐĂNG KÝ NHẬP HÀNG AAAAAA</div><br/>
+			                	<div style="border:1px solid black;">
+			                		<div style="border:1px solid black;"><strong>SECURITY</strong></div>
+				                	<div class ="text-left" style="font-size:18px;"><strong>Registration No. / </strong>Số phiếu: <span t-field="o.name"/><br/> </div>
+				                	<div class ="text-left" style="font-size:18px;"><strong>Date / </strong>Ngày Tháng: <span t-field="o.arrivial_time"/><br/></div>
+				                	<div class ="text-left" style="font-size:18px;"><strong>Driver No. / </strong>Tài số: <span t-field="o.parking_order"/><br/></div>
+				                	<div class ="text-left" style="font-size:18px;"><strong>Truck / </strong>Số xe: <span t-field="o.license_plate"/><br/></div>
+			                	</div><br/>
+			                	<div style="border:1px solid black;">
+				                	<div style="border:1px solid black;"><strong>QC</strong></div>
+				                	<div class ="text-left" style="font-size:18px;"><strong>Seller / </strong>Người bán: <span t-field="o.supplier_id.name"/><br/></div>
+				                	<div class ="text-left" style="font-size:18px;"><strong>Book code / </strong>Mã số HĐ:<span t-esc="get_contract(o)"/><br/></div>
+				                	<div class ="text-left" style="font-size:18px;"><strong>Bags / </strong>Số bao: <span t-field="o.estimated_bags"/><br/></div>
+				                	<div class ="text-left" style="font-size:18px;"><strong>Net Weight / </strong>TL ước tính: <span t-field="o.approx_quantity"/><br/></div>
+				                	<div class ="text-left" style="font-size:18px;"><strong>Quality / </strong>Loại cà phê: <span t-field="o.aprroved_by_quality"/><br/></div>
+				                	<div class ="text-left" style="font-size:18px;"><strong>Maisture / </strong>Độ ẩm: <span t-field="o.mc"/><br/></div>
+				                	<div class ="text-left" style="font-size:18px;"><strong>Thử mốc </strong><br/> </div>
+				                	<div class ="text-left" style="font-size:18px;"><strong>Thử khói </strong><br/> </div>
+			                	</div><br/>
+			                </div>
+			                <div class="col-xs-12 pull-right">
+					           <table class="table table-condensed">
+					               <tr style="border-black">
+				                        <tr>
+				                        	<td width="50%" class="text-center" style="border:1px solid black; font-size:18px;" ><strong style ="text-decoration: underline;">SECURITY</strong><br/><br/><br/><br/></td>
+				                            <td width="50%" class="text-center" style="border:1px solid black; font-size:18px;"><strong style ="text-decoration: underline;">QC NEDCOFFEE</strong><br/><br/><br/><br/></td> 
+				                        </tr>
+			                        </tr>
+					           </table>
+			           		</div>
+			           		<!-- <div class="border-black text-center">
+	                			<img class="barcode" t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s&amp;humanreadable=1' % ('QRCode', o.name, 150, 150)" style="background-color: #fff"/>
+		           			</div> -->
+			           		<!-- <div class="border-black text-center">
+	                			<img class="makeQRcode" t-att-src="'/report/barcode/QR/'+o.name" alt="QR Code" style="height:150px; width:150px; background-color: #fff"/>
+		           			</div>		 -->           			
+		           			<br/>
+		           		</div>
+	           			<br/>
+	           			<div style="border:1px solid black;">
+		           			<br/>
+			           			<div class="border-black text-center">
+			           				<strong>MẪU HÀNG NHẬP LIÊN 1 (<span t-field="o.license_plate"/>)</strong><br/>
+			           				<strong>Date:</strong> <span t-field="o.arrivial_time"/> <strong>---Weight:</strong> <span t-field="o.approx_quantity"/><br/>
+		                			<img class="barcode" t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s&amp;humanreadable=1' % ('Code128', o.name, 625, 125)" style="background-color: #fff"/>
+			           			</div>
+			           		<br/>
+		           		</div>
+	           			<br/>
+	           			<div style="border:1px solid black;">
+		           			<br/>
+			           			<div class="border-black text-center">
+			           				<strong>MẪU HÀNG NHẬP LIÊN 2 (<span t-field="o.license_plate"/>)</strong><br/>
+			           				<strong>Date:</strong> <span t-field="o.arrivial_time"/> <strong>---Weight:</strong> <span t-field="o.approx_quantity"/><br/>
+		                			<img class="barcode" t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s&amp;humanreadable=1' % ('Code128', o.name, 625, 125)" style="background-color: #fff"/>
+			           			</div>
+			           		<br/>
+		           		</div>
+	           			<br/>
+	           			<div style="border:1px solid black;">
+		           			<br/>
+			           			<div class="border-black text-center">
+			           				<strong>MẪU SƠ BỘ (<span t-field="o.license_plate"/>)</strong><br/>
+			           				<strong>Date:</strong> <span t-field="o.arrivial_time"/> <strong>---Weight:</strong> <span t-field="o.approx_quantity"/><br/>
+		                			<img class="barcode" t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s&amp;humanreadable=1' % ('Code128', o.name, 625, 125)" style="background-color: #fff"/>
+			           				<!-- <img class="barcode" t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;humanreadable=1' % ('Code128', o.name)"/><br/> -->
+			           			</div>
+			           		<br/>
+		           		</div>
+             	</div>
+           	</div>
+        </t>
+	</template>
+	
+	
+	<template id="report_security_gate">
+	    <t t-call="report.html_container">
+	        <t t-foreach="docs" t-as="o">
+	            <t t-call="ned_security_gate_queue.template_report_security_gate" t-lang="o.security_id.partner_id.lang"/>
+	            <p style="page-break-before:always;"></p>
+	        </t>
+	    </t>
+	</template>
+	
+	<record id="paperformat_security_gate" model="report.paperformat">
+            <field name="name">Security Gate</field>
+            <field name="default" eval="True"/>
+            <field name="format">custom</field>
+            <field name="page_height">3126</field>
+            <field name="page_width">80</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">2</field>
+            <field name="margin_bottom">0</field>
+            <field name="margin_left">1</field>
+            <field name="margin_right">1</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">0</field>
+            <field name="dpi">130</field>
+        </record>
+        
+	<report 
+	      id="action_report_security_gate"
+	      string="Report Security Gate"
+	      model="ned.security.gate.queue" 
+	      report_type="qweb-pdf"
+	      file="ned_security_gate_queue.report_security_gate" 
+	      name="ned_security_gate_queue.report_security_gate"
+	      paperformat="paperformat_security_gate"/>
+	      
+	</data>
+</openerp>

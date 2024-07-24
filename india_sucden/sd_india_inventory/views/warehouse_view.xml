@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_warehouse_inherit_sucden_inherit_india" model="ir.ui.view">
+        <field name="name">view_warehouse_inherit_sucden_inherit_india</field>
+        <field name="model">stock.warehouse</field>
+        <field name="inherit_id" ref="sd_inventory.view_warehouse_inherit_sucden"/>
+        <field name="arch" type="xml">
+			 <xpath expr="//field[@name='account_analytic_id']" position="attributes">
+            	<attribute name="required">False</attribute>
+            </xpath>
+
+        </field>
+    </record>
+</odoo>

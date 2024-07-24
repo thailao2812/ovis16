@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    
+        
+    	<!-- Ned stock stack -->
+    	<record id="view_report_ned_stock_stack_tree" model="ir.ui.view">
+            <field name="name">report.ned.stock.stack.tree</field>
+            <field name="model">stock.lot</field>
+            <field eval="100" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Stack" editable="bottom" default_order="id desc">
+                    <field name="zone_id" invisible="0" readonly="1"/>
+                    <field name="name" readonly="1"/>
+                    <field name="date" readonly="1"/>
+                    <field name="production_id"/>
+                    <field name="categ_id" invisible="1"/>
+                    <field name="product_id" readonly="1"/>
+                    <!-- err -->
+					<!--
+					<field name="x_certificate_id"/>
+					-->
+					<!-- err
+                    <field name="packing_id" readonly="1"/>
+                    -->
+                    <field name="districts_id" readonly="1" string="Nguồn Hàng"/>
+                    <!-- errerr
+					<field name="net_qty" string="Stock Weight" sum="net_qty"/>
+					-->
+                    <!-- <field name="basis_qty" sum="basis_qty" string="Basis Weight"/> -->
+                    <!--err 
+                    <field name="gdn_net" sum="gdn_net"/>
+                    -->
+                    <!-- <field name="gdn_basis" sum="gdn_basis"/> -->
+                    <!-- err
+                    <field name="gip_net" sum="gip_net"/>
+                    -->
+                    <!-- <field name="gip_basis" sum="gip_basis"/> -->
+                    <field name="init_qty" sum="init_qty" string="Balance Net"/>
+                    <!-- <field name="remaining_qty" sum="remaining_qty" string="Balance Basis"/> -->
+                    <field name="bag_qty" sum="bag_qty"/>
+                    <field name="mc" avg="mc"/>
+                    <field name="fm" avg="fm"/>
+                    <field name="black" avg="black"/>
+                    <field name="broken" avg="broken"/>
+                    <field name="brown" avg="brown"/>
+                    <field name="mold" avg="mold"/>
+                    <field name="cherry" avg="cherry"/>
+                    <field name="excelsa" avg="excelsa"/>
+                    <field name="screen20" avg="screen20"/>
+                    <field name="screen19" avg="screen19"/>
+                    <field name="screen18" avg="screen18"/>
+                    <field name="screen17" avg="screen17"/>
+                    <field name="screen16" avg="screen16"/>
+                    <field name="screen15" avg="screen15"/>
+                    <field name="screen14" avg="screen14"/>
+                    <field name="screen13" avg="screen13"/>
+                    <field name="greatersc12" avg="greatersc12"/>
+                    <field name="screen12" avg="screen12"/>
+                    <field name="immature" avg="immature"/> 
+                    <field name="burn" avg="burn"/>
+                    <field name="ligh_burnded_bean" avg="ligh_burnded_bean"/>
+                    <field name="eaten" avg="eaten"/>
+                    <field name="stone_count"/>
+                    <field name="stick_count"/>
+                    <field name="remarks"/>                    
+                    <field name="remarks_note"/>
+					<field name="sampler"/>
+                    <field name="remaining_qty"  invisible="1"/>
+                </tree>
+            </field>
+        </record>
+        
+        
+        <record id="action_report_ned_stock_stack_tree" model="ir.actions.act_window">
+            <field name="name">Stock Movement</field>
+            <field name="res_model">stock.lot</field>
+            <field name="view_mode">tree,pivot</field>
+            <field name="domain">[('product_id.hide_report','=',False)]</field>
+            <field name="context" eval="{'search_by_field_date': ['date']}"/>
+            <field name="context">{}</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+              		Create a Stack, the first step of a new Stack.
+              </p>
+            </field>
+        </record>
+        
+        <record model="ir.actions.act_window.view" id="action_stock_movement_view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_report_ned_stock_stack_tree"/>
+            <field name="act_window_id" ref="action_report_ned_stock_stack_tree"/>
+        </record>
+        
+
+        
+
+
+    </data>
+</odoo>

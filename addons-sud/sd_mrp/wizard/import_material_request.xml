@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+		<record id="view_mrequest_import_file_form" model="ir.ui.view">
+	        <field name="name">view.mrequest.import.file.form.</field>
+	        <field name="model">s.import.file</field>
+	        <field name="arch" type="xml">
+				<form string="Import Material Request">
+					<sheet>
+	                    <div class="oe_title">
+	                        <h1>
+								<field name="mrp_id" invisible="1"/>
+	                            <field name="im_file"/>
+								<field name="error"/>
+	                        </h1>
+	                    </div>
+					</sheet>
+					<footer>
+						<button name="import_material_request" string="Import" class="oe_highlight" type="object"/>
+						<button string="Cancel" class="btn-default" special="cancel"/>
+					</footer>
+				</form>
+			</field>
+		</record>
+
+		<record id="action_import_mrequest" model="ir.actions.act_window">
+            <field name="name">Import Material Request</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">s.import.file</field>
+            <field name="view_mode">form</field>
+			<field name="target">new</field>      
+        </record>
+        
+      </data>
+</odoo>

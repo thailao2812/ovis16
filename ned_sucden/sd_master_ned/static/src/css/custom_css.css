@@ -1,0 +1,17 @@
+.oe_statusbar_status {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+.oe_statusbar_status.green {
+    background-color: green;
+}
+
+.oe_statusbar_status.red {
+    background-color: red;
+}
+
+.oe_statusbar_status.yellow {
+    background-color: yellow;
+}

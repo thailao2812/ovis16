@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+   
+        <record id="view_v_shipment_quality_tree" model="ir.ui.view">
+            <field name="name">view.v.shipment.quality.tree</field>
+            <field name="model">v.shipment.quality</field>
+            <field name="arch" type="xml">
+                <tree >
+                    <field name = 'scontract' />
+                    <field name = 'partner' />
+                    <field name = 'stack_name' />
+                    <field name = 'product' />
+                    <field name = 'quantity' sum = 'Quantity (Kg)' />
+                    <field name = 'shipment_date' />
+                    <field name = 'mc_p' />
+                    <field name = 'fm_p' />
+                    <field name = 'bb_p' />
+                    <field name = 'primary_scr_p' />
+                    <field name = 'nvs_date' />
+                    <field name = 'mc_qc' />
+                    <field name = 'fm_qc' />
+                    <field name = 'bb_qc' />
+                    <field name = 'primary_scr_qc' />
+                </tree>
+             </field>
+        </record>
+
+        <record id="view_v_shipment_quality_search" model="ir.ui.view">
+            <field name="name">search.v.shipment.quality</field>
+            <field name="model">v.shipment.quality</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name = "scontract"/>
+                    <field name = "partner"/>
+                    <field name = "product"/>
+                    <field name = "stack_name"/>
+                    <group expand="1" string="Group By">
+                        <filter name="group_by_product" string="Product" domain="[]" context="{'group_by':'product'}"/>
+                        <filter name="group_by_scontract" string="Contract No." domain="[]" context="{'group_by':'scontract'}"/>
+                    </group>
+                </search>
+             </field>
+        </record>
+                      
+        <record id="action_v_shipment_quality" model="ir.actions.act_window">
+            <field name="name">Shipment Quality Comparision</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">v.shipment.quality</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" eval="False"/>
+            <field name="context">{'search_by_field_date': ['shipment_date', 'nvs_date']}</field>
+        </record>
+        
+       
+
+    </data>
+</openerp>

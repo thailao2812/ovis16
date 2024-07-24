@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+	
+		<!-- Modify Account Journal -->
+		<record model="ir.ui.view" id="view_account_journal_form_add_discount_account">
+			<field name="name">view_account_journal_form_add_discount_account</field>
+			<field name="model">account.journal</field>
+			<field name="inherit_id" ref="account.view_account_journal_form"/>
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='default_account_type']" position="after">
+					<field name="sequence_id" required="1"/>
+					<field name="trans_type"/>
+				</xpath>
+			</field>
+        </record>
+    
+    </data>
+</odoo>

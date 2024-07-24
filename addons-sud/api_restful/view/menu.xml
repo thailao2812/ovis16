@@ -1,0 +1,37 @@
+<openerp>
+    <data>
+
+        <menuitem id="api_synchronize_data_root_menu"
+              action="action_api_synchronize_data"
+              web_icon="api_restful,static/src/img/logo.png"
+              sequence="300"
+              name="Synchronize Data" groups="api_restful.group_api_synchronize_data_user"/>
+
+        <menuitem name="Synchronize" id="api_synchronize_menu" parent="api_synchronize_data_root_menu"
+            sequence="1"/>
+
+        <menuitem name="Synchronize Data" id="api_data_synchronize_menu" parent="api_synchronize_menu"
+                  action="action_api_synchronize_data"
+                  sequence="1"/>
+
+        <menuitem name="Synchronize Transaction Data" id="api_data_synchronize_transaction_menu" parent="api_synchronize_menu"
+                  action="action_api_synchronize_data_transaction"
+                  sequence="2"/>
+
+        <menuitem name="Configuration" id="api_synchronize_configuration_menu" parent="api_synchronize_data_root_menu"
+            sequence="2"/>
+
+        <menuitem name="Synchronize Schedule Actions" id="api_synchronize_cron_menu" parent="api_synchronize_data_root_menu"
+                  action="ir_cron_act_inherit_reach"
+                  sequence="3"/>
+
+        <menuitem name="Synchronize Config" id="api_synchronize_data_config_menu" parent="api_synchronize_configuration_menu"
+                  action="action_api_synchronize_data_config"
+                  sequence="1"/>
+
+        <menuitem name="Synchronize Domain Config" id="api_synchronize_domain_config_menu" parent="api_synchronize_configuration_menu"
+                  action="action_api_synchronize_domain_config"
+                  sequence="2"/>
+
+    </data>
+</openerp>

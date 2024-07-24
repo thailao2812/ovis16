@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+		
+    	<record id="report_cost_productions" model="ir.actions.report">
+	        <field name="name">report_cost_productions</field>
+	        <field name="type">ir.actions.report</field>
+	        <field name="model">mrp.periodical.production.costing</field>
+	        <field name="report_name">report_cost_productions</field>
+	        <field name="report_type">aeroo</field>
+	        <field name="in_format">oo-ods</field>
+	        <field name="out_format" model="report.mimetypes" search="[('code','=','oo-xls'),('compatible_types','=','oo-ods')]"/>
+	        <field name="preview">True</field>
+	        <field name="parser_state">loc</field>
+	        <field name="parser_loc">sd_account/report/report_cost_production_parser.py</field>
+	        <field name="report_file">sd_account/report/report_cost_production.ods</field>
+	        <field name="tml_source">file</field>
+	        <field name="print_report_name">'Cost production'</field>
+	    </record>
+    	
+    	<!--$###################################################################### -->
+		
+	</data>
+</odoo>

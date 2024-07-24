@@ -1,0 +1,39 @@
+.dt-filter select {
+    width: 10%;
+    background: #017e84;
+    color: white;
+    text-align: center;
+}
+
+.dt-filter button {
+    width: 10%;
+}
+
+
+.dt-filter input {
+    height: 100%;
+    width: 10%;
+}
+
+.dt-filter span {
+    display: none;
+}
+
+.dt-filter * {
+    border: none;
+    padding: 0 5px;
+}
+
+.dt-filter div.o_datepicker {
+    border-top: solid 0.5px;
+    border-bottom: solid 0.5px;
+    border-right: solid 0.5px;
+}
+
+.dt-filter .o_datepicker input {
+    text-align: center;
+}
+
+.dt-filter i {
+    padding-top: 40%;
+}

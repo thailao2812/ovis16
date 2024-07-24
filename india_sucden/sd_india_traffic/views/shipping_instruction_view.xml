@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_shipping_instruction_form_inherit_india" model="ir.ui.view">
+        <field name="name">view_shipping_instruction_form_inherit_india</field>
+        <field name="model">shipping.instruction</field>
+        <field name="inherit_id" ref="sd_sale_contract.view_shipping_instruction_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='bl_information']" position="replace">
+                <page string="Shipment Detail" name="shipment_details">
+                    <group>
+                        <group>
+                            <field name="dispatch_mode" attrs="{'readonly':[('state','=','done')]}"/>
+                            <field name="loading_country" attrs="{'readonly':[('state','=','done')]}"/>
+                            <field name="port_of_loading" attrs="{'readonly':[('state','=','done')]}" domain="[('type', '=', 'port')]"/>
+                            <field name="discharge_country" attrs="{'readonly':[('state','=','done')]}"/>
+                            <field name="port_of_discharge" attrs="{'readonly':[('state','=','done')]}" domain="[('type', '=', 'port')]"/>
+                            <field name="destination_country" attrs="{'readonly':[('state','=','done')]}"/>
+                        </group>
+                        <group>
+                            <field name="final_destination" attrs="{'readonly':[('state','=','done')]}"/>
+                            <field name="country_origin" attrs="{'readonly':[('state','=','done')]}"/>
+                            <field name="weights" attrs="{'readonly':[('state','=','done')]}"/>
+                            <field name="container_status" attrs="{'readonly':[('state','=','done')]}"/>
+                            <field name="shipper" attrs="{'readonly':[('state','=','done')]}"/>
+                            <field name="shipping_line_id" attrs="{'readonly':[('state','=','done')]}"/>
+                            <field name="shipment_from" attrs="{'readonly':[('state','=','done')]}"/>
+                            <field name="forwarding_agent" attrs="{'readonly':[('state','=','done')]}"/>
+                        </group>
+                    </group>
+                </page>
+                <page string="Notify And Consignee Details" name="notify">
+                    <group>
+                        <group>
+                            <field name="notify_1"/>
+                            <field name="notify_2"/>
+                            <field name="notify_3"/>
+                        </group>
+                        <group>
+                        </group>
+                    </group>
+                </page>
+                <page string="System Field" name="system_field">
+                    <group>
+                        <group>
+                            <field name="bag_mark"/>
+                            <field name="against_sample"/>
+                            <field name="freight"/>
+                        </group>
+                        <group>
+                             <field name="sample_approve_date"/>
+                        </group>
+                    </group>
+                </page>
+                <page string="Sale Contract" name="sale_contract">
+                    <separator string="Sale Contract"/>
+                    <field name="contract_ids" readonly="1"/>
+                </page>
+            </xpath>
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="ship_to" domain="[('customer_rank', '=', True), ('shipping_customer', '=', True)]" options="{'no_create': True}"/>
+                <field name="ship_to_address" readonly="1" force_save="1"/>
+            </xpath>
+            <xpath expr="//field[@name='od_doc_rec_date']" position="replace">
+                <field name="ico_lot"/>
+                <field name="ico_lot_description"/>
+            </xpath>
+            <xpath expr="//field[@name='od_doc_sent_date']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='nominated_etd']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='awb_sent_no']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='company_id']" position="after">
+                <label for="date_from" string="Delivery from"/>
+                <div>
+                    <field name="date_from" class="oe_inline"/>
+                    <span>       </span><span>    to</span>
+                    <field name="date_to" class="oe_inline"/>
+                </div>
+            </xpath>
+            <xpath expr="//field[@name='shipping_ids']/tree/field[@name='tare_weight']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='shipping_ids']/tree/field[@name='diff_net']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='shipping_ids']/tree/field[@name='price_unit']" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+
+    <record id="view_shipping_instruction_tree_inherit_india" model="ir.ui.view">
+        <field name="name">view_shipping_instruction_tree_inherit_india</field>
+        <field name="model">shipping.instruction</field>
+        <field name="inherit_id" ref="sd_sale_contract.view_shipping_instruction_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='total_line_qty']" position="after">
+                <field name="no_of_bag"/>
+            </xpath>
+            <xpath expr="//field[@name='allowed_franchise']" position="replace">
+            </xpath>
+
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="crop_id"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

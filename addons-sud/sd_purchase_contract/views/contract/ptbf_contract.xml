@@ -1,0 +1,502 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    	
+    	<record id="view_ptbf_contract_form" model="ir.ui.view">
+            <field name="name">ptbf.purchase.contract.form</field>
+            <field name="model">purchase.contract</field>
+            <field name="arch" type="xml">
+                <form string="Purchase Contract">
+	                <header>
+	                   <button name="button_approve" type="object" states='draft' string="Confirm" class="oe_highlight"/>
+	                    <button name="%(action_view_wizard_purchase_contract)d" invisible="1" attrs="{'invisible': ['|',('state','!=','approved'),('type','=','purchase')]}" string="Convert NVP" type="action"/>
+
+	                    <button name="button_draft" states="cancel" string="Set to Draft" type="object"/>
+	                    
+	                    <button name="action_request_register_payment" 
+							type="object" class="oe_highlight" string="Customer Deposit" states="approved"/>
+						<button name="button_done" type="object" string="Thanh lý hợp đồng" class="oe_highlight" states="approved"/>
+                        
+	                    <button name="button_cancel" states="approved" string="Cancel" type="object"
+	                    	confirm="Are you sure want to cancel contract?" class="oe_highlight"/>
+
+	                    <button name="print_contract_ptbf" string="Print PTBF" type="object" attrs="{'invisible': [('type','in',('purchase','consign') )]}"/>
+	                    <button name="print_contract_ptbf_special" invisible="1" string="Print PTBF 8" type="object" attrs="{'invisible': [('type','in',('purchase','consign') )]}"/>
+                        <button name="printf_nvp" string="Print NVP" type="object" attrs="{'invisible': [('type','in',('ptbf','consign') )]}"/>
+	                    <button name="printf_npe" string="Print NPE" type="object" attrs="{'invisible': [('type','in',('purchase','ptbf') )]}"/>
+
+	                    <field name="state" widget="statusbar" statusbar_visible="draft,approved,done"/>
+	                </header>
+	                <sheet>
+	                	<div class="oe_button_box" name="button_box" attrs="{'invisible': [('state','=','draft')]}">
+							<field name="picking_ids" invisible="1"/>
+							<button type="object" name="action_view_picking" class="oe_stat_button" icon="fa-truck"
+									attrs="{'invisible': [('picking_count','=',0)]}">
+								<field name="picking_count" widget="statinfo" string="Shipping"/>
+							</button>
+						</div>
+	                    <div class="oe_title">
+	                        <h1>
+	                            <field name="name" readonly="0"/>
+	                            <field name="type" invisible="1"/>
+	                        </h1>
+	                    </div>
+	                    <group>
+	                    	<group>
+	                    		<field name="partner_id" domain="[('is_supplier_coffee','=',True)]"/>
+	                    		<field name="supplier_representative" domain="[('parent_id','=',partner_id)]" invisible="1"/>
+	                    		<field name="currency_id" invisible="1"/>
+            					<field name="exchange_rate" invisible="1"/>
+                                <field name="delivery_place_id" required="1"/>
+                                <field name="contract_type" invisible="1"/>
+                                <field name="certificate_id"/>
+                                <field name="si_price"/>
+                   				<field name="sd_price"/>
+                                
+                                <field name="license_id" attrs="{'required': [('certificate_id','!=',False)]}"
+                                       context="{'default_partner_id': partner_id, 'default_certificate_id': certificate_id}"/>
+                                       
+                                <field name="premium"/>
+                                <field name="qty_received" readonly="1" attrs="{'invisible': [('type','=','purchase')]}" />
+                                <field name="total_qty_fixed" attrs="{'invisible': [('type','=','purchase')]}" />
+                                <field name="contract_p_id" />
+                                <field name="interest" attrs="{'invisible': [('type','=','purchase')]}" />
+                                <field name="is_according"/>
+                                <field name="according_id"/>
+	                    	</group>
+	                    	<group>
+	                    		<field name="date_order"/>
+                                <field name="crop_id"/>
+	                    		<field name="warehouse_id" required="1" invisible="1"/>
+	                    		<field name="company_representative" invisible="1" context="{'default_type': 'person', 'default_parent_id': company_id}"/>
+                    			<field name="deadline_date" readonly="0"/>
+                    			<field name="origin"/>
+                                <field name="songay" string="Fixation days" attrs="{'invisible': [('type','=','purchase')]}"/>
+                                <field name="qty_allocate" />
+                                <field name="date_fix"/>
+                                <field name="fixation_deadline"/>
+                                
+                                <field name="trader_id" attrs="{'invisible': [('type', '!=', 'ptbf')]}" domain="[('trader', '=', True)]"/>
+                    			<field name="cert_type" attrs="{'invisible': [('type', '!=', 'ptbf')]}"/>
+                    			<field name="signed_by_gm"/>
+                    			<field name="signed_by_supplier"/>
+	                    	</group>
+	                    </group>
+	                     <notebook>
+	                     	<page string="Products" name="product">
+	                    		<field name="contract_line">
+	                    			<tree editable="top">
+										<field name="product_id"/>
+										<field name="name"/>
+                                        <field name="product_qty" sum="product_qty"/>
+										<field name="packing_id"/>
+										<field name="product_uom"/>
+										<field name="premium" string="Subsidy (USD/Mt)"/>
+										<field name="price_unit" string="Provisional Price"/>
+                                        <field name="diff_price"/>
+                                        <field name="date_fix" invisible="1"/>
+										<field name="tax_id" invisible="1" widget="many2many_tags" domain="[('type_tax_use', '=', 'purchase')]"/>
+                                		<field name="type_price_weight"/>
+										<field name="price_subtotal" invisible="1"/>
+										<field name="difams"/>
+	                    			</tree>
+	                    		</field>
+	                    		<group class="oe_subtotal_footer oe_right" colspan="2" name="sale_total">
+	                                <field name="amount_untaxed" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+	                                <field name="amount_tax" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                                    <field name="amount_sub_total" class="oe_subtotal_footer_separator"/>
+                                    <field name="amount_sub_rel_total" attrs="{'invisible': [('type','=','consign')]}"/>
+                                    <field name="amount_deposit" attrs="{'invisible': [('type','=','consign')]}" class="oe_subtotal_footer_separator"/>
+                                    <field name="total_interest_pay" attrs="{'invisible': [('type','=','consign')]}"/>
+	                                <div class="oe_subtotal_footer_separator oe_inline o_td_label">
+	                                    <label for="amount_total" />
+	                                    <button name="button_dummy"
+	                                        states="draft" string="(update)"
+	                                        type="object" class="oe_edit_only oe_link"/>
+	                                </div>
+	                                <field name="amount_total" nolabel="1" class="oe_subtotal_footer_separator" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+	                            </group>
+	                            <field name="note" class="oe_inline" placeholder="Description"/>
+	                            <div class="oe_clear"/>
+	                            <group col="4">
+	                            	<field name="create_uid"/>
+	                    			<field name="create_date"/>
+	                    			<field name="user_approve"/>
+	                    			<field name="date_approve"/>
+	                    		</group>
+	                    	</page>
+	                    	
+	                    	<page string="PTBF Fix Price" attrs="{'invisible': [('type','!=','ptbf')]}">
+	                    		<button name="allocate_recevice_qty" type ="object" string="Alocate" invisible="1"/>
+	                    		<field name="ptbf_ids">
+		                    		<tree >
+										<field name="contract_id" invisible="1"/>
+		                    			<field name="no" optional="show"/>
+		                    			<field name="date_fix" optional="show"/>
+		                    			<field name="product_id" readonly="1" optional="show"/>
+		                    			<field name="name" invisible="1" optional="show"/>
+		                    			<field name="quantity" sum="quantity" optional="show"/>
+		                    			<field name="price_fix" sum="price_fix" optional="show"/>
+		                    			<field name="diff" sum="diff" optional="show"/>
+		                    			<field name="final_price" optional="show"/>
+                                		<field name="input_centlb" optional="show"/>
+		                    			<field name="total_amount_final" sum="total_amount_final" optional="show"/>
+		                    			
+		                    			<button name="%(action_wizard_ptbf_contract)d" type ="action" string="Create PTBF Fix price"
+		                    				context="{'default_purchase_contract_id':contract_id}"/>
+		                    			
+		                    			<field name="quantity_fixed" sum="quantity_fixed"/>
+		                    			<field name="quantity_receive" sum="quantity_receive"/>
+		                    			<button name="print_ptbf" type="object" string="Print PTBF"/>
+		                    			
+	                    			</tree>
+	                    			<form>
+										<sheet>
+											<header>
+											</header>
+		                    				<group>
+												<group>
+													<field name="no"/>
+			                    					<field name="date_fix"/>
+					                    			<field name="product_id"/>
+					                    			<field name="name"/>
+					                    			<field name="quantity" />
+					                    			<field name="diff" sum="diff" />
+				                    			</group>
+				                    			<group>
+					                    			<field name="price_fix"/>
+					                    			<field name="total_amount_final" readonly="1"/>
+					                    			<field name="quantity_fixed"/>
+					                    			<field name="quantity_receive"/>
+					                    			<field name="input_centlb"/>
+				                    			</group>
+		                    				</group>
+	                    					<field name="history_rate_ids" readonly="False" nolabel="1">
+		                    					<tree editable="top">
+		                    						<field name="date_receive"/>
+		                    						<field name="product_id"/>
+		                    						<field name="uom_id"/>
+		                    						<field name="qty_receive" sum="qty_receive"/>
+		                    						<field name="qty_price" sum="qty_price"/>
+		                    						<field name="final_price_en"/>
+		                    						<field name="rate"/>
+		                    						<field name="final_price_vn"/>
+		                    						<field name="total_amount_en" sum="total_amount_en"/>
+		                    						<field name="total_amount_vn" sum="total_amount_vn"/>
+		                    						<field name="grn_id"/>
+		                    						<button name="print_bien_ban_chot_gia" type="object" string="Print Fix Price" class="oe_highlight"/>
+		                    					</tree>
+	                    					</field>
+	                    				</sheet>
+	                    			</form>
+	                    		</field>
+	                    	</page>
+	                    	
+	                    	<page string="Appendix" attrs="{'invisible': [('type','!=','ptbf')]}">
+	                    		<button name="allocate_recevice_qty" type ="object" string="Alocate"/>
+	                    		<field name="appendix_ids">
+		                    		<tree editable='bottom'>
+		                    			<field name="name"/>
+		                    			<field name="date_order"/>
+		                    			<field name="quantity" sum="quantity"/>
+		                    			<field name="liffe_price"/>
+		                    			<field name="differencial" />
+		                    			<field name="advanced_price"/>
+		                    			<field name="exchange_rate"/>
+		                    			<field name="advanced_price_vn"/>
+		                    			<field name="payment_amount"/>
+		                    			<button name="print_appendix_ptbf" string="Print Appendix" type="object"/>
+	                    			</tree>
+	                    		</field>
+	                    	</page>
+	                    	<page string="Rolling" attrs="{'invisible': [('type','!=','ptbf')]}">
+	                    		<field name="rolling_ids">
+		                    		<tree editable='bottom'>
+		                    			<field name="no"/>
+		                    			<field name="date_rolling"/>
+		                    			<field name="date_fixed"/>
+		                    			<field name="diff_price"/>
+		                    			<field name="quantity" sum="quantity"/>
+		                    			<field name="date"/>
+		                    			<button name="print_roll_ptbf" type="object" string="Print"/>
+	                    			</tree>
+	                    		</field>
+	                    	</page>
+	                    	
+	                    	<page string="Request Payment">
+                                <field name="request_payment_ids" attrs="{'readonly': [('state','=','done')]}" 
+                                	context="{'type':type,'default_partner_id':partner_id,
+                                			  'contract_line':contract_line,
+                                			  'default_type_payment':'Payment',
+                                			  'default_purchase_contract_id':active_id}">
+                                    <tree>
+                                    	<field name="type_payment"/>
+                                        <field name="partner_id" invisible="0"/>
+                                        <field name="name" string="Request No."/>
+                                        <field name="date"/>
+                                        <field name="users_request_id"/>
+                                        <field name="partner_bank_id" invisible="1"/>
+                                        <field name="advance_price" invisible="1"/>
+                                        <field name="advance_payment_quantity" invisible="1" string="Advance Quantity" sum="advance_payment_quantity"/>
+                                        <field name="request_amount" sum="request_amount"/>
+                                        <field name="total_payment" sum="total_payment"/>
+                                        <field name="total_remain" sum="total_remain"/>
+                                        <field name="type" invisible="1"/>
+                                        <button name="print_advance_payment" type="object" string="Print Advance Payment" attrs="{'invisible': [('type','=','purchase')]}" icon="STOCK_PRINT"/>
+                                        <button name="print_printout_payment_npv" type="object" string="Print Printout Payment NPV" attrs="{'invisible': [('type','!=','purchase')]}" icon="STOCK_PRINT"/>
+                                        <button name="print_payment_request" type="object" string="Print Payment Request" attrs="{'invisible': [('type','=','purchase')]}" icon="STOCK_PRINT"/>
+                                    </tree>
+                                    <form>
+                                        <group>
+					                          <group>
+					                            <field name="type_payment"/>
+					                            <field name="partner_id" invisible="0"/>
+					                            <field name="partner_bank_id" invisible="0" domain="[('partner_id','=',partner_id)]"/>
+					                            <field name="name" string="Request No."/>
+					                            <field name="users_request_id" required="1"/>
+					                            <field name="date"/>
+					                            <field name="advance_price" invisible="1"/>
+					                            <field name="advance_payment_quantity" invisible="1"/>
+					<!--                            <field name="market_price"/>-->
+					                              <field name="fix_price"/>
+					                            <field name="diff_price"/>
+					                            <field name="payment_quantity"/>
+					                            <field name="fx_price"/>
+					                        </group>
+					                         <group>
+					                            <field name="request_amount"/>
+					                            <field name="request_amount_temp"/>
+					                            <field name="partner_bank_id" invisible="1" domain="[('partner_id','=',partner_id)]"/>
+					                            <field name="songay" string="Fixation days" attrs="{'invisible': [('type', '=', 'purchase')]}"/>
+					                            <field name="account_no"/>
+					                            <field name="chinhanh"  string="Branch"/>
+					                            <field name="purchase_contract_id" readonly="1"/>
+					                            <field name="request_fun_amount" invisible="1"/>
+					                            <field name="ref_price"/>
+					                            <field name="rate"/>
+					                            <field name="ptbt_fix_price"/>
+					                            <field name="type" invisible="1"/>
+					                            <field name="provisional_price" invisible="1"/>
+					                            <field name="source" invisible="1"/>
+					<!--                            <button name="load_data" string="Load Data 1" type="object" class="oe_highlight" groups="ned_contract_vn.load_data_request_payment_line"/>-->
+					                            <button name="load_data_2" string="Load Fix 1" type="object" class="oe_highlight" />
+					                         </group>
+					                     </group>
+					                    <newline/>
+					                     <notebook>
+					                         <page string="Payment">
+					                            <field name="request_payment_ids" readonly="1" nolabel="1">
+					                                <tree editable="top">
+					                                    <field name="payment_date"/>
+					                                    <field name="name"/>
+					                                    <field name="partner_id" string="Supplier" invisible="1"/>
+					                                    <field name="journal_id"/>
+					                                    <field name="amount" sum="amount"/>
+					                                    <field name="payment_refunded" sum="payment_refunded"/>
+					                                    <field name="open_advance" sum="open_advance"/>
+					                                    <field name="state" invisible="1"/>
+					                                </tree>
+					                            </field>
+					                        </page>
+					                         <page string="Detail Request Payment">
+					                             <field name="line_ids" nolabel="1" context="{'request_id': active_id}">
+													<tree string="Detail of Payment" editable="top">
+															<field name="delivery_id"/>
+															<field name="grn_id"/>
+															<field name="name"/>
+															<field name="percent"/>
+															<field name="estimated_quantity"/>
+															<field name="quantity_payment"/>
+															<field name="price_unit" string="Fix Price(VND)"/>
+															<field name="amount" sum="amount"/>
+													</tree>
+					                             </field>
+					                         </page>
+					                     </notebook>
+                            	</form>
+                                </field>
+                                <newline/>
+                                <field name="payment_ids" domain="[('extend_payment','!=','payment')]" readonly="1">
+                                    <tree>
+                                        <field name="name"/>
+                                        <field name="payment_date"/>
+                                        <field name="partner_id"/>
+                                        <field name="amount" sum="amount"/>
+                                        <field name="extend_payment" invisible="1"/>
+                                        <field name="state" invisible="1"/>
+                                    </tree>
+                                </field>
+
+                            </page>
+                            
+                            <page string="Payment Allocation" attrs="{'invisible': [('type','=','consign')]}">
+                                <group>
+                                    <button name="btt_load_payment" string="Load Payment" type="object"/>
+                                    <button name="button_lai" string="Refresh Lãi xuất" type="object" class="oe_highlight"/>
+                                </group>
+                                <field name="pay_allocation_ids">
+                                    <tree>
+                                        <field name="allocation_amount" sum="allocation_amount"/>
+                                        <field name="pay_id"/>
+                                        <field name="relation_contract_id"/>
+                                        <field name="payment_date"/>
+                                        <field name="payment_amount" sum="payment_amount"/>
+                                        <field name="payment_received" sum="payment_received"/>
+                                        <field name="payment_remain" sum="payment_remain"/>
+                                        <field name="total_interest_pay" sum="total_interest_pay"/>
+                                        <field name="currency_id" invisible="1"/>
+                                    </tree>
+                                    <form>
+                                        <header>
+                                            <button name="btt_load_interest" string="Load Interest" type="object"/>
+                                        </header>
+                                        <group col="4">
+                                            <field name="pay_id" readonly="1"/>
+                                            <field name="relation_contract_id"/>
+                                            <field name="payment_date"/>
+                                            <field name="payment_amount"/>
+                                            <field name="payment_received" sum="payment_received"/>
+                                            <field name="allocation_amount" sum="allocation_amount"/>
+                                            <field name="payment_remain" sum="payment_remain"/>
+                                            <field name="total_interest_pay" sum="total_interest_pay"/>
+                                            <field name="move_id" readonly="1"/>
+                                            <field name="currency_id" invisible="1"/>
+                                        </group>
+                                        <newline/>
+                                        <notebook>
+	                                        <page string="Interest Rate">
+	                                            <field name="allocation_line_ids">
+	                                                <tree editable="1">
+	                                                    <field name="month"/>
+	                                                    <field name="from_date"/>
+	                                                    <field name="to_date"/>
+	                                                    <field name="total_date" sum="total_date"/>
+	                                                    <field name="rate"/>
+	                                                    <field name="interest_pay" sum="interest_pay"/>
+	                                                    <field name="actual_interest_pay" sum="actual_interest_pay"/>
+	                                                </tree>
+	                                            </field>
+	                                        </page>
+                                        </notebook>
+                                    </form>
+                                </field>
+                            </page>
+	                    	
+	                    	
+	                    	<page string="Other Information" name="information" >
+	                    		<group>
+	                    			<group>
+	                    				<field name="company_id"/>
+	                    				<label for="delivery_from" string="Shipping"/>
+	                    				<div name="delivery_from" class="o_row">
+	                    					From <field name="delivery_from"/> To <field name="delivery_to"/>
+										</div>
+			                    		<field name="transportation_charges"/>
+
+	                    			</group>
+	                    			<group>
+	                    				<field name="validity_date"/>
+	                    				<field name="expiration_date"/>
+			                    		<field name="price_estimation_date"/>
+			                    		<field name="date_done" attrs="{'invisible': [('state','!=','done')]}"/>
+			                    		<field name="npe_contract_id" attrs="{'invisible': [('type','=','consign')]}"/>
+	                    			</group>
+	                    			<group>
+	                    				<field name="payment_term_id"/>
+			                    		<field name="payment_description"/>
+                                        <field name="interest_move_id" readonly="1"/>
+	            	                    <field name="interest_move_entries_id" readonly="1"/>
+	                    			</group>
+	                    			<group>
+	                    				<field name="check_qty"/>
+	                    				<field name="check_price_unit"/>
+	                    				<field name="type" invisible="context.get('type',True)"/>
+			                    		<separator string="Other Payment term"/>
+			            				<div><field name="payment_term_item" placeholder="8. Trường hợp Bên bán chốt giá nhưng chưa giao hàng, Bên bán phải ký quỹ 10% giá trị hợp đồng cho Bên mua trong vòng 3 ngày kể từ ngày chốt giá, số tiền ký quỹ sẽ được các Bên thỏa thuận bằng các Phụ lục Hợp đồng tại ngày nộp tiền. Trong trường hợp giá tham chiếu tăng 10% (Bằng giá trị ký quỹ), hai bên có thể thống nhất hủy hợp đồng (bằng văn bản), bên bán sẽ chịu mất 10% ký quỹ hoặc nộp tiếp tiền ký quỹ 10% để duy trì hợp đồng đã bán./ In case the contract is fixed but undelivered, the Seller must deposit 10% contract value within 3 days after fixing price by Appendixes which is agreed by both Parties on that day. Reference price increases 10%, contract can be cancelled by written, in this case the Buyer shall not refund 10% deposit or the Seller can deposit additional 10% to maintain the contract." class="oe_inline"/></div>
+	                    			</group>
+	                    		</group>
+	                    	</page>
+	                    	<field name="move_ids" invisible="1"/>
+	                     </notebook>
+	                    
+	                </sheet>
+	                <div class="oe_chatter" groups="base.group_no_one">
+	                    <field name="message_follower_ids" widget="mail_followers"/>
+	                    <field name="message_ids" widget="mail_thread"/>
+	                </div>
+                </form>
+            </field>
+        </record>
+    
+       <record id="view_ptbf_contract_tree" model="ir.ui.view">
+            <field name="name">view.ptbf.contract.tree</field>
+            <field name="model">purchase.contract</field>
+            <field name="arch" type="xml">
+                <tree string="Contract List" default_order="id desc" decoration-info="state == 'draft'" decoration-muted="state in ('cancel','done')" decoration-danger="state in ('approved','validate')">
+                    <field name="name" string="PTBF" optional="show"/>
+                    <field name="date_order" optional="show"/>
+                    <field name="deadline_date" optional="show"/>
+                    <field name="month_code" optional="show"/>
+                    <field name="validity_date" invisible="1" optional="show"/>
+                    <field name="partner_id" optional="show"/>
+                    <field name="contract_p_id" optional="show" />
+                    <field name="diff_price" string="Diff Supplier" optional="show"/>
+                    <field name="certificate_id" optional="show"/>
+                    <field name="license_id" invisible="0" optional="show"/>
+                    <field name="delivery_place_id" optional="show"/>
+                    <field name="company_representative" invisible="1" optional="show"/>
+                    <field name="product_id" optional="show"/>
+                    <field name="currency_id" invisible="1" optional="show"/>
+                    <field name="total_qty" sum="total_qty" optional="show"/>
+                    <field name="qty_received" sum="qty_received" optional="show"/>
+                    <field name="qty_unreceived" sum="qty_unreceived" optional="show"/>
+                    <field name="total_qty_fixed" sum="total_qty_fixed" optional="show"/>
+                    <field name="qty_unfixed" sum="qty_unfixed" optional="show"/>
+                    <field name="fixed_vnd" sum="fixed_vnd" optional="show"/>
+                    <field name="advance_amount" sum="advance_amount" optional="show"/>
+                    <field name="total_payment" sum="total_payment" optional="show"/>
+                    <field name="origin" optional="show"/>
+                    <field name="state" string="Status" optional="show"/>
+                    
+                    <field name="lifffe_line_ptbf" invisible="1" optional="show"/>
+                    <field name="difams" sum="difams" invisible="1" optional="show"/>
+                    <field name="ex" sum="ex" invisible="1" optional="show"/>
+                    <field name="signed_by_gm" optional="hide"/>
+        			<field name="signed_by_supplier" optional="hide"/>
+                    <field name="print_count" optional="hide"/>
+                    <field name="note"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_ptbf_contract">
+            <field name="name">PTBF Contract</field>
+            <field name="res_model">purchase.contract</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('type','=','ptbf')]</field>
+            <field name="context">{'default_type':'ptbf', 'default_cert_type': 'normal', 'search_by_field_date': ['date_order'],'ptbf': True}</field>
+            <field name="search_view_id" ref="purchase_contract_search"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+              		Create a PTBF contract, the first step of a new NVP.
+              </p>
+            </field>
+        </record>
+    	       
+
+        <record id="action_view_ptbf_contract_tree" model="ir.actions.act_window.view">
+            <field eval="100" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_ptbf_contract_tree"/>
+            <field name="act_window_id" ref="action_ptbf_contract"/>
+        </record>
+
+        <record id="action_view_ptbf_contract_form" model="ir.actions.act_window.view">
+            <field eval="105" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_ptbf_contract_form"/>
+            <field name="act_window_id" ref="action_ptbf_contract"/>
+        </record>
+        
+    </data>
+</odoo>

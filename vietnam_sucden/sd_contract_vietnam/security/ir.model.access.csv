@@ -1,0 +1,12 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_list_farmer,access_list_farmer,model_list_farmer,base.group_user,1,1,1,1
+access_import_farmer,access_import_farmer,model_import_farmer,base.group_user,1,1,1,1
+
+access_diff_configuration,access_diff_configuration,model_diff_configuration,base.group_user,1,1,1,1
+
+access_report_average_price,access_report_average_price,model_report_average_price,base.group_user,1,1,1,1
+access_average_price_contract,access_average_price_contract,model_average_price_contract,base.group_user,1,1,1,1
+
+access_delivery_ktn,access_delivery_ktn,model_delivery_katoen,base.group_user,1,1,1,1
+
+access_open_qty_npe,access_open_qty_npe,model_open_qty_npe,base.group_user,1,1,1,1

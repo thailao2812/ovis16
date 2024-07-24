@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_partner_form_inherit_india" model="ir.ui.view">
+        <field name="name">view_partner_form_inherit_india</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+			 <xpath expr="//field[@name='ref']" position="after">
+            	<field name="pan_number"/>
+            	<field name="agent"/>
+            	<field name="forwarding_agent"/>
+            	<field name="shipping_customer"/>
+            </xpath>
+            <xpath expr="//field[@name='vat']" position="attributes">
+                <attribute name="string">GSTIN</attribute>
+            </xpath>
+            <xpath expr="//span[@name='address_name']" position="before">
+                <field name="estate_name"/>
+            </xpath>
+
+        </field>
+    </record>
+
+     <record id="view_partner_property_form_inherit_india" model="ir.ui.view">
+        <field name="name">view_partner_property_form_inherit_india</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="account.view_partner_property_form"/>
+        <field name="arch" type="xml">
+			 <xpath expr="//field[@name='bank_ids']/tree/field[@name='acc_number']" position="after">
+            	<field name="estate_name"/>
+            	<field name="ifsc_code"/>
+            	<field name="related_holder"/>
+            </xpath>
+
+        </field>
+    </record>
+
+     <record id="view_partner_tree_inherit_india" model="ir.ui.view">
+        <field name="name">view_partner_tree_inherit_india</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_tree"/>
+        <field name="arch" type="xml">
+			 <xpath expr="//tree" position="replace">
+            	<tree string="Contacts" sample="1" multi_edit="1">
+                    <field name="name" string="Company Name"/>
+                    <field name="shortname" string="Short Name"/>
+                    <field name="estate_name"/>
+                    <field name="partner_code"/>
+                    <field name="category_id" widget="many2many_tags"/>
+                    <field name="street"/>
+                    <field name="street2"/>
+                    <field name="district_id"/>
+                    <field name="city"/>
+                    <field name="state_id"/>
+                    <field name="zip"/>
+                    <field name="country_id"/>
+                    <field name="phone"/>
+                    <field name="mobile"/>
+                    <field name="email"/>
+                    <field name="l10n_in_gst_treatment"/>
+                    <field name="vat" string="GSTIN"/>
+                    <field name="ref"/>
+                    <field name="pan_number"/>
+                    <field name="transfer"/>
+                    <field name="agent"/>
+                    <field name="forwarding_agent"/>
+                    <field name="shipping_customer"/>
+                    <field name="is_supplier_coffee"/>
+                    <field name="is_customer_coffee"/>
+                    <field name="property_payment_term_id"/>
+                    <field name="property_supplier_payment_term_id"/>
+                </tree>
+            </xpath>
+
+        </field>
+    </record>
+
+<!--    <record id="view_partner_property_form_inherit_india_from_sd_master" model="ir.ui.view">-->
+<!--        <field name="name">view_partner_property_form_inherit_india_from_sd_master</field>-->
+<!--        <field name="model">res.partner</field>-->
+<!--        <field name="inherit_id" ref="sd_master.view_partner_property_form"/>-->
+<!--        <field name="arch" type="xml">-->
+<!--			 <xpath expr="//field[@name='accounting_type']" position="attributes">-->
+<!--            	<attribute name="required">0</attribute>-->
+<!--                 <attribute name="invisible">1</attribute>-->
+<!--            </xpath>-->
+
+<!--        </field>-->
+<!--    </record>-->
+
+<!--    <record id="view_tree_res_partner_india" model="ir.ui.view">-->
+<!--        <field name="name">view_tree_res_partner_india</field>-->
+<!--        <field name="model">res.partner</field>-->
+<!--        <field name="arch" type="xml">-->
+<!--            <tree string="Vendor">-->
+<!--                <field name="name"/>-->
+<!--                <field name="shortname"/>-->
+<!--                <field name="street"/>-->
+<!--                <field name="street2"/>-->
+<!--                <field name="district_id"/>-->
+<!--                <field name="city"/>-->
+<!--                <field name="state_id"/>-->
+<!--                <field name="zip"/>-->
+<!--                <field name="country_id"/>-->
+<!--                <field name="phone"/>-->
+<!--                <field name="mobile"/>-->
+<!--                <field name="email"/>-->
+<!--                <field name="l10n_in_gst_treatment"/>-->
+<!--                <field name="vat"/>-->
+<!--                <field name="ref"/>-->
+<!--                <field name="pan_number"/>-->
+<!--                <field name="transfer"/>-->
+<!--                <field name="partner_code"/>-->
+<!--                <field name="is_supplier_coffee"/>-->
+<!--                <field name="is_customer_coffee"/>-->
+<!--                <field name="property_payment_term_id"/>-->
+<!--                <field name="name"/>-->
+<!--                <field name="name"/>-->
+<!--                <field name="name"/>-->
+<!--                <field name="name"/>-->
+<!--            </tree>-->
+<!--        </field>-->
+<!--    </record>-->
+
+
+
+</odoo>

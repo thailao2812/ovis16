@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="sd_sale_contract.action_s_contract_export" model="ir.actions.act_window">
+        <field name="domain">[('type','=','export')]</field>
+    </record>
+    <record id="sd_sale_contract.action_s_contract_local" model="ir.actions.act_window">
+        <field name="domain">[('type','=','local')]</field>
+    </record>
+
+    <record id="view_s_contract_form_inherit_india" model="ir.ui.view">
+        <field name="name">view_s_contract_form_inherit_india</field>
+        <field name="model">s.contract</field>
+        <field name="inherit_id" ref="sd_sale_contract.view_s_contract_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='shipt_month']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='shipt_month']" position="after">
+                <field name="document_contract" widget="many2many_tags" options="{'no_create': True}"/>
+                <label for="date_from" string="Delivery from"/>
+                <div>
+                    <field name="date_from" class="oe_inline"/>
+                    <span>       </span><span>    to</span>
+                    <field name="date_to" class="oe_inline"/>
+                </div>
+            </xpath>
+            <xpath expr="//field[@name='state']" position="replace">
+                <button name="button_submit" string="Submit" type="object" states="draft" class="oe_highlight" groups="sd_india_master.group_sale_logistic_india"/>
+                <button name="button_approve" string="Approve" type="object" states="submit" class="oe_highlight" groups="sd_india_master.group_accounting_india"/>
+                <button name="set_to_draft" string="Set To Draft" type="object" class="oe_highlight" attrs="{'invisible': [('state', '=', 'draft')]}" confirm="Do you want to Set To Draft this contract?" groups="sd_india_master.group_admin_india"/>
+                <button name="button_print_s_contract" string="Print S-Contract"  states="approved"
+                    type="object" class="oe_highlight" />
+                <field name="state" widget="statusbar" statusbar_visible="draft,submit,approved"/>
+            </xpath>
+            <xpath expr="//field[@name='contract_count']" position="attributes">
+                <attribute name="string">Contract Relevant</attribute>
+            </xpath>
+            <xpath expr="//field[@name='warehouse_id']" position="attributes">
+                <attribute name="required">1</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

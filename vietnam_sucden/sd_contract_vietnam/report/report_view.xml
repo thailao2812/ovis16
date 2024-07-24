@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="sd_purchase_contract.printout_payment_npv_report" model="ir.actions.report">
+	        <field name="parser_loc">sd_contract_vietnam/report/printout_payment_npv_parser.py</field>
+	        <field name="report_file">sd_contract_vietnam/report/printout_payment_npv.ods</field>
+	    </record>
+
+	 <record id="sd_purchase_contract.npe_report" model="ir.actions.report">
+<!--	        <field name="parser_loc">sd_purchase_contract/report/report_npe_parser.py</field>-->
+	        <field name="report_file">sd_contract_vietnam/report/report_npe.odt</field>
+	    </record>
+
+	<record id="sd_purchase_contract.npe_nvp_report" model="ir.actions.report">
+	        <field name="report_file">sd_contract_vietnam/report/report_npe_nvp_new.odt</field>
+	    </record>
+	<record id="sd_purchase_contract.nvp_report" model="ir.actions.report">
+	        <field name="report_file">sd_contract_vietnam/report/report_nvp_new.odt</field>
+	    </record>
+
+	<record id="sd_purchase_contract.report_contract_ptbf_npe" model="ir.actions.report">
+	        <field name="report_file">sd_contract_vietnam/report/report_contract_ptbf_npe.odt</field>
+	    </record>
+
+	<record id="sd_purchase_contract.report_contract_ptbf" model="ir.actions.report">
+	        <field name="report_file">sd_contract_vietnam/report/report_contract_ptbf.odt</field>
+	    </record>
+</odoo>

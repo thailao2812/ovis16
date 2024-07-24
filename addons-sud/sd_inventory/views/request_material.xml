@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+		
+		<record id="view_request_materials_search" model="ir.ui.view">
+            <field name="name">view.equest.materials.search</field>
+            <field name="model">request.materials</field>
+            <field name="arch" type="xml">
+                <search string="Request Coffee Materials">
+                    <field name="name"/>
+                    <field name="production_id"/>
+                    <group expand="1" string="Group By">
+                        <filter string="Production" name="filter_production_id" context="{'group_by':'production_id'}"/>
+                        <filter string="State" name="filter_state"  context="{'group_by':'state'}"/>
+                    </group>
+               </search>
+            </field>
+        </record>
+			
+		    <record id="view_request_materials_tree" model="ir.ui.view">
+		            <field name="name">request.materials.tree</field>
+		            <field name="model">request.materials</field>
+		            <field name="arch" type="xml">
+		                <tree string="Request Materials List" default_order="id desc" decoration-info="state == 'draft'" decoration-muted="state in ('done')" decoration-danger="state in ('approved')">
+		                	<field name="warehouse_id" invisible="0"/>
+		                	<field name="name"/>
+		                	<field name="origin"/>
+		                	
+		                    <field name="request_date"/>
+		                    <field name="production_id"/>
+		                    <field name="total_qty"/>
+		                    <field name="state"/>
+		                    <field name="type"/>
+		                </tree>
+		            </field>
+		        </record>
+		        
+		        
+		        
+		        <record id="view_request_materials_form" model="ir.ui.view">
+		            <field name="name">request.materials.form</field>
+		            <field name="model">request.materials</field>
+		            <field name="arch" type="xml">
+		                <form string="Request Coffee Materials">
+		                	<header>
+			                    <button name="button_draft" type="object" states='approved' string="Set to Draft" class="oe_highlight"/>
+			                    <button name="button_done" type="object" states='draft,approved' string="Done" class="oe_highlight"/>
+			                    <button name="set_to_approved" type="object" states="done" string="Set To Approved" class="oe_highlight"/>
+			                    <field name="state" widget="statusbar" statusbar_visible="draft,approved,done"/>
+			                </header>
+			                <sheet>
+				                <div class="oe_title">
+			                        <h1>
+			                            <field name="name" readonly="1"/>
+			                        </h1>
+			                    </div>
+			                    <group>
+			                    	<group>
+			                    		<field name="origin"/>
+			                    		<field name="type" readonly="1"/>
+			                    		<field name="production_id" domain="[('state', 'not in', ['done', 'cancel'])]" options="{'no_create': True}"/>
+			                    	</group>
+			                    	<group>
+			                    		<field name="request_date"/>
+				                    	<field name="warehouse_id" invisible="0"/>
+			                   		 </group>
+			                    </group>
+			                     <notebook>
+			                    	<page string="Products" name="product">
+			                    		<field name="request_line">
+			                    			<tree editable="top"> 
+			                    				<field name="product_id" required="1"/>
+			                    				<field name="product_uom" required="1"/>
+			                    				
+			                    				<field name="stack_id" domain="[('product_id', '=',product_id),('init_qty', '!=',0), ('stack_wip', '!=', True), ('warehouse_id', '=', parent.warehouse_id)]"/>
+			                    				
+			                    				<field name="bag_no" sum="bag_qty"/>
+			                    				
+							                    <field name="qty_stack" string="Qty Stack" sum="qty_stack"/>
+							                    <field name="stack_empty" readonly="1" invisible="1" />
+			                    				
+			                    				<field name="product_qty" string="Request qty" sum="product_qty"/>
+			                    				<field name="basis_qty" string="Issue Qty" sum="basis_qty"/>
+			                    				<!-- SON: Bỏ chức năng Gip của SX -->
+			                    				<button name="%(action_view_wizard_stock_picking)d" string="GIP" type ="action"
+	                    							groups="stock.group_stock_user"/>
+	                    							
+		              							<button name="btt_cancel" string="Cancel" type="object" invisible="1"/>
+		              							<field name="state"/>
+			                    			</tree>
+			                    			<form>
+			                    				<header>
+			                    					<field name="state" widget="statusbar" statusbar_visible="approved,cancel"/>
+			                    				</header>
+			                    				<sheet>
+			                    					<group col="4">
+				                    					<field name="request_id"/>
+				                    					<field name="product_id" required="1"/>
+				                    					<field name="stack_id" domain="[('product_id', '=',product_id)]"/>
+					                    				<field name="product_uom" required="1"/>
+					                    				<field name="product_qty"/>
+					                    				<field name="basis_qty"/>
+				                    				</group>
+				                    				<field name="picking_ids">
+				                    					<tree>
+				                    						<field name="name"/>
+				                    						<field name="date_done"/>
+				                    						<field name="total_init_qty" sum="total_init_qty" string="Net Weight"/>
+				                    						<field name="total_qty" sum="total_qty" string="Basis Weight"/>
+				                    						<field name="state"/>
+				                    					</tree>
+				                    				</field>
+			                    				</sheet>
+			                    			</form>
+			                    			
+			                    		</field>
+			                    		 <field name="notes" class="oe_inline" placeholder="Description"/>
+			                    	</page>
+		                    	</notebook>
+		                        <div class="oe_chatter">
+		                            <field name="message_follower_ids" widget="mail_followers"/>
+		                            <field name="message_ids" widget="mail_thread"/>
+		                        </div>
+		                    </sheet>
+		                </form>
+		            </field>
+		        </record>
+		        
+		        <record id="action_request_materials" model="ir.actions.act_window">
+		            <field name="name">Request Coffee Materials</field>
+		            <field name="res_model">request.materials</field>
+		            <field name="view_mode">tree,form</field>
+		            <field name="domain">[('type','=','mrp')]</field>
+		            <field name="context">{'default_type':'mrp'}</field>
+		            <field name="search_view_id"/>
+		            <field name="help" type="html">
+		              <p class="oe_view_nocontent_create">
+		              		Create a Request Materials, the first step of a new Request Materials.
+		              </p>
+		            </field>
+		        </record>
+		        
+		        <record model="ir.actions.act_window.view" id="action_request_materials_view">
+		            <field name="sequence" eval="1"/>
+		            <field name="view_mode">tree</field>
+		            <field name="view_id" ref="view_request_materials_tree"/>
+		            <field name="act_window_id" ref="action_request_materials"/>
+		        </record>
+		        
+		        <record model="ir.actions.act_window.view" id="action_request_materials_form">
+		            <field name="sequence" eval="2"/>
+		            <field name="view_mode">form</field>
+		            <field name="view_id" ref="view_request_materials_form"/>
+		            <field name="act_window_id" ref="action_request_materials"/>
+		        </record>
+
+
+    </data>
+</odoo>

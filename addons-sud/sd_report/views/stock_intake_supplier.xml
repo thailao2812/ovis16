@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+   
+    	<record id="view_v_intake_qty_supplier_tree" model="ir.ui.view">
+            <field name="name">view.v.intake.qty.supplier</field>
+            <field name="model">v.intake.qty.supplier</field>
+            <field name="arch" type="xml">
+    			<tree>
+                    <field name = 'week_name' />
+                    <field name = "y_num" />
+                    <field name = "supplier_name" />                    
+                    <field name = 'source_province'  />
+                    <field name = "product" />    
+
+                    <field name = 'net_qty' />
+                    <field name = 'mc' />
+                    <field name = 'fm' />
+
+                    <field name = 'black' />
+                    <field name = 'broken' />
+                    <field name = 'brown' />
+
+                    <field name = 'mold' />
+                    <field name = 'cherry' />
+                    <field name = 'excelsa' />
+                    <field name = 'screen20' />
+                    <field name = 'screen19' />
+                    <field name = 'screen18' />
+
+                    <field name = 'screen16' />
+                    <field name = 'screen13' />
+                    <field name = 'screen12' />
+                    <field name = 'belowsc12' />
+
+                    <field name = 'burned' />
+                    <field name = 'eaten' />
+                    <field name = 'immature' />
+                </tree>
+	         </field>
+         </record>
+
+        <!-- The block of code bellow determines a list of search parameters appear once user type in the searchbar -->
+        <record id="view_v_intake_qty_supplier_search" model="ir.ui.view">
+            <field name="name">view.v.intake.qty.supplier.search</field>
+            <field name="model">v.intake.qty.supplier</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name = "week_name"/>
+                    <field name = "supplier_name"/>
+                    <field name = "product"/>
+                    <field name = 'source_province'/>
+                    <group expand="1" string="Group By">
+                        <filter domain="[('product','=','FAQ')]" string="Product is FAQ" name='product'/>
+                        <filter name="group_supplier_name" string="Supplier" domain="[]" context="{'group_by':'supplier_name'}"/>
+                        <filter name="group_by_product" string="Product" domain="[]" context="{'group_by':'product'}"/>
+                    </group>
+                </search>
+             </field>
+         </record>
+
+        <record id="view_v_intake_qty_supplier_pivot" model="ir.ui.view">
+         <field name="name">view.v.intake.qty.supplier.pivot</field>
+         <field name="model">v.intake.qty.supplier</field>
+            <field name="arch" type="xml">
+               <pivot string="Intake Quality by Supplier">
+                   <field name="week_name" group="True"/>
+                   <field name="supplier_name" group="True"/>
+                   <field name="net_qty" operator="*"/>
+                   <field name="mc" operator="*"/>
+                   <field name="fm" operator="*"/>
+                   <field name="black" operator="*"/>
+                   <field name="broken" operator="*" />
+                   <field name="brown" operator="*"/>
+                   <field name="mold" operator="*"/>
+                   <field name="cherry" operator="*"/>
+                   <field name="excelsa" operator="*"/>
+                   <field name="screen20" operator="*"/>
+                   <field name="screen19" operator="*"/>
+                   <field name="screen18" operator="*"/>
+                   <field name="screen16" operator="*"/>
+                   <field name="screen13" operator="*"/>
+                   <field name="screen12" operator="*"/>
+                   <field name="belowsc12" operator="*"/>                  
+                   <field name="burned" operator="*"/>                  
+                   <field name="eaten" operator="*"/>                  
+                   <field name="immature" operator="*"/>                  
+               </pivot>
+            </field>
+        </record>
+
+        <record id="view_v_intake_qty_supplier_graph" model="ir.ui.view">
+            <field name="name">view.v.intake.qty.supplier.graph</field>
+            <field name="model">v.intake.qty.supplier</field>
+            <field name="arch" type="xml">
+                <graph string="Intake Quality by Supplier" type="bar" stacked="True">
+                    <field name="supplier_name" type="row"/>
+                    <field name="net_qty" type="measure"/>
+                </graph>
+            </field>
+        </record>
+
+        <!-- the block of code below is the action to trigger the list open -->
+        <record id="action_v_intake_qty_supplier" model="ir.actions.act_window">
+            <field name="name">Supplier - Stock Intake Quality</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">v.intake.qty.supplier</field>
+            <field name="view_mode">tree,pivot,graph</field>
+        </record>
+
+        <!-- The below block of code will assign the abovementioned action to menu
+        tags:
+            - id: the identification name, this should be unique
+            - action: the action defines corresponding the abovementioned action to be triggered
+            - parrent: this specify which menu the current sub-menu will be nested under, in this case, this menu will be nested under MRP area of Master Report
+            - groups: defines a list of group users who have permission to access this report
+            - sequence: the order of the menu in the parrent menu -->
+
+        <!-- Create a menu item to open this report in KCS/Report -->
+        <!--
+        <menuitem id="menu_v_intake_qty_supplier" 
+            action="action_v_intake_qty_supplier" parent="general_kcs.menu_report_kcs" name="Intake Quality by Supplier"
+            sequence="211" />
+            -->
+        <!-- Create a menu item to open this report in Manufacturing -->
+        <!-- Create a menu item to open this report in Report/Production -->
+        <!--
+        <menuitem id="menu_v_intake_qty_supplier_report" 
+            action="action_v_intake_qty_supplier" parent="ned_report.menu_production_master_report" name="Supplier - Stock Intake Quality"
+            sequence="240" />
+            -->
+        
+    </data>
+</openerp>

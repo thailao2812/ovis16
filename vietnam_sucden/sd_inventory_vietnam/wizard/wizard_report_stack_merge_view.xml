@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="wizard_report_stack_merge" model="ir.ui.view">
+            <field name="name">wizard_report_stack_merge</field>
+            <field name="model">wizard.report.stack.merge</field>
+            <field name="arch" type="xml">
+                <form string="Report Stack Merge">
+                    <sheet>
+			            <group>
+		            		<label for="date_from" string="Date from"/>
+							<div>
+								<field name="date_from" class="oe_inline" required="1"/>
+								<span>       </span><span>   Date to</span>
+								<field name="date_to" class="oe_inline ms-3" required="1"/>
+							</div>
+		                </group>
+		                <group>
+
+		                </group>
+		                <footer>
+		                	<button string="Generate" name="generate_report" type="object" class="oe_highlight"/>
+		                    <button string="Cancel" class="btn-default" special="cancel"/>
+		                </footer>
+	                </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_wizard_report_stack_merge" model="ir.actions.act_window">
+            <field name="name">Report Stack Merge</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">wizard.report.stack.merge</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem id="menu_wizard_report_stack_merge" action="action_wizard_report_stack_merge"
+              parent="stock.menu_stock_inventory_control"
+					name="Report Stack Merge" sequence="150"/>
+
+    </data>
+</odoo>

@@ -1,0 +1,60 @@
+.dt-filter {
+    select {
+        width: 10%;
+        background: $o-brand-primary;
+        color: $o-gray-100;
+        text-align: center;
+        option {
+            color: black;
+        }
+    }
+    button {
+        width: 10%;
+    }
+    input {
+        height: 100%;
+        width: 10%;
+    }
+    span {
+        display: none;
+    }
+    * {
+        border: none;
+        padding: 0 5px;
+    }
+    div.o_datepicker {
+        border-top: solid 0.5px;
+        border-bottom: solid 0.5px;
+        border-right: solid 0.5px;
+    }
+    .o_datepicker {
+        input {
+            text-align: center;
+        }
+    }
+    i {
+        padding-top: 40%;
+    }
+
+    .btn {
+        &.eraser {
+            padding-top: 4px;
+            margin: 0px 5px;
+            width: 25px;
+        }
+
+        &.arrow {
+            padding-top: 1px;
+        }
+
+        &.date-text {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+
+            &.selected {
+                background-color: lightgray;
+            }
+        }
+    }
+}

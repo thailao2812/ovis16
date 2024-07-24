@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="condition_contract_tree" model="ir.ui.view">
+        <field name="name">condition_contract_tree</field>
+        <field name="model">condition.contract</field>
+        <field name="arch" type="xml">
+            <tree string="Condition for Purchase Contract" editable ='top'>
+				<field name="display_name"/>
+				<field name="name"/>
+				<field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+     <record id="action_condition_contract" model="ir.actions.act_window">
+        <field name="name">Condition for Contract</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">condition.contract</field>
+        <field name="view_id" ref="condition_contract_tree"/>
+        <field name="view_mode">tree</field>
+    </record>
+
+    <menuitem id="menu_condition_contract"
+            name="Condition for Contract"
+            action="action_condition_contract"
+            parent="sd_master.menu_master_data_sucden_root"
+            sequence="100"/>
+</odoo>

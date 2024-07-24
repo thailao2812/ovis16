@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_request_kcs_line_form_inherit_india" model="ir.ui.view">
+        <field name="name">view_request_kcs_line_form_inherit_india</field>
+        <field name="model">request.kcs.line</field>
+        <field name="inherit_id" ref="sd_quality.view_request_kcs_line_form"/>
+        <field name="arch" type="xml">
+			<xpath expr="//field[@name='inspector']" position="attributes">
+				<attribute name="required">1</attribute>
+			</xpath>
+			<xpath expr="//field[@name='sampler']" position="attributes">
+				<attribute name="required">1</attribute>
+			</xpath>
+			<xpath expr="//field[@name='categ_id']" position="after">
+				<field name="template_qc"/>
+			</xpath>
+			<xpath expr="//field[@name='bag_no']" position="after">
+				<field name="moisture_percent" invisible="1"/>
+				<field name="visual_quality_ids" options="{'no_create': True, 'no_open': True}" widget="many2many_tags" attrs="{'readonly': [('state', '=', 'approved')]}"/>
+			</xpath>
+			<xpath expr="//field[@name='deduction']" position="replace">
+			</xpath>
+			 <xpath expr="//page[@name='quality_test']" position="replace">
+                 <page string="Quality Test" name="quality_test_india">
+                     <group  class="row">
+                         		<group class="col-lg-6"  colspan="7" >
+									<field name="sample_weight_india" attrs="{'readonly': [('state', 'in', ['approved', 'commercial'])]}"/>
+						    		<field name="outturn_gram" attrs="{'readonly': [('state', '=', 'approved')], 'readonly': [('state', 'in', ['approved', 'commercial'])]}"/>
+						    		<field name="sleeve_6_up" attrs="{'invisible': [('template_qc', 'not in', ['c_grade'])], 'readonly': [('state', 'in', ['approved', 'commercial'])]}"/>
+						    		<field name="sleeve_5_5_up" attrs="{'invisible': [('template_qc', 'not in', ['c_grade'])], 'readonly': [('state', 'in', ['approved', 'commercial'])]}"/>
+						    		<field name="sleeve_5_5_down" attrs="{'invisible': [('template_qc', 'not in', ['c_grade'])], 'readonly': [('state', 'in', ['approved', 'commercial'])]}"/>
+						    		<field name="sleeve_5_down" attrs="{'invisible': [('template_qc', 'not in', ['c_grade'])], 'readonly': [('state', 'in', ['approved', 'commercial'])]}"/>
+						    		<field name="aaa_gram" attrs="{'invisible': [('template_qc', 'not in', ['raw', 'clean', 'bulk', 'clean_bulk'])], 'readonly': [('state', 'in', ['approved', 'commercial'])]}"/>
+						    		<field name="aa_gram" attrs="{'invisible': [('template_qc', 'not in', ['raw', 'clean', 'bulk', 'clean_bulk'])], 'readonly': [('state', 'in', ['approved', 'commercial'])]}"/>
+						    		<field name="a_gram" attrs="{'invisible': [('template_qc', 'not in', ['raw', 'clean', 'bulk', 'clean_bulk'])], 'readonly': [('state', 'in', ['approved', 'commercial'])]}"/>
+						    		<field name="b_gram" attrs="{'invisible': [('template_qc', 'not in', ['raw', 'clean', 'bulk', 'clean_bulk'])], 'readonly': [('state', 'in', ['approved', 'commercial'])]}"/>
+						    		<field name="c_gram" attrs="{'invisible': [('template_qc', 'not in', ['raw', 'clean', 'bulk', 'clean_bulk'])], 'readonly': [('state', 'in', ['approved', 'commercial'])]}"/>
+						    		<field name="pb_gram" attrs="{'invisible': [('template_qc', 'in', ['pb_grade', 'lower'])], 'readonly': [('state', 'in', ['approved', 'commercial'])]}"/>
+						    		<field name="flat_gram" attrs="{'invisible': [('template_qc', '!=', 'pb_grade')], 'readonly': [('state', 'in', ['approved', 'commercial'])]}"/>
+						    		<field name="pb1_gram" attrs="{'invisible': [('template_qc', '!=', 'pb_grade')], 'readonly': [('state', 'in', ['approved', 'commercial'])]}"/>
+						    		<field name="pb2_gram" attrs="{'invisible': [('template_qc', '!=', 'pb_grade')], 'readonly': [('state', 'in', ['approved', 'commercial'])]}"/>
+						    		<field name="bb_gram" attrs="{'readonly': [('state', 'in', ['approved', 'commercial'])]}"/>
+						    		<field name="bleached_gram" attrs="{'readonly': [('state', 'in', ['approved', 'commercial'])], 'invisible': [('template_qc', '=', 'lower')]}"/>
+						    		<field name="idb_gram" attrs="{'readonly': [('state', 'in', ['approved', 'commercial'])]}"/>
+						    		<field name="bits_gram" attrs="{'readonly': [('state', 'in', ['approved', 'commercial'])]}"/>
+						    		<field name="hulks_gram" attrs="{'readonly': [('state', 'in', ['approved', 'commercial'])]}"/>
+						    		<field name="stone_gram" attrs="{'readonly': [('state', 'in', ['approved', 'commercial'])]}"/>
+						    		<field name="skin_out_gram" attrs="{'readonly': [('state', 'in', ['approved', 'commercial'])], 'invisible': [('template_qc', '=', 'lower')]}"/>
+						    		<field name="triage_gram" attrs="{'readonly': [('state', 'in', ['approved', 'commercial'])]}"/>
+						    		<field name="wet_bean_gram" attrs="{'readonly': [('state', 'in', ['approved', 'commercial'])], 'invisible': [('template_qc', '=', 'lower')]}"/>
+						    		<field name="red_beans_gram" attrs="{'readonly': [('state', 'in', ['approved', 'commercial'])], 'invisible': [('template_qc', '=', 'lower')]}"/>
+						    		<field name="stinker_gram" attrs="{'readonly': [('state', 'in', ['approved', 'commercial'])], 'invisible': [('template_qc', '=', 'lower')]}"/>
+						    		<field name="faded_gram" attrs="{'readonly': [('state', 'in', ['approved', 'commercial'])], 'invisible': [('template_qc', '=', 'lower')]}"/>
+
+						    		<field name="sleeve_5_up" attrs="{'invisible': [('template_qc', 'not in', ['clean', 'lower', 'clean_bulk'])], 'readonly': [('state', 'in', ['approved', 'commercial'])]}"/>
+									<field name="unhulled" attrs="{'invisible': [('template_qc', 'not in', ['clean', 'lower', 'bulk', 'clean_bulk'])], 'readonly': [('state', 'in', ['approved', 'commercial'])]}"/>
+									<field name="remaining_coffee" attrs="{'invisible': [('template_qc', 'not in', ['clean', 'lower', 'clean_bulk'])], 'readonly': [('state', 'in', ['approved', 'commercial'])]}"/>
+									<field name="blacks" attrs="{'invisible': [('template_qc', 'not in', ['clean', 'lower', 'clean_bulk'])], 'readonly': [('state', 'in', ['approved', 'commercial'])]}"/>
+									<field name="half_monsoon" attrs="{'invisible': [('template_qc', 'not in', ['clean', 'clean_bulk'])], 'readonly': [('state', 'in', ['approved', 'commercial'])]}"/>
+									<field name="good_beans" attrs="{'invisible': [('template_qc', 'not in', ['clean', 'lower', 'clean_bulk'])], 'readonly': [('state', 'in', ['approved', 'commercial'])]}"/>
+
+						    		<field name="total_gram" attrs="{'readonly': [('state', 'in', ['approved', 'commercial'])]}"/>
+					    		</group>
+                         		<group class="col-lg-6"  colspan="5">
+									<separator/>
+						    		<field name="outturn_percent" readonly="1"/>
+						    		<field name="sleeve_6_up_percent" readonly="1" attrs="{'invisible': [('template_qc', 'not in', ['c_grade'])]}"/>
+						    		<field name="sleeve_5_5_up_percent" readonly="1" attrs="{'invisible': [('template_qc', 'not in', ['c_grade'])]}"/>
+						    		<field name="sleeve_5_5_down_percent" readonly="1" attrs="{'invisible': [('template_qc', 'not in', ['c_grade'])]}"/>
+						    		<field name="sleeve_5_down_percent" readonly="1" attrs="{'invisible': [('template_qc', 'not in', ['c_grade'])]}"/>
+						    		<field name="aaa_percent" readonly="1" attrs="{'invisible': [('template_qc', 'not in', ['raw', 'clean', 'bulk', 'clean_bulk'])]}"/>
+						    		<field name="aa_percent" readonly="1" attrs="{'invisible': [('template_qc', 'not in', ['raw', 'clean', 'bulk', 'clean_bulk'])]}"/>
+						    		<field name="a_percent" readonly="1" attrs="{'invisible': [('template_qc', 'not in', ['raw', 'clean', 'bulk', 'clean_bulk'])]}"/>
+						    		<field name="b_percent" readonly="1" attrs="{'invisible': [('template_qc', 'not in', ['raw', 'clean', 'bulk', 'clean_bulk'])]}"/>
+						    		<field name="c_percent" readonly="1" attrs="{'invisible': [('template_qc', 'not in', ['raw', 'clean', 'bulk', 'clean_bulk'])]}"/>
+						    		<field name="pb_percent" readonly="1" attrs="{'invisible': [('template_qc', 'in', ['pb_grade', 'lower'])]}"/>
+						    		<field name="flat_percent" readonly="1" attrs="{'invisible': [('template_qc', '!=', 'pb_grade')]}"/>
+						    		<field name="pb1_percent" readonly="1" attrs="{'invisible': [('template_qc', '!=', 'pb_grade')]}"/>
+						    		<field name="pb2_percent" readonly="1" attrs="{'invisible': [('template_qc', '!=', 'pb_grade')]}"/>
+						    		<field name="bb_percent" readonly="1"/>
+						    		<field name="bleached_percent" readonly="1" attrs="{'invisible': [('template_qc', '=', 'lower')]}"/>
+						    		<field name="idb_percent" readonly="1"/>
+						    		<field name="bits_percent" readonly="1"/>
+						    		<field name="hulks_percent" readonly="1"/>
+						    		<field name="stone_percent" readonly="1"/>
+						    		<field name="skin_out_percent" readonly="1" attrs="{'invisible': [('template_qc', '=', 'lower')]}"/>
+						    		<field name="triage_percent" readonly="1"/>
+						    		<field name="wet_bean_percent" readonly="1" attrs="{'invisible': [('template_qc', '=', 'lower')]}"/>
+						    		<field name="red_beans_percent" readonly="1" attrs="{'invisible': [('template_qc', '=', 'lower')]}"/>
+						    		<field name="stinker_percent" readonly="1" attrs="{'invisible': [('template_qc', '=', 'lower')]}"/>
+						    		<field name="faded_percent" readonly="1" attrs="{'invisible': [('template_qc', '=', 'lower')]}"/>
+
+									<field name="sleeve_5_up_percent" readonly="1" attrs="{'invisible': [('template_qc', 'not in', ['clean', 'lower', 'clean_bulk'])]}"/>
+									<field name="unhulled_percent" readonly="1" attrs="{'invisible': [('template_qc', 'not in', ['clean', 'lower', 'bulk', 'clean_bulk'])]}"/>
+									<field name="remaining_coffee_percent" readonly="1" attrs="{'invisible': [('template_qc', 'not in', ['clean', 'lower', 'clean_bulk'])]}"/>
+									<field name="blacks_percent" readonly="1" attrs="{'invisible': [('template_qc', 'not in', ['clean', 'lower', 'clean_bulk'])]}"/>
+									<field name="half_monsoon_percent" readonly="1" attrs="{'invisible': [('template_qc', 'not in', ['clean', 'clean_bulk'])]}"/>
+									<field name="good_beans_percent" readonly="1" attrs="{'invisible': [('template_qc', 'not in', ['clean', 'lower', 'clean_bulk'])]}"/>
+
+						    		<field name="total_percent" readonly="1"/>
+					    		</group>
+                     </group>
+                 </page>
+				 <page string="Deduction" name="deduction_india">
+					 <field name="deduction_ids" attrs="{'readonly': [('state', '=', 'approved')]}">
+						 <tree editable="top" create="false">
+							 <field name="name" options="{'no_create': True, 'no_open': True}" readonly="1"/>
+							 <field name="percent"/>
+							 <field name="kg" sum="kg"/>
+							 <field name="commercial_input" sum="commercial_input"/>
+							 <field name="reject" readonly="1"/>
+							 <field name="remark"/>
+						 </tree>
+					 </field>
+					 <field name="deduction_special_ids" attrs="{'readonly': [('state', '=', 'approved')]}">
+						 <tree editable="top" create="false">
+							 <field name="name" options="{'no_create': True, 'no_open': True}" readonly="1"/>
+							 <field name="percent"/>
+							 <field name="kg" sum="kg"/>
+							 <field name="commercial_input" sum="commercial_input"/>
+							 <field name="remark"/>
+						 </tree>
+					 </field>
+				 </page>
+            </xpath>
+
+        </field>
+    </record>
+
+	<record id="view_request_kcs_line_history_tree_ned_inherit_india" model="ir.ui.view">
+	    <field name="name">view_request_kcs_line_history_tree_ned_inherit_india</field>
+	    <field name="model">request.kcs.line</field>
+	    <field name="inherit_id" ref="sd_quality.view_request_kcs_line_history_tree_ned"/>
+	    <field name="arch" type="xml">
+
+	        <xpath expr="//tree" position="replace">
+				<tree string="Request KCS Line" default_order="id desc">
+                	<field name="date" invisible="0"/>
+                	<field name="production_id"/>
+                    <field name="picking_id"/>
+                    <field name="state"/>
+<!--                    <field name="p_contract"/>-->
+                    <field name="partner_id"/>
+                    <field name="reference"/>
+                    <field name="districts_id" string="Districts"/>
+                    <field name="stack_id"/>
+                    <field name="zone_id"/>
+					<field name="x_warehouse_id"/>
+                    <field name="product_id"/>
+					<field name="x_certificate_id"/>
+                    <field name="product_uom" invisible="1"/>
+                    <field name="packing_id"/>
+                    <field name="bag_no" sum="bag_no"/>
+                    <field name="product_qty"/>
+                    <field name="qty_reached"/>
+                    <field name="basis_weight"/>
+
+
+                    <field name="origin_deduction"/>
+                    <field name="deduction"/>
+                    <field name="qty_reached" invisible="1"/>
+
+                    <field name="moisture_percent" readonly="1"/>
+                    <field name="outturn_percent" readonly="1"/>
+					<field name="aaa_percent" readonly="1"/>
+					<field name="aa_percent" readonly="1"/>
+					<field name="a_percent" readonly="1"/>
+					<field name="b_percent" readonly="1"/>
+					<field name="c_percent" readonly="1"/>
+					<field name="pb_percent" readonly="1"/>
+					<field name="bb_percent" readonly="1"/>
+					<field name="bleached_percent" readonly="1"/>
+					<field name="idb_percent" readonly="1"/>
+					<field name="bits_percent" readonly="1"/>
+					<field name="hulks_percent" readonly="1"/>
+					<field name="stone_percent" readonly="1"/>
+					<field name="total_percent" readonly="1"/>
+					<field name="outturn_percent" readonly="1"/>
+
+					<field name="cuptest"/>
+					<field name="remark"/>
+					<field name="inspector"/>
+					<field name="x_inspectator"/>
+					<field name="sampler" groups="sd_india_quality_control.group_checking_sampler"/>
+                    <field name="picking_type_id" invisible="1"/>
+                </tree>
+	        </xpath>
+
+	    </field>
+	</record>
+
+</odoo>

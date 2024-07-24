@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_fixed_cost_tree_india" model="ir.ui.view">
+            <field name="name">view_fixed_cost_tree_india</field>
+            <field name="model">fixed.cost.india</field>
+            <field name="arch" type="xml">
+                <tree string="Exchange" editable="top" default_order="id desc">
+                	<field name="date_from" required="1"/>
+                	<field name="date_to" required="1"/>
+                	<field name="fixed_cost"/>
+                </tree>
+            </field>
+        </record>
+
+    <record id="action_fixed_cost_india" model="ir.actions.act_window">
+            <field name="name">Fixed Cost</field>
+            <field name="res_model">fixed.cost.india</field>
+            <field name="view_mode">tree</field>
+            <field name="context">{}</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+              		Create a Fixed Cost, the first step of a new Fixed Cost
+              </p>
+            </field>
+        </record>
+</odoo>

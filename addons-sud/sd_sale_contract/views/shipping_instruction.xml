@@ -1,0 +1,466 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    
+    	<!-- Shipping Instruction-->
+        <record id="view_shipping_instruction_tree" model="ir.ui.view">
+            <field name="name">shipping.instruction.tree</field>
+            <field name="model">shipping.instruction</field>
+            <field name="arch" type="xml">
+                <tree default_order="id desc">
+    				<field name="name" string="SI No." optional="show"/>
+    				<field name="reference" optional="show"/>
+    				<field name="date" string="SI Date" optional="show"/>
+    				<field name="contract_id" string="Scontract" optional="show"/>
+    				<field name="certificate_id" optional="show"/>
+    				<field name="partner_id" optional="show"/>
+    				
+    				<field name="allowed_franchise" optional="show"/>
+                    
+    				<field name="product_id"/>
+    				<field name="total_line_qty" sum="total_line_qty" string="Qty" optional="show"/>
+    				
+    				<field name="priority_by_month" optional="show"/>
+                    <field name="packing_id" optional="show"/>
+                    <field name="packing_place" string="WH Allocated"/>
+                    <field name="bill_date" optional="show"/>
+                    <field name="shipment_date" optional="show"/>
+                    <field name="fumigation_id" optional="show"/>
+                    <field name="fumigation_date" optional="show"/>
+                    <field name="pss_condition" optional="show"/>
+                    <field name="factory_etd" optional="show"/>
+                    <field name="push_off_etd" optional="show"/>
+                    <field name="booking_date" optional="show"/>
+                    <field name="closing_time" optional="show"/>
+                    <field name="shipped" invisible="1" optional="show"/>
+                    <field name="booking_ref_no" optional="show"/>
+                    <field name="shipping_line_id" optional="show"/>
+                    <field name="prodcompleted" optional="show"/>
+                    <field name="port_of_discharge" optional="show"/>
+                    <field name="port_of_loading" optional="show"/>
+                    <field name="delivery_place_id" optional="show"/>
+                    <field name="ico_permit_no" optional="show"/>
+                    <!-- err 
+                    <field name="allocated"/>
+                    -->
+                    <field name="remarks" optional="show"/>
+                    <field name="x_link_id" invisible="1" optional="show"/>
+    				
+    				<field name="origin" invisible="1" optional="show"/>
+    				<field name="state" invisible="1" optional="show"/>
+    			</tree>
+            </field>
+        </record>
+        
+        <record id="view_shipping_instruction_form" model="ir.ui.view">
+            <field name="name">shipping.instruction.form</field>
+            <field name="model">shipping.instruction</field>
+            <field name="arch" type="xml">
+                <form string="Shipping Instruction">
+	                <header>
+						<button name="create_commercial_reference" type="object" string="Generate Commercial Invoice Reference" class="oe_highlight"/>
+	                  	<button name="button_cancel" states="draft" string="Cancel" type="object" confirm="Are you sure want to cancel SI?" class="oe_highlight"/>
+	                    <button name="button_done" type="object" states = 'draft' string="Done"/>
+	                    <button name="print_commercial_invoice" type="object" string="Print Commercial Invoice" class="oe_highlight"/>
+
+
+	                    <field name="state" widget="statusbar" statusbar_visible="draft,done"/>
+	                </header>
+	                <sheet>
+	                	<div class="oe_button_box" name="button_box" >
+							<field name="contract_ids" invisible="1"/>
+							<button type="object" name="action_view_contract_nvs" class="oe_stat_button" icon="fa-truck" 
+									attrs="{'invisible': [('contract_count','=',0)]}">
+								<field name="contract_count" widget="statinfo" string="NVS"/>
+							</button>
+							<!--
+							<button type="object" name="action_view_invoices" class="oe_stat_button" icon="fa-pencil-square-o" 
+									attrs="{'invisible': [('invoice_count','=',0)]}">
+								<field name="invoice_count" widget="statinfo" string="Invoices"/>
+							</button>
+							
+							-->
+						</div>
+	                    <div class="oe_title">
+							<span class="o_form_label"><label for="name" string="SI"/></span>
+	                        <h1>
+	                            <field name="name" readonly="1"/>
+	                        </h1>
+
+	                    </div>
+	                	<group>
+	                		<group>
+								<field name="reference" readonly="1"/>
+	                			<field name="partner_id" domain="[('customer_rank','=',True)]" readonly = "1"/>
+	                			<label for="contract_id" domain ="[('type','!=','p_contract'), ('traffic_link_id', '=', False)]"/>
+								<div name="contract_id" class="o_row">
+									<field name="contract_id" domain ="[('type','!=','p_contract'), ('traffic_link_id', '=', False)]"
+										options="{'no_write': True, 'no_create': True}" required="1"/>
+									<!-- 
+									<field name="contract_id" domain="[('state','=','approved'),('type','=','export')]" 
+										options="{'no_write': True, 'no_create': True}" required="1"/>
+									 -->
+									<!-- <button name="button_load_sc" string="Load" type="object" 
+										icon="terp-gtk-jump-to-ltr" states="draft" class="btn-default"
+										 attrs="{'invisible': [('state','!=', 'draft')]}"/>   -->
+									<button name="button_load_sc" string="Load" type="object" 
+										icon="fa-bars" class="btn-default"/>  
+								</div>
+								
+								<field name="pss_condition"/>
+			                    <field name="pss_send_schedule"/>
+			                    <field name="certificated_ids" widget="many2many_tags"/>
+			                    <field name="fumigation_id"/>
+			                    <field name="packing_place"/>
+			                    
+			                     <field name="si_received_date"/>
+			                     <field name="si_sent_date"/>
+			                     <field name="nominated_etd"/>
+	                		</group>
+	                		<group>
+								<field name="crop_id"/>
+	                			<field name="date"/>
+	                			<!--
+	                    		<field name="deadline"/>
+	                    		-->
+	                    		<field name="shipment_date"/>
+                    			<field name="origin" invisible="1"/>
+                    			
+                			    <field name="materialstatus"/>
+			                    <field name="prodcompleted"/>
+			                    <field name="fumigation_date"/>
+			                    <field name="shipped" invisible="1"/>
+			                    <field name="remarks"/>
+			                    <field name="priority_by_month"/>
+			                    
+			                    <field name="od_doc_rec_date"/>
+			                    <field name="od_doc_sent_date"/>
+			                    <field name="awb_sent_no"/>
+			                    <field name="status"/>
+                    			
+                    			<field name="company_id" options="{'no_write': True, 'no_create': True}" invisible="1"/>
+                    			<!-- erro
+                    			<field name="bags"/>
+                   				<field name="pallet"/>
+                   				-->  
+	                		</group>
+	                	</group>
+	                	<notebook>
+	                		<page string="Products" name="product">
+	                    		<field name="shipping_ids" context="{'default_shipping_id': active_id}">
+	                    			<tree editable="top">
+	                    				<field name="sequence" widget="handle"/>
+			                            <field name="product_id"/>
+			                            <field name="name"/>
+			                            <field name="certificate_id"/>
+			                            <field name="packing_id"/>
+			                            <field name="product_uom"/>
+			                            
+			                            <field name="bags" sum="bags"/>
+			                            <field name="tare_weight" sum="tare_weight"/>
+			                            <field name="gross_weight" sum="gross_weight"/>
+			                            <field name="diff_net"/>
+			                            <field name="product_qty" sum="product_qty"/>
+			                            <field name="no_of_teus" sum="no_of_teus"/>
+			                            <field name="price_unit" invisible="0"/>
+			                            <field name="tax_id" invisible="1" widget="many2many_tags" domain="[('type_tax_use','=','sale'),('company_id','=',parent.company_id)]"/>
+			                            
+	                    			</tree>
+	                    		</field>
+	                            <field name="note" class="oe_inline" placeholder="Setup default terms and conditions in your company settings."/>
+	                            <div class="oe_clear"/>
+	                            <group col="4" name="users_validate" invisible ="1">
+	                            	<field name="create_uid"/>
+	                    			<field name="create_date"/>
+	                    			<field name="date_confirm"/>
+	                    			<field name="user_confirm"/>
+	                    			<field name="user_approve" attrs="{'invisible': [('state','in',('draft','waiting'))]}"/>
+	                    			<field name="date_approve" attrs="{'invisible': [('state','in',('draft','waiting'))]}"/>
+	                    		</group>
+	                    	</page>
+	                    	<page string="NVS" name="nvs" attrs="{'invisible': [('state','in',('draft','cancel','waiting'))]}">
+	                    		<field name="contract_ids" context="{'default_type': 'export'}"/>
+	                    	</page>
+	                    	<page string="B/L Information" name="bl_information" attrs="{'readonly':[('state','=','done')]}">
+	                    		<group>
+	                    			<group>
+	                    				<field name="booking_ref_no"/>
+	                    				<field name="number_of_container"/>
+	                    				<field name="ico_permit_no" attrs="{'readonly':[('state','=','done')]}"/>
+	                    				<field name="factory_etd" attrs="{'readonly':[('state','=','done')]}"/>
+	                    				<field name="container_status" string="Container Type" attrs="{'readonly':[('state','=','done')]}"/>
+	                    				
+	                    				<field name="bill_date"/>
+					                    <field name="vessel" attrs="{'readonly':[('state','=','done')]}"/>
+					                    <field name="voyage" attrs="{'readonly':[('state','=','done')]}"/>
+	                    				
+	                    				<field name="port_of_discharge" domain="[('type','=','port')]" attrs="{'readonly':[('state','=','done')]}"/>
+	                    			</group>
+	                    			<group>
+	                    				<field name="booking_date" attrs="{'readonly':[('state','=','done')]}"/>
+	                    				<field name="closing_time" attrs="{'readonly':[('state','=','done')]}"/>
+	                    				<field name="push_off_etd" attrs="{'readonly':[('state','=','done')]}"/>
+	                    				<field name="delivery_place_id" attrs="{'readonly':[('state','=','done')]}"/>
+	                    				<!--<field name="incoterms_id"/>  -->
+	                    				<field name="shipping_line" invisible="1"/>
+	                    				 <field name="shipping_line_id" invisible="0" attrs="{'readonly':[('state','=','done')]}"/>
+		                    			<field name="forwarding_agent" attrs="{'readonly':[('state','=','done')]}"/>
+	                    				<field name="port_of_loading" domain="[('type','=','port')]" attrs="{'readonly':[('state','=','done')]}"/>
+	                    			</group>
+	                    		</group>
+	                    			<field name="contract_ids" attrs="{'readonly':[('state','=','done')]}" />
+                    		</page>
+                    		<!--
+                    		
+                    		<page string="License Certificate Allocation" name="allocated_license">
+		                        <field name="license_allocation_ids">
+		                            <tree editable="top">
+		                                <field name="shipping_id" readonly="1"/>
+		                                <field name="license_id" context="{'certificated_ids': parent.certificated_ids}"/>
+		                                <field name="product_id" readonly="1"/>
+		                                <field name="grade_id" readonly="1"/>
+		                                <field name="state" readonly="1"/>
+		                                <field name="allocation_qty"/>
+		                            </tree>
+		                        </field>
+		                    </page>
+		                    -->
+		                    
+                    		<!-- Kiet dim
+                    		<page string="invoice" invisible="1">
+                    			<field name="invoice_ids">
+	                    			<tree>
+	                    				<field name="date_invoice"/>
+	                    				<field name="partner_id"/>
+	                    				<field name="amount_total" sum="amount_total"/>
+	                    				<field name="state"/>
+	                    				<field name="currency_id"/>
+	                   				</tree>
+                    			</field>
+                    		</page>
+                    		-->
+	                    	<page string="Shipment Details" name="shipment_information" invisible="1">
+	                    		<separator string="Containers" invisible="1"/>
+	                    		<field name="containers_ids" context="{'default_shipping_id': active_id}" invisible="1">	
+	                    			<tree editable="top">
+	                    				<field name="name" readonly="0"/>
+	                    				<field name="shipping_id" invisible="1"/>
+	                    				<field name="seal_no"/>
+	                    				<field name="product_qty" sum="product_qty"/>
+	                    				<field name="product_uom" readonly="1"/>
+	                    			</tree>
+	                    		</field>
+	                    	</page>
+	                    	<page string="Other Informations" name="shipment_information">
+	                    		<separator string="Type Of Stuffing"/>
+	                    		<field name="type_of_stuffing"/>
+	                    		<separator string="Marking"/>
+	                    		<field name="marking"/>
+		                        <group>
+		                            <field name="ross_weight"/>
+		                            <separator string="Description of Goods"/>
+		                            <div><field name="description_of_goods"/></div>
+		                        </group>
+		                        <group>
+		                            <!-- <field name="net_weight"/> -->
+		                            <separator string="Other Detail"/>
+		                            <div><field name="other_detail"/></div>
+		                        </group>
+	                    	</page>
+	                    	<page string="PSS">
+		                        <field name="pss_sent_ids" nolabel="1" colspan="4">
+		                        	<tree editable="top">
+		                        		<field name="s_contract_id"/>
+					               		<field name="kgs"/>
+					               		<field name="quality"/>
+					               		<field name="ref_no"/>
+					               		<field name="date_sent"/>
+					               		<field name="courier"/>
+					               		<field name="awb"/>
+					               		<field name="delivered_date"/>
+					               		<field name="signed_by"/>
+					               		<field name="aproved_date"/>
+					               		<field name="rejected_date"/>
+		                        	</tree>
+		                        </field>
+		                    </page>
+	                	</notebook>
+	                	
+	                </sheet>
+                </form>
+            </field>
+        </record>
+        
+        <record id="shipping_instruction_search" model="ir.ui.view">
+            <field name="name">shipping.instruction.search</field>
+            <field name="model">shipping.instruction</field>
+            <field name="arch" type="xml">
+                <search string="Search Shipping Instruction">
+                    <field name="name" string="Shipping"/>
+                    <field name="origin"/>
+					<field name="pic_id"/>
+					<field name="partner_id"/>
+					<field name="contract_id" string="S Contract"/>
+					<field name="product_id" string="Standard"/>
+                    
+                    
+                    <separator/>
+                    <filter name="draft" string="Draft" domain="[('state','=','draft')]"/>
+                    <filter name="approve" string="Approved" domain="[('state','=','approved')]"/>
+                    <filter name="filter_create_uid" domain="[('create_uid','=',uid)]" help="My SI"/>
+					<filter name="filter_x_link_id" domain="[('x_link_id','!=',False)]" string="Linked from Traffic"/>
+					<separator/>
+					
+                    <filter string="S Contract" name="group_contract_id" context="{'group_by':'contract_id'}"/>
+                    <filter string="Certificate" name="group_certificate_id" context="{'group_by':'certificate_id'}"/>
+                    
+                    <filter string="Customer" name="group_partner_id" context="{'group_by':'partner_id'}"/>
+                    <filter string="Product" name="group_product_id" context="{'group_by':'product_id'}"/>
+               </search>
+            </field>
+        </record>
+        
+        
+        
+        <record model="ir.actions.act_window" id="action_shipping_instruction">
+            <field name="name">Shipping Instruction</field>
+            <field name="res_model">shipping.instruction</field>
+            <field name="view_mode">tree,form</field>
+            <!--<field name="domain">[('status','=','3rd party')]</field>  -->
+            <field name="search_view_id" ref="shipping_instruction_search"/>
+            <field name="context">{
+                }
+            </field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a Shipping Instruction, the first step of a new SI.
+                </p><p>
+                </p>
+            </field>
+        </record>
+        
+        <record model="ir.actions.act_window.view" id="action_shipping_instruction_view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_shipping_instruction_tree"/>
+            <field name="act_window_id" ref="action_shipping_instruction"/>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="action_shipping_instruction_form">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_shipping_instruction_form"/>
+            <field name="act_window_id" ref="action_shipping_instruction"/>
+        </record>
+        
+        
+        
+        <!-- instruction.line -->
+        
+        
+        <record id="view_shipping_instruction_line_tree" model="ir.ui.view">
+            <field name="name">shipping.instruction.line.tree</field>
+            <field name="model">shipping.instruction.line</field>
+            <field name="arch" type="xml">
+                <tree string="Shipping Instruction Line">
+                    <field name="shipping_no"/>
+                    <field name="contract_no"/>
+                    <field name="si_date"/>
+                    <field name="partner_name"/>
+                    <field name="shipment_date"/>
+                    <field name="product_id"/>
+                    <field name="name"/>
+                    <field name="certificate_id"/>
+                    <field name="packing_id"/>
+                    <field name="product_uom"/>
+                    <field name="product_qty"/>
+                    <field name="price_unit"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id="view_shipping_instruction_line_form" model="ir.ui.view">
+            <field name="name">shipping.instruction.line.form</field>
+            <field name="model">shipping.instruction.line</field>
+            <field name="arch" type="xml">
+                <form string="Shipping Instruction Line">
+                    <group name="group_top">
+                        <group name="group_left">
+                            <field name = 'shipping_no' readonly = '1'/>
+                            <field name = 'contract_no' readonly = '1'/>
+                            <field name = 'si_date' readonly = '1'/>
+                            <field name = 'partner_name' readonly = '1'/>
+                            <field name = 'shipment_date' readonly = '1'/>
+                        </group>
+                        <group name="group_center">
+                            <field name = 'product_id' readonly = '1'/>
+                            <field name = 'name' readonly = '1'/>
+                            <field name = 'certificate_id' readonly = '1'/>
+                            <field name = 'packing_id' readonly = '1'/>
+                            <field name = 'product_uom' readonly = '1'/>
+                            <field name = 'price_unit' readonly = '1'/>
+                        </group>
+                    </group>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- The block of code bellow determines a list of search parameters appear once user type in the searchbar -->
+        <record id="shipping_instruction_line_search" model="ir.ui.view">
+            <field name="name">shipping.instruction.line.search</field>
+            <field name="model">shipping.instruction.line</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name = "shipping_no"/>
+                    <field name = 'contract_no'/>
+                    <field name = 'partner_name'/>
+                    <field name = 'product_id'/>
+                    <!-- erro
+                    <group expand="1" string="Group By">
+                        <filter string="SI" domain="[]" context="{'group_by':'shipping_no'}"/>
+                        <filter string="S Contract" domain="[]" context="{'group_by':'contract_no'}"/>
+                        <filter string="Customer" domain="[]" context="{'group_by':'partner_name'}"/>
+                        <filter string="Product" domain="[]" context="{'group_by':'product_id'}"/>
+                    </group>
+                    -->
+                </search>
+             </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_shipping_instruction_line">
+            <field name="name">Shipping Instruction Line</field>
+            <field name="res_model">shipping.instruction.line</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="shipping_instruction_line_search"/>
+            <field name="context">{
+                }
+            </field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a Shipping Instruction, the first step of a new SI.
+                </p><p>
+                </p>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="action_shipping_instruction_line_tree">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_shipping_instruction_line_tree"/>
+            <field name="act_window_id" ref="action_shipping_instruction_line"/>
+        </record>
+
+		<record id="seq_reference_shipping_instruction" model="ir.sequence">
+            <field name="name">Reference Shipping Instruction</field>
+            <field name="code">reference.shipping.instruction</field>
+            <field name="prefix">INV-%(y)s-%(month)s-</field>
+            <field name="padding">4</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+<!--        tree normal-->
+        <record id="sale_contract_india_form" model="ir.ui.view">
+            <field name="name">sale_contract_india_form</field>
+            <field name="model">sale.contract.india</field>
+            <field name="arch" type="xml">
+                <form string="Pro Forma Sales Contract - Create &amp; Modify">
+                    <header>
+                        <button name="button_submit" string="Submit" type="object" states="draft" class="oe_highlight"/>
+                        <button name="button_approve" string="Approve" type="object" states="submit" class="oe_highlight"/>
+                        <button name="button_set_to_draft" string="Set to Draft" type="object"  attrs="{'invisible': [('state', '=', 'draft')]}" class="oe_highlight"/>
+<!--                        <button name="button_approve_p_data" string="Approve" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('check_state_p', '=', False), ('state_p', '=', 'approve')]}"/>-->
+                        <field name="state" widget="statusbar" statusbar_visible="draft,submit,approve"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="name"/>
+                            <h1>
+                                <field name="name" placeholder="SN No." readonly="1"/>
+                            </h1>
+                            <widget name="web_ribbon" title="Approve" bg_color="bg-danger" attrs="{'invisible': [('state_p', '!=', 'approve')]}"/>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="crop_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="partner_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="partner_address" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="sn_date" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="contact_person" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="inco_term_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="payment_term_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="state_p" invisible="1"/>
+                                <field name="check_state_p" invisible="1"/>
+                            </group>
+                            <group>
+<!--                                <field name="payment_term_description" attrs="{'readonly': [('state', '!=', 'draft')]}"/>-->
+                                <field name="shipment" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="arbitration" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="general_condition" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="special_condition" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            </group>
+                        </group>
+                        <group string="P Information">
+                            <group>
+                                <field name="p_number" attrs="{'readonly': ['|', ('state', '!=', 'submit'), ('state_p', 'in', ['approve'])]}"/>
+                                <field name="p_date" attrs="{'readonly': ['|',  ('state', '!=', 'submit'), ('state_p', 'in', ['approve'])]}"/>
+                            </group>
+                            <group>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Product" name="product">
+                                <field name="line_ids">
+                                    <tree editable="top">
+                                        <field name="item_group_id" attrs="{'readonly': [('parent.state', '!=', 'draft')]}" required="1"/>
+                                        <field name="units" readonly="1"/>
+                                        <field name="packing_id" attrs="{'readonly': [('parent.state', '!=', 'draft')]}"/>
+                                        <field name="quantity" attrs="{'readonly': [('parent.state', '!=', 'draft')]}"/>
+                                        <field name="uom_id" readonly="1"/>
+                                        <field name="price_unit" attrs="{'readonly': [('parent.state_p', '=', 'approve')]}"/>
+                                        <field name="currency_id" attrs="{'readonly': [('parent.state', '!=', 'draft')]}"/>
+                                        <field name="price_uom" readonly="1"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+<!--        form normal-->
+        <record id="sale_contract_india_tree" model="ir.ui.view">
+            <field name="name">sale_contract_india_tree</field>
+            <field name="model">sale.contract.india</field>
+            <field name="arch" type="xml">
+                <tree string="Pro Forma Sales Contract - Create &amp; Modify">
+                    <field name="name"/>
+                    <field name="p_number"/>
+                    <field name="p_date"/>
+                    <field name="partner_id"/>
+                    <field name="item_group_id"/>
+                    <field name="unit"/>
+                    <field name="packing_id"/>
+                    <field name="total_quantity"/>
+                    <field name="price_unit"/>
+                    <field name="currency_id"/>
+                    <field name="price_uom"/>
+                    <field name="crop_id"/>
+                    <field name="sn_date"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+<!--        tree linked-->
+        <record id="sale_contract_india_tree_link" model="ir.ui.view">
+            <field name="name">sale_contract_india_tree_link</field>
+            <field name="model">sale.contract.india</field>
+            <field name="arch" type="xml">
+                <tree string="PSC to PC Linked">
+                    <field name="p_number"/>
+                    <field name="p_date"/>
+                    <field name="partner_id"/>
+                    <field name="partner_address"/>
+                    <field name="crop_id"/>
+                    <field name="product_id"/>
+                    <field name="total_quantity"/>
+                    <field name="allocated_quantity"/>
+                    <field name="balance_quantity"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+<!--        form linked-->
+        <record id="sale_contract_india_form_link" model="ir.ui.view">
+            <field name="name">sale_contract_india_form_link</field>
+            <field name="model">sale.contract.india</field>
+            <field name="arch" type="xml">
+                <form string="PSC to PC Linked">
+                    <header>
+                        <button name="button_approve_allocation" string="Approve Allocation" type="object" states="approve" class="oe_highlight"/>
+                        <field name="state" widget="statusbar" statusbar_visible="approve_allocation" attrs="{'invisible': [('state', '!=', 'approve_allocation')]}"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="p_number" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="p_date" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="partner_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="partner_address" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="crop_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+
+                            </group>
+                            <group>
+                                <field name="item_group_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="total_quantity" readonly="1"/>
+                                <field name="allocated_quantity" readonly="1"/>
+                                <field name="balance_quantity" readonly="1"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="PSC to PC Linked" name="linked_purchase">
+                                <field name="line_purchase_ids">
+                                    <tree editable="top">
+                                        <field name="purchase_contract_id" attrs="{'readonly': [('parent.state', '=', 'approve_allocation')]}" options="{'no_create': 1}" required="1" domain="[('product_id.item_group_id', '=', parent.item_group_id)]"/>
+                                        <field name="date_contract" readonly="1" force_save="1"/>
+                                        <field name="partner_id" readonly="1" force_save="1"/>
+                                        <field name="product_id" readonly="1" force_save="1"/>
+                                        <field name="quantity" readonly="1" force_save="1"/>
+                                        <field name="receive_qty" readonly="1" force_save="1"/>
+                                        <field name="outturn" readonly="1" force_save="1"/>
+                                        <field name="finished_qty" readonly="1" force_save="1"/>
+                                        <field name="finished_actual_qty" readonly="1" force_save="1"/>
+                                        <field name="total_allocated" readonly="1" force_save="1"/>
+                                        <field name="balance_qty" readonly="1"/>
+                                        <field name="current_allocated" attrs="{'readonly': [('parent.state', '=', 'approve_allocation')]}"/>
+                                        <field name="state" readonly="1" invisible="1"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!--        tree psc to sc-->
+        <record id="sale_contract_india_tree_psc_to_sc" model="ir.ui.view">
+            <field name="name">sale_contract_india_tree_psc_to_sc</field>
+            <field name="model">sale.contract.india</field>
+            <field name="arch" type="xml">
+                <tree string="PSC to SC Linked">
+                    <field name="p_number"/>
+                    <field name="p_date"/>
+                    <field name="partner_id"/>
+                    <field name="partner_address"/>
+                    <field name="crop_id"/>
+                    <field name="item_group_id"/>
+                    <field name="total_quantity"/>
+                    <field name="allocated_quantity_sc"/>
+                    <field name="balance_quantity_sc"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+<!--        form psc to sc-->
+        <record id="sale_contract_india_form_psc_to_sc" model="ir.ui.view">
+            <field name="name">sale_contract_india_form_psc_to_sc</field>
+            <field name="model">sale.contract.india</field>
+            <field name="arch" type="xml">
+                <form string="PSC to SC Linked">
+                    <header>
+<!--                        <button name="button_approve_allocation_sc" string="Approve Allocation" type="object" states="approve" class="oe_highlight"/>-->
+                        <field name="state" widget="statusbar" statusbar_visible="approve_sc_link" attrs="{'invisible': [('state', '!=', 'approve_sc_link')]}"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="p_number" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="p_date" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="partner_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="partner_address" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="crop_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+
+                            </group>
+                            <group>
+                                <field name="item_group_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="total_quantity" readonly="1"/>
+                                <field name="allocated_quantity_sc" readonly="1"/>
+                                <field name="balance_quantity_sc" readonly="1"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="PSC to SC Linked" name="linked_sale_contract">
+                                <field name="sale_contract_factory_ids">
+                                    <tree editable="top">
+                                        <field name="s_contract" attrs="{'readonly': [('state_allocate', '=', 'submit')]}" options="{'no_create': 1}" required="1" domain="[('product_id.item_group_id', '=', parent.item_group_id)]"/>
+                                        <field name="sc_date" readonly="1" force_save="1"/>
+                                        <field name="partner_id" readonly="1" force_save="1"/>
+                                        <field name="product_id" readonly="1" force_save="1"/>
+                                        <field name="sc_qty" readonly="1" force_save="1"/>
+                                        <field name="balance_qty" readonly="1"/>
+                                        <field name="value"/>
+                                        <field name="current_allocated" attrs="{'readonly': [('state_allocate', '=', 'submit')]}"/>
+                                        <button name="button_submit" string="Submit" type="object" attrs="{'invisible': [('state_allocate', '=', 'submit')]}"/>
+                                        <button name="button_draft" string="Set to Draft" type="object" attrs="{'invisible': [('state_allocate', '=', 'draft')]}"/>
+                                        <field name="state_allocate" readonly="1"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+<!--        search normal-->
+        <record id="sale_contract_india_search" model="ir.ui.view">
+            <field name="name">sale_contract_india_search</field>
+            <field name="model">sale.contract.india</field>
+            <field name="arch" type="xml">
+                <search string="Pro Forma Sales Contract - Create">
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                    <field name="crop_id"/>
+                    <field name="contact_id"/>
+                    <field name="p_number"/>
+                    <group expand="1" string="Group By">
+                        <filter string="Customer" name="partner_id" domain="[]"
+                                context="{'group_by':'partner_id'}"/>
+                        <filter string="Season" name="crop_id" domain="[]"
+                                context="{'group_by':'crop_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+<!--        action normal-->
+        <record id="action_sale_contract_india" model="ir.actions.act_window">
+            <field name="name">Pro Forma Sales Contract - Create &amp; Modify</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.contract.india</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="sale_contract_india_search"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    There is no examples click here to add new Pro Forma Sales Contract - Create.
+                </p>
+            </field>
+        </record>
+<!--        action linked-->
+        <record id="action_psc_pc_linked_india" model="ir.actions.act_window">
+            <field name="name">PSC to PC Link</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.contract.india</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="sale_contract_india_search"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    There is no examples click here to add new PSC to PC Linked
+                </p>
+            </field>
+        </record>
+
+        <!--        action psc to sc-->
+        <record id="action_psc_sc_linked_india" model="ir.actions.act_window">
+            <field name="name">PSC to SC Linked</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.contract.india</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="sale_contract_india_search"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    There is no examples click here to add new PSC to SC Linked
+                </p>
+            </field>
+        </record>
+<!--        action view form normal-->
+        <record id="action_view_sale_contract_form" model="ir.actions.act_window.view">
+            <field eval="100" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="sale_contract_india_form"/>
+            <field name="act_window_id" ref="action_sale_contract_india"/>
+        </record>
+<!--        action view tree normal-->
+         <record id="action_view_sale_contract_tree" model="ir.actions.act_window.view">
+            <field eval="99" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="sale_contract_india_tree"/>
+            <field name="act_window_id" ref="action_sale_contract_india"/>
+        </record>
+<!--        action view form linked-->
+        <record id="action_view_psc_pc_linked_form" model="ir.actions.act_window.view">
+            <field eval="102" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="sale_contract_india_form_link"/>
+            <field name="act_window_id" ref="action_psc_pc_linked_india"/>
+        </record>
+<!--        action view tree linked-->
+         <record id="action_view_psc_pc_linked_tree" model="ir.actions.act_window.view">
+            <field eval="101" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="sale_contract_india_tree_link"/>
+            <field name="act_window_id" ref="action_psc_pc_linked_india"/>
+        </record>
+
+        <!--        action view form psc to sc link-->
+        <record id="action_view_psc_sc_linked_form" model="ir.actions.act_window.view">
+            <field eval="102" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="sale_contract_india_form_psc_to_sc"/>
+            <field name="act_window_id" ref="action_psc_sc_linked_india"/>
+        </record>
+<!--        action view tree psc to sc link-->
+         <record id="action_view_psc_sc_linked_tree" model="ir.actions.act_window.view">
+            <field eval="101" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="sale_contract_india_tree_psc_to_sc"/>
+            <field name="act_window_id" ref="action_psc_sc_linked_india"/>
+        </record>
+
+    </data>
+</odoo>

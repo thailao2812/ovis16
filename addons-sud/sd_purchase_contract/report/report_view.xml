@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+		
+    	<record id="report_ptbf_chot_gia" model="ir.actions.report">
+	        <field name="name">Report Ptbf Chot gia</field>
+	        <field name="type">ir.actions.report</field>
+	        <field name="model">history.rate</field>
+	        <field name="binding_model_id" ref="sd_purchase_contract.model_history_rate"/>
+	        <field name="report_name">report_ptbf_chot_gia</field>
+	        <field name="report_type">aeroo</field>
+	        <field name="in_format">oo-ods</field>
+	        <field name="out_format" model="report.mimetypes" search="[('code','=','oo-pdf'),('compatible_types','=','oo-odt')]"/>
+	        <field name="preview">True</field>
+	        <field name="parser_state">loc</field>
+	        <field name="parser_loc">sd_purchase_contract/report/report_ptbf_chot_gia_parser.py</field>
+	        <field name="report_file">sd_purchase_contract/report/report_ptbf_chot_gia.odt</field>
+	        <field name="tml_source">file</field>
+	        <field name="print_report_name">'Biên Bản Chốt Giá'</field>
+	    </record>	  
+		
+		
+		<!--  ========================= fix_price report ================= -->
+    	
+    	<record id="report_ptbf_report_fix_price" model="ir.actions.report">
+	        <field name="name">Report Ptbf Fix Price</field>
+	        <field name="type">ir.actions.report</field>
+	        <field name="model">ptbf.fixprice</field>
+	        <field name="binding_model_id" ref="sd_purchase_contract.model_ptbf_fixprice"/>
+	        <field name="report_name">report_ptbf_report_fix_price</field>
+	        <field name="report_type">aeroo</field>
+	        <field name="in_format">oo-ods</field>
+	        <field name="out_format" model="report.mimetypes" search="[('code','=','oo-pdf'),('compatible_types','=','oo-odt')]"/>
+	        <field name="preview">True</field>
+	        <field name="parser_state">loc</field>
+	        <field name="parser_loc">sd_purchase_contract/report/report_ptbf_fix_price_parser.py</field>
+	        <field name="report_file">sd_purchase_contract/report/report_ptbf_fix_price.odt</field>
+	        <field name="tml_source">file</field>
+	        <field name="print_report_name">(object._get_printed_report_name())</field>
+	    </record>	    
+		
+			<!--  ========================= appendix_ptbf report ================= -->
+    	<record id="report_appendix_ptbf_report" model="ir.actions.report">
+	        <field name="name">Peport Appendix Ptbf </field>
+	        <field name="type">ir.actions.report</field>
+	        <field name="model">appendix.ptbf</field>
+	        <field name="binding_model_id" ref="sd_purchase_contract.model_appendix_ptbf"/>
+	        <field name="report_name">report_appendix_ptbf_report</field>
+	        <field name="report_type">aeroo</field>
+	        <field name="in_format">oo-ods</field>
+	        <field name="out_format" model="report.mimetypes" search="[('code','=','oo-xls'),('compatible_types','=','oo-ods')]"/>
+	        <field name="preview">True</field>
+	        <field name="parser_state">loc</field>
+	        <field name="parser_loc">sd_purchase_contract/report/report_appendix_ptbf_parser.py</field>
+	        <field name="report_file">sd_purchase_contract/report/report_appendix_ptbf.ods</field>
+	        <field name="tml_source">file</field>
+	        <field name="print_report_name">(object._get_printed_report_name())</field>
+	    </record>	     
+		
+				<!--  ========================= Ptbf deposit ================= -->
+
+		
+    	<record id="report_contract_ptbf_deposit" model="ir.actions.report">
+	        <field name="name">Report Contract Ptbf Deposit</field>
+	        <field name="type">ir.actions.report</field>
+	        <field name="model">purchase.contract</field>
+	        <field name="binding_model_id" ref="sd_purchase_contract.model_purchase_contract"/>
+	        <field name="report_name">report_contract_ptbf_deposit</field>
+	        <field name="report_type">aeroo</field>
+	        <field name="in_format">oo-ods</field>
+	        <field name="out_format" model="report.mimetypes" search="[('code','=','oo-pdf'),('compatible_types','=','oo-odt')]"/>
+	        <field name="preview">True</field>
+	        <field name="parser_state">loc</field>
+	        <field name="parser_loc">sd_purchase_contract/report/report_ptbf_deposit_parser.py</field>
+	        <field name="report_file">sd_purchase_contract/report/report_contract_ptbf_deposit.odt</field>
+	        <field name="tml_source">file</field>
+	        <field name="print_report_name">(object._get_printed_report_name())</field>
+	    </record>	       
+		
+		
+		<!--  ========================= NVP nvp_liquidation ================= -->
+    	
+    	<record id="nvp_liquidation_report" model="ir.actions.report">
+	        <field name="name">Report Nvp Liquidation</field>
+	        <field name="type">ir.actions.report</field>
+	        <field name="model">purchase.contract</field>
+	        <field name="binding_model_id" ref="sd_purchase_contract.model_purchase_contract"/>
+	        <field name="report_name">nvp_liquidation_report</field>
+	        <field name="report_type">aeroo</field>
+	        <field name="in_format">oo-ods</field>
+	        <field name="out_format" model="report.mimetypes" search="[('code','=','oo-pdf'),('compatible_types','=','oo-odt')]"/>
+	        <field name="preview">True</field>
+	        <field name="parser_state">loc</field>
+	        <field name="parser_loc">sd_purchase_contract/report/printout_nvp_liquidation_parser.py</field>
+	        <field name="report_file">sd_purchase_contract/report/printout_nvp_liquidation.odt</field>
+	        <field name="tml_source">file</field>
+	        <field name="print_report_name">(object._get_printed_report_name())</field>
+	    </record>	   
+		
+		
+		
+		
+		<!--  ========================= NVP Report Deposit ================= -->
+	    
+	    <record id="nvp_report_deposit" model="ir.actions.report">
+	        <field name="name">Report Nvp Deposit</field>
+	        <field name="type">ir.actions.report</field>
+	        <field name="model">purchase.contract</field>
+	        <field name="binding_model_id" ref="sd_purchase_contract.model_purchase_contract"/>
+	        <field name="report_name">nvp_report_deposit</field>
+	        <field name="report_type">aeroo</field>
+	        <field name="in_format">oo-ods</field>
+	        <field name="out_format" model="report.mimetypes" search="[('code','=','oo-pdf'),('compatible_types','=','oo-odt')]"/>
+	        <field name="preview">True</field>
+	        <field name="parser_state">loc</field>
+	        <field name="parser_loc">sd_purchase_contract/report/report_nvp_deposit_parser.py</field>
+	        <field name="report_file">sd_purchase_contract/report/report_nvp_deposit.odt</field>
+	        <field name="tml_source">file</field>
+	        <field name="print_report_name">(object._get_printed_report_name())</field>
+	    </record>	 
+	        
+		
+		<!-- payment_NVP_report-->
+    	<record id="printout_payment_npv_report" model="ir.actions.report">
+	        <field name="name">Report Payment Npv</field>
+	        <field name="type">ir.actions.report</field>
+	        <field name="model">request.payment</field>
+	        <field name="binding_model_id" ref="sd_purchase_contract.model_request_payment"/>
+	        <field name="report_name">printout_payment_npv_report</field>
+	        <field name="report_type">aeroo</field>
+	        <field name="in_format">oo-ods</field>
+	        <field name="out_format" model="report.mimetypes" search="[('code','=','oo-xls'),('compatible_types','=','oo-ods')]"/>
+	        <field name="preview">True</field>
+	        <field name="parser_state">loc</field>
+	        <field name="parser_loc">sd_purchase_contract/report/printout_payment_npv_parser.py</field>
+	        <field name="report_file">sd_purchase_contract/report/printout_payment_npv.ods</field>
+	        <field name="tml_source">file</field>
+	        <field name="print_report_name">(object._get_printed_report_name())</field>
+	    </record>	 
+    	
+    	
+		<!-- payment_npe_report-->
+    	<record id="payment_npe_report" model="ir.actions.report">
+	        <field name="name">Report Payment Npe</field>
+	        <field name="type">ir.actions.report</field>
+	        <field name="model">request.payment</field>
+	        <field name="binding_model_id" ref="sd_purchase_contract.model_request_payment"/>
+	        <field name="report_name">payment_npe_report</field>
+	        <field name="report_type">aeroo</field>
+	        <field name="in_format">oo-odt</field>
+	        <field name="out_format" model="report.mimetypes" search="[('code','=','oo-pdf'),('compatible_types','=','oo-odt')]"/>
+	        <field name="preview">True</field>
+	        <field name="parser_state">loc</field>
+	        <field name="parser_loc">sd_purchase_contract/report/payment_npe_parser.py</field>
+	        <field name="report_file">sd_purchase_contract/report/payment_npe.odt</field>
+	        <field name="tml_source">file</field>
+	        <field name="print_report_name">(object._get_printed_report_name())</field>
+	    </record>	   
+    	
+    	
+		<!--  ========================= Advance Payment Report ================= -->
+    	
+    	<record id="advance_payment_report" model="ir.actions.report">
+	        <field name="name">Report Advance Payment</field>
+	        <field name="type">ir.actions.report</field>
+	        <field name="model">request.payment</field>
+	        <field name="binding_model_id" ref="sd_purchase_contract.model_request_payment"/>
+	        <field name="report_name">advance_payment_report</field>
+	        <field name="report_type">aeroo</field>
+	        <field name="in_format">oo-odt</field>
+	        <field name="out_format" model="report.mimetypes" search="[('code','=','oo-pdf'),('compatible_types','=','oo-odt')]"/>
+	        <field name="preview">True</field>
+	        <field name="parser_state">loc</field>
+	        <field name="parser_loc">sd_purchase_contract/report/advance_payment_parser.py</field>
+	        <field name="report_file">sd_purchase_contract/report/advance_payment.odt</field>
+	        <field name="tml_source">file</field>
+	        <field name="print_report_name">(object._get_printed_report_name())</field>
+	    </record>	    
+		
+		<!--  ========================= End  ================= -->
+		
+    	<!-- NPE -->
+	     <record id="npe_report" model="ir.actions.report">
+	        <field name="name">Report Npe</field>
+	        <field name="type">ir.actions.report</field>
+	        <field name="model">purchase.contract</field>
+	        <field name="binding_model_id" ref="sd_purchase_contract.model_purchase_contract"/>
+	        <field name="report_name">npe_report</field>
+	        <field name="report_type">aeroo</field>
+	        <field name="in_format">oo-odt</field>
+	        <field name="out_format" model="report.mimetypes" search="[('code','=','oo-pdf'),('compatible_types','=','oo-odt')]"/>
+	        <field name="preview">True</field>
+	        <field name="parser_state">loc</field>
+	        <field name="parser_loc">sd_purchase_contract/report/report_npe_parser.py</field>
+	        <field name="report_file">sd_purchase_contract/report/report_npe.odt</field>
+	        <field name="tml_source">file</field>
+	        <field name="print_report_name">(object._get_printed_report_name())</field>
+	    </record>
+		
+		<!-- NVP -->
+		<record id="nvp_report" model="ir.actions.report">
+	        <field name="name">Report Nvp</field>
+	        <field name="type">ir.actions.report</field>
+	        <field name="model">purchase.contract</field>
+	        <field name="binding_model_id" ref="sd_purchase_contract.model_purchase_contract"/>
+	        <field name="report_name">nvp_report</field>
+	        <field name="report_type">aeroo</field>
+	        <field name="in_format">oo-odt</field>
+	        <field name="out_format" model="report.mimetypes" search="[('code','=','oo-pdf'),('compatible_types','=','oo-odt')]"/>
+	        <field name="preview">True</field>
+	        <field name="parser_state">loc</field>
+	        <field name="parser_loc">sd_purchase_contract/report/report_nvp_parser.py</field>
+	        <field name="report_file">sd_purchase_contract/report/report_nvp_new.odt</field>
+	        <field name="tml_source">file</field>
+	        <field name="print_report_name">(object._get_printed_report_name())</field>
+	    </record>
+	    
+	    <!-- NPE Conver NVP -->
+	    <record id="npe_nvp_report" model="ir.actions.report">
+	        <field name="name">Npe Nvp Report</field>
+	        <field name="type">ir.actions.report</field>
+	        <field name="model">purchase.contract</field>
+	        <field name="binding_model_id" ref="sd_purchase_contract.model_purchase_contract"/>
+	        <field name="report_name">npe_nvp_report</field>
+	        <field name="report_type">aeroo</field>
+	        <field name="in_format">oo-odt</field>
+	        <field name="out_format" model="report.mimetypes" search="[('code','=','oo-pdf'),('compatible_types','=','oo-odt')]"/>
+	        <field name="preview">True</field>
+	        <field name="parser_state">loc</field>
+	        <field name="parser_loc">sd_purchase_contract/report/report_npe_nvp_new_parser.py</field>
+	        <field name="report_file">sd_purchase_contract/report/report_npe_nvp_new.odt</field>
+	        <field name="tml_source">file</field>
+	        <field name="print_report_name">(object._get_printed_report_name())</field>
+	    </record>
+	    
+	    <!-- NPE Conver ptbf -->
+	    <record id="report_contract_ptbf_npe" model="ir.actions.report">
+	        <field name="name">report Ptbf Npe</field>
+	        <field name="type">ir.actions.report</field>
+	        <field name="model">purchase.contract</field>
+	        <field name="binding_model_id" ref="sd_purchase_contract.model_purchase_contract"/>
+	        <field name="report_name">report_contract_ptbf_npe</field>
+	        <field name="report_type">aeroo</field>
+	        <field name="in_format">oo-odt</field>
+	        <field name="out_format" model="report.mimetypes" search="[('code','=','oo-pdf'),('compatible_types','=','oo-odt')]"/>
+	        <field name="preview">True</field>
+	        <field name="parser_state">loc</field>
+	        <field name="parser_loc">sd_purchase_contract/report/report_contract_ptbf_npe_parser.py</field>
+	        <field name="report_file">sd_purchase_contract/report/report_contract_ptbf_npe.odt</field>
+	        <field name="tml_source">file</field>
+	        <field name="print_report_name">(object._get_printed_report_name())</field>
+	    </record>
+	    <!-- ptbf -->
+	     <record id="report_contract_ptbf" model="ir.actions.report">
+	        <field name="name">Report Ptbf</field>
+	        <field name="type">ir.actions.report</field>
+	        <field name="model">purchase.contract</field>
+	        <field name="binding_model_id" ref="sd_purchase_contract.model_purchase_contract"/>
+	        <field name="report_name">report_contract_ptbf</field>
+	        <field name="report_type">aeroo</field>
+	        <field name="in_format">oo-odt</field>
+	        <field name="out_format" model="report.mimetypes" search="[('code','=','oo-pdf'),('compatible_types','=','oo-odt')]"/>
+	        <field name="preview">True</field>
+	        <field name="parser_state">loc</field>
+	        <field name="parser_loc">sd_purchase_contract/report/report_contract_ptbf_parser.py</field>
+	        <field name="report_file">sd_purchase_contract/report/report_contract_ptbf.odt</field>
+	        <field name="tml_source">file</field>
+	        <field name="print_report_name">(object._get_printed_report_name())</field>
+	    </record>
+	    
+	</data>
+</odoo>

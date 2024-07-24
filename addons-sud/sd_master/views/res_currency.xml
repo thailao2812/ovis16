@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+       <!-- THANH: add currency_type into tree view -->
+		<record id="view_currency_tree_inherit_reach_base" model="ir.ui.view">
+           <field name="name">view_currency_tree_inherit_reach_base</field>
+           <field name="model">res.currency</field>
+           <field name="inherit_id" ref="base.view_currency_tree"/>
+           <field name="arch" type="xml">
+               <xpath expr="//field[@name='name']" position="after">
+           			<field name="currency_type"/>
+           		</xpath>
+           </field>
+	   	</record>
+	    	
+  		<record id="view_currency_form_reach_inherit" model="ir.ui.view">
+	        <field name="name">view_currency_form_reach_inherit</field>
+	        <field name="model">res.currency</field>
+	        <field name="inherit_id" ref="base.view_currency_form"/>
+	        <field name="arch" type="xml">
+	        	<xpath expr="//field[@name='name']" position="after">
+           			<field name="currency_type"/>
+           		</xpath>
+           		
+	        	<xpath expr="//notebook[@class='o_currency_rate_list']" position="attributes">
+					<attribute name="attrs">{'invisible': 0}</attribute>
+	        	</xpath>
+				<xpath expr="//field[@name='rate_ids']/tree/field[@name='rate']" position="attributes">
+					<attribute name="optional">show</attribute>
+				</xpath>
+				<xpath expr="//field[@name='rate_ids']/tree/field[@name='company_rate']" position="attributes">
+					<attribute name="invisible">1</attribute>
+				</xpath>
+				<xpath expr="//field[@name='rate_ids']/tree/field[@name='inverse_company_rate']" position="attributes">
+					<attribute name="invisible">1</attribute>
+				</xpath>
+	        </field>
+  		</record>
+
+
+    </data>
+</odoo>

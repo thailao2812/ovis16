@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+		<!-- Planning -->
+	    
+	    <menuitem name="Packing Branch List" 
+	    	id="menu_action_sud_packing_branch_inventory"
+	        action="action_sud_packing_branch"
+	        parent="sd_inventory.menu_action_other_notes"
+	        sequence="100"/>
+
+	    <menuitem name="Packing Branch List" 
+	    	id="menu_action_sud_packing_branch_mrp"
+	        action="action_sud_packing_branch"
+	        parent="mrp.mrp_planning_menu_root"
+	        sequence="165"/>
+	
+    </data>
+</odoo>

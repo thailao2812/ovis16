@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+    	
+    	<record id="view_ned_stock_truccking_cost_tree" model="ir.ui.view">
+            <field name="name">stock.trucking.cost.tree</field>
+            <field name="model">stock.trucking.cost</field>
+            <field name="arch" type="xml">
+                <tree string="Trucking cost" editable="top">
+                	<field name="name" />
+                    <field name="cost"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id="action_ned_stock_truccking_cost" model="ir.actions.act_window">
+            <field name="name">Trucking Cost</field>
+            <field name="res_model">stock.trucking.cost</field>
+            <field name="view_mode">tree</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+              		Click to start a Trucking cost.
+              </p>
+            </field>
+        </record>
+		
+		
+		<record id="view_picking_form_inherit_ned_trucking_cost" model="ir.ui.view">
+	        <field name="name">stock.picking.form.inherit.ned.trucking.cost</field>
+	        <field name="model">stock.picking</field>
+	        <field name="inherit_id" ref="stock.view_picking_form"/>
+	        <field name="arch" type="xml">
+				 <xpath expr="//field[@name='origin']" position="after">
+					<field name="truking_cost_id" />
+					<field name="cost" />
+                </xpath>               
+            </field>
+        </record>
+        
+		
+    </data>
+</openerp>

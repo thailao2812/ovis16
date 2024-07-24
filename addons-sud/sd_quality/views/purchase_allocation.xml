@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    
+         <record id="view_nvp_contract_allocation_invoiced_inherit_add_state_kcs_form" model="ir.ui.view">
+	        <field name="name">view.nvp.contract.allocation.invoiced.inherit.add.state.kcs.form</field>
+	        <field name="model">purchase.contract</field>
+	        <field name="inherit_id" ref="sd_purchase_contract.view_nvp_contract_allocation_invoiced_form"/>
+	        <field name="arch" type="xml">
+				<xpath expr="//field[@name='stock_allocation_ids']/tree/field[@name='picking_id']" position="replace">
+					<field name="picking_id" string="GRN" readonly="0" domain="[('partner_id','=',parent.partner_id),('picking_type_code','=','incoming'),('qty_available','!=',0),('state_kcs','=','approved'),   
+																										('date_done','>=',parent.date_order), ('product_id', '=', parent.product_id),
+																										('allocation_id','=',False)]"/>
+				</xpath>
+                
+	        </field>
+	    </record>
+        
+    </data>
+</odoo>

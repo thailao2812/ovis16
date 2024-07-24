@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:14
+    restart: always
+    environment:
+      POSTGRES_USER: odoo
+      POSTGRES_PASSWORD: odoo
+      POSTGRES_DB: postgres
+    ports:
+      - "5433:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  odoo:
+    image: odoo:16
+    restart: always
+    depends_on:
+      - db
+    ports:
+      - "8069:8069"
+    environment:
+      ODOO_DB_HOST: db
+      ODOO_DB_PORT: 5432
+      ODOO_DB_USER: odoo
+      ODOO_DB_PASSWORD: odoo
+      ODOO_DB_NAME: odoo
+    volumes:
+      - odoo_data:/var/lib/odoo
+      - /opt/sud16c:/opt/avis16
+
+volumes:
+  db_data:
+  odoo_data:

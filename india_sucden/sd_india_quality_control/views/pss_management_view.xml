@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_pss_management_inherit_india" model="ir.ui.view">
+        <field name="name">view_pss_management_inherit_india</field>
+        <field name="model">pss.management</field>
+        <field name="inherit_id" ref="sd_quality.view_pss_management"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='x_ex_warehouse_id']" position="replace">
+                <field name="warehouse_id"/>
+            </xpath>
+
+            <xpath expr="//field[@name='mc']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='fm']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='black']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='broken']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='brown']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='moldy']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='burned']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='scr20']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='scr19']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='scr18']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='scr16']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='scr13']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='blscr12']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='x_bulk_density']" position="replace">
+            </xpath>
+
+            <xpath expr="//field[@name='stack']" position="after">
+                <field name="moisture_percent"/>
+                <field name="outturn_percent"/>
+                <field name="aaa_percent" />
+                <field name="aa_percent" />
+                <field name="a_percent" />
+                <field name="b_percent" />
+                <field name="c_percent" />
+                <field name="pb_percent" />
+                <field name="bb_percent" />
+                <field name="bleached_percent" />
+                <field name="idb_percent" />
+                <field name="bits_percent" />
+                <field name="hulks_percent" />
+                <field name="stone_percent" />
+                <field name="skin_out_percent" />
+                <field name="triage_percent" />
+                <field name="wet_bean_percent" />
+                <field name="red_beans_percent" />
+                <field name="stinker_percent" />
+                <field name="faded_percent" />
+                <field name="flat_percent" />
+                <field name="pb1_percent" />
+                <field name="pb2_percent" />
+                <field name="sleeve_6_up_percent" />
+                <field name="sleeve_5_5_up_percent" />
+                <field name="sleeve_5_5_down_percent" />
+                <field name="sleeve_5_down_percent" />
+
+                <field name="sleeve_5_up_percent" />
+                <field name="unhulled_percent" />
+                <field name="remaining_coffee_percent" />
+                <field name="blacks_percent" />
+                <field name="half_monsoon_percent" />
+                <field name="good_beans_percent" />
+            </xpath>
+
+        </field>
+    </record>
+</odoo>

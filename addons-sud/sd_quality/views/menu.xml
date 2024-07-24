@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	
+	
+		<!--
+		<menuitem id= "menu_purchase_contract" 
+    		parent= "bes_contract_base.menu_base_contracts" 
+    		sequence= "2" name= "Purchase Contract" 
+    		groups="bes_purchase_contract.group_purchase_contract_user"/>
+    	
+    	<menuitem id= "menu_report_purchase_contract" 
+    		parent= "bes_contract_base.menu_base_contracts" 
+    		sequence= "10" name= "Report Purchase Contract" 
+    		groups="bes_purchase_contract.group_purchase_contract_user"/>
+    		
+    		-->
+
+		<!-- Top menu item Top 0-->
+        <menuitem name="Quality Control"
+            id="menu_quality_control_root"
+            groups="sd_quality.group_kcs_user,sd_quality.group_kcs_manager"
+            web_icon="sd_quality,static/description/icon_contract.jpg"
+            sequence="140"/>
+            
+	            <!-- Configuration Contracts Top 1-->
+		       <menuitem id="quality_control_configuration_root_menu"
+		            name="Configuration"
+		            parent="menu_quality_control_root"
+		            sequence="50"/>
+		       	
+			       		<!-- Degree -->
+				      <menuitem id="sd_quality.menu_action_purchase_contract" 
+				            	action="sd_quality.action_view_mconKett" 
+				            	sequence="5"
+					        	parent="quality_control_configuration_root_menu" 
+					        	groups="sd_quality.group_kcs_user,sd_quality.group_kcs_manager"/>
+			        	
+			        	<!-- Qc Criterions -->
+			          <menuitem action="action_kcs_criterions" 
+			          		id="menu_action_kcs_criterions" 
+				        	parent="quality_control_configuration_root_menu" 
+				        	groups="sd_quality.group_kcs_manager" sequence="10"/>
+		       
+		      <!-- Opeations  -->		      
+		      <menuitem id="quality_control_operation_root_menu"
+	            name="Operation"
+	            parent="menu_quality_control_root"
+	            sequence="10"/>
+	            
+	          <!-- Opeation  -->		      
+		      <menuitem id="quality_control_good_root_menu"
+	            name="Goods Kcs"
+	            parent="quality_control_operation_root_menu"
+	            sequence="10"/>
+			            <!-- Quality Analysis  -->	
+				        <menuitem id="menu_action_stock_kcs" 
+				        	action="action_stock_kcs" 
+			        		parent="quality_control_good_root_menu" 
+			        		name="Quality Analysis"
+				        	groups="sd_quality.group_kcs_user,sd_quality.group_kcs_manager" 
+				        	sequence="10" />
+				        
+				         <menuitem id="menu_action_request_kcs_line_history" 
+				         	action="action_request_kcs_line_history" 
+				        	parent="quality_control_good_root_menu"
+				        	groups="sd_quality.group_kcs_user,sd_quality.group_kcs_manager" 
+				        	sequence="20"/>
+				        	
+				        
+				        
+				        <!-- Allocation -->
+				        <menuitem action="sd_purchase_contract.action_nvp_contract_allocation_invoiced" 
+							id="menu_pur_menu_action_nvp_contract_allocation_kcs" 
+							parent="quality_control_good_root_menu" 
+							sequence="20"
+							name="Purchase contract"
+							groups="sd_quality.group_kcs_user,sd_quality.group_kcs_manager"/>
+							
+						<!-- Intake Quality Average -->
+				        <menuitem id="kcs_sample_menu" 
+				        	name="Intake Quality Average" 
+				        	parent="quality_control_good_root_menu" 
+				        	groups="sd_quality.group_kcs_user,sd_quality.group_kcs_manager" 
+				        	sequence="30"
+				        	action="action_kcs_sample"/>  
+				        	
+				        	
+				        <!-- GRP -->  	
+				      	<menuitem action="sd_inventory.action_finished_good_receipt" 
+				           	id="menu_action_finished_good_receipt_qc"
+				           	parent="quality_control_good_root_menu" sequence="35"/>
+			           	
+				        
+				        <menuitem 
+				        	action="action_wizard_import_qc_grn" 
+			        		id="import_qc_grn" 
+			        		groups="sd_quality.group_kcs_user,sd_quality.group_kcs_manager" 
+			        		parent="quality_control_good_root_menu" 
+			        		sequence="40"/>
+	        	
+		        	    
+        		
+        		 
+	          <!-- Allocated  -->		      
+		      <menuitem id="quality_control_allocate_root_menu"
+	            name="Allocation"
+	            parent="quality_control_operation_root_menu"
+	            sequence="20"/>
+        		
+        				<!-- S-P Allocation (QC Confirm) -->	
+		        		<menuitem id="menu_action_sale_contract_allocate_traffic_qc_confirm" 
+		        			action="sd_sale_contract.action_sale_contract_allocate_sp_qc_confirm"
+			    			sequence="50" 
+			    			parent="quality_control_allocate_root_menu" 
+			    			name="S-P Allocation (QC Confirm)"/>
+			    		
+			    		<!-- Lot Management -->
+			    		<menuitem id="menu_action_lot_kcs" 
+			    			action="action_lot_kcs" 
+				        	parent="quality_control_allocate_root_menu"
+				        	groups="sd_quality.group_kcs_user,sd_quality.group_kcs_manager" 
+				        	sequence="60"/>
+		        
+		        		<!-- Lot Allocate -->
+				        <menuitem id="menu_action_lot_stack_allocation" 
+				        	action="action_lot_stack_allocation" 
+				        	parent="quality_control_allocate_root_menu"
+				        	groups="sd_quality.group_kcs_user,sd_quality.group_kcs_manager" sequence="70"/>
+				        
+				        <!-- Pss Management -->
+				        <menuitem id="menu_pss_management" 
+				            action="action_pss_management" 
+				            parent="quality_control_allocate_root_menu" 
+				            name="PSS Management"
+				            sequence="80"/>
+				        
+				         <menuitem id="menu_pss_management_nestle"
+				            action="action_pss_management_nestle" 
+				            parent="quality_control_allocate_root_menu" 
+				            name="PSS Management Nestle"
+				            sequence="85" />
+
+				            
+				         <!-- FOB Pss Management -->
+				         <menuitem id="menu_action_fob_manager" 
+				         	action="action_fob_manager" 
+				        	parent="quality_control_allocate_root_menu"
+				        	groups="sd_quality.group_kcs_user,sd_quality.group_kcs_manager" 
+				        	sequence="90"/>    
+				        
+				         <!-- FOB Pss Management -->
+				         <menuitem id="menu_action_fob_pss_manager" 
+				         	action="action_fob_pss_manager" 
+				        	parent="quality_control_allocate_root_menu"
+				        	groups="sd_quality.group_kcs_user,sd_quality.group_kcs_manager" 
+				        	sequence="100"/>    
+				        
+				        
+				         <menuitem id="menu_stock_contract_allocation" 
+			           		action="action_stock_contract_allocation" 
+			           		parent="quality_control_allocate_root_menu" 
+			           		groups="sd_quality.group_kcs_user,sd_quality.group_kcs_manager" 
+			           		name="Stock allocation"
+			           		sequence="211" />
+				
+				
+				 
+	          <!-- Other   -->		      
+		      <menuitem id="quality_control_other_root_menu"
+	            name="Other"
+	            parent="quality_control_operation_root_menu"
+	            sequence="30"/>   
+	            
+		            <!-- restack_management -->	
+	        		<menuitem action="action_restack_management" 
+	        			id="menu_action_restack_management" 
+	        			parent="quality_control_other_root_menu" 
+	        			sequence="40"/> 
+					        
+			        <!-- glyphosate -->
+			        <menuitem id="menu_kcs_action_glyphosate" 
+			        	action="action_kcs_glyphosate" 
+			        	parent="quality_control_other_root_menu"
+			        	groups="sd_quality.group_kcs_user,sd_quality.group_kcs_manager" 
+			        	sequence="110"/>
+			       	
+			       	<!-- Quality modification -->
+			       	<menuitem id="menu_action_request_kcs_line_modification" 
+			       		action="action_request_kcs_line_modification" 
+			    		name ='Quality modification'
+			        	parent="quality_control_other_root_menu"
+			        	sequence="120" />
+	
+	        		<!-- groups="ned_kcs.group_qc_modification"  -->
+	        		
+	        		<menuitem action="action_view_vessel_registration" 
+	        			id="vessel_registration_action" 
+	        			parent="quality_control_other_root_menu" 
+	        			sequence="130"/>
+	        		
+	        		 <menuitem id="menu_action_wizard_kcs_glyphosat" action="action_wizard_kcs_glyphosat" 
+			        	parent="quality_control_other_root_menu"
+			        	sequence="140"/>
+	        		
+	        		<menuitem id="menu_action_wizard_pss_management" 
+	        			action="action_wizard_pss_management"
+        				parent="quality_control_other_root_menu" sequence="150"/>
+	      
+	       <!-- Report  -->		      
+		      <menuitem id="quality_control_report_root_menu"
+	            name="Report"
+	            parent="menu_quality_control_root"
+	            sequence="10"/>
+	            	
+	            		<!-- Stock Movement -->
+	        			 <menuitem id="menu_action_report_ned_stock_stack_tree" 
+	        			 	action="action_report_ned_stock_stack_tree" 
+	        			 	sequence="100" 
+				        	parent="quality_control_report_root_menu" 
+				        	name="Stock Movement"
+				        	groups="sd_quality.group_kcs_user,sd_quality.group_kcs_manager"/>
+				        
+				        <!-- Shipping Instruction -->
+				        <menuitem id="menu_action_shipping_instruction_kcs" 
+				        	action="action_shipping_instruction_kcs" 
+				        	parent="quality_control_report_root_menu" 
+				        	name="Shipping Instruction"
+				        	groups="sd_quality.group_kcs_user,sd_quality.group_kcs_manager" 
+				        	sequence="110" />
+       					
+       					<!-- Post shipment -->
+       					<menuitem id="menu_action_post_shipment_kcs" 
+       						action="sd_sale_contract.action_post_shipments" 
+       						sequence="120" 
+        					parent="quality_control_report_root_menu"/>
+        				
+        				<!-- Post shipment Line-->
+				        <menuitem id="menu_action_post_shipment_line_kcs" 
+				        	action="sd_sale_contract.action_post_shipment_lines" 
+				        	sequence="130" 
+				        	parent="quality_control_report_root_menu"
+				        	/>
+				        
+				        <!-- Bonded Movement -->
+				        <menuitem id="menu_bonded_movement_stock_stack"
+				            action="action_report_ned_stock_stack_tree_in_qc" 
+				            parent="quality_control_report_root_menu" name="Bonded Movement"
+				            sequence="140" />
+				        
+				        <!-- Intake Quality -->
+				        <menuitem id="menu_v_qc_details_ned" 
+				            action="action_v_qc_details_ned" 
+				            parent="quality_control_report_root_menu" 
+				            name="Intake Quality"
+				            sequence="150" />
+									        
+				        
+				       
+		
+			<!-- Sales Contract -->
+			<menuitem id="vessel_registration_action_sales_contract" 
+				action="action_view_vessel_registration" sequence="16"
+	        	parent="sd_sale_contract.menu_sale_contract_root" 
+	        	groups="sd_sale_contract.group_sales_contract_user"
+	        	name="Vessel Registration"/>
+	       
+	       <!-- Purchase Contract -->
+	       <menuitem 
+					sequence="30"
+		           	id="menu_action_stock_kcs_purs"
+		           	parent="sd_purchase_contract.purchase_contract_root_good_menu" 
+		           	action="sd_quality.action_stock_kcs_purs"/>
+		   
+		   
+		   
+		   
+		   
+		   <!-- Stock Stock Movement -->
+		 <menuitem id="menu_action_report_ned_stock_users_stack_tree" 
+		 	action="action_report_ned_stock_stack_tree" 
+		 	sequence="100" 
+        	parent="stock.menu_warehouse_report" 
+        	name="Stock Movement"
+        	groups="stock.group_stock_manager,stock.group_stock_user"/>
+			    	
+</odoo>

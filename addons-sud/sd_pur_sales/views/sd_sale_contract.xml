@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="s_contract_form_inherit" model="ir.ui.view">
+		        <field name="name">s.contract.tree.inherit</field>
+		        <field name="model">s.contract</field>
+		        <field name="inherit_id" ref="sd_sale_contract.view_s_contract_form"/>
+		        <field name="arch" type="xml">
+					<xpath expr="//field[@name='license_allocation_ids']/tree/field[@name='license_id']" position="after">
+						<field name="type"/>
+					</xpath>
+		        </field>
+		    </record>
+
+    </data>
+</odoo>

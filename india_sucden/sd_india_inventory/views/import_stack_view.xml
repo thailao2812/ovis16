@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+        <record id="view_import_stack_tree" model="ir.ui.view">
+            <field name="name">view_import_stack_tree</field>
+            <field name="model">import.update.stack</field>
+            <field name="arch" type="xml">
+                <tree string="Import Stack" editable="top">
+                	<field name="file" filename="file_name"/>
+                	<field name="file_name" invisible="1"/>
+                	<button name="import_stack" type="object" string="Import" class="oe_highlight"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_import_stack" model="ir.actions.act_window">
+            <field name="name">Import Stack</field>
+            <field name="res_model">import.update.stack</field>
+            <field name="view_mode">tree</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+              		Create a Import Stack, the first step of a new Import Stack.
+              </p>
+            </field>
+        </record>
+
+    <menuitem id="menu_action_import_stack" action="action_import_stack" sequence="22"
+        	parent="stock.menu_warehouse_config" name="Import Stack"/>
+</odoo>

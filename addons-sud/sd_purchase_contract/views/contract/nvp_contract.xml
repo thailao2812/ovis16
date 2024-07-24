@@ -1,0 +1,586 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    	
+    	<record id="view_nvp_contract_tree" model="ir.ui.view">
+            <field name="name">view.nvp.contract.tree</field>
+            <field name="model">purchase.contract</field>
+            <field name="arch" type="xml">
+                <tree string="Contract List" default_order="id desc" decoration-info="state == 'draft'" decoration-muted="state in ('cancel','done')" decoration-danger="state in ('approved','validate')">
+                    <field name="name" string="SNVP" optional="show"/>
+                    <field name="date_order" optional="show"/>
+                    <field name="deadline_date" optional="show"/>
+                    <field name="partner_id" optional="show"/>
+                    <field name="contract_p_id" optional="show"/>
+                    <field name="delivery_place_id" invisible="0" optional="show"/>
+                    <field name="contract_type" invisible="1" optional="show"/>
+                    <field name="certificate_id" invisible="0" optional="show"/>
+                    <field name="license_id" invisible="0" optional="show"/>
+                    <field name="product_id" optional="show"/>
+                    <field name="total_qty" sum="total_qty" string="Quantity" optional="show"/>
+                    <field name="relation_price_unit" sum="relation_price_unit" optional="show"/>
+                    <field name="diff_price" string="Diff Supplier" sum="diff_price" optional="show"/>
+                    <field name="relation_premium" sum="relation_premium" optional="show"/>
+                    <field name="amount_sub_total" sum="amount_sub_total" string="Total Value" optional="show"/>
+                    <field name="amount_deposit" sum="amount_deposit" string="Paid" optional="show"/>
+                    <field name="total_interest_pay" sum="total_interest_pay" optional="show"/>
+                    <field name="amount_total" sum="amount_total" string="Payable" optional="show"/>
+                    <field name="advance_amount" sum="advance_amount" invisible="1" optional="show"/>
+                    <field name="qty_received" sum="qty_received" optional="show"/>
+	            	<field name="qty_unreceived" sum="qty_unreceived" string="To receive" optional="show"/>
+	            	<!--
+	            	<field name="nvp_relation_type" invisible="1"/>
+	            	-->
+	            	<field name="origin" invisible="0" optional="show"/>
+	            	<field name="print_count" optional="hide"/>
+                    <field name="state" string="Status" optional="show"/>
+                    <field name="cert_type" invisible="1" optional="show"/>
+                    <field name="currency_id" invisible="1" optional="show"/>
+                    <field name="note"/>
+
+                </tree>
+            </field>
+        </record>
+        
+        <record id="view_purchase_contract_tree" model="ir.ui.view">
+            <field name="name">purchase.contract.tree</field>
+            <field name="model">purchase.contract</field>
+            <field name="arch" type="xml">
+                <tree string="Contract List" decoration-info="state == 'draft'" decoration-muted="state in ('cancel','done')" decoration-danger="state in ('approved','validate')">
+                    <field name="name" string="NPE" optional="show"/>
+                    <field name="date_order" optional="show"/>
+                    <field name="validity_date" invisible="1" optional="show"/>
+                    <field name="partner_id" optional="show"/>
+                    
+                    <field name="certificate_id" optional="show"/>
+                    <field name="delivery_place_id" optional="show"/>
+                    
+                    <field name="company_representative" invisible="1" optional="show"/>
+                    <field name="product_id" invisible="0" optional="show"/>
+                    <field name="currency_id" invisible="1" optional="show"/>
+                    <field name="origin" invisible="1" optional="show"/>
+                    <field name="total_qty" string="Qty Contract" sum="total_qty" attrs="{'invisible': [('type','=','purchase')]}" optional="show"/>
+                    
+                    <field name="qty_received" sum="qty_received" optional="show"/>
+                    <field name="qty_unreceived" sum="qty_unreceived" string="To receive" optional="show"/>
+                    <field name="total_qty_fixed" sum="total_qty_fixed" optional="show"/>
+                    <field name="qty_unfixed" sum="qty_unfixed" optional="show"/>
+
+                    <field name="total_advance" sum="total_advance" optional="show" />
+                    <field name="total_payment_received" sum="total_payment_received" optional="show"/>
+                    <field name="total_payment_remain" sum="total_payment_remain" optional="show"/>
+                    <field name="type" invisible="1" optional="show"/>
+                    <field name="currency_id" invisible="1" optional="show"/>
+                    
+                    <field name="contract_p_id" invisible="1" optional="show"/>
+                    
+                    <field name="state" string="Status" optional="show"/>
+                    <field name="signed_by_gm" optional="hide"/>
+        			<field name="signed_by_supplier" optional="hide"/>
+                </tree>
+            </field>
+        </record>
+        
+        
+        
+        
+        <record id="view_purchase_contract_form" model="ir.ui.view">
+            <field name="name">purchase.contract.form</field>
+            <field name="model">purchase.contract</field>
+            <field name="arch" type="xml">
+                <form string="Purchase Contract">
+	                <header>
+	                	<button name="button_approve" type="object" states="draft" string="Confirm" class="oe_highlight"/>
+	                	<button name="%(action_view_wizard_purchase_contract)d" attrs="{'invisible': ['|',('state','!=','approved'),('type','=','purchase')]}" string="Convert" type="action"/>
+	                	<button name="button_draft" states="cancel" string="Set to Draft" type="object"/>
+	                    <button name="button_cancel" states="approved" string="Cancel" type="object" confirm="Are you sure want to cancel contract?" class="oe_highlight"/>
+
+	                    <button name="printf_nvp" string="Print NVP" type="object" />
+	                    <button name="compute_amount" string="Compute Amount" type="object" />
+	                    <button name="create_interest_move_rate" string="Create Interest Rate" type ="object" invisible="1"/>
+	                    
+	                    <field name="state" widget="statusbar" statusbar_visible="draft,approved,done"/>
+	                </header>
+	                <sheet>
+	                	<div class="oe_button_box" name="button_box" attrs="{'invisible': [('state','=','draft')]}">
+							<field name="picking_ids" invisible="1"/>
+							<button type="object" name="action_view_picking" class="oe_stat_button" icon="fa-truck" 
+									attrs="{'invisible': [('picking_count','=',0)]}">
+								<field name="picking_count" widget="statinfo" string="Shipping"/>
+							</button>
+						</div>
+					
+	                    <div class="oe_title">
+	                        <h1>
+	                            <field name="name" readonly="0"/>
+	                        </h1>
+	                    </div>
+	                    <group>
+	                    	<group>
+								<field name="type" invisible="1"/>
+	                    		<field name="partner_id" domain="[('is_supplier_coffee','=',True)]"/>
+	                    		<!--
+	                    		<field name="supplier_representative" domain="[('parent_id','=',partner_id)]" invisible="1"/>
+	                    		-->
+	                    		<field name="currency_id" invisible="1"/>
+            					<field name="exchange_rate" invisible="1"/> 
+            					
+            					
+            					
+            					<field name="delivery_place_id" required="1"/>
+			                    <field name="contract_type" invisible="1"/>
+			                    <field name="certificate_id"/>
+			                    <field name="sd_price"/>
+			                    <field name="si_price"/>
+			                    <field name="license_id" attrs="{'required': [('certificate_id','!=',False)]}"
+			                    	context="{'default_partner_id': partner_id, 'default_certificate_id': certificate_id}"/>
+			                    <field name="premium"/>
+			                    <field name="g2diff" invisible="1"/>
+			                    <field name="packing_terms_id" invisible="1"/>
+			                    <field name="qty_received" readonly="1" attrs="{'invisible': [('type','=','purchase')]}"/>
+			                    <field name="total_qty_fixed" attrs="{'invisible': [('type','=','purchase')]}"/>
+			                    <field name="interest" invisible="1"/>
+			                    <field name="contract_p_id" attrs="{'invisible': [('type','=','consign')]}"/>
+			                    <field name="is_according"/>
+                    			<field name="according_id"/>
+                    			
+
+	                    	</group>
+	                    	<group>
+	                    		<field name="date_order"/>
+	                    		<field name="crop_id"/>
+			                    <field name="cert_type"/>
+			                    <field name="no_copute" invisible="1"/>
+                    
+                    
+	                    		<field name="warehouse_id" required="0" invisible ="1"/>
+	                    		<field name="company_representative" invisible="1" context="{'default_conpany_type': 'person', 'default_parent_id': company_id}"/>
+                    			<field name="deadline_date" readonly="0"/>
+                    			<field name="origin"/>
+                    			<field name="is_temp_quota" readonly="True"/>
+                    			<field name="trader_id" domain="[('trader', '=', True)]"/>
+                    			<field name="date_fix"/>
+                    			<field name="songay" string="Fixation days" attrs="{'invisible': [('type','=','purchase')]}"/>
+                    			<field name="signed_by_gm"/>
+                    			<field name="signed_by_supplier"/>
+	                    	</group>
+	                    </group>
+	                    <notebook>
+	                    	<page string="Products" name="product">
+	                    		<field name="contract_line">
+	                    			<tree editable="top">
+										<field name="product_id"/>
+										<field name="name"/>
+										<field name="product_qty" sum="product_qty"/>
+										<field name="premium" string="Subsidy (USD/Mt)"/>
+										<field name="packing_id"/>
+										<field name="product_uom"/>
+										<field name="price_unit" attrs="{'invisible': [('parent.type','=','consign')]}"/>
+										<field name="tax_id" invisible="1" widget="many2many_tags" attrs="{'invisible': [('parent.type','=','consign')]}" domain="[('type_tax_use', '=', 'purchase')]"/>
+										<field name="price_subtotal"  attrs="{'invisible': [('parent.type','=','consign')]}" />
+										
+										<field name="hedged_fixed_level" sum="hedged_fixed_level"  attrs="{'invisible': [('parent.type','=','consign')]}" />
+					                    <field name="diff_price"  attrs="{'invisible': [('parent.type','=','consign')]}" />
+					                    <field name="ex" sum="ex"  attrs="{'invisible': [('parent.type','=','consign')]}" />
+					                    <field name="difams"  attrs="{'invisible': [('parent.type','=','consign')]}"/>
+					                    
+	                    			</tree>
+	                    		</field>
+	                    		<group class="oe_subtotal_footer oe_right" colspan="2" name="sale_total">
+	                                <field name="amount_untaxed" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+	                                <field name="amount_tax" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+	                                
+	                                <field name="amount_sub_total" class="oe_subtotal_footer_separator"/>
+				                    <field name="amount_sub_rel_total" attrs="{'invisible': [('type','!=','purchase'),('state','!=','draft')]}"/>
+				                    <field name="amount_deposit" attrs="{'invisible': [('type','!=','purchase')]}" class="oe_subtotal_footer_separator"/>
+				                    <field name="total_interest_pay" attrs="{'invisible': [('type','!=','purchase'),('state','!=','draft')]}"/>
+				                    
+				                    
+	                                <div class="oe_subtotal_footer_separator oe_inline o_td_label">
+	                                    <label for="amount_total" />
+	                                    <button name="button_dummy"
+	                                        states="draft" string="(update)" 
+	                                        type="object" class="oe_edit_only oe_link"/>
+	                                </div>
+	                                <field name="amount_total" nolabel="1" class="oe_subtotal_footer_separator" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+	                            </group>
+	                            <field name="note" class="oe_inline" placeholder="Description"/>
+	                            <div class="oe_clear"/>
+	                            <group col="4">
+	                            	<field name="create_uid"/>
+	                    			<field name="create_date"/>
+	                    			<field name="user_approve"/>
+	                    			<field name="date_approve"/>
+	                    		</group>
+	                    	</page>
+	                    	
+	                    	<page string="NVP Allocation" attrs="{'invisible': [('type','=','purchase')]}">
+	                    		<field name="npe_ids" readonly="1">
+		                    		<tree>
+		                    			<field name="contract_id"/>
+		                    			<field name="product_qty" sum="product_qty" string="Fixed"/>
+	                    			</tree>
+	                    		</field>
+	                    	</page>
+	                    	
+	                    	<page string="NPE Allocation" attrs="{'invisible': [('type','!=','purchase')]}">
+	                    		<field name="nvp_ids">
+		                    		<tree>
+		                    			<field name="npe_contract_id"/>
+		                    			<!--
+		                    			<field name="product_qty" sum="product_qty" string="Fixed"/>
+		                    			-->
+		                    			<field name="origin_qty" sum="origin_qty" string="Contract Qty"/>
+					                    <field name="product_qty" sum="product_qty"/>
+					                    <field name="qty_received" sum="qty_received"/>
+					                    <field name="total_qty_fixed" sum="total_qty_fixed"/>
+					                    
+	                    			</tree>
+	                    		</field>
+	                    	</page>
+	                    	
+                	  <page string="Invoice" name="invoice">
+	            			 <div class="oe_edit_only">
+	            			 <separator string="Invoices"/>
+	            			 <newline/>
+            			 	 <div class="d-flex">
+                                <field name="invoice_ids" nolabel="1" options="{&quot;no_create&quot;: True}">
+	                                <tree>
+	                                    <field name="supplier_inv_date"/>
+	                                    <field name="partner_id"/>
+	                                    <field name="total_qty" sum="total_qty"/>
+	                                    <field name="amount_total" sum="amount_total"/>
+	                                    <!--<field name="residual" sum="residual"/>  -->
+	                                    <field name="state"/>
+	                                    <field name="currency_id" nolabel="1"/>
+	                                </tree>
+	                            </field>
+                            </div>
+                            <separator string="Invoice Fix"/>
+                            <div class="d-flex">
+                            	
+                            	<newline/>
+	                            <field name="npe_nvp_invoice_ids" options="{&quot;no_create&quot;: True}" nolabel="1">
+	                                <tree editable="top">
+	                                    <field name="npe_id" domain="[('partner_id','=',parent.partner_id),('type','=','consign')]" options="{&quot;no_create&quot;: True}"/>
+	                                    <field name="invoice_id" domain="[('partner_id','=',parent.partner_id)]" options="{&quot;no_create&quot;: True}"/>
+	                                    <field name="product_qty" sum="product_qty"/>
+	                                    <field name="amount_total" sum="amount_total"/>
+	                                    <field name="currency_id" invisible="1"/>
+	                                </tree>
+	                            </field>
+		                        </div>
+            			 	</div>
+                	  
+                    </page>
+	                <page string="Request Payment">
+	                        <field name="request_payment_ids" attrs="{'readonly': [('state','=','done')]}" context="{'type':type,'partner_id':partner_id,'purchase_contract_id':active_id,'contract_line':contract_line}">
+	                            <tree>
+	                            	<field name="type_payment" optional="show"/>
+	                                <field name="partner_id" invisible="0" optional="show"/>
+	                                <field name="name" string="Request No." optional="show"/>
+	                                <field name="date" optional="show"/>
+	                                <field name="users_request_id" optional="show"/>
+	                                <field name="partner_bank_id" invisible="0" optional="show"/>
+	                                <field name="advance_price" invisible="1" optional="show"/>
+	                                <field name="payment_quantity" sum="payment_quantity" optional="show"/>
+	                                <field name="advance_payment_quantity" invisible="1" string="Advance Quantity" sum="advance_payment_quantity" optional="show"/>
+	                                <field name="request_amount" sum="request_amount" optional="show"/>
+	                                <field name="total_payment" sum="total_payment" optional="show"/>
+	                                <field name="total_remain" sum="total_remain" optional="show"/>
+	                                <field name="type" invisible="1" optional="show"/>
+	                                <button name="print_advance_payment" type="object" string="Print Advance Payment" attrs="{'invisible': [('type','=','purchase')]}" />
+	                                <button name="print_printout_payment_npv" type="object" string="Print Printout Payment NPV" attrs="{'invisible': [('type','!=','purchase')]}" />
+	                                <button name="print_payment_request" type="object" string="Print Payment Request" attrs="{'invisible': [('type','=','purchase')]}" />
+	                            </tree>
+	                            <form>
+	                                <group>
+	                                    <group>
+				                            <field name="type_payment"/>
+				                            <field name="partner_id" invisible="0"/>
+				                            <field name="name" string="Request No."/>
+				                            <field name="users_request_id" required="1"/>
+				                            <field name="date"/>
+				                            <field name="advance_price" invisible="1"/>
+				                            <field name="advance_payment_quantity" invisible="1"/>
+				                            <field name="market_price"/>
+				                            <field name="payment_quantity" />
+				                        </group>
+				                        
+				                        <group>
+			                                <field name="request_amount"/>
+			                                <field name="request_amount_temp"/>
+			                                <field name="partner_bank_id" invisible="0" domain="[('partner_id','=',partner_id)]"/>
+			                                <field name="songay" string="Fixation days" attrs="{'invisible': [('type', '=', 'purchase')]}"/>
+			                                <field name="account_no"/>
+			                                <field name="chinhanh" string="Branch"/>
+			                                <field name="purchase_contract_id" readonly="1"/>
+			                                <field name="request_fun_amount" invisible="1"/>
+			                                <field name="type" invisible="1"/>
+			                                <field name="provisional_price" readonly="0" invisible="1"/>
+			                                <field name="source" invisible="1"/>
+			                                
+			                                <button name="load_data" string="Load Data" type="object" class="oe_highlight"  invisible="1"
+			                                	/>
+			                                <!-- err
+			                                <button name="load_data" string="Load Data" type="object" class="oe_highlight" 
+			                                	groups="ned_contract_vn.load_data_request_payment_line"/>
+			                                -->
+			                         	</group>
+			                         </group>
+	                                    <newline/>
+	                                    <notebook attrs="{'invisible': [('type','=','purchase')]}">
+	                                        <page string="Rate" attrs="{'invisible': [('type','in',['purchase', 'ptbf'])]}">
+					                                <field name="rate_ids" readonly="0">
+					                                    <tree editable="top">
+					<!--                                        <field name="month"/>-->
+					                                        <field name="date"/>
+					                                        <field name="date_end"/>
+					                                        <field name="rate"/>
+					<!--                                        <field name="provisional_rate" sum="provisional_rate"/>-->
+					                                    </tree>
+					                                </field>
+					                         </page>
+	                                        <page string="Payment" attrs="{'invisible': [('type','=','purchase')]}">
+					                                <field name="request_payment_ids" readonly="1" nolabel="1">
+					                                    <tree editable="top">
+					                                        <field name="payment_date"/>
+					                                        <field name="name"/>
+					                                        <field name="partner_id" string="Supplier" invisible="1"/>
+					                                        <field name="journal_id"/>
+					                                        <field name="amount" sum="amount"/>
+					                                        <field name="payment_refunded" sum="payment_refunded"/>
+					                                        <field name="open_advance" sum="open_advance"/>
+					                                        <field name="state" invisible="1"/>
+					                                    </tree>
+					                                </field>
+					                         </page>
+					                         
+					                         <page string="Detail of Payment">
+						                             <field name="line_ids" context="{'request_id': active_id}" attrs="{'invisible': ['|', ('type', '!=', 'purchase'), ('source', '!=', False)]}">
+						                                  <tree string="Detail of Payment" editable="top" class="my_class" create="false">
+						                                          <field name="delivery_id" required="1" readonly="1"/>
+						                                          <field name="grn_id" readonly="1"/>
+						                                          <field name="name" readonly="1"/>
+						                                          <field name="percent" readonly="1"/>
+						                                          <field name="estimated_quantity" sum="estimated_quantity" invisible="1"/>
+						                                          <field name="limit_quantity_payment" readonly="1" invisible="1"/>
+						                                          <field name="quantity_payment" sum="quantity_payment"/>
+						                                          <field name="price_unit" readonly="1"/>
+						                                          <field name="amount" sum="amount" readonly="0"/>
+						                                          <field name="request_id" invisible="1"/>
+						                                  </tree>
+						                 	        </field>
+						                             <field name="line_ids_npe" context="{'request_id_npe': active_id}" attrs="{'invisible': ['|', ('type', '!=', 'consign'), ('source', '!=', False)]}">
+						                                  <tree string="Detail of Payment" editable="top" class="my_class" create="true">
+						                                          <field name="delivery_id" required="0"/>
+						                                          <field name="grn_id" readonly="1"/>
+						                                          <field name="name" readonly="1"/>
+						                                          <field name="percent" readonly="1"/>
+						                                          <field name="estimated_quantity" sum="estimated_quantity" invisible="1"/>
+						                                          <field name="limit_quantity_payment" readonly="1" invisible="1"/>
+						                                          <field name="quantity_payment" sum="quantity_payment"/>
+						                                          <field name="price_unit"/>
+						                                          <field name="amount" sum="amount" readonly="0"/>
+						                                          <field name="request_id" invisible="1"/>
+						                                  </tree>
+						                             </field>
+						                             <field name="line_nvp_convert_ids" context="{'request_id': active_id}" attrs="{'invisible': ['|', ('type', '!=', 'purchase'), ('source', '=', False)]}">
+						                                  <tree string="Detail of Payment" editable="top" class="my_class" create="true">
+						                                          <field name="fixation_qty"/>
+						                                          <field name="contract_id"/>
+						                                          <field name="provisional"/>
+						                                          <field name="advance_payment"/>
+						                                          <field name="date_from"/>
+						                                          <field name="date_to"/>
+						                                          <field name="rate_date"/>
+						                                          <field name="total_days"/>
+						                                          <field name="interest"/>
+						                                          <field name="request_id" invisible="1"/>
+						                                  </tree>
+						                             </field>
+						                         </page>
+	                                    </notebook>
+	                                
+	                            </form>
+	                        </field>
+	                        <newline/>
+	                        <field name="payment_ids" domain="[('extend_payment','!=','payment')]" readonly="1">
+	                            <tree>
+	                                <field name="name"/>
+	                                <field name="payment_date"/>
+	                                <field name="partner_id"/>
+	                                <field name="amount" sum="amount"/>
+	                                <field name="extend_payment" invisible="1"/>
+	                                <field name="state" invisible="1"/>
+	                            </tree>
+	                        </field>
+                    </page>
+                    
+                    <page string="Payment Allocation" attrs="{'invisible': [('type','!=','purchase')]}">
+                        <group>
+                            <button name="btt_load_payment" string="Load Payment" type="object"/>
+                            <button name="button_lai" string="Refresh Lãi xuất" type="object" class="oe_highlight"/>
+                        </group>
+                        <field name="pay_allocation_ids">
+                            <tree>
+                                <field name="allocation_amount" sum="allocation_amount"/>
+                                <field name="pay_id"/>
+                                <field name="relation_contract_id"/>
+                                <field name="allocation_amount" sum="allocation_amount"/>
+                                <field name="payment_date"/>
+                                <field name="payment_amount" sum="payment_amount"/>
+                                <field name="payment_received" sum="payment_received"/>
+                                <field name="payment_remain" sum="payment_remain"/>
+                                <field name="total_interest_pay" sum="total_interest_pay"/>
+                                <field name="currency_id" invisible="1"/>
+                            </tree>
+                            <form>
+                                <header>
+                                    <button name="btt_load_interest" string="Load Interest" type="object"/>
+                                </header>
+                                <group col="4">
+                                    <field name="pay_id" readonly="1"/>
+                                    <field name="relation_contract_id"/>
+                                    <field name="payment_date"/>
+                                    <field name="payment_amount"/>
+                                    <field name="payment_received" sum="payment_received"/>
+                                    <field name="allocation_amount" sum="allocation_amount" attrs="{'readonly': [('allocation_line_ids','=',[])]}"/>
+                                    <field name="payment_remain" sum="payment_remain"/>
+                                    <field name="total_interest_pay" sum="total_interest_pay"/>
+                                    <field name="move_id" readonly="1"/>
+                                    <field name="currency_id" invisible="1"/>
+                                </group>
+                                <notebook>
+	                                <page string="Interest Rate">
+	                                    <field name="allocation_line_ids" >
+	                                        <tree editable="1">
+	                                            <field name="month"/>
+	                                            <field name="from_date"/>
+	                                            <field name="to_date"/>
+	                                            <field name="total_date" sum="total_date"/>
+	                                            <field name="rate"/>
+	                                            <field name="interest_pay" sum="interest_pay"/>
+	                                            <field name="actual_interest_pay" sum="actual_interest_pay"/>
+	                                        </tree>
+	                                    </field>
+	                                </page>
+                                </notebook>
+                            </form>
+                        </field>
+                     </page>
+                    
+                    
+	
+	                    	
+	             	
+                	<page string="Other Information" name="information" >
+                		<group>
+                			<group>
+                				<field name="company_id"/>
+                				<label for="delivery_from" string="Shipping"/>
+                				<div name="delivery_from" class="o_row">
+                					From <field name="delivery_from"/> To <field name="delivery_to"/>
+								</div>
+	                    		<field name="transportation_charges"/>
+	                    		
+                			</group>
+                			<group>
+                				<field name="validity_date"/>
+                				<field name="expiration_date"/>
+	                    		<field name="price_estimation_date"/>
+	                    		<field name="date_done" attrs="{'invisible': [('state','!=','done')]}"/>
+	                    		<field name="npe_contract_id" attrs="{'invisible': [('type','=','consign')]}"/>
+                			</group>
+                			<group>
+                				<field name="payment_term_id"/>
+	                    		<field name="payment_description"/>
+	                    		<field name="interest_move_id" readonly="1"/>
+           						<field name="interest_move_entries_id" readonly="1"/>
+                			</group>
+                			<group>
+                				<field name="check_qty"/>
+                				<field name="check_price_unit"/>
+                				<field name="type" invisible="context.get('type',True)"/>
+                				<field name="move_ids" invisible="1"/>
+                			</group>
+                		</group>
+                	</page>
+                </notebook>
+            </sheet>
+            <div class="oe_chatter">
+                <field name="message_follower_ids" widget="mail_followers"/>
+                <field name="message_ids" widget="mail_thread"/>
+            </div>
+        </form>
+            </field>
+        </record>
+        
+        <record id="nvp_purchase_contract_search" model="ir.ui.view">
+            <field name="name">purchase.contract.search</field>
+            <field name="model">purchase.contract</field>
+            <field name="arch" type="xml">
+                <search string="Search Consignment Agreement">
+                    <field name="name" string="Consignment Agreement"/>
+                    
+                    <field name="partner_id" filter_domain="['|', '|','|', ('partner_id', 'ilike', self), ('partner_id.partner_code', 'ilike', self), ('partner_id.ref', 'ilike', self), 
+                    		('partner_id.district_id', 'ilike', self)]"/>
+                    
+                    <field name="npe_contract_id"/>
+                    <field name="origin"/>
+                    <field name="contract_p_id"/>
+                    <field name="certificate_id"/>
+                    <field name="delivery_place_id"/>
+                    <field name="product_id"/>
+                    <separator/>
+                    <filter name="filter_state_draft" string="Draft" domain="[('state','=','draft')]"/>
+                    <filter name="filter_state_approve" string="Approved" domain="[('state','=','approved')]"/>
+                    <filter name="filter_state_done" string="Done" domain="[('state','=','done')]"/>
+                    <filter name="filter_create_uid" domain="[('create_uid','=',uid)]" help="My Contract"/>
+                    <separator/>
+                	<filter name="group_by_partner" string="Partner" context="{'group_by':'partner_id'}"/>
+                	<filter name="group_by_product" string="Product" context="{'group_by':'product_id'}"/>
+                	<filter name="group_by_partner" string="Partner" context="{'group_by':'partner_id'}"/>
+                	<filter name="group_by_certificate" string="Certificate" context="{'group_by':'certificate_id'}"/>
+                	<filter name="group_by_delivery_place" string="Delivery place" context="{'group_by':'delivery_place_id'}"/>
+                	<filter name="group_by_state" string="State" context="{'group_by':'state'}"/>
+               </search>
+            </field>
+        </record>
+        
+        
+        
+        <record model="ir.actions.act_window" id="action_purchase_contract">
+            <field name="name">SNVP</field>
+            <field name="res_model">purchase.contract</field>
+            <field name="view_mode">tree,form</field>
+         <field name="view_mode">tree,form</field>
+            <field name="domain">[('type','=','purchase'),('cert_type','=','normal'),('is_temp_quota', '=', False)]</field>
+            <field name="context">{'default_type':'purchase', 'default_cert_type': 'normal'}</field>
+            <field name="search_view_id" ref="nvp_purchase_contract_search"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+              		Create a NVP contract, the first step of a new NVP.
+              </p>
+            </field>
+        </record>
+         
+          <record id="action_view_purchase_contract_form" model="ir.actions.act_window.view">
+            <field eval="105" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_purchase_contract_form"/>
+            <field name="act_window_id" ref="action_purchase_contract"/>
+        </record>
+        
+         <record id="action_view_nvp_contract_tree_normal" model="ir.actions.act_window.view">
+            <field eval="100" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_nvp_contract_tree"/>
+            <field name="act_window_id" ref="action_purchase_contract"/>
+        </record> 
+    	       
+        
+        
+        
+    </data>
+</odoo>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="action_grades_premium" model="ir.actions.act_window">
+            <field name="name">Grades Premium</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">grade.premium.root</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a period, the first step of a new Period.
+                </p><p>
+                </p>
+            </field>
+        </record>
+        
+
+
+        <record id="view_tree_grades_premium" model="ir.ui.view">
+            <field name="name">view_tree_grades_premium</field>
+            <field name="model">grade.premium.root</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="effective_date"/>
+                    <field name="end_date"/>
+                    <field name="state"/>
+                </tree>
+             </field>
+        </record>
+
+        <record id="view_form_grades_premium" model="ir.ui.view">
+	      <field name="name">view_form_grades_premium</field>
+			<field name="model">grade.premium.root</field>
+			<field name="arch" type="xml">
+	        <form>
+                <header>
+                        <button string="Stop Configuration" type="object" name="action_stop_config" class="oe_highlight" states="run"/>
+                        <field name="state" widget="statusbar"/>
+                </header>
+	        	<sheet>
+                    <h1>
+                        <field name="name" readonly="1"/>
+                    </h1>
+                    <group>
+                        <group>
+                            <field name="effective_date" required="1"/>
+                            <field name="end_date" attrs="{'invisible': [('end_date', '=', False)], 'readonly': [('state', '=', 'stop')]}"/>
+                            </group>
+                        <group>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Grade Premium Configuration" name="grade_premium">
+                            <field name="grade_premium_line_ids">
+                                <tree editable="bottom">
+                                    <field name="grade_id" required="1"/>
+                                    <field name="premium_discount_g2"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+				</sheet>
+    		</form>
+	      </field>
+	    </record>
+
+        
+
+    </data>
+</openerp>

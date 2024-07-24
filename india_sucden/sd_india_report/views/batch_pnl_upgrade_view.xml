@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="action_ned_batch_pnl_upgrade" model="ir.actions.act_window">
+            <field name="name">Batch PnL Upgrade</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">production.analysis</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('type','=','upgrade')]</field>
+            <field name="context">{'default_type':'upgrade',
+                                    'upgrade': True}</field>
+            <field name="search_view_id" ref="view_ned_production_analysis_search"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                </p>
+            </field>
+        </record>
+
+      
+    </data>
+</odoo>

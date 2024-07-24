@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="allow_to_see_field_supplier" model="res.groups">
+        <field name="name">Allow To See Field Supplier</field>
+    </record>
+</odoo>

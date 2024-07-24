@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_ned_stock_zone_form_inherit_sucden_india" model="ir.ui.view">
+        <field name="name">view_ned_stock_zone_form_inherit_sucden_india</field>
+        <field name="model">stock.zone</field>
+        <field name="inherit_id" ref="sd_inventory.view_ned_stock_zone_form"/>
+        <field name="arch" type="xml">
+			 <xpath expr="//field[@name='warehouse_id']" position="after">
+            	<field name="building_id" required="1"/>
+            </xpath>
+
+        </field>
+    </record>
+
+    <record id="view_ned_stock_zone_tree_inherit_sucden_india" model="ir.ui.view">
+        <field name="name">view_ned_stock_zone_tree_inherit_sucden_india</field>
+        <field name="model">stock.zone</field>
+        <field name="inherit_id" ref="sd_inventory.view_ned_stock_zone_tree"/>
+        <field name="arch" type="xml">
+			 <xpath expr="//field[@name='name']" position="after">
+            	<field name="building_id"/>
+            </xpath>
+
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="view_ned_origin_tree" model="ir.ui.view">
+            <field name="name">view_ned_origin_tree</field>
+            <field name="model">ned.origin</field>
+            <field name="arch" type="xml">
+                <tree string="Sucden Origin" editable="top" default_order="write_date desc">
+					<field name="name" required="1"/>
+					<field name="code" required="1"/>
+                </tree>
+            </field>
+        </record>
+
+     <record id="action_ned_origin" model="ir.actions.act_window">
+            <field name="name">Sucden Origin</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ned.origin</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+              		Create an Sucden Origin, the first step of a new Sucden Origin.
+              </p>
+            </field>
+        </record>
+</odoo>

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_sale_contract_form_inherit_india" model="ir.ui.view">
+        <field name="name">view_sale_contract_form_inherit_india</field>
+        <field name="model">sale.contract</field>
+        <field name="inherit_id" ref="sd_sale_contract.view_sale_contract_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='contract_line']/tree/field[@name='premium']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='contract_line']/tree/field[@name='premium_adjustment']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='contract_line']/tree/field[@name='provisional_g2_price']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='contract_line']/tree/field[@name='provisional_g2_diff']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='contract_line']/tree/field[@name='provisional_price']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='contract_line']/tree/field[@name='final_g2_price']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='contract_line']/tree/field[@name='final_g2_diff']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='contract_line']/tree/field[@name='product_qty']" position="before">
+                <field name="packing_cost" readonly="1"/>
+                <field name="cert_premium" readonly="1"/>
+                <field name="differential" readonly="1"/>
+            </xpath>
+            <xpath expr="//field[@name='date']" position="attributes">
+                 <attribute name="string">Date Contract</attribute>
+            </xpath>
+
+        </field>
+    </record>
+
+
+    <record id="view_sale_contract_tree_inherit_india" model="ir.ui.view">
+        <field name="name">view_sale_contract_tree_inherit_india</field>
+        <field name="model">sale.contract</field>
+        <field name="inherit_id" ref="sd_sale_contract.view_sale_contract_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="attributes">
+                <attribute name="string">DOM</attribute>
+            </xpath>
+
+        </field>
+    </record>
+
+    <record id="view_sale_contract_export_tree_inherit_india" model="ir.ui.view">
+        <field name="name">view_sale_contract_export_tree_inherit_india</field>
+        <field name="model">sale.contract</field>
+        <field name="inherit_id" ref="sd_sale_contract.view_sale_contract_export_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="attributes">
+                <attribute name="string">EXP</attribute>
+            </xpath>
+            <xpath expr="//field[@name='date']" position="attributes">
+                <attribute name="string">Date Contract</attribute>
+            </xpath>
+
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="sd_sale_contract.action_sale_contract_local">
+            <field name="name">Domestic Sale Order</field>
+    </record>
+    <record model="ir.actions.act_window" id="sd_sale_contract.action_sale_contract_export">
+            <field name="name">Export Sale Order</field>
+    </record>
+
+
+    <record model="ir.ui.menu" id="sd_sale_contract.menu_action_sale_contract_local">
+		    <field name="name">Domestic Sale Order</field>
+		</record>
+    <record model="ir.ui.menu" id="sd_sale_contract.menu_action_sale_contract_export">
+		    <field name="name">Export Sale Order</field>
+		</record>
+</odoo>

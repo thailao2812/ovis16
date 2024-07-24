@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    	
+    	<record id="view_mrp_operation_result_inherit_add_fields_stack_wip_form" model="ir.ui.view">
+	        <field name="name">view.mrp.operation.result.inherit.add.fields.stack.wip.form</field>
+	        <field name="model">mrp.operation.result</field>
+	        <field name="inherit_id" ref="sd_mrp.view_mrp_operation_result_form"/>
+	        <field name="arch" type="xml">
+				
+				<xpath expr="//field[@name='produced_products']/tree/field[@name='kcs_notes']" position="after">
+					<field name="stack_wip_id"/>
+					<button name="create_update_stack_wip" type="object" string="Create Stack Wip" />
+				</xpath>
+				
+	        </field>
+         </record>
+         
+        
+    
+    </data>  
+</odoo>

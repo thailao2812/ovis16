@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_import_polygon,access_import_polygon,model_import_polygon,base.group_user,1,1,1,1
+access_import_deforestation,access_import_deforestation,model_import_deforestation,base.group_user,1,1,1,1

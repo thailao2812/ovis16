@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+      <record id="picking_type_kanban_inherit_reach_stock" model="ir.ui.view">
+			<field name="name">picking_type_kanban_inherit_reach_stock</field>
+			<field name="model">stock.picking.type</field>
+			<field name="inherit_id" ref="stock.stock_picking_type_kanban"/>
+			<field name="arch" type="xml">
+				<!-- THANH thêm hiển thị code customer_return và return_supplier -->
+				<xpath expr="//div[@name='stock_picking']" position="attributes">
+					<attribute name="t-if">['incoming', 'return_supplier', 'outgoing', 'return_customer', 'phys_adj','production_in','production_out','transfer_in','transfer_out','material_in','material_out'].indexOf(record.code.raw_value) > -1</attribute>
+	            </xpath>
+
+	        	<xpath expr="//field[@name='code']" position="after">
+					<field name="operation"/>
+	            </xpath>
+
+
+				<!-- THANH thêm hiển thị button Process đối với code customer_return và return_supplier -->
+				<xpath expr="//button[@name='get_action_picking_tree_ready']" position="inside">
+					<span t-if="record.code.raw_value =='customer_return'"><t t-esc="record.count_picking_ready.value"/> To Process</span>
+					<span t-if="record.code.raw_value =='return_supplier'"><t t-esc="record.count_picking_ready.value"/> To Process</span>
+	            </xpath>
+
+				<!-- THANH 260822 hide button create picking -->
+				<xpath expr="//div[hasclass('o_kanban_manage_new')]" position="replace">
+	            </xpath>
+
+	        </field>
+        </record>
+
+
+
+		<!-- Action -->
+   		<record id="stock.stock_picking_type_action" model="ir.actions.act_window">
+   			<field name="context">{'delete': False, 'filter_by_user': True}</field>
+           	<field name="domain">[('dashboard_invisible','=', False)]</field>
+           	<field name="view_mode">kanban</field>
+        </record>
+        
+		<record id="view_picking_type_form_inherit_sucden" model="ir.ui.view">
+		        <field name="name">Operation Types</field>
+		        <field name="model">stock.picking.type</field>
+		        <field name="inherit_id" ref="stock.view_picking_type_form"/>
+		        <field name="arch" type="xml">
+		            
+		            <xpath expr="//field[@name='warehouse_id']" position="after">
+		        		<field name="res_user_ids" widget="many2many_tags"/>
+		        	</xpath>
+		        	<xpath expr="//sheet/group" position="after">
+		        		<group>
+		        			<group string="Options">
+			        			<field name="dashboard_invisible"/>
+			        			<field name="fob" attrs="{'invisible': [('code','!=','incoming')]}"/>
+			        			<field name="kcs"/>
+				        		<field name="deduct"/>
+				        		<field name="kcs_approved"/>
+				        		<field name="stack"/>
+				        		
+				        		<!-- err
+				        			<field name="allow_fifo"/>
+				        		-->
+				        	</group>
+				        	<group string="Filters">
+					        	<field name="is_service"/>
+				        		<field name="is_product"/>
+				        		<field name="is_materials"/>
+				        		<field name="is_tools"/>
+				        	</group>
+		        		</group>
+		        	</xpath>
+		        	
+		        	<xpath expr="//field[@name='code']" position="after">
+		        		<field name="operation"/>
+		        		<field name="picking_type_npe_id"/>
+		        		<field name="picking_type_nvp_id"/>
+		        		<field name="transfer_picking_type_id"/>
+		        		<field name="active"/>
+		        	</xpath>
+		            
+		        </field>
+		    </record>
+        
+        
+        	
+    </data>
+</odoo>

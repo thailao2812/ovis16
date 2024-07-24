@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="sql_export_view_form" model="ir.ui.view">
+        <field name="model">sql.export</field>
+        <field
+            name="inherit_id"
+            ref="sql_request_abstract.view_sql_request_mixin_form"
+        />
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+             <!-- THANH - bở button_set_draft -->
+            <button name="button_set_draft" position="replace"/>
+            <!-- THANH - bở button validate sql -->
+            <button name="button_validate_sql_expression" position="replace"/>
+            <!-- THANH - hite status bar -->
+            <xpath expr="//field[@name='state']" position="attributes">
+        		<attribute name="invisible">1</attribute>
+        	</xpath>
+            <!-- THANH - thay thế nút Preview bằng nút Preview hiển thị ra giao diện -->
+            <button name="button_preview_sql_expression" position="replace">
+<!--                <attribute-->
+<!--                    name="attrs"-->
+<!--                >{'invisible': [('field_ids', '!=', False)]}</attribute>-->
+                <button
+                    name="button_preview_sql"
+                    type="object"
+                    string="Preview Results"
+                    class="oe_highlight"
+                    groups="sql_request_abstract.group_sql_request_manager"
+                />
+            </button>
+
+            <xpath expr="//header" position="inside">
+                <button
+                    name="export_sql_query"
+                    string="Export File"
+                    type="object"
+                    class="oe_highlight"
+                    icon="fa-arrow-right text-success"
+                />
+            </xpath>
+            <!-- THANH - dịch chuyển field nhập sql lên header -->
+            <group name="group_query" position="replace">
+            </group>
+
+            <group name="group_main_info" position="inside">
+                <group name="option">
+                    <field
+                        name="file_format"
+                    />
+                    <field
+                        name="copy_options"
+                        attrs="{'invisible': [('file_format', '!=', 'csv')], 'required': [('file_format', '=', 'csv')]}"
+                    />
+                    <field
+                        name="encoding"
+                    />
+                </group>
+                <group string="SQL Query" name="group_query">
+                        <field
+                                name="query"
+                                nolabel="1"
+                                colspan="2"
+                                widget="ace"
+                                options="{'mode': 'pgsql'}"
+                            />
+                    </group>
+            </group>
+
+            <page name="page_sql" position="before">
+                <page string="Preview Result">
+                    <group>
+                        <label string=" " for="rowcount"/>
+                        <div class="o_row">
+                            <field name="rowcount" readonly="1" nolabel="1"/>
+                        </div>
+                    </group>
+                    <group>
+                        <field name="html" readonly="1" nolabel="1"/>
+                    </group>
+                </page>
+            </page>
+
+            <page name="page_sql" position="inside">
+                <group string="Parameters">
+                    <field
+                        name="field_ids"
+                        nolabel="1"
+                        colspan="2"
+                        options="{'no_create': True}"
+                        context="{'tree_view_ref': 'sql_export.sql_parameter_view_tree', 'form_view_ref': 'sql_export.sql_parameter_view_form'}"
+                        groups="sql_request_abstract.group_sql_request_user"
+                    />
+                </group>
+            </page>
+        </field>
+    </record>
+
+    <record id="sql_export_view_tree" model="ir.ui.view">
+        <field name="model">sql.export</field>
+        <field
+            name="inherit_id"
+            ref="sql_request_abstract.view_sql_request_mixin_tree"
+        />
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <!-- THANH - bỏ tô màu trên tree -->
+            <xpath expr="//tree" position="attributes">
+        		<attribute name="decoration-info"></attribute>
+                <attribute name="decoration-warning"></attribute>
+        	</xpath>
+            <field name="state" position="after">
+                <button
+                    name="export_sql_query"
+                    string="Export File"
+                    type="object"
+                    icon="fa-arrow-right text-success"
+                />
+            </field>
+            <!-- THANH - hite state -->
+            <xpath expr="//field[@name='state']" position="attributes">
+        		<attribute name="invisible">1</attribute>
+        	</xpath>
+        </field>
+    </record>
+
+    <record id="sql_export_tree_action" model="ir.actions.act_window">
+        <field name="name">SQL Exports</field>
+        <field name="res_model">sql.export</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- MENU ITEM -->
+    <menuitem
+        id="menu_sql_exports"
+        name="SQL Exports"
+        web_icon="sql_export,static/description/icon_app.svg"
+        sequence="36"
+        groups="sql_request_abstract.group_sql_request_user"
+    />
+
+        <menuitem
+            id="sql_export_menu_view"
+            name="Sql Export"
+            parent="menu_sql_exports"
+            action="sql_export_tree_action"
+            sequence="15"
+        />
+
+        <menuitem
+            id="sql_export_menu_settings"
+            name="Settings"
+            parent="menu_sql_exports"
+            sequence="20"
+        />
+
+</odoo>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_instore_traffic_tree" model="ir.ui.view">
+            <field name="name">view_instore_traffic_tree</field>
+            <field name="model">stock.lot</field>
+            <field name="arch" type="xml">
+                <tree string="In-Store" editable="top">
+                	<field name="warehouse_id" invisible="0"/>
+                    <field name="zone_id"/>
+                    <field name="p_contract_id"/>
+                    <field name="p_qty"/>
+                    <field name="shipper_id" readonly="1"/>
+                    <field name="code" string="WR No"/>
+                    <field name="name" readonly="1"/>
+                    <field name="date"/>
+                    <field name="certificate_id"/>
+
+                    <field name="stack_type" invisible="1"/>
+                    <field name="categ_id" invisible="1"/>
+                    <field name="product_id"/>
+                    <field name="bag_in"/>
+					<field name="stack_qty" invisible="1"/>
+
+					<field name="net_qty" string="Weight In" sum="Weight In"/>
+                    <field name="bag_out" sum="Bags Ex" readonly="1"/>
+                    <field name="gdn_net" string="Weight Ex" sum="Weight Ex"/>
+                    <field name="bag_qty" sum="Bags"/>
+                    <field name="init_qty" sum="init_qty" string="Balance Weight"/>
+                    <field name="unreceived"/>
+
+                    <field name="lock" invisible="1"/>
+                    <field name="active" invisible="1"/>
+                    <field name="is_bonded" invisible="1"/>
+                    <field name="company_id" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+    <record id="view_instore_traffic_search" model="ir.ui.view">
+            <field name="name">view_instore_traffic_search</field>
+            <field name="model">stock.lot</field>
+            <field name="arch" type="xml">
+                <search string="In Store">
+                    <field name="p_contract_id"/>
+                    <field name="warehouse_id"/>
+                    <field name="zone_id"/>
+					<field name="shipper_id"/>
+					<field name="code" string="WR No"/>
+					<field name="name" string="Lot/Stack"/>
+					<field name="product_id"/>
+					<separator/>
+                	<filter name ="groupby_warehouse_id" string="Warehouse" domain="[]" context="{'group_by':'warehouse_id'}"/>
+                	<filter name ="groupby_zone_id" string="Zone" domain="[]" context="{'group_by':'zone_id'}"/>
+                	<filter name ="groupby_product_id" string="Product" domain="[]" context="{'group_by':'product_id'}"/>
+                	<filter name ="groupby_shipper_id" string="Shipper" domain="[]" context="{'group_by':'shipper_id'}"/>
+               </search>
+            </field>
+        </record>
+
+    <record id="action_instore_traffic" model="ir.actions.act_window">
+            <field name="name">In-Stored</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">stock.lot</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('is_bonded','=',True)]</field>
+            <field name="context">{'default_is_bonded':True, 'default_stack_type': 'stacked'}</field>
+            <field name="search_view_id" ref="view_instore_traffic_search"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+              		Create a In-Stored, the first step of a new In-Stored.
+              </p>
+            </field>
+        </record>
+
+    <record id="action_in_store_traffic_tree" model="ir.actions.act_window.view">
+            <field eval="100" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_instore_traffic_tree"/>
+            <field name="act_window_id" ref="action_instore_traffic"/>
+		</record>
+</odoo>

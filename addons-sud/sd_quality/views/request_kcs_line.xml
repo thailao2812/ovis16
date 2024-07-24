@@ -1,0 +1,380 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    	
+    	
+    	
+    	<record id="view_request_kcs_line_history_tree_ned" model="ir.ui.view">
+            <field name="name">request.kcs.line.history.tree.ned</field>
+            <field name="model">request.kcs.line</field>
+            <field name="priority">30</field>
+            <field name="arch" type="xml">
+                <tree string="Request KCS Line" default_order="id desc">
+                	<field name="date" invisible="0"/>
+                	<field name="production_id"/>
+                    <field name="picking_id"/>
+                    <field name="p_contract"/>
+                    <field name="partner_id"/>
+                    <field name="reference"/>
+                    <field name="districts_id" string="Districts"/>
+                    <field name="stack_id"/>
+                    <field name="zone_id"/>
+					<field name="x_warehouse_id"/>
+                    <field name="product_id"/>
+					<field name="x_certificate_id"/>
+                    <field name="product_uom" invisible="1"/>
+                    <field name="packing_id"/>
+                    <field name="bag_no" sum="bag_no"/>
+                    <field name="product_qty"/>
+                    <field name="basis_weight"/>
+                    
+                    
+                    <field name="origin_deduction"/>
+                    <field name="deduction"/>
+                    <field name="qty_reached" invisible="1"/>
+                    
+                    <field name="mc" avg="True"/>
+                    <field name="fm" avg="True"/>
+                    <field name="black" avg="True"/>
+                    <field name="broken" avg="True"/>
+                    <field name="brown" avg="True"/>
+                    <field name="mold" avg="True"/>
+                    <field name="cherry" avg="True"/>
+                    <!-- <field name="insect_bean" avg="True"/> -->
+                    <field name="screen20" avg="True"/>
+                    <field name="screen19" avg="True"/>
+                    <field name="screen18" avg="True"/>
+                    <field name="screen17" avg="True"/>
+                    <field name="screen16" avg="True"/>
+                    <field name="screen15" avg="True"/>
+                    <field name="screen14" avg="True"/>
+                    <field name="screen13" avg="True"/>
+                    <field name="greatersc12" avg="True"/>
+                    <field name="belowsc12" invisible="0" avg="True"/>
+                    <field name="burned" avg="True"/>
+                    
+                    <field name="eaten" avg="True"/>
+                    <field name="immature" avg="True"/>
+                    <field name="stick_count"/>
+                    <field name="stone_count"/>
+                    <field name="contract_no"/>
+					
+					<field name="cuptest"/>
+					<field name="remark"/>
+					<field name="inspector"/>
+					<field name="x_inspectator"/>
+					<field name="sampler"/>
+					<field name="x_bulk_density"/>
+                    <field name="state" invisible="1"/>
+                    <field name="picking_type_id" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+        
+        
+        
+        
+        <record id="view_request_kcs_line_history_tree_ned_pivot" model="ir.ui.view">
+            <field name="name">request.kcs.line.pivot</field>
+            <field name="model">request.kcs.line</field>
+            <field name="arch" type="xml">
+                <pivot string="Qc Orders">
+                    <field name="product_id" type="row"/>
+                    <field name="product_qty" type="measure"/>
+                    <field name="basis_weight" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+        <record id="view_request_kcs_line_history_tree_ned_graph" model="ir.ui.view">
+            <field name="name">request.kcs.line.graph</field>
+            <field name="model">request.kcs.line</field>
+            <field name="arch" type="xml">
+                <graph string="Qc Orders">
+                    <field name="product_id"/>
+                    <field name="product_qty" type="measure"/>
+                    <field name="basis_weight" type="measure"/>
+                </graph>
+            </field>
+        </record>
+
+<record id="view_request_kcs_line_search" model="ir.ui.view">
+            <field name="name">view_request_kcs_line_search</field>
+            <field name="model">request.kcs.line</field>
+            <field name="arch" type="xml">
+                <search string="Request KCS Line">
+					<field name="stack_id"/>
+					<field name="production_id"/>
+                    <field name="picking_id"/>
+                    <field name="p_contract"/>
+					<field name="partner_id"/>
+					<field name="x_warehouse_id"/>
+					<field name="zone_id"/>
+					<field name="product_id"/>
+					<separator/>
+                	<filter name ="groupby_product_id" string="Product" domain="[]" context="{'group_by':'product_id'}"/>
+                	<filter name ="groupby_zone_id" string="Zone" domain="[]" context="{'group_by':'zone_id'}"/>
+                	<filter name ="groupby_x_warehouse_id" string="Warehouse" domain="[]" context="{'group_by':'x_warehouse_id'}"/>
+                	<filter name ="groupby_p_contract"  string="P Contract" domain="[]" context="{'group_by':'p_contract'}"/>
+                	<filter name ="groupby_stack_id" string="Stack" domain="[]" context="{'group_by':'stack_id'}"/>
+                	<filter name ="groupby_picking_id" string="Picking" domain="[]" context="{'group_by':'picking_id'}"/>
+               </search>
+            </field>
+        </record>
+        
+        
+        <record id="action_request_kcs_line_history" model="ir.actions.act_window">
+            <field name="name">Q.A Detail</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">request.kcs.line</field>
+            <field name="view_mode">tree,form,pivot,graph</field>
+			 <field name="search_view_id" ref="view_request_kcs_line_search"/>
+            <field name="context" />
+        </record>
+        
+        
+        <record model="ir.actions.act_window.view" id="action_request_kcs_line_out">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_request_kcs_line_history_tree_ned"/>
+            <field name="act_window_id" ref="action_request_kcs_line_history"/>
+        </record>
+        
+    	
+    	
+    	 <!-- Request KCS Line -->
+    	<record id="view_request_kcs_line_tree" model="ir.ui.view">
+            <field name="name">request.kcs.line.tree</field>
+            <field name="model">request.kcs.line</field>
+            <field eval="1" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Request KCS Line">
+                    
+                    <!-- 
+                    <field name="picking_id" groups="ned_kcs.group_qc_modification"/>
+                    -->
+                    <field name="picking_id"/>
+                    <field name="product_id"/>
+                    
+                    <field name="criterions_id"/>
+                    <field name="product_uom"/>
+                    <field name="product_qty"/>
+                    <field name="deduction" readonly="1"/>
+                    <field name="qty_reached"/>
+                    <field name="basis_weight"/>
+                   
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id="view_request_kcs_line_form" model="ir.ui.view">
+            <field name="name">request.kcs.line.form</field>
+            <field name="model">request.kcs.line</field>
+            <field name="arch" type="xml">
+                <form string="Request KCS Line">
+                	<header>
+                		<field name="state" widget="statusbar" statusbar_visible="draft,approved"/>
+                		<!-- 
+                		groups="ned_kcs.group_qc_modification"
+                		-->
+                		<button string="Set to draft" name="set_to_draft" type="object"  class="oe_highlight"  invisible="1"
+	        			attrs="{'invisible': [('state','!=','approved')]}"/>
+		        		<button string="Approve" name="btt_qc_modification" type="object"  class="oe_highlight"  invisible="1"
+		        			attrs="{'invisible': [('state','!=','draft')]}"/>
+		        			
+                	</header>
+	                <sheet>
+	                	<group>
+	                		<group>
+            		 			<field name="product_id" readonly="1"/>
+            		 			<field name="inspector"/>
+            		 			<field  name="x_inspectator"/>
+            		 			<field  name="sampler"/>
+            		 			
+            		 			
+            		 			<label for="product_qty"/>
+								<div name="product_qty" class="o_row">
+									<field name="product_qty" readonly="1"/><field name="product_uom"  class="oe_inline oe_no_button" readonly="1"/>
+								</div>
+								<field name="check_user" invisible="1" readonly='1'/>
+            					<field name="deduction" readonly="1"/>
+                            	<field name="qty_reached" readonly="1"/>
+                            	<field name="basis_weight"/>
+            					<field name="origin_deduction"/>
+            					<field name="packing_id"/>
+                   				<field name="bag_no"/>
+							</group>
+							<group>
+								<field name="categ_id" readonly="1"/>
+								<field name="deduction_manual" attrs="{'readonly': [('state', '=', 'approved'),('check_user', '!=', True)]}"/>
+			            		<field name="zone_id" readonly="1"/>
+								<field name="x_warehouse_id"/>
+			            		<field name="stack_id" readonly="1"/>
+			            		<field name="cuptest"/>
+			            		<field name="reference" string="Warehouse Delivery"/>
+			                    <field name="check_deduction" attrs="{'readonly': [('state', '=', 'approved'),('check_user', '!=', True)]}"/> <!-- attrs="{'readonly': [('state', '=', 'approved')]}" -->
+								<!-- err
+								<field name="picking_id" readonly="1" groups="ned_kcs.group_qc_modification"/>
+								-->
+								<field name="picking_id" readonly="1"/>
+								<field name="criterions_id" invisible="1"/>
+								<field name="remark"/>
+								
+								<field name="reject_mc" readonly="1" invisible="1"/>
+								<field name="reject_foreign" readonly="1" invisible="1"/>
+								<field name="reject_bb" readonly="1" invisible="1"/>
+								<field name="reject_brown" readonly="1" invisible="1"/>
+								<field name="reject_mold" readonly="1" invisible="1"/>
+								<field name="reject_excelsa" readonly="1" invisible="1"/>
+								<field name="reject_burned" readonly="1" invisible="1"/>
+								<field name="reject_insect_bean" readonly="1" invisible="1"/>
+								
+							</group>	
+	                	</group>
+	                	
+	                	
+	                	
+	                	<notebook>
+	                		<page string="Quality Test" name="quality_test">
+	                		<group  class="row">
+						    	<group class="col-lg-4"  colspan="4" >
+						    		<field  name="sample_weight" required="1" attrs="{'readonly': [('state', '=', 'approved'),('check_user', '!=', True)]}"/>
+						    		<field  name="mc_degree" attrs="{'readonly': [('state', '=', 'approved'),('check_user', '!=', True)]}" decoration-danger="reject_mc == True"/>
+						    		<field  name="fm_gram" attrs="{'readonly': [('state', '=', 'approved'),('check_user', '!=', True)]}" decoration-muted="reject_foreign == True"/>
+						    		<field  name="black_gram" attrs="{'readonly': [('state', '=', 'approved'),('check_user', '!=', True)]}" decoration-muted="reject_bb == True"/>
+						    		<field  name="broken_gram" attrs="{'readonly': [('state', '=', 'approved'),('check_user', '!=', True)]}" decoration-muted="reject_bb == True"/>
+						    		<field  name="brown_gram" attrs="{'readonly': [('state', '=', 'approved'),('check_user', '!=', True)]}" decoration-muted="reject_brown == True"/>
+						    		
+						    		<field  name="mold_gram" attrs="{'readonly': [('state', '=', 'approved'),('check_user', '!=', True)]}" decoration-muted="reject_mold == True"/>
+						    		<field  name="cherry_gram" attrs="{'readonly': [('state', '=', 'approved'),('check_user', '!=', True)]}"/>
+						    		<field  name="excelsa_gram" attrs="{'readonly': [('state', '=', 'approved'),('check_user', '!=', True)]}" decoration-muted="reject_burned == True"/>
+						    		<field  name="screen20_gram" attrs="{'readonly': [('state', '=', 'approved'),('check_user', '!=', True)]}"/>
+						    		<field  name="screen19_gram" attrs="{'readonly': [('state', '=', 'approved'),('check_user', '!=', True)]}"/>
+						    		<field  name="screen18_gram" attrs="{'readonly': [('state', '=', 'approved'),('check_user', '!=', True)]}"/>
+						    		<field  name="screen17_gram" attrs="{'readonly': [('state', '=', 'approved'),('check_user', '!=', True)]}"/>
+						    		<field  name="screen16_gram" attrs="{'readonly': [('state', '=', 'approved'),('check_user', '!=', True)]}"/>
+						    		<field  name="screen15_gram" attrs="{'readonly': [('state', '=', 'approved'),('check_user', '!=', True)]}"/>
+						    		<field  name="screen14_gram" attrs="{'readonly': [('state', '=', 'approved'),('check_user', '!=', True)]}"/>
+						    		<field  name="screen13_gram" attrs="{'readonly': [('state', '=', 'approved'),('check_user', '!=', True)]}"/>
+						    		<field  name="greatersc12_gram"/>
+						    		<field  name="belowsc12_gram" attrs="{'readonly': [('state', '=', 'approved'),('check_user', '!=', True)]}"/>
+						    		<field  name="burned_gram" attrs="{'readonly': [('state', '=', 'approved'),('check_user', '!=', True)]}" decoration-muted="reject_burned == True"/>
+						    		<field name="ligh_burnded_bean_gram" avg="True"/>
+						    		<field  name="eaten_gram" attrs="{'readonly': [('state', '=', 'approved'),('check_user', '!=', True)]}" decoration-muted="reject_insect_bean == True"/>
+						    		<field  name="immature_gram" attrs="{'readonly': [('state', '=', 'approved'),('check_user', '!=', True)]}"/>
+						    		<field  name="maize_yn" invisible="1"/>
+						    		
+						    		<field  name="stone_count"/>
+						    		<field  name="stick_count"/>
+			            			<field  name="bb12_gram" invisible="1"/>
+			            			<field  name="state" invisible="1"/>
+					    		</group>
+						    	<group class="col-lg-4"  colspan="4">
+						    		<field  name="bb_sample_weight" required="1" attrs="{'readonly': [('state', '=', 'approved'),('check_user', '!=', True)]}"/>
+						    		<field  name="mc" />
+						    		<field  name="fm" />
+						    		<field  name="black" />
+						    		<field  name="broken" />
+						    		<field  name="brown" />
+						    		<field  name="mold" />
+						    		<field  name="cherry"/>
+						    		<field  name="excelsa" />
+						    		<field  name="screen20"/>
+						    		<field  name="screen19"/>
+						    		<field  name="screen18"/>
+						    		<field  name="screen17"/>
+						    		<field  name="screen16"/>
+						    		
+						    		
+						    		
+						    		<field  name="screen15"/>
+						    		<field  name="screen14"/>
+						    		<field  name="screen13"/>
+						    		<field  name="greatersc12"/>
+						    		<field  name="belowsc12"/>
+						    		<field  name="burned" />
+						    		<field name="ligh_burnded_bean"/>
+						    		<field  name="eaten" />
+						    		
+						    		<field  name="immature"/>
+						    		<field  name="bb12" invisible="1"/>
+						    		
+					    		</group>
+						    	<group class="col-lg-4" colspan="4">
+									<separator string=" "/>
+						    		<field name="mc_deduct"  />
+						    		<field name="fm_deduct"   />
+
+						    		<field   name="broken_deduct"/>
+						    		<field  name="brown_deduct"/>
+						    		
+						    		<field   name="bbb"/>
+						    		<!-- -->
+									<field name="mold_deduct"/>
+						    		
+						    		<field  name="excelsa_deduct" />
+						    		
+
+						    		<field name="total_S18"/>
+						    		<field  name="oversc18"/>
+
+						    		<field name="total_S16"/>
+						    		<field  name="oversc16"/>
+
+						    		<field name="total_S13"/>
+						    		<field  name="oversc13"/>
+						    		
+
+						    		<field  name="oversc12"/>
+						    		<field  name="burned_deduct"/>	
+						    		<field  name="ligh_burnded_bean_result" decoration-danger="ligh_burnded_bean_result == 'rejected'" decoration-info="ligh_burnded_bean_result == 'pass'"/>
+						    		<field  name="insect_bean_deduct"/>
+						    		<field  name="x_bulk_density"/>
+					    		</group>
+				    		</group>
+									   
+	            		</page>
+	                	</notebook>
+	                	<div class="oe_chatter">
+		                    <field name="message_follower_ids" widget="mail_followers"/>
+		                    <field name="message_ids" widget="mail_thread"/>
+		                </div>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        
+        
+        <record id="action_request_kcs_line_modification" model="ir.actions.act_window">
+            <field name="name">Quality modification</field>
+            <field name="res_model">request.kcs.line</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('picking_type_code','in',('outgoing','production_out'))]</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+              		Create a MconKett, the first step of a MconKett.
+              </p>
+            </field>
+        </record>
+        
+        
+        <record model="ir.actions.act_window.view" id="action_request_kcs_line_modification_tree">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_request_kcs_line_history_tree_ned"/>
+            <field name="act_window_id" ref="action_request_kcs_line_modification"/>
+        </record>
+        
+        <record model="ir.actions.act_window.view" id="action_request_kcs_line_modification_form">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_request_kcs_line_form"/>
+            <field name="act_window_id" ref="action_request_kcs_line_modification"/>
+        </record>
+                                
+	            				
+	            				
+       
+    	
+    </data>
+</odoo>

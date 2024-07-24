@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+	
+	<record id="view_tree_sucden_syn_config'" model="ir.ui.view">
+            <field name="name">Sucden Syn Config</field>
+            <field name="model">sucden.syn.config</field>
+            <field name="arch" type="xml">
+    			<tree>
+                    <field name = "name"/>
+                    <field name = "server_db_link"/>
+                    <field name = "result"/>
+                </tree>
+	         </field>
+         </record>
+
+        <!-- The block of code bellow determines a list of search parameters appear once user type in the searchbar -->
+        <record id="view_form_sucden_syn_config" model="ir.ui.view">
+            <field name="name">view.form.sucden.syn.config</field>
+            <field name="model">sucden.syn.config</field>
+            <field name="arch" type="xml">
+		         <form string="Syn Config"> 
+					 <header>
+						<button name="syn_config" type="object" string="Syn Config"/>
+						<button name="syn_config1" type="object" string="Syn Config 1"/>
+						
+						<!--
+						<button name="sys_run_step1" type="object" string="step 1"/>
+						<button name="sys_run_step2" type="object" string="step 2"/>
+						<button name="sys_run_step3" type="object" string="step 3"/>
+						<button name="sys_run_step3_1" type="object" string="step 3.1"/>
+						<button name="sys_run_step3_2" type="object" string="step 3.2"/>
+						<button name="sys_run_step3_3" type="object" string="step 3.3"/>
+						<button name="sys_run_step3_4" type="object" string="step 3.4"/>
+						
+						
+						<button name="sys_run_step4" type="object" string="step 4"/>
+						<button name="sys_run_step5" type="object" string="step 5.1"/>
+						<button name="sys_run_step5_1" type="object" string="step 5.2"/>
+						<button name="sys_run_step6" type="object" string="step 6"/>
+						<button name="sys_run_step7" type="object" string="step 7"/>
+						<button name="sys_run_step8" type="object" string="step 8"/>
+						
+						<button name="sys_run_step9" type="object" string="step 9"/>
+						<button name="sys_run_step10" type="object" string="step 10"/>
+						<button name="sys_run_step11" type="object" string="step 11"/>
+						<button name="sys_run_step12" type="object" string="step 12"/>
+						<button name="sys_run_step13" type="object" string="step 13"/>
+						<button name="sys_run_step14" type="object" string="step 14"/>
+						<button name="sys_run_step15" type="object" string="step 15"/>
+						<button name="sys_run_step16" type="object" string="step 16"/>
+						<button name="sys_run_step17" type="object" string="step 17"/>
+						<button name="sys_run_step18" type="object" string="step 18"/>
+						<button name="sys_run_step19" type="object" string="step 19"/>
+						<button name="sys_run_step20" type="object" string="step 20"/>
+						<button name="sys_run_step21" type="object" string="step 21"/>
+						<button name="sys_run_step22" type="object" string="step 22"/>
+						<button name="sys_run_step23" type="object" string="step 23"/>
+						<button name="sys_run_step24" type="object" string="step 24"/>
+						<button name="sys_run_step25" type="object" string="step 25"/>
+						<button name="sys_run_step26" type="object" string="step 26"/>
+						<button name="sys_run_step27" type="object" string="step 27"/>
+						
+						<button name="sys_run_step28" type="object" string="step 28"/>
+						-->
+						<button name="sys_run_step29" type="object" string="step 29"/>
+						 
+		        	</header>
+					
+		        	<sheet>
+			            <group>
+							<group>
+								<field name="name"/>
+			            		<field name="host" />
+			            		<field name="user"/>
+			            		<field name="password"/>
+			            		<field name="db_name"/>
+			            		<field name="server_db_link"/>
+			            		 <field name = "result"/>
+		            		</group>
+			            </group>
+		        	</sheet>                    
+                   
+		         </form>
+             </field>
+         </record>
+         
+         <record id="action_sucden_syn_config" model="ir.actions.act_window">
+            <field name="name">Syn Config</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sucden.syn.config</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+	
+	
+</odoo>

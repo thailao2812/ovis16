@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+ <!-- THINH the DatetimeFilterItem need to be inserted into the origin ControlPanel (js file) to be available here-->
+    <t t-name="web_datetime_panel.ControlPanel.Regular" t-inherit="web.ControlPanel.Regular" t-inherit-mode="primary" owl="1">
+        <xpath expr="//div[hasclass('o_cp_bottom')]" position="after">
+            <DatetimeFilterItem class="o_filter_menu" />
+        </xpath>
+    </t>
+    <!-- THINH - using extension inherit method to override the ol' ControlPanel -->
+    <t t-name="web_datetime_panel.DatetimeControlPanel" t-inherit="web.ControlPanel" t-inherit-mode="extension" owl="1">
+        <xpath expr="//t[@t-call='web.ControlPanel.Regular']" position="replace">
+            <t t-call="web_datetime_panel.ControlPanel.Regular"/>
+        </xpath>
+    </t>
+
+</templates>

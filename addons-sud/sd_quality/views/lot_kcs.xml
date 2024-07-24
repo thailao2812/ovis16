@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+		
+		
+    	
+		<record id="view_lot_kcs_search" model="ir.ui.view">
+            <field name="name">view.lot.kcs.search</field>
+            <field name="model">lot.kcs</field>
+            <field name="arch" type="xml">
+                <search string="Lot stack search">
+                	<field name="name" string="Lot"/>
+                	<field name="contract_id"/>
+                    <field name="product_id"/>
+                    <field name="partner_id"/>
+                </search>
+                
+            </field>
+        </record>
+        
+        
+    	<record id="view_lot_kcs_tree" model="ir.ui.view">
+            <field name="name">view.lot.kcs.tree</field>
+            <field name="model">lot.kcs</field>
+            <field name="arch" type="xml">
+                <tree string="Lot Management"  editable="top" default_order="id desc">
+                	<button name="get_qc" string="Load" class="oe_highlight" type="object" attrs="{'readonly': [('state', '=', 'approve')]}" groups="sd_quality.group_kcs_manager,sd_quality.group_kcs_user"/>
+                	<button name="btt_confirm" string="Confirm" class="oe_highlight" type="object" attrs="{'readonly': [('state', '=', 'approve')]}" groups="sd_quality.group_kcs_manager,sd_quality.group_kcs_user"/>
+                	<button name="btt_draft" string="S.T.Draft" type="object" attrs="{'readonly': [('state', '!=', 'approve')]}" groups="sd_quality.group_kcs_manager"/>
+                	<field name="file" widget="binary" filename="file_name"/>
+                	<field name="file_name" invisible="1"/>
+                	<field name="name" readonly="1" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                    <field name="lot_date" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                    <field name="contract_id" required="0" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                    <!-- <field name="nvs_id" attrs="{'readonly': [('state', '=', 'approve')]}"/> -->
+                    <field name="nvs_id"/>
+                    <field name="x_ex_warehouse_id"/>
+                    <field name="partner_id" readonly="1"/>
+                    <field name="product_id" readonly="1"/>
+					<field name="x_packing_id" readonly="1"/>
+					<field name="x_pod_id" readonly="1"/>
+                    <field name="qty_scontract" readonly="1"/>
+		            <field name="lot_quantity"/>
+                    
+                    <field name="fixed_mc" attrs="{'readonly': [('state', '=', 'approve')]}" invisible="1"/>
+                    <field name="fixed_mc_on_despatch" attrs="{'readonly': [('state', '=', 'approve')]}" invisible="1"/>
+                    
+                    <field name="mc"/>
+                    <field name="mc_on_despatch"/>
+                    
+                    <field name="fixed_fm" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                    <field name="fixed_black" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                    <field name="fixed_broken" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                    <field name="fixed_brown" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                    <field name="fixed_mold" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                    <field name="fixed_cherry" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                    <field name="fixed_screen20" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                    <field name="fixed_screen19" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                    <field name="fixed_screen18" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                    <field name="fixed_screen17" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                    <field name="fixed_screen16" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                    <field name="fixed_screen15" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                    <field name="fixed_screen14" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                    <field name="fixed_screen13" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                    <field name="fixed_greatersc12" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                    <field name="fixed_screen12" string="Below screen12" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                    <field name="fixed_burn" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                    <field name="fixed_immature" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                    <field name="fixed_excelsa" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+
+
+					<field name="fixed_eaten" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                    <field name="stone" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                    <field name="stick" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                    
+                    <field name="fixed_defects" attrs="{'readonly': [('state', '=', 'approve')]}" invisible="1"/>
+                    <field name="defects" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                    <field name="x_bulk_density"  attrs="{'readonly': [('state', '=', 'approve')]}"/>
+
+                    <field name="cuptaste" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                    <field name="lot_ned"/>
+                    
+                    <field name="supervisor" attrs="{'readonly': [('state', '=', 'approve')]}" string="Inspected/Samples"/>
+					<field name="sampler" attrs="{'readonly': [('state', '=', 'approve')]}" string="Supervisor"/>
+                    <field name="state" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id="view_lot_kcs_form" model="ir.ui.view">
+            <field name="name">view.lot.kcs.form</field>
+            <field name="model">lot.kcs</field>
+            <field name="arch" type="xml">
+                <form string="Lot Management">
+                	<!-- <header>
+                		<button name="get_qc" type="object" string="Duplicate QC" class="oe_highlight"/>
+                	</header> -->
+	                <sheet>
+	                	<div class="oe_title">
+	                        <h1>
+	                            <field name="name"/>
+	                        </h1>
+	                    </div>
+                  		<group>
+	                		<group col="6">
+	                			<field name="contract_id"/>
+            		 			<field name="nvs_id" />
+            		 			<field name="partner_id"/>
+            		 			<field name="product_id"/>
+            		 			<field name="lot_quantity"/>
+            		 			<field name="qty_scontract"/>
+								<field name="lot_ned"/>
+								<field name="lot_date"/>
+								<field name="cup_test"/>
+							</group>
+						</group>
+						<group>
+							<group string='Factory QC'>
+								<field name="mc"/>
+			                    <field name="mc_on_despatch"/>
+			                    <field name="fm"/>
+			                    <field name="black"/>
+			                    <field name="broken"/>
+			                    <field name="brown"/>
+			                    <field name="mold"/>
+			                    <field name="cherry"/>
+                                <field name="screen20"/>
+                                <field name="screen19"/>
+			                    <field name="screen18"/>
+			                    <field name="screen16"/>
+			                    <field name="screen13"/>
+			                    <field name="greatersc12"/>
+			                    <field name="screen12" string="Below screen12"/>
+			                    <field name="burn"/>
+			                    <field name="immature"/>
+			                    <field name="excelsa"/>
+			                    <field name="defects"/>
+								<field name="eaten"/>
+			                    <field name="stone"/>
+			                    <field name="stick"/>
+			                    
+			                    <field name="cuptaste"/>
+			                    <field name="sampler"/>
+			                    <field name="supervisor"/>
+	            			</group>
+	            			<group string='Fixed QC'>
+								<field name="fixed_mc"/>
+			                    <field name="fixed_mc_on_despatch"/>
+			                    <field name="fixed_fm"/>
+			                    <field name="fixed_black"/>
+			                    <field name="fixed_broken"/>
+			                    <field name="fixed_brown"/>
+			                    <field name="fixed_mold"/>
+			                    <field name="fixed_cherry"/>
+                                <field name="fixed_screen20"/>
+                                <field name="fixed_screen19"/>
+			                    <field name="fixed_screen18"/>
+			                    <field name="fixed_screen16"/>
+			                    <field name="fixed_screen13"/>
+			                    <field name="fixed_greatersc12"/>
+			                    <field name="fixed_screen12" string="Below screen12"/>
+			                    <field name="fixed_burn"/>
+			                    <field name="fixed_immature"/>
+			                    <field name="fixed_excelsa"/>
+			                    <field name="fixed_defects"/>
+								<field name="fixed_eaten"/>
+	            			</group>
+								
+	                	</group>
+		            	<notebook>
+		            		<page string="GDN" name="gnd">
+		            			<field name="los_ids"/>
+		            		</page>
+		            		
+		            	</notebook>
+		        	</sheet>
+                </form>
+            </field>
+        </record>
+    	
+    	<record id="action_lot_kcs" model="ir.actions.act_window">
+            <field name="name">Lot Management</field>
+            <field name="res_model">lot.kcs</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+              		Create a lot kcs, the first step of a Lot Kcs.
+              </p>
+            </field>
+        </record>
+        
+        
+        
+    	
+    </data>
+</odoo>

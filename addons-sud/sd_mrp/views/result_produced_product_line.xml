@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    
+        <record id="view_mrp_operation_result_produced_product_line_search" model="ir.ui.view">
+            <field name="name">mrp.operation.result.produced.product.line.search</field>
+            <field name="model">mrp.operation.result.produced.product</field>
+            <field name="arch" type="xml">
+                <search string="MRP Operation Result Line search">
+                    <field name="production_id" string="Batch No."/>
+                    <field name="product_id" string="Production"/>
+                    <field name="si_id" string="SI No."/>
+                    <field name="stack_id" string="Stack"/>
+                    
+                    <group expand="1" string="Group By...">
+                        <filter name="non_zero" string="Remove Zero Value" domain="[('product_qty','!=',0)]" />
+                        <filter string="Batch No." name="production_id" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'production_id'}"/>
+                        <filter string="Production" name="product_id" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
+                        <filter string="SI No." name="si_id" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'si_id'}"/>
+                    </group>
+                    
+               </search>
+            </field>
+        </record>
+    	
+    	<record id="view_mrp_operation_result_produced_product_line_tree" model="ir.ui.view">
+            <field name="name">mrp.operation.result.produced.product.line.tree</field>
+            <field name="model">mrp.operation.result.produced.product</field>
+            <field name="arch" type="xml">
+                <tree string="MRP Operation Result Line">
+                    <field name="production_id"/>
+                    <field name="start_date"/>
+                    <field name="end_date"/>
+                    <field name="si_id"/>
+                    <field name="product_id" on_change="onchange_product_id(product_id)" options='{"no_create": True, "no_write": True}'/>
+                    <field name="product_uom" options='{"no_create": True, "no_write": True}'/>
+                    <field name="product_qty" string="Ned Weight" sum="product_qty" />
+                    <field name="production_weight" sum="production_weight" />
+                    <field name="zone_id"/>
+                    <field name="packing_id"/>
+                    <field name="qty_bags" sum="qty_bags"/>
+                    <field name="picking_id"/>
+                    <!--
+                    <field name="stack_id"/>
+                    -->
+                    <field name="notes" invisible="1"/>
+                    <field name="state_kcs" readonly="1" />
+                    <field name="kcs_notes" readonly="1"/>
+                    <!-- <button name="create_kcs" string="KCS" type="object" attrs="{'readonly': [('state_kcs','!=',False)]}"/> -->
+                </tree>
+            </field>
+        </record>
+        
+        <record id="action_mrp_operation_result_produced_product_line" model="ir.actions.act_window">
+            <field name="name">MRP Operation Result Line</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">mrp.operation.result.produced.product</field>
+            <field name="view_mode">tree</field>
+            <field name="search_view_id" ref="view_mrp_operation_result_produced_product_line_search"/>
+            <field name="context">{"search_default_non_zero":True,'search_by_field_date': ['start_date','end_date']}</field>
+        </record>
+        
+        
+	    	
+    
+    </data>'    
+</odoo>

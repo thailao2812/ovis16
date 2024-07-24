@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_request_payment_tree_inherit_india" model="ir.ui.view">
+        <field name="name">view_request_payment_tree_inherit_india</field>
+        <field name="model">request.payment</field>
+        <field name="inherit_id" ref="sd_purchase_contract.view_request_payment_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_bank_id']" position="after">
+                <field name="branch"/>
+                <field name="related_holder"/>
+                <field name="ifsc_code"/>
+            </xpath>
+            <xpath expr="//field[@name='request_amount']" position="attributes">
+                <attribute name="sum">request_amount</attribute>
+            </xpath>
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="pan_number"/>
+                <field name="estate_name"/>
+                <field name="vendor_invoice_number"/>
+                <field name="vendor_invoice_date"/>
+                <field name="product_id"/>
+            </xpath>
+            <xpath expr="//field[@name='payment_quantity']" position="after">
+                <field name="price"/>
+                <field name="invoice_amount"/>
+            </xpath>
+            <xpath expr="//field[@name='purchase_contract_id']" position="before">
+                <field name="use_payment_for"/>
+            </xpath>
+            <xpath expr="//field[@name='purchase_contract_id']" position="after">
+                <field name="source_document_contract"/>
+            </xpath>
+            <xpath expr="//field[@name='request_amount']" position="after">
+                <field name="tds_assessable_value" sum="tds_assessable_value"/>
+                <field name="tds_amount" sum="tds_amount"/>
+                <field name="final_request_payment" sum="final_request_payment"/>
+            </xpath>
+            <xpath expr="//field[@name='date']" position="after">
+                <field name="date_approve"/>
+                <field name="financial_year_id"/>
+            </xpath>
+            <xpath expr="//field[@name='invoice_amount']" position="attributes">
+                <attribute name="sum">invoice_amount</attribute>
+            </xpath>
+        </field>
+    </record>
+    <record id="view_request_payment_form_inherit_india" model="ir.ui.view">
+        <field name="name">view_request_payment_form_inherit_india</field>
+        <field name="model">request.payment</field>
+        <field name="inherit_id" ref="sd_purchase_contract.view_request_payment_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='chinhanh']" position="attributes">
+                <attribute name="string">Bank Name</attribute>
+            </xpath>
+            <xpath expr="//field[@name='chinhanh']" position="after">
+                <field name="branch"/>
+            </xpath>
+            <xpath expr="//field[@name='rate_ids']//tree/field[@name='provisional_rate']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="use_payment_for" readonly="1"/>
+            </xpath>
+            <xpath expr="//button[@name='action_request_register_payment']" position="attributes">
+                <attribute name="attrs">{'invisible': [('state', 'in', ['request', 'paid'])]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='purchase_contract_id']" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='name']" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='partner_id']" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='partner_bank_id']" position="attributes">
+                <attribute name="attrs">{'readonly': [('state', '!=', 'request')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='date']" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="sd_purchase_contract.action_request_payment" model="ir.actions.act_window">
+        <field name="context">{'create': false}</field>
+    </record>
+</odoo>

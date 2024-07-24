@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_consignment_agreement_form_inherit_add_domain_certificate" model="ir.ui.view">
+		        <field name="name">view.consignment.agreement.form.inherit.add.domain.certificate</field>
+		        <field name="model">purchase.contract</field>
+		        <field name="inherit_id" ref="sd_purchase_contract.view_consignment_agreement_form"/>
+		        <field name="arch" type="xml">
+					 <xpath expr="//field[@name='license_id']" position="attributes">
+		                <attribute name="domain">[('partner_id', '=', partner_id), 
+							('certificate_id', '=', certificate_id), ('state', '=', 'active'),  ('lock_purchase', '=', False), 
+							('parent_id', '=', False), ('crop_id', '=', crop_id),('available_amount', '&gt;', 0) ]</attribute>
+		            </xpath>
+		        </field>
+		    </record>
+		    
+	    <record id="purchase_contract_form_inherit_add_domain_certificate" model="ir.ui.view">
+		        <field name="name">purchase.contract.form.inherit.add.domain.certificate</field>
+		        <field name="model">purchase.contract</field>
+		        <field name="inherit_id" ref="sd_purchase_contract.view_purchase_contract_form"/>
+		        <field name="arch" type="xml">
+					 <xpath expr="//field[@name='license_id']" position="attributes">
+		                <attribute name="domain">[('partner_id', '=', partner_id), 
+							('certificate_id', '=', certificate_id), ('state', '=', 'active'), ('lock_purchase', '=', False), 
+							('parent_id', '=', False), ('crop_id', '=', crop_id), ('available_amount','&gt;', 0)]</attribute>
+		            </xpath>
+		        </field>
+		    </record>
+		   
+		 <record id="view_ptbf_contract_form_inherit_add_domain_certificate" model="ir.ui.view">
+		        <field name="name">view.ptbf.contract.form.inherit.add.domain.certificate</field>
+		        <field name="model">purchase.contract</field>
+		        <field name="inherit_id" ref="sd_purchase_contract.view_ptbf_contract_form"/>
+		        <field name="arch" type="xml">
+					 <xpath expr="//field[@name='license_id']" position="attributes">
+		                <attribute name="domain">[('partner_id', '=', partner_id), 
+							('certificate_id', '=', certificate_id), ('state', '=', 'active'), ('lock_purchase', '=', False), 
+							('parent_id', '=', False), ('crop_id', '=', crop_id), ('available_amount', '&gt;', 0)]</attribute>
+		            </xpath>
+		        </field>
+		    </record>
+
+
+    </data>
+</odoo>

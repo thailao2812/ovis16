@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="prinout_grn_with_price" model="res.groups">
+        <field name="name">Print Out GRN With Price</field>
+    </record>
+    <record id="prinout_grn_without_price" model="res.groups">
+        <field name="name">Print Out GRN Without Price</field>
+    </record>
+</odoo>

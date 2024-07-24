@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_contract_price_purchase" model="ir.ui.view">
+            <field name="name">view_contract_price_purchase</field>
+            <field name="model">contract.price.purchase</field>
+            <field name="arch" type="xml">
+                <tree string="Contract Price Purchase" editable="top" default_order="id desc">
+                	<field name="product_id" required="1"/>
+                	<field name="date_price" required="1"/>
+                	<field name="exchange"/>
+                	<field name="exchange_rate"/>
+                	<field name="market_price"/>
+                	<field name="fob"/>
+                	<field name="a_differential"/>
+                	<field name="ab_differential"/>
+                	<field name="grade_differential"/>
+                	<field name="partner_id" required="1"/>
+                	<field name="contract_number" required="1"/>
+                	<field name="quantity"/>
+                	<field name="certificate_id"/>
+                	<field name="price"/>
+                	<field name="premium"/>
+                	<field name="total"/>
+                </tree>
+            </field>
+        </record>
+
+    <record id="action_contract_price_purchase" model="ir.actions.act_window">
+            <field name="name">Contract Price Purchase</field>
+            <field name="res_model">contract.price.purchase</field>
+            <field name="view_mode">tree</field>
+            <field name="context">{}</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+              		Create a Contract Price for Purchase
+              </p>
+            </field>
+        </record>
+
+    <menuitem id="menu_contract_price_purchase"
+                action="action_contract_price_purchase"
+                sequence="26"
+                parent="sd_purchase_contract.menu_purchase_contract_root"/>
+</odoo>

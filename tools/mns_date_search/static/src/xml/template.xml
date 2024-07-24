@@ -1,0 +1,21 @@
+
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="mns_date_search.DateRangeGM" owl="1">
+        <div class="btn-group o_dropdown" style="display: block; margin-top: 5px">
+            <select id="all_field_date" t-on-click="_onClickChangeFieldSelection">
+            </select>
+            <span t-on-click="_onClickDateRangePicker" id="daterange-input" style="cursor: pointer; width: auto;">
+                <i class="fa fa-calendar"></i> <span class="result-date-statistic" style="color:#666666; font-weight: 500"> Date Search </span>
+            </span>
+        </div>
+    </t>
+
+    <t t-name="mns_date_search.CustomDateRange" t-inherit="web.ControlPanel.Regular" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[@class='btn-group o_search_options position-static']" position="inside">
+                <t t-component="SearchMenuCustom.Component"/>
+        </xpath>
+    </t>
+
+
+</templates>

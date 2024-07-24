@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+    
+    
+    	 <record id="view_warehouse_inherit_sucden" model="ir.ui.view">
+            <field name="name">view_warehouse.inherit.sucden</field>
+            <field name="model">stock.warehouse</field>
+            <field name="inherit_id" ref="stock.view_warehouse"/>
+            <field name="arch" type="xml">
+                
+                
+                <xpath expr="//field[@name='wh_output_stock_loc_id']" position="after">
+                	<field name="wh_raw_material_loc_id"/>
+                	<field name="wh_finished_good_loc_id"/>
+                	<field name="wh_production_loc_id"/>
+                	<field name="other_location_loc_id"/>
+                	<field name="adj_type_id"/>
+                	<field name="x_auto_done"/>
+                	
+                	 <field name="wh_npe_id"/>
+                    <field name="wh_nvp_id"/>
+                    
+                </xpath>
+	            <xpath expr="//field[@name='int_type_id']" position="replace">
+	            	<field name="int_type_id"/>
+	            </xpath>
+            	<xpath expr="//field[@name='out_type_id']" position="after">
+	            	<field name="out_type_local_id"/>
+	            	<field name="production_in_type_id" readonly="0"/>
+	            	<field name="production_out_type_id" readonly="0"/>
+	            	<field name="return_customer_type_id" readonly="0"/>
+	            	<field name="return_supplier_type_id" readonly="0"/>
+	            	
+	            </xpath>
+	            
+	            <xpath expr="//field[@name='code']" position="after">
+                	<field name="account_analytic_id" required="True"/>
+                </xpath>
+            </field>
+        </record>
+
+        
+
+
+    </data>
+</openerp>

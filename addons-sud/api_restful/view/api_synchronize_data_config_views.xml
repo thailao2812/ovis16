@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <record id="api_synchronize_data_config_form_view" model="ir.ui.view">
+        <field name="name">api.synchronize.data.config.form.view</field>
+        <field name="model">api.synchronize.data.config</field>
+        <field name="arch" type="xml">
+            <form string="Synchronize Data">
+                <sheet>
+                    <header>
+                        <button name="action_post" string="Post" states="draft" type="object" class="oe_highlight"/>
+                        <button name="action_draft" string="Set to Draft" states="post" type="object" class="oe_highlight"/>
+                        <div class="oe_right">
+                            <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,post"/>
+                        </div>
+                        <div class="oe_clear"/>
+                    </header>
+                    <group name="name_header">
+                        <group name="name_one" string="Data">
+                            <field name="model" attrs="{'readonly': [('state', '=', 'post')]}" />
+                            <field name="new_model" attrs="{'readonly': [('state', '=', 'post')]}" />
+                        </group>
+                        <group name="name_three" string="User">
+                            <field name="create_uid" readonly="1"/>
+                            <field name="create_date" readonly="1"/>
+                            <field name="is_change" invisible="1"/>
+
+                        </group>
+                    </group>
+
+                    <notebook colspan="4">
+                        <page string="Data Fields">
+                            <field name="line_ids" nolabel="1" attrs="{'readonly': [('state', '=', 'post')]}">
+                                <tree string="Lines" editable="top">
+                                    <field name="fields_id" options="{'no_create_edit': True}" domain="[('model_id.model', '=', parent.model),]"/>
+                                    <field name="fields_name" readonly="1" />
+                                    <field name="ttype" readonly="1" />
+                                    <field name="relation" readonly="1" />
+                                    <field name="fields_sys" />
+                                    <field name="model_sys" />
+                                    <field name="value_sys" />
+                                    <field name="is_sync" readonly="1"/>
+                                    <field name="config_sys_id" domain="[('model', '=', relation), ('state', '=', 'post')]" options='{"no_create": True,}'/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="api_synchronize_data_config_tree_view" model="ir.ui.view">
+        <field name="name">api.synchronize.data.config.tree.view</field>
+        <field name="model">api.synchronize.data.config</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="model"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="api_synchronize_domain_config_tree_view" model="ir.ui.view">
+        <field name="name">api_synchronize_domain_config_tree_view</field>
+        <field name="model">api.synchronize.domain.config</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="new_model"/>
+                <field name="domain"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="api_synchronize_domain_config_form_view" model="ir.ui.view">
+        <field name="name">api_synchronize_domain_config_form_view</field>
+        <field name="model">api.synchronize.domain.config</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="new_model"/>
+                    </group>
+                    <group>
+                        <field name="domain"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="api_synchronize_data_config_filter" model="ir.ui.view">
+        <field name="name">api_synchronize_data_config_filter</field>
+        <field name="model">api.synchronize.data.config</field>
+        <field name="arch" type="xml">
+            <search string="Synchronize">
+                <field name="model"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_api_synchronize_data_config" model="ir.actions.act_window">
+        <field name="name">Synchronize Config</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">api.synchronize.data.config</field>
+<!--        <field name="view_type">form</field>-->
+        <field name="view_mode">tree,form</field>
+        <field name="context">{}</field>
+    </record>
+
+    <record id="action_api_synchronize_domain_config" model="ir.actions.act_window">
+        <field name="name">Synchronize Domain Config</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">api.synchronize.domain.config</field>
+<!--        <field name="view_type">form</field>-->
+        <field name="view_mode">tree,form</field>
+        <field name="context">{}</field>
+    </record>
+
+</openerp>

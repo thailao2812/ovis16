@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_stock_grp_tree_inherit_india" model="ir.ui.view">
+        <field name="name">view_stock_grp_tree_inherit_india</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="sd_inventory.view_picking_tree_grp_good_tree"/>
+        <field name="arch" type="xml">
+			 <xpath expr="//field[@name='production_id']" position="after">
+            	<field name="transaction_no"/>
+            </xpath>
+
+        </field>
+    </record>
+    <record id="view_stock_gip_tree_inherit_india" model="ir.ui.view">
+        <field name="name">view_stock_gip_tree_inherit_india</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="sd_inventory.view_picking_tree_gip_good_tree"/>
+        <field name="arch" type="xml">
+			 <xpath expr="//field[@name='production_id']" position="after">
+            	<field name="transaction_no"/>
+            </xpath>
+
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <record id="api_synchronize_data_form_view" model="ir.ui.view">
+        <field name="name">api.synchronize.data.form.view</field>
+        <field name="model">api.synchronize.data</field>
+        <field name="arch" type="xml">
+            <form string="Synchronize Data">
+                <sheet>
+                    <header>
+                        <button name="run_api" attrs="{'invisible': [('state', '=', 'done')]}"
+                                string="Run" type="object" class="oe_highlight"/>
+                        <div class="oe_right">
+                            <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft"/>
+                        </div>
+                        <div class="oe_clear"/>
+                    </header>
+                    <group name="name_header">
+                        <group name="name_one" string="Data">
+                            <field name="name" readonly="1"/>
+                            <field name="model" readonly="1"/>
+                            <field name="res_id" readonly="1"/>
+                            <field name="reference" readonly="1"/>
+                            <field name="slc_method" invisible="0" readonly="1"/>
+                        </group>
+                        <group name="name_two" string="Synchronize">
+                            <field name="name_syn" readonly="1"/>
+                            <field name="model_syn" readonly="1"/>
+                            <field name="res_id_syn" readonly="1"/>
+                            <field name="type" invisible="0" readonly="1"/>
+                            <field name="number_of_retries" attrs="{'invisible': [('state','!=','failed')]}"/>
+                        </group>
+                        <group name="name_three" string="User">
+                            <field name="create_uid" readonly="1"/>
+                            <field name="create_date" readonly="1"/>
+                        </group>
+
+                        <group name="name_four" string="Method" attrs="{'invisible': [('type', '!=', 'transaction')]}">
+                            <field name="is_write" readonly="1"/>
+                            <field name="is_run" readonly="1"/>
+                            <field name="is_delete" readonly="1"/>
+                        </group>
+                    </group>
+
+                    <div name="div_result">
+                        <label for="result"></label>
+                        <field name="result"
+                               placeholder="Result ..."/>
+                    </div>
+                    <notebook colspan="4">
+                        <page string="Message Log">
+                            <field name="line_ids" nolabel="1">
+                                <tree string="Lines" editable="top">
+                                    <field name="slc_method" />
+                                    <field name="payload"/>
+                                    <field name="write_uid" string="User" readonly="1"/>
+                                    <field name="write_date" string="Date" readonly="1"/>
+                                    <field name="result"/>
+                                    <field name="state"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="api_synchronize_data_tree_view" model="ir.ui.view">
+        <field name="name">api.synchronize.data.tree.view</field>
+        <field name="model">api.synchronize.data</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="model"/>
+                <field name="res_id"/>
+                <field name="name_syn"/>
+                <field name="model_syn"/>
+                <field name="res_id_syn"/>
+                <field name="number_of_retries"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="api_synchronize_data_filter" model="ir.ui.view">
+        <field name="name">api_synchronize_data_filter</field>
+        <field name="model">api.synchronize.data</field>
+        <field name="arch" type="xml">
+            <search string="Synchronize">
+                <field name="name"/>
+                <field name="model"/>
+                <field name="res_id"/>
+                <field name="name_syn"/>
+                <field name="model_syn"/>
+                <field name="res_id_syn"/>
+                <field name="state"/>
+                <group expand="0" string="Group By...">
+                    <filter string="Status" name="group_by_state" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by': 'state'}"/>
+                    <filter string="Model" name="group_by_model" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'model'}"/>
+                    <filter string="Syn Model" name="group_by_syn_model" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'model_syn'}"/>
+                </group>
+
+            </search>
+        </field>
+    </record>
+
+    <record id="action_api_synchronize_data" model="ir.actions.act_window">
+        <field name="name">Synchronize Data</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">api.synchronize.data</field>
+<!--        <field name="view_type">form</field>-->
+        <field name="view_mode">tree,form</field>
+        <field name="context">{}</field>
+        <field name="domain">[('type', '=', 'master')]</field>
+    </record>
+
+    <record id="action_api_synchronize_data_transaction" model="ir.actions.act_window">
+        <field name="name">Synchronize Transaction Data</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">api.synchronize.data</field>
+<!--        <field name="view_type">form</field>-->
+        <field name="view_mode">tree,form</field>
+        <field name="context">{}</field>
+        <field name="domain">[('type', '=', 'transaction')]</field>
+    </record>
+
+</openerp>

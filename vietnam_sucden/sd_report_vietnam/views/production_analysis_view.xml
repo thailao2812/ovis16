@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_ned_production_analysis_form_inherit_sucden_vn" model="ir.ui.view">
+            <field name="name">view_ned_production_analysis_form_inherit_sucden_vn</field>
+            <field name="model">production.analysis</field>
+            <field name="inherit_id" ref="sd_report.view_ned_production_analysis_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='crop_id']" position="after">
+	          	  <field name="locked" invisible="1"/>
+              </xpath>
+                <xpath expr="//button[@name='load_data']" position="attributes">
+                    <attribute name="attrs">{'invisible': ['|', ('type','=','upgrade'), ('locked', '=', True)]}</attribute>
+                </xpath>
+            </field>
+    </record>
+</odoo>

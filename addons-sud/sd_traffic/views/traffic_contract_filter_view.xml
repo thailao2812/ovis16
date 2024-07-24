@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_traffic_contract_filter" model="ir.ui.view">
+            <field name="name">view.traffic.contract.filter.form</field>
+            <field name="model">traffic.contract.filter</field>
+            <field name="arch" type="xml">
+                <form string="VN Position">
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                            <field name="origin_ids" widget="many2many_tags"/>
+                            <field name="name" invisible="1"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="date_from"/>
+                                <field name="date_to"/>
+                            </group>
+                        </group>
+                    </sheet>
+                        <footer>
+                                <button name="open_scontract" string="Open" class="oe_highlight" type="object"/>
+                                <button string="Cancel" class="btn-default" special="cancel"/>
+                        </footer>
+                    </form>
+            </field>
+    </record>
+
+    <record id="view_traffic_contract_filter_tree" model="ir.ui.view">
+            <field name="name">view_traffic_contract_filter_tree</field>
+            <field name="model">traffic.contract</field>
+            <field name="arch" type="xml">
+                <tree string="VN Position" editable="top" default_order="write_date desc">
+					<field name="status" invisible="1"/>
+					<field name="write_date" invisible="1"/>
+					<field name="create_date" invisible="1"/>
+					<field name="shipt_month"/>
+					<field name="ps"/>
+					<field name="name" string="S-contract"/>
+					<field name="shipby_id" string="Allocation status"/>
+					<field name="partner_id"/>
+                    <field name="certificate_id"/>
+					<field name="p_quality"/>
+					<field name="p_qty" widget="Integer"/>
+					<field name="incoterms_id" string="Delivery Term"/>
+					<field name="contract_mship"/>
+					<field name="end_of_ship_period_actual" string="Delivery Period"/>
+					<field name="delivery_type"/>
+					<field name="port_of_discharge" string="POD"/>
+					<field name="pss_type"/>
+					<field name="packing_id"/>
+					<field name="shipment_status"/>
+					<field name="p_contract_link" widget="many2many_tags" domain="[('type','=','p_contract')]" invisible="1"/>
+                    <field name="x_p_contract_link"/>
+					<field name="shipper_id"/>
+					<field name="allocated_date"/>
+					<field name="pss_send_schedule"/>
+					<field name="pss_approved_date" string="PSS approved date"/>
+					<field name="factory_etd" string="Stuffing Date"/>
+					<field name="booking_ref_no" string="Booking No./ BL No."/>
+					<field name="bill_date" string="ETD/ BL date"/>
+					<field name="remarks"/>
+                    <field name="x_remark1"/>
+                </tree>
+            </field>
+        </record>
+
+     <record id="action_traffic_contract_filter" model="ir.actions.act_window">
+            <field name="name">VN Position</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">traffic.contract.filter</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+</odoo>

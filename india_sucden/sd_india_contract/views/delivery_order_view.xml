@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_delivery_order_tree_inherit_india" model="ir.ui.view">
+        <field name="name">view_delivery_order_tree_inherit_india</field>
+        <field name="model">delivery.order</field>
+        <field name="inherit_id" ref="sd_sale_contract.view_delivery_order_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='shipped_weight']" position="attributes">
+                <attribute name="string">Post Shipment Weight</attribute>
+            </xpath>
+            <xpath expr="//field[@name='bags']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_delivery_order_form_inherit_india" model="ir.ui.view">
+        <field name="name">view_delivery_order_form_inherit_india</field>
+        <field name="model">delivery.order</field>
+        <field name="inherit_id" ref="sd_sale_contract.view_delivery_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='trucking_id']" position="attributes">
+                <attribute name="domain">[('transfer','=', True)]</attribute>
+                <attribute name="options">{'no_create': True}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='trucking_no']" position="attributes">
+                <attribute name="string">Truck Number</attribute>
+            </xpath>
+            <xpath expr="//button[@name='button_approve']" position="after">
+                <button name="button_cancel" string="Cancel" attrs="{'invisible': [('state', 'in', ['approve', 'cancel'])]}" type="object" confirm="Do you want to Cancel this DO?" groups="sd_india_master.group_admin_india"/>
+            </xpath>
+            <xpath expr="//button[@name='button_approve']" position="attributes">
+                <attribute name="groups">sd_india_master.group_sale_logistic_india</attribute>
+            </xpath>
+            <xpath expr="//field[@name='date_approve']" position="after">
+                <field name="note"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

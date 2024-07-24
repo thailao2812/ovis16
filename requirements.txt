@@ -1,0 +1,9 @@
+pandas	#==0.24.2 # used in module dashboard_pos
+py3o.template
+py3o.formats
+html2text
+jwt
+marshmallow
+git+https://github.com/aeroo/currency2text.git@master
+
+openpyxl # using for module sql export excel

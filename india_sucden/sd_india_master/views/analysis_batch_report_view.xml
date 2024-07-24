@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+<record id="analysis_batch_report_tree" model="ir.ui.view">
+        <field name="name">analysis_batch_report_tree</field>
+        <field name="model">analysis.batch.report</field>
+        <field name="arch" type="xml">
+            <tree string="Analysis Batch Report" editable ='top'>
+				<field name="name" readonly="1"/>
+				<field name="crop_id" required="1" options="{'no_create': True}" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+				<field name="grade_id" required="1" options="{'no_create': True}" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+				<field name="percent" required="1" string="Outturn %" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+				<field name="expectation_percent" required="1" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                <button name="approve_analysis" string="Approve" class="oe_highlight" type="object" states="new"/>
+                <button name="set_to_draft" string="Set to New" class="oe_highlight" type="object" states="approve"/>
+				<field name="state" readonly="1"/>
+            </tree>
+        </field>
+    </record>
+
+     <record id="action_analysis_batch_report" model="ir.actions.act_window">
+        <field name="name">Analysis Batch Report</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">analysis.batch.report</field>
+        <field name="view_id" ref="analysis_batch_report_tree"/>
+        <field name="view_mode">tree</field>
+    </record>
+
+    <menuitem id="menu_analysis_batch_report"
+            name="Analysis Batch Report"
+            action="action_analysis_batch_report"
+            parent="sd_master.menu_master_data_sucden_root"
+            sequence="120"/>
+</odoo>

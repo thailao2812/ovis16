@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="visual_good" model="visual.quality">
+            <field name="name">Good</field>
+        </record>
+        <record id="visual_average" model="visual.quality">
+            <field name="name">Average</field>
+        </record>
+        <record id="visual_bad" model="visual.quality">
+            <field name="name">Bad</field>
+        </record>
+        <record id="visual_fermented" model="visual.quality">
+            <field name="name">Fermented</field>
+        </record>
+        <record id="visual_musty" model="visual.quality">
+            <field name="name">Musty</field>
+        </record>
+        <record id="visual_other" model="visual.quality">
+            <field name="name">Other</field>
+        </record>
+
+        <record id="moisture_deduction" model="deduction.quality">
+            <field name="name">Moisture Deduction</field>
+            <field name="code">MD</field>
+        </record>
+        <record id="outturn_deduction" model="deduction.quality">
+            <field name="name">Outturn Deduction</field>
+            <field name="code">OD</field>
+        </record>
+        <record id="grade_deduction" model="deduction.quality">
+            <field name="name">A/AB Grade Deduction</field>
+            <field name="code">GD</field>
+        </record>
+        <record id="pb_deduction" model="deduction.quality">
+            <field name="name">PB Deduction</field>
+            <field name="code">PB</field>
+        </record>
+        <record id="bleach_deduction" model="deduction.quality">
+            <field name="name">Bleached Deduction</field>
+            <field name="code">Bleach</field>
+        </record>
+        <record id="bb_deduction" model="deduction.quality">
+            <field name="name">BB Deduction</field>
+            <field name="code">BB</field>
+        </record>
+        <record id="idb_deduction" model="deduction.quality">
+            <field name="name">IDB Deduction</field>
+            <field name="code">IDB</field>
+        </record>
+        <record id="husk_deduction" model="deduction.quality">
+            <field name="name">Husk Deduction</field>
+            <field name="code">HUSK</field>
+        </record>
+        <record id="stone_deduction" model="deduction.quality">
+            <field name="name">Stone Deduction</field>
+            <field name="code">STONE</field>
+        </record>
+        <record id="skin_out_deduction" model="deduction.quality">
+            <field name="name">Skinout Deduction</field>
+            <field name="code">SD</field>
+        </record>
+        <record id="other_deduction" model="deduction.quality">
+            <field name="name">Other Deduction</field>
+            <field name="code">OTH</field>
+        </record>
+        <record id="drying_deduction" model="deduction.quality">
+            <field name="name">Drying Deduction</field>
+            <field name="code">DRY</field>
+        </record>
+
+        <record id="wet_beans" model="deduction.quality">
+            <field name="name">Wet Beans</field>
+            <field name="code">WB</field>
+        </record>
+        <record id="red_beans" model="deduction.quality">
+            <field name="name">Red Beans</field>
+            <field name="code">RB</field>
+        </record>
+        <record id="stinker_deduction" model="deduction.quality">
+            <field name="name">Stinkers</field>
+            <field name="code">STIN</field>
+        </record>
+        <record id="duct_deduction" model="deduction.quality">
+            <field name="name">Dust</field>
+            <field name="code">DUST</field>
+        </record>
+        <record id="faded_deduction" model="deduction.quality">
+            <field name="name">Faded</field>
+            <field name="code">FADE</field>
+        </record>
+        <record id="triage_deduction" model="deduction.quality">
+            <field name="name">Triages</field>
+            <field name="code">TRIAGE</field>
+        </record>
+        <record id="jutblacks_deduction" model="deduction.quality">
+            <field name="name">Jut Blacks</field>
+            <field name="code">JB</field>
+        </record>
+        <record id="unhauled_deduction" model="deduction.quality">
+            <field name="name">Unhauled</field>
+            <field name="code">UNHAU</field>
+        </record>
+
+        <record id="4_kinds_deduction" model="deduction.quality">
+            <field name="name">BB/Bleached/IDB/Red Beans Deduction</field>
+            <field name="code">4_kinds_deduction</field>
+        </record>
+
+        <menuitem id="sd_quality.menu_pss_management_nestle" active="False"/>
+
+        <record id="group_checking_sampler" model="res.groups">
+            <field name="name">Check Sampler QC</field>
+        </record>
+    </data>
+</odoo>

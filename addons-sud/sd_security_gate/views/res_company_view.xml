@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="view_company_form_inherit_ned_security_gate_queue" model="ir.ui.view">
+            <field name="inherit_id" ref="base.view_company_form"/>
+            <field name="model">res.company</field>
+            <field name="arch" type="xml">
+                <field name="currency_id" position="after">
+                    <field name="time_to_reject_the_goods" class="oe_inline" />
+                </field>
+            </field>
+        </record>
+        
+
+    </data>
+</odoo>

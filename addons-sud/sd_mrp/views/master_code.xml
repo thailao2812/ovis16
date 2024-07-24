@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    
+     <!-- Ned Packing -->
+    	<record id="master_code_sucden_tree_view" model="ir.ui.view">
+            <field name="name">master.code.sucden.tree.view</field>
+            <field name="model">master.code</field>
+            <field name="arch" type="xml">
+                <tree string="Master Code" editable="top">
+                    <field name="name"/>
+                    <field name="type_code"/>
+                    <field name="remarks"/>
+                </tree>
+            </field>
+        </record>
+        
+        
+        <record id="master_code_action_view" model="ir.actions.act_window">
+            <field name="name">Master Code</field>
+            <field name="res_model">master.code</field>
+            <field name="view_mode">tree</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+              		Create a Master Code, the first step of a Master Code.
+              </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>

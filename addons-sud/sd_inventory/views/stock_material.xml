@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+    	<record id="view_report_stock_material_tree" model="ir.ui.view">
+            <field name="name">v.stock.material.tree</field>
+            <field name="model">v.stock.material</field>
+            <field name="arch" type="xml">
+    			<tree string="Material stock balance">
+					<field name = "warehouse_id"/>
+                    <field name = 'default_code'/>
+                    <field name = 'name'/>
+                    <field name = 'product_uom'/>
+                    <field name = 'qty_in'/>
+                    <field name = 'qty_out'/>
+                    <field name = 'qty_balance'/>
+                </tree>
+	        </field>
+        </record>
+
+
+        <record id="view_report_stock_material_search" model="ir.ui.view">
+            <field name="name">v.stock.material.search</field>
+            <field name="model">v.stock.material</field>
+            <field name="arch" type="xml">
+                <search string="Material stock balance">
+                    <field name = 'name'/>
+                    <field name = 'default_code'/>
+                    <field name = 'warehouse_id'/>
+                </search>
+            </field>
+        </record>
+
+
+        <record id="action_report_stock_material" model="ir.actions.act_window">
+            <field name="name">Material stock balance</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">v.stock.material</field>
+            <field name="view_mode">tree</field>
+            <field name="domain">[('default_code', 'not in', ['PP Bag', 'Pallet-ex', 'than cui'])]</field>
+            <field name="context">{}</field>
+            <field name="search_view_id" ref="view_report_stock_material_search"/>
+        </record>
+		
+
+    </data>
+</odoo>

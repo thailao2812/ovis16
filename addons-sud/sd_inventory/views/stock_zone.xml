@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+    
+    	<!-- Ned stock Zone -->
+    	<record id="view_ned_stock_zone_tree" model="ir.ui.view">
+            <field name="name">ned.tock.zone.tree</field>
+            <field name="model">stock.zone</field>
+            <field name="arch" type="xml">
+                <tree string="Zone">
+                	<field name="warehouse_id"/>
+                	<field name="name" string="Zone" filter_domain="['|',('name','ilike', self),('code','ilike',self)]"/>
+                    <field name="description"/>
+                    <field name="location_wip"/>
+                    <field name="active"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id="view_ned_stock_zone_form" model="ir.ui.view">
+            <field name="name">ned.stock.zone.form</field>
+            <field name="model">stock.zone</field>
+            <field name="arch" type="xml">
+                <form string="Zone">
+                	<sheet>
+                		<group>
+                			<group>
+			                    <field name="name"/>
+			                    <field name="description"/>
+			                    <field name="active"/>
+		                    </group>
+		                    <group>
+			                    <field name="warehouse_id"/>
+			                    <field name="hopper"/>
+			                    <field name="location_wip"/>
+                			</group>
+                		</group>
+                		<!--
+    					<field name="stack_ids">
+    						<tree editable="top">
+    							<field name="code"/>
+    							<field name="name"/>
+    							<field name="remaining_qty"/>
+    						</tree>
+    					</field>
+    					-->
+                	</sheet>
+                	<div class="oe_chatter">
+	                    <field name="message_follower_ids" widget="mail_followers"/>
+	                    <field name="message_ids" widget="mail_thread"/>
+	                </div>
+                </form>
+            </field>
+        </record>
+        
+        <record id="action_ned_stock_zone" model="ir.actions.act_window">
+            <field name="name">Zones</field>
+            <field name="res_model">stock.zone</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+              		Create a Zone, the first step of a new Zone.
+              </p>
+            </field>
+        </record>
+        
+        
+
+        
+
+
+    </data>
+</openerp>

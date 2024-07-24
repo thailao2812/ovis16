@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    
+	     <record id="view_daily_confirmation_form_inherit" model="ir.ui.view">
+		        <field name="name">view.daily.confirmation.form.inherit.inherit</field>
+		        <field name="model">daily.confirmation</field>
+		        <field name="inherit_id" ref="sd_sale_contract.view_daily_confirmation_form"/>
+		        <field name="arch" type="xml">
+					<xpath expr="//field[@name='daily_confirmation_ids']/tree/field[@name='p_contract']" position="before">
+						<field name="contract_id"/>
+					</xpath>
+				
+		        </field>
+		    </record>   
+		
+    </data>
+</odoo>

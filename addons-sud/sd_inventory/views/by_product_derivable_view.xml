@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+<record id="action_by_product_derivable" model="ir.actions.act_window">
+            <field name="name">By Product Derivable</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">by.product.derivable</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{}</field>
+        </record>
+
+     <record id="view_by_product_derivable_tree" model="ir.ui.view">
+            <field name="name">view_by_product_derivable_tree</field>
+            <field name="model">by.product.derivable</field>
+            <field name="arch" type="xml">
+                <tree string="By Product Derivable">
+                    <field name="name"/>
+                    <field name="crop_id"/>
+                    <field name="state"/>
+                </tree>
+             </field>
+        </record>
+
+    <record id="view_by_product_derivable_form" model="ir.ui.view">
+            <field name="name">view_by_product_derivable_form</field>
+            <field name="model">by.product.derivable</field>
+			<field name="arch" type="xml">
+	        <form>
+                <header>
+                    <button name="active_by_product" string="Active" type="object" class="oe_highlight" attrs="{'invisible': [('state', '=', 'active')]}"/>
+                    <button name="deactive_by_product" string="Deactive" type="object" class="oe_highlight" attrs="{'invisible': [('state', '=', 'deactive')]}"/>
+                    <field name="state" widget="statusbar" statusbar_visible="deactive,active"/>
+                </header>
+	        	<sheet>
+                    <h1>
+                        <field name="name" readonly="1"/>
+                    </h1>
+                    <group>
+                        <group>
+                            <field name="option" required="1"/>
+                        </group>
+                        <group>
+                            <field name="crop_id"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Detail By Product Derivable" name="detail_by_product">
+                            <field name="line_ids">
+                                <tree editable="top">
+                                    <field name="grade_id" required="1"/>
+                                    <field name="product_id"/>
+                                    <field name="current_stock"/>
+                                    <field name="g2_percent"/>
+                                    <field name="quantity_g2"/>
+                                    <field name="g3_percent"/>
+                                    <field name="quantity_g3"/>
+                                    <field name="description"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+				</sheet>
+    		</form>
+	      </field>
+	    </record>
+
+    <menuitem
+            action="action_by_product_derivable"
+				        id="menu_action_by_product_derivable"
+				        name="By Product Derivable"
+				        parent="sd_master.menu_master_product_sucden_root"
+				        sequence="20"/>
+</odoo>

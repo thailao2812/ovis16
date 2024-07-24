@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+
+		<!-- Zone-->
+        <menuitem id="menu_action_ned_stock_zone" action="action_ned_stock_zone" sequence="1" 
+        	parent="stock.menu_warehouse_config" name="Zone"/>
+        	
+        <menuitem id="menu_action_x_external_warehouse" action="action_x_external_warehouse" sequence="20" 
+        	parent="stock.menu_warehouse_config"/>
+        
+        
+        <menuitem action="action_ned_stock_truccking_cost" 
+        	id="menu_action_ned_stock_truccking_cost" 
+        	parent="stock.menu_warehouse_config"
+        	sequence="100"/>
+		
+		<!-- Stack-->
+		<!--
+		 <menuitem id="menu_action_ned_stock_stack" action="action_ned_stock_stack" sequence="2" 
+        	parent="stock.menu_warehouse_report" name="Stack"
+        	groups="stock.group_stock_user"/>
+		-->
+		
+	    <!-- ẩn menu replenish -->
+	    <record model="ir.ui.menu" id="stock.menu_reordering_rules_replenish">
+		    <field eval='False' name="active"/>
+		</record> 
+		
+		<record model="ir.ui.menu" id="stock.menu_product_stock">
+		    <field eval='False' name="active"/>
+		</record> 
+		
+		<!-- ẩn menu stock.quant -->
+		<record model="ir.ui.menu" id="stock.menu_action_inventory_tree">
+		    <field eval='False' name="active"/>
+		</record>   
+		
+		<record model="ir.ui.menu" id="stock.menu_stock_scrap">
+		    <field eval='False' name="active"/>
+		</record> 
+		
+		<record model="ir.ui.menu" id="stock.menu_procurement_compute">
+		    <field eval='False' name="active"/>
+		</record>  
+		
+		<record model="ir.ui.menu" id="stock.menu_procurement_compute">
+		    <field eval='False' name="active"/>
+		</record>   
+		  
+		<record model="ir.ui.menu" id="stock.menu_valuation">
+		    <field eval='False' name="active"/>
+		</record>
+		
+		<record model="ir.ui.menu" id="stock.menu_putaway">
+		    <field eval='False' name="active"/>
+		</record>     
+		
+		<record model="ir.ui.menu" id="stock.menu_reordering_rules_replenish">
+		    <field eval="[(6,0,[ref('base.group_no_one')])]" name="groups_id"/>
+		</record>
+	    
+	    <record model="ir.ui.menu" id="stock.menu_action_production_lot_form">
+		    <field name="name">Stack</field>
+		</record>
+		
+		<!--GOOD NOTE -->
+		<menuitem  
+           	id="menu_action_good_notes"
+           	name="Good Notes"
+           	parent="stock.menu_stock_warehouse_mgmt" sequence="1"/>
+
+	        <!-- grngrn -->  	
+			<menuitem 
+	           	id="menu_action_grn_receipt_sucden"
+	           	parent="menu_action_good_notes" 
+	           	action="action_grn_receipt_sucden"
+	           	sequence="170"/>
+	        
+	        <!-- GRN FOT -->  	
+	        <menuitem action="action_grn_fot_receipt_sucden" 
+	           	id="menu_action_grn_fot_receipt_sucden"
+	           	parent="menu_action_good_notes" sequence="180"/>
+	        
+	        <!-- GIP -->  	
+       		<menuitem action="action_material_issue" 
+	           	id="menu_action_material_issue"
+	           	parent="menu_action_good_notes" 
+	           	sequence="200"/>
+	      
+	      	<!-- GRP -->  	
+	      	<menuitem action="action_finished_good_receipt" 
+	           	id="menu_action_finished_good_receipt"
+	           	parent="menu_action_good_notes" sequence="230"/>
+	      	
+	      	<!-- GDN -->  
+	      	<menuitem action="action_gdns_good" 
+	           	id="menu_action_gdns_good"
+	           	parent="menu_action_good_notes" sequence="240"/>
+	        
+	        <!-- Material Receipt Note -->  
+	        <menuitem action="action_material_in_good" 
+	           	id="menu_action_material_in_good"
+	           	parent="menu_action_good_notes" sequence="250"/>
+	        
+	        
+	        <!-- Material Issuing Note -->  
+	        <menuitem action="action_material_out_good" 
+	           	id="menu_action_material_out_good"
+	           	parent="menu_action_good_notes" sequence="260"/>
+	      
+	      	<!-- ADJ-->
+	      	<menuitem action="action_adj_stock_good" 
+	           	id="menu_action_adj_stock_good"
+	           	parent="menu_action_good_notes" sequence="350"/>
+	        
+	        <!-- ADJ-->
+	      	<menuitem action="action_tranfers_in_stock_good" 
+	           	id="menu_action_tranfers_in_stock_good"
+	           	parent="menu_action_good_notes" sequence="370"/>
+	        
+	         <!-- ADJ-->
+	      	<menuitem action="action_tranfers_out_stock_good" 
+	           	id="menu_action_tranfers_out_stock_good"
+	           	parent="menu_action_good_notes" sequence="390"/>	    
+	    
+	    <!--Other  -->
+		<menuitem  
+           	id="menu_action_other_notes"
+           	name="Other"
+           	parent="stock.menu_stock_warehouse_mgmt" sequence="50"/>
+           	
+           	
+           	<menuitem id="menu_action_delivery_order_stock" 
+          		action="sd_sale_contract.action_delivery_order" 
+	        	parent="menu_action_other_notes" name="Delivery Orders"
+	        	groups="stock.group_stock_user"
+	        	sequence="10" />
+	        	
+           	 <menuitem name="Request Coffee Materials" 
+           	 	parent="menu_action_other_notes"
+		        id="menu_action_request_materials"
+		        action="action_request_materials"
+		        sequence="20"/>
+		     
+		     
+		     <menuitem action="action_request_stock_material" 
+		     	id="menu_action_request_stock_material_stock" 
+        		parent="menu_action_other_notes" 
+        		sequence="30"/>
+
+	        <menuitem id="menu_action_stock_storage_condition"
+                  action="action_stock_storage_condition" sequence="300"
+                  parent="menu_action_other_notes"
+                  groups="stock.group_stock_user"/>
+        
+        
+       		<!-- Purchase contract -->
+        	<!-- grn_fot -->
+        	 <!-- GRN -->  	
+				<menuitem 
+					sequence="10"
+		           	id="menu_action_purchase_grn_receipt_sucden"
+		           	parent="sd_purchase_contract.purchase_contract_root_good_menu" 
+		           	action="sd_inventory.action_grn_receipt_sucden"/>
+		        
+		        <!-- grn_quota_tem -->
+		        <menuitem id="menu_action_grn_quota_temp" 
+		         	action="action_grn_quota_temp" sequence="20"
+    				parent="sd_purchase_contract.purchase_contract_root_good_menu" 
+    				name="GRN QUOTA TEMP"/>
+    				
+    				
+	        	<menuitem action="action_grn_fot_receipt_sucden" 
+		            id="menu_action_grn_fot_receipt_sucden_purchase_contract"
+		            parent="sd_purchase_contract.purchase_contract_root_good_menu" sequence="25"/>
+	        	<!-- grn_quota -->
+	            <menuitem action="action_grn_quota_receipt_sucden" 
+		            id="menu_action_grn_quota_receipt_sucden_purchase_contract"
+		            parent="sd_purchase_contract.purchase_contract_root_good_menu" sequence="50"/>
+		        
+		        <menuitem 
+					sequence="110"
+		           	id="import_grn"
+		           	parent="sd_purchase_contract.purchase_contract_root_good_menu" 
+		           	action="sd_inventory.action_wizard_import_overtime"/>
+            
+          <!-- Report -->
+          
+	      	
+	      	
+	      	<menuitem id="menu_action_report_stock_material_report" 
+	            action="action_report_stock_material" sequence="110" 
+	            parent="stock.menu_warehouse_report"
+	            name="Material Stock Balance"/>
+	        
+	        
+	        <menuitem id="menu_action_request_materials_warehouse" 
+	            action="action_view_wizard_print_request_materials_form" sequence="110" 
+	            parent="stock.menu_warehouse_report"
+	            groups="stock.group_stock_manager,stock.group_stock_user"
+	            name="Print Request Materials"/>
+	        
+	        
+	        <menuitem 
+	        	id="menu_action_ned_stock_stack_transfer" 
+	        	action="action_ned_stock_stack_transfer" 
+	        	parent="stock.menu_stock_inventory_control" 
+	        	sequence="200"
+	        	groups="stock.group_stock_manager,stock.group_stock_user"
+	        	/>
+	        	
+      
+      
+           	
+    
+</odoo>

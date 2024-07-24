@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	
+    <data>
+		<record id="view_mrp_periodical_production_costing_tree" model="ir.ui.view">
+            <field name="name">mrp.periodical.production.costing.tree</field>
+            <field name="model">mrp.periodical.production.costing</field>
+            <field name="arch" type="xml">
+                <tree string="Periodical Costing">
+                	<field name="name"/>
+                	<field name="notes" widget="char"/>
+                	<field name="state"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id="view_mrp_periodical_production_costing_form" model="ir.ui.view">
+            <field name="name">mrp.periodical.production.costing.form</field>
+            <field name="model">mrp.periodical.production.costing</field>
+            <field name="arch" type="xml">
+                <form string="Periodical Costing">
+                    <header>
+	                	<button name="compute_cost" states="draft" string="Compute cost" type="object" class="oe_highlight"/>
+	                	<button name="printf_mo" string="Production reports" type="object"/>
+	                	<button name="import_price" string="Import Values" states="draft" type="object" class="oe_highlight" confirm="Are you sure want to Import" />
+	                	<button name="fifo_nvl" string="Fifo" type="object" states="draft" class="oe_highlight"/>
+	                	<button name="post" string="Post" states="draft"  type="object" confirm="Are you sure want to Post" />
+	                	<button name="post_done" string="Done" type="object" states="posted" confirm="Are you sure want to Post"/>
+	                	<button name="dieuchinh_values" string="Dieuchinh"  type="object" invisible="1"/>
+	                	<button name="cancel" string="Cancel"  type="object" />
+	                	<field name="state" widget="statusbar" statusbar_visible="draft,posted,done,cancel"/>
+	                </header>
+	                <sheet>
+	                	<div class="oe_title">
+	                        <h1>
+	                            <field name="name" placeholder="Period ..."/>
+	                        </h1>
+	                    </div>
+                    	<group col="4">
+                    		<field name="company_id"/>
+                    		<field name="warehouse_id"/>
+                    		<field name="company_currency_id"/>
+                        	<field name="premium_id"/>
+                        	<field name="total_cost"/>
+                        	<field name="notes" widget="char"/>
+                        	<field name="file" filename="file_name"/>
+                			<field name="file_name" invisible="1"/>
+	                    </group>
+	                    <notebook>	
+							<page string="Premium Line">
+								<field name="premium_ids">
+									<tree editable="top">
+	                    				<field name="product_id"/>
+	                    				<field name="product_uom"/>
+	                    				<field name="product_qty" sum="product_qty"/>
+	                    				<field name="premium"/>
+	                    				<field name="price"/>
+	                    				<field name="value" sum="value"/>
+	                    				<field name="company_currency_id" invisible="1"/>
+	                    			</tree>
+								</field>
+							</page>
+							<page string="Finished Good">
+								<field name="direct_cost_lines">
+									<tree string='Direct Cost Details'>
+                               			<field name="product_id"/>
+                               			<field name="init_qty" sum="init_qty"/>
+                               			<field name="produced_qty" sum="produced_qty"/>
+                               			<field name="product_uom_id"/>
+                               			<field name="price_unit" sum="Total" invisible="1"/>
+                               			<field name="price_subtotal" sum="Total" invisible="1"/>
+                               			<field name="company_currency_id" invisible="1"/>
+                               		</tree>
+                               		<form>
+		            					<sheet>
+		            						<group col="4">
+			            						<field name="product_id"/>
+					            				<field name="produced_qty"/>
+					            				<field name="price_unit"/>
+					            				<field name="price_subtotal"/>
+					            				<field name="price_subtotal" sum="Total"/>
+			            					</group>
+			            					<field name="fis_ids">
+			            						<tree>
+			            							<field name="picking_id"/>
+			            							<field name="product_id"/>
+			            							<field name="product_uom"/>
+			            							<field name="product_qty" sum="product_qty"/>
+			            							<field name="init_qty" sum="init_qty"/>
+			            						</tree>
+			            					</field>
+			            				</sheet>
+	            					</form>
+                               		
+								</field>
+								</page>
+								<page string="Direct Materials">
+									<field name="direct_materials_ids">
+										<tree>
+				            				<field name="product_id"/>
+				            				<field name="product_uom"/>
+				            				<field name="init_qty" sum="init_qty"/>
+				            				<field name="product_qty" sum="product_qty"/>
+				            				<field name="fifo_net_qty" sum="fifo_net_qty"/>
+					            			<field name="fifo_qty" sum="fifo_qty"/>
+				            				<field name="amount_fifo_qty" sum="amount_fifo_qty"/>
+				            				<field name="company_currency_id" invisible="1" />
+				            				<button name="fifo_nvl" string="Fifo" type="object"/>
+				            			</tree>
+				            			<form>
+		            					<sheet>
+		            						<group col="6">
+			            						<field name="product_id"/>
+					            				<field name="product_uom" string="UoM"/>
+					            				<newline/>
+					            				<field name="init_qty"/>
+					            				<field name="product_qty"/>
+					            				<newline/>
+					            				<field name="fifo_net_qty"/>
+					            				
+					            				<field name="fifo_qty"/>
+				            					<field name="amount_fifo_qty" />
+				            					<field name="company_currency_id" invisible="1"/>
+			            					</group>
+			            					<notebook>
+			            						<page string="NVL">
+					            					<field name="material_ids">
+					            						<tree>
+					            							<field name="notes"/>
+					            							<field name="origin"/>
+					            							<field name="product_id"/>
+					            							<field name="product_uom" string="UoM"/>
+					            							<field name="init_qty" sum="init_qty"/>
+					            							<field name="product_qty" sum="product_qty"/>
+					            						</tree>
+				            						</field>
+				            					</page>
+				            					<page string="FIFO">
+					            					<field name="allocation_ids">
+					            						<tree>
+					            							<field name="type"/>
+					            							<field name="in_date" string="Date"/>
+					            							<field name="from_origin"/>
+										                	<field name="warehouse_id" invisible='1'/>
+										                	<field name="location_id" invisible='1'/>
+															
+															<field name="allocated_date"/>
+															<field name="picking_id" invisible='1'/>
+										                    <field name="from_move_id" invisible='1'/>
+										                    <field name="to_move_id" invisible='1'/>
+										                    <field name="product_id"/>
+										                    <field name="uom_id"/>
+										                    <field name="net_qty" sum="net_qty" invisible="1"/>
+										                    <field name="allocated_qty" sum="allocated_qty"/>
+										                    <field name="allocated_value" sum="allocated_value"/>
+										                    <field name="price_vnd" sum="allocated_value" invisible="1"/>
+					            						</tree>
+					            					</field>
+				            					</page>
+			            					</notebook>
+			            				</sheet>
+	            					</form>
+									</field>
+								</page>
+								
+							<page string="Mo">
+                              	<field name="production_order_ids" nolabel='1'>
+                              		<tree string="MO Cost Collection">
+					                	<field name="name" string="Mo"/>
+										<field name="product_issued" string="NET Issue" sum="product_issued"/>
+										<field name="product_basis_issued" sum="product_basis_issued"/>
+										<field name="product_received" sum="product_received"/>
+					                	<field name="product_balance" sum="product_balance"/>
+					                	<field name="state" invisible=""/>
+					                </tree>
+				                </field>
+			                </page>
+			            </notebook>
+	                </sheet>
+                </form>
+            </field>
+        </record>
+        
+        <record id="action_periodical_production_costing" model="ir.actions.act_window">
+            <field name="name">Production Costing</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">mrp.periodical.production.costing</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id"/>
+        </record>
+        
+        
+	      		
+        
+        
+    </data>
+</odoo>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="report_psc_to_sc_link_tree_view" model="ir.ui.view">
+            <field name="name">report_psc_to_sc_link_tree_view</field>
+            <field name="model">report.psc.sc.link</field>
+            <field name="arch" type="xml">
+                <tree string="Report PSC to SC Linked" editable="top" edit="false" create="false" delete="false">
+                    <field name="p_number"/>
+                    <field name="p_qty" avg="p_qty"/>
+                    <field name="p_price"/>
+                    <field name="currency_uom"/>
+                    <field name="p_amount" sum="p_amount"/>
+                    <field name="shipping_instruction_id"/>
+                    <field name="s_contract_id"/>
+                    <field name="product_id"/>
+                    <field name="s_qty" sum="s_qty"/>
+                    <field name="allocated_qty" sum="allocated_qty"/>
+                    <field name="differential"/>
+                    <field name="packing_cost"/>
+                    <field name="certificate_premium"/>
+                    <field name="s_total_price"/>
+                    <field name="currency_uom_2nd"/>
+                    <field name="s_contract_amount" sum="s_contract_amount"/>
+                    <field name="currency_uom_3rd"/>
+<!--                    <field name="open_position"/>-->
+<!--                    <field name="open_position_value"/>-->
+                </tree>
+            </field>
+        </record>
+
+        <record id="report_psc_to_sc_link_search_view" model="ir.ui.view">
+            <field name="name">report_psc_to_sc_link_search_view</field>
+            <field name="model">report.psc.sc.link</field>
+            <field name="arch" type="xml">
+                <search string="Report PSC to SC Linked">
+                    <field name="p_number"/>
+                    <field name="shipping_instruction_id"/>
+                    <field name="s_contract_id"/>
+                    <field name="product_id"/>
+                    <group expand="1" string="Group By">
+                        <filter string="Item Name" name="product_id" domain="[]"
+                                context="{'group_by':'product_id'}"/>
+                        <filter string="PSC Number" name="p_number" domain="[]"
+                                context="{'group_by':'p_number'}"/>
+                        <filter string="SI" name="shipping_instruction_id" domain="[]"
+                                context="{'group_by':'shipping_instruction_id'}"/>
+                        <filter string="S Contract" name="s_contract_id" domain="[]"
+                                context="{'group_by':'s_contract_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="report_psc_to_sc_act_window" model="ir.actions.act_window">
+            <field name="name">Report PSC to SC Linked</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">report.psc.sc.link</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="report_psc_to_sc_link_search_view"/>
+            <field name="context">{'search_default_groupby_p_number': True, 'search_default_groupby_s_contract_id': True}</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    There is no examples click here to add new Report FOB Statement.
+                </p>
+            </field>
+        </record>
+
+</odoo>

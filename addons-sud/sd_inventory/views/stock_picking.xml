@@ -1,0 +1,559 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+		
+		
+		 <record id="vpicktree_inherit_add_allocated_total_qty" model="ir.ui.view">
+	        <field name="name">vpicktree.inherit.add.allocated.total.qty</field>
+	        <field name="model">stock.picking</field>
+	        <field name="inherit_id" ref="stock.vpicktree"/>
+	        <field name="arch" type="xml">
+	        	<xpath expr="//field[@name='state']" position="before">
+	        		<field name="qty_available" sum="qty_available"/>
+                    <field name="allocated_qty" sum="allocated_qty"/>
+                </xpath>
+
+				<xpath expr="//field[@name='name']" position="attributes">
+					<attribute name="invisible">context.get('fot', False)</attribute>
+				</xpath>
+                
+	        </field>
+	    </record>
+	    
+		
+	 <record id="view_picking_internal_search_sucden_inherit" model="ir.ui.view">
+        <field name="name">stock.picking.internal.search.sucden.inherit</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_internal_search"/>
+        <field name="arch" type="xml">
+			 <xpath expr="//field[@name='picking_type_id']" position="before">
+            	<field name="production_id"/>
+            	<field name="crop_id"/>
+            </xpath>
+            <xpath expr="//filter[@name='status']" position="after">
+            	<filter string="Crop" name="crop_id" domain="[]" context="{'group_by': 'crop_id'}"/>
+            </xpath>
+            
+        </field>
+    </record>
+    
+    <record id="vpicktree_inherit_add_total_qty" model="ir.ui.view">
+	        <field name="name">vpicktree.inherit.add.total.qty</field>
+	        <field name="model">stock.picking</field>
+	        <field name="inherit_id" ref="stock.vpicktree"/>
+	        <field name="arch" type="xml">
+	        	<xpath expr="//field[@name='state']" position="before">
+	        		<field name="zone_id"/>
+                    <field name="product_id"/>
+                    <field name="packing_id"/>
+                    <field name="lot_id"/>
+                    <field name="init_lot" invisible="not context.get('gip', False)"/>
+                    <field name="total_bag" sum="total_bag"/>
+                    <field name="total_init_qty" invisible="0" sum="total_init_qty" string="Net Weight"/> 
+                    <field name="total_qty" sum="total_qty" string="Basis Qty" invisible="1"/>
+                </xpath>
+                <xpath expr="//field[@name='scheduled_date']" position="before">
+                	<field name="date_done"/>
+                	<field name="vehicle_no" required="0"/>
+                </xpath>
+                
+                <xpath expr="//field[@name='name']" position="before">
+                	<field name="warehouse_id" />
+                </xpath>
+                <xpath expr="//field[@name='name']" position="after">
+                	<field name="crop_id" />
+                </xpath>
+                
+                <xpath expr="//field[@name='scheduled_date']" position="attributes">
+	          	  <attribute name="invisible">True</attribute>
+              	</xpath>
+              	
+              	<xpath expr="//tree" position="attributes">
+	          	  <attribute name="default_order">id desc</attribute>
+              	</xpath>
+                <xpath expr="//field[@name='name']" position="before">
+                    <field name="description_name"  optional="show" invisible="not context.get('fot', False)"/>
+                </xpath>
+                
+	        </field>
+	    </record>
+    	
+    
+	  <record id="view_picking_inherit_sucden_form" model="ir.ui.view">
+            <field name="name">view.picking.inherit.sucden.form</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="arch" type="xml">
+			
+				<xpath expr="//button[@name='action_confirm']" position="after">
+	            	<button name="button_qc_assigned" string="Router to QC"  states="draft"
+						type="object" class="oe_highlight" />
+					<button name="button_sd_validate" string="Validate"  states="assigned"
+						type="object" class="oe_highlight" />
+					
+					<button name="create_picking_transfers" type="object" string ="Create GTR" attrs="{'invisible': [('picking_type_code', '!=', 'transfer_out')]}"/>
+					<button name="btt_reopen_stock" string="Reopen Stock"  states="done"
+						type="object" class="oe_highlight" groups="sd_inventory.group_reopen_picking"/>
+					
+					
+               </xpath>
+               
+               <xpath expr="//button[@name='action_confirm']" position="attributes">
+	          	  <attribute name="invisible">1</attribute>
+              </xpath>
+              <xpath expr="//button[@name='button_validate']" position="attributes">
+	          	  <attribute name="invisible">1</attribute>
+              </xpath>
+              
+              <xpath expr="//button[@name='action_set_quantities_to_reservation']" position="attributes">
+	          	  <attribute name="invisible">1</attribute>
+              </xpath>
+               <xpath expr="//button[@name='action_clear_quantities_to_zero']" position="attributes">
+	          	  <attribute name="invisible">1</attribute>
+              </xpath>
+              
+              <xpath expr="//button[@name='button_scrap']" position="attributes">
+	          	  <attribute name="invisible">1</attribute>
+              </xpath>
+              <xpath expr="//button[@name='%(stock.act_stock_return_picking)d']" position="attributes">
+	          	  <attribute name="invisible">1</attribute>
+              </xpath>
+              
+              <xpath expr="//button[@name='action_toggle_is_locked']" position="attributes">
+	          	  <attribute name="invisible">1</attribute>
+              </xpath>
+              
+              <xpath expr="//button[@name='action_open_label_type']" position="attributes">
+	          	  <attribute name="invisible">1</attribute>
+              </xpath>
+              
+	              <xpath expr="//field[@name='date_done']" position="replace">
+	                  <field name="origin"/>
+		              <field name="date_done" string="Date of Transfer" required="1"/>
+		              <field name="crop_id" readonly="0"/>
+		        	  <field name="certificate_id" invisible="1"/>
+		        	  <field name="cert_type"/>
+		        	  <field name="pcontract_id"/>
+		        	  <field name="description_name" invisible="not context.get('fot')"/> 
+	              </xpath>
+	              <xpath expr="//field[@name='picking_type_id']" position="after">
+	              		<field name="warehouse_id" required="1"/>
+	              		<field name="to_warehouse_id" attrs="{'required':[('picking_type_code', '=', 'transfer_out')],'invisible': [('picking_type_code', '!=', 'transfer_out')]}"/>
+	              		<field name="picking_type_code" invisible="1"/>
+	                	<field name="certificate_id" />
+	                	<field name="districts_id" required="0" string="Nguồn Hàng"/>
+	                	<field name="vehicle_no" required="0"/>
+	                	<field name="trucking_id"/>
+	                	<field name="delivery_id" attrs="{'required':[('picking_type_code', '=', 'transfer_out')]}"/>
+	                	<field name="delivery_place_id"/>
+	                	
+	                </xpath>
+	             <!--   
+	             <xpath expr="//field[@name='picking_type_id']" position="attributes">
+                	<attribute name="domain">[('id', 'in', user._picking_type_domain())]</attribute>
+                </xpath>
+                -->
+	                
+               <xpath expr="//field[@name='origin']" position="attributes">
+	          	  <attribute name="invisible">True</attribute>
+              </xpath>
+              <xpath expr="//label[@for='partner_id']" position="attributes">
+	          	  <attribute name="string">Supplier</attribute>
+              </xpath>
+              
+              <xpath expr="//field[@name='date_deadline']" position="attributes">
+	          	  <attribute name="invisible">True</attribute>
+              </xpath>
+             
+            <xpath expr="//page[@name='detailed_operations']" position="replace">
+            	<page string="Detailed Operations" name="detailed_operations">
+            		<field name="move_line_ids_without_package"  attrs="{'readonly': [('state', '=', 'done')]}"
+	            		context="{'tree_view_ref': 'stock.view_stock_move_line_detailed_operation_tree', 'default_picking_id': id, 'default_location_id': location_id, 
+	            			'default_location_dest_id': location_dest_id, 'default_company_id': company_id}"/>
+            	</page>
+            </xpath>
+              <xpath expr="//field[@name='move_ids_without_package']/tree/field[@name='product_uom_qty']" position="before">
+					<button name="%(sd_inventory.action_view_create_stock_stack)d" 
+	                      string="Create stack" type="action"
+	                      states="draft,waiting,confirmed,assigned"
+	                      groups="stock.group_stock_user" invisible="0"/>
+					<field name="packing_id"/>
+					<field name="first_weight" sum="first_weight"/>
+					<field name="second_weight" sum="second_weight" />
+					<field name="bag_no"/>
+					<field name="init_qty"/>
+				</xpath>
+            </field>
+        </record>
+        
+        
+        <record id="action_grn_receipt_sucden" model="ir.actions.act_window">
+            <field name="name">GRN</field>
+            <field name="res_model">stock.picking</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('cert_type','=',False),('picking_type_id.code','=','incoming'),'|',('picking_type_id.operation','=','factory'),('picking_type_id.operation','=',False)]</field>
+            <field name="search_view_id" ref="stock.view_picking_internal_search"/>
+            <field name="context" eval="{'picking_grn_Goods':True, 'picking_type_id': 'incoming'}"/>
+        </record>
+        <!-- 
+      	<GIP
+      -->
+      	<record id="view_picking_tree_gip_good_tree" model="ir.ui.view">
+            <field name="name">view.picking.tree.gip.good.tree</field>
+            <field name="model">stock.picking</field>
+            <field name="arch" type="xml">
+                <tree default_order="id desc"
+                	decoration-info="state == 'draft'" 
+                	decoration-muted="state == 'cancel'" decoration-danger="state not in ('cancel', 'done') and date_done &lt; current_date" string="Picking list">
+                    <field name="production_id"/>
+                    
+                    <field name="name"/>
+                    <field name="origin"/>
+                    <field name="date_done" />
+                    <field name="zone_id"/>
+                    <field name="lot_id"/>
+                    <field name="product_id"/>
+                    <field name="packing_id"/>
+                    <field name="total_bag"/>
+                    <field name="total_init_qty" invisible="0" sum="total_init_qty" string="Net Weight"/> 
+                    <field name="total_qty" sum="total_qty" string="Basis Qty" invisible="1"/>
+                    <field name="note"/>
+                    <field name="state"/>
+                    <!--
+                    <field name="state_kcs"/>
+                    -->
+                    <field name="picking_type_id" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+      
+        <record id="action_material_issue" model="ir.actions.act_window">
+            <field name="name">GIP</field>
+            <field name="res_model">stock.picking</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('picking_type_id.code','=','production_out')])</field>
+            <field name="search_view_id" ref="stock.view_picking_internal_search"/>
+            <field name="context">{'gip': True}</field>
+        </record>
+        
+        <record model="ir.actions.act_window.view" id="action_gip_good_view">
+            <field name="sequence" eval="50"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_picking_tree_gip_good_tree"/>
+            <field name="act_window_id" ref="action_material_issue"/>
+        </record>
+        
+        <record model="ir.actions.act_window.view" id="action_gip_good_form">
+            <field name="sequence" eval="50"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="stock.view_picking_form"/>
+            <field name="act_window_id" ref="action_material_issue"/>
+        </record>
+        
+      <!-- 
+      	<GRP
+      -->
+      <record id="view_picking_tree_grp_good_tree" model="ir.ui.view">
+            <field name="name">view.picking.tree.grp.good.tree</field>
+            <field name="model">stock.picking</field>
+            <field name="arch" type="xml">
+                <tree default_order="id desc"
+                	decoration-info="state == 'draft'" 
+                	decoration-muted="state == 'cancel'" decoration-danger="state not in ('cancel', 'done') and date_done &lt; current_date" string="Picking list">
+                    <field name="warehouse_id"/>
+                    <field name="production_id"/>
+                    <field name="name"/>
+                    <field name="origin"/>
+                    <field name="date_done" />
+                    <field name="zone_id"/>
+                    <field name="lot_id"/>
+                    <field name="product_id"/>
+                    <field name="packing_id"/>
+                    <field name="total_bag"/>
+                    <field name="total_init_qty" invisible="0" sum="total_init_qty" string="Net Weight"/> 
+                    <field name="total_qty" sum="total_qty" string="Basis Qty" invisible="1"/>
+                    <field name="note"/>
+                    <field name="state"/>
+                    <!--
+                    <field name="state_kcs"/>
+                    -->
+                    <field name="picking_type_id" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+		
+		<record id="action_finished_good_receipt" model="ir.actions.act_window">
+            <field name="name">GRP</field>
+            <field name="res_model">stock.picking</field>
+            <field name="view_mode">tree,form,graph</field>
+            <field name="domain">[('picking_type_id.code','=','production_in')]</field>
+            <field name="search_view_id" ref="stock.view_picking_internal_search"/>
+            <field name="context" eval="{'picking_grp_Goods':True}"/>
+        </record>
+        
+        <record model="ir.actions.act_window.view" id="action_grp_good_view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_picking_tree_grp_good_tree"/>
+            <field name="act_window_id" ref="action_finished_good_receipt"/>
+        </record>
+        
+        <record model="ir.actions.act_window.view" id="action_grp_good_form">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="stock.view_picking_form"/>
+            <field name="act_window_id" ref="action_finished_good_receipt"/>
+        </record>
+        
+        <!-- GDN
+        
+        -->
+        
+        <record id="view_picking_tree_gdn_good" model="ir.ui.view">
+            <field name="name">view.picking.tree.gdn.good</field>
+            <field name="model">stock.picking</field>
+            <field name="arch" type="xml">
+                <tree decoration-info="state == 'draft'" default_order="id desc"
+		                	decoration-muted="state == 'cancel'" 
+		                	decoration-danger="state not in ('cancel', 'done') and date_done &lt; current_date" string="Picking list">
+                    <field name="name"/>
+                    <field name="origin"/>
+                    <field name="date_done"/>
+                    <field name="zone_id"/>
+                    <field name="lot_id"/>
+                    <field name="date" invisible="1"/>
+                    <field name="partner_id" invisible="1"/>
+                    <field name="product_id"/>
+                    <field name="total_init_qty" invisible="0" string="Total Stock Qty" sum="total_init_qty"/> 
+                    <!-- <field name="total_weighbridge_qty" string="Total Net Qty" sum="total_weighbridge_qty" invisible="1"/> -->
+                    <field name="total_qty" sum="total_qty" string="Basis Qty" invisible="1"/>
+                    <field name="state"/>
+                    <field name="picking_type_id" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id="action_gdns_good" model="ir.actions.act_window">
+            <field name="name">GDN</field>
+            <field name="res_model">stock.picking</field>
+            <field name="view_mode">tree,form,graph</field>
+            <field name="domain">[('picking_type_id.code','=','outgoing')]</field>
+            <field name="context">{'warehouse_receipt': True}</field>
+            <field name="search_view_id" ref="stock.view_picking_internal_search"/>
+        </record>
+        
+        <record model="ir.actions.act_window.view" id="action_gdn_good_view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_picking_tree_gdn_good"/>
+            <field name="act_window_id" ref="action_gdns_good"/>
+        </record>
+        
+        <record model="ir.actions.act_window.view" id="action_gdn_good_form">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="stock.view_picking_form"/>
+            <field name="act_window_id" ref="action_gdns_good"/>
+        </record>
+        
+        <record id="action_adj_stock_good" model="ir.actions.act_window">
+            <field name="name">ADJ-Stock</field>
+            <field name="res_model">stock.picking</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('picking_type_id.code','=','phys_adj')]</field>
+            <field name="context">{'warehouse_receipt': True}</field>
+            <field name="search_view_id" ref="stock.view_picking_internal_search"/>
+            <field name="context" eval="{'search_by_field_date': ['day_tz']}"/>
+        </record>
+        
+        <record model="ir.actions.act_window.view" id="action_adj_good_view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_picking_tree_gdn_good"/>
+            <field name="act_window_id" ref="action_adj_stock_good"/>
+        </record>
+        
+        <record model="ir.actions.act_window.view" id="action_gdn_good_form">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="stock.view_picking_form"/>
+            <field name="act_window_id" ref="action_adj_stock_good"/>
+        </record>
+        
+        <!-- -->
+        <record id="action_tranfers_in_stock_good" model="ir.actions.act_window">
+            <field name="name">Tranfers-In</field>
+            <field name="res_model">stock.picking</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('picking_type_id.code','=','transfer_in')]</field>
+            <field name="context">{'warehouse_receipt': True}</field>
+            <field name="search_view_id" ref="stock.view_picking_internal_search"/>
+            <field name="context" eval="{'search_by_field_date': ['day_tz']}"/>
+        </record>
+        
+        <record model="ir.actions.act_window.view" id="action_tranfers_in_good_view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_picking_tree_gdn_good"/>
+            <field name="act_window_id" ref="action_tranfers_in_stock_good"/>
+        </record>
+        
+        <record model="ir.actions.act_window.view" id="action_tranfers_in_good_form">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="stock.view_picking_form"/>
+            <field name="act_window_id" ref="action_tranfers_in_stock_good"/>
+        </record>
+        
+        <record id="action_tranfers_out_stock_good" model="ir.actions.act_window">
+            <field name="name">Tranfers-Out</field>
+            <field name="res_model">stock.picking</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('picking_type_id.code','=','transfer_out')]</field>
+            <field name="search_view_id" ref="stock.view_picking_internal_search"/>
+            <field name="context" eval="{'transfer_out':True,'search_by_field_date': ['day_tz']}"/>
+        </record>
+        
+        <record model="ir.actions.act_window.view" id="action_tranfers_out_good_view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_picking_tree_gdn_good"/>
+            <field name="act_window_id" ref="action_tranfers_out_stock_good"/>
+        </record>
+        
+        <record model="ir.actions.act_window.view" id="action_tranfers_in_good_form">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="stock.view_picking_form"/>
+            <field name="act_window_id" ref="action_tranfers_out_stock_good"/>
+        </record>
+        <!---->
+        
+       <!--
+       	GRN FOT
+       -->
+        <record id="action_grn_fot_receipt_sucden" model="ir.actions.act_window">
+            <field name="name">GRN FOT</field>
+            <field name="res_model">stock.picking</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('picking_type_id.code','=','incoming'),('picking_type_id.operation','=','station')]</field>
+            <field name="search_view_id" ref="stock.view_picking_internal_search"/>
+            <field name="context" eval="{'picking_grn_Goods':True,'fot':True}"/>
+        </record>
+        
+        <!--
+       	GRN QUOTA
+       -->
+        <record id="action_grn_quota_receipt_sucden" model="ir.actions.act_window">
+            <field name="name">GRN QUOTA</field>
+            <field name="res_model">stock.picking</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('cert_type','=','quota'),('picking_type_id.code','=','incoming'),'|',('picking_type_id.operation','=','factory'),('picking_type_id.operation','=',False)]</field>
+            <field name="search_view_id" ref="stock.view_picking_internal_search"/>
+            <field name="context" eval="{'search_by_field_date': ['day_tz'], 'picking_grn_Goods': True, 'default_cert_type':'quota'}"/>
+        </record>
+        
+        <!--
+        	Material Receipt Note
+        -->
+        
+        <record id="view_picking_tree_material_good" model="ir.ui.view">
+            <field name="name">view.picking.tree.material.good</field>
+            <field name="model">stock.picking</field>
+            <field name="arch" type="xml">
+                <tree decoration-info="state == 'draft'" decoration-muted="state == 'cancel'" decoration-danger="state not in ('cancel', 'done') and date_done &lt; current_date" string="Picking list">
+                    <field name="warehouse_id"/>
+                    <field name="name"/>
+                    <field name="origin" invisible="1"/>
+                    <field name="date_done" invisible="0"/>
+                    <field name="zone_id" invisible="1"/>
+                    <field name="lot_id" invisible="1"/>
+                    <field name="product_id"/>
+                    <!-- <field name="total_weighbridge_qty" string="Real Qty" sum="total_weighbridge_qty" invisible="1"/> -->
+                    <field name="total_init_qty" invisible="0" string="Quantity" sum="total_init_qty"/>
+                    <field name="note"/>
+                    <field name="create_uid" string="User Name"/>
+                    <field name="total_qty" sum="total_qty" string="Basis Qty" invisible="1"/>
+                    <field name="state"/>
+                    <field name="picking_type_id" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+        
+        
+		<record id="action_material_in_good" model="ir.actions.act_window">
+            <field name="name">Material Receipt Note</field>
+            <field name="res_model">stock.picking</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('picking_type_id.code','=','material_in')]</field>
+            <field name="context">{'material_in': True}</field>
+            <field name="search_view_id" ref="stock.view_picking_internal_search"/>
+        </record>
+        
+        <record model="ir.actions.act_window.view" id="action_material_in_good_view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_picking_tree_material_good"/>
+            <field name="act_window_id" ref="action_material_in_good"/>
+        </record>
+        
+        <record model="ir.actions.act_window.view" id="aaction_material_in_good_form">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="stock.view_picking_form"/>
+            <field name="act_window_id" ref="action_material_in_good"/>
+        </record>
+        
+		
+		<!-- 
+        Material Issuing Note
+        -->
+        <record id="action_material_out_good" model="ir.actions.act_window">
+            <field name="name">Material Issuing Note</field>
+            <field name="res_model">stock.picking</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('picking_type_id.code','=','material_out')]</field>
+            <field name="context">{'material_out': True}</field>
+            <field name="search_view_id" ref="stock.view_picking_internal_search"/>
+        </record>
+        
+        <record model="ir.actions.act_window.view" id="action_gmo_good_view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_picking_tree_material_good"/>
+            <field name="act_window_id" ref="action_material_out_good"/>
+        </record>
+        
+        <record model="ir.actions.act_window.view" id="action_gmo_good_form">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="stock.view_picking_form"/>
+            <field name="act_window_id" ref="action_material_out_good"/>
+        </record>
+        
+        
+        <record id="action_grn_quota_temp" model="ir.actions.act_window">
+            <field name="name">GRN Quota Temp</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">stock.picking</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('cert_type','=','normal'), ('is_quota_temp', '=', True), 
+            	('picking_type_id.code','=','incoming'),'|',('picking_type_id.operation','=','factory'),
+            	('picking_type_id.operation','=',False)]</field>
+            <field name="context">{'search_by_field_date': ['day_tz'], 'default_is_quota_temp': True, 'picking_grn_Goods': True, 'default_cert_type':'normal'}</field>
+            <field name="search_view_id" ref="stock.view_picking_internal_search"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+              		Create a GRN quota Temp, the first step of a new GRN.
+              </p>
+            </field>
+        </record>
+       
+              
+        
+     
+        
+
+    </data>
+</odoo>

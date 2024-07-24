@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_form_stock_contract_allocation_inherit_sucden_vn" model="ir.ui.view">
+            <field name="name">view_form_stock_contract_allocation_inherit_sucden_vn</field>
+            <field name="model">stock.contract.allocation</field>
+            <field name="inherit_id" ref="sd_quality.view_form_stock_contract_allocation"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='allocating_quantity']" position="after">
+                    <field name="note"/>
+                    <field name="sample_lot"/>
+                </xpath>
+            </field>
+    </record>
+
+    <record id="view_tree_stock_contract_allocation_inherit_sucden_vn" model="ir.ui.view">
+            <field name="name">view_tree_stock_contract_allocation_inherit_sucden_vn</field>
+            <field name="model">stock.contract.allocation</field>
+            <field name="inherit_id" ref="sd_quality.view_tree_stock_contract_allocation"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='allocating_quantity']" position="after">
+                    <field name="note"/>
+                    <field name="sample_lot"/>
+                </xpath>
+            </field>
+    </record>
+</odoo>

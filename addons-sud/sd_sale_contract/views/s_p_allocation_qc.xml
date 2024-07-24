@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    	
+    	<record id="view_sale_contract_form_allocate_sp" model="ir.ui.view">
+            <field name="name">view.sale.contract.form.allocate.sp</field>
+            <field name="model">sale.contract</field>
+            <field name="arch" type="xml">
+            <form string="S - P Allocation">
+                <header>
+                    <button name="allocate_sp" string="Approve" class="oe_highlight" type="object" states="draft"/>
+                    <button name="qc_confirm" string="QC Confirm" type="object" attrs="{'invisible': [('confirm_qc', '=', True)]}"/>
+                    <button name="refuse_qc_confirm" string="Refuse QC Confirm"  type="object" attrs="{'invisible': [('confirm_qc', '=', False)]}"/>
+					                    
+                    <field name="state" widget="statusbar" statusbar_visible="draft,approved,invoice"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                    <h1>
+                        <field name="name"/>
+                    </h1>
+                    </div>
+                        <group col="4" colspan="4">
+                                <group col="2" colspan="2">
+                                        <field name="shipping_id" on_change="onchange_si_id(shipping_id)" string="Shipment No."/>
+                                        <field name="partner_id" domain="[('customer_rank','=',True),('type','=','company')]" string="Buyer" readonly="1"/>
+                                        <field name="p_quality"/>
+                                        <field name="certificate_id"/>
+                                        <field name="si_qty_contract" readonly="0"/>
+                                        <field name="s_allocated_qty" readonly="0"/>
+                                        <field name="s_unallocate_qty" readonly="0"/>
+                                        <field name="scontract_id" on_change="onchange_scontract_id(scontract_id)" invisible="1"/>
+                                </group>
+                                <group col="2" colspan="2">
+                                        <field name="shipment_date"/>
+                                        <field name="status" readonly="1"/>
+                                        <field name="si_bag_contract" readonly="0"/>
+                                        <field name="s_allocated_bag" readonly="0"/>
+                                        <field name="s_unallocate_bag" readonly="0"/>
+                                        <field name="product_id"/>
+                                        <field name="product_id1"/>
+                                        <field name="product_id2"/>
+
+                                        <field name="confirm_qc" readonly="1"/>
+                   						<field name="confirm_date" readonly="1"/>
+                   
+                   
+
+                                        <field name="currency_id" invisible="1"/>
+                                        <field name="total_qty" invisible="1"/>
+                                        <field name="type" invisible="1"/>
+                                </group>
+                        </group>
+                        <group>
+                            <field name="detail_ids" nolabel="1" colspan="4" context="{'default_state':'draft'}">
+                                <tree editable="top">
+                                        <field name="p_contract_id" attrs="{'readonly': [('state','=','approve')]}" string="P Contract" 
+                                        domain="['|','|',('standard_id', '=', parent.product_id),('standard_id', '=', parent.product_id1),('standard_id', '=', parent.product_id2)]"/>
+                                        <!-- err
+                                        <field name="stack_id" string="WR No." attrs="{'readonly': [('state','=','approve')]}" 
+                                        	domain="['|','|',('product_id', '=', parent.product_id),('product_id', '=', parent.product_id1),('product_id', '=', parent.product_id2),('warehouse_id','=',warehouse_id)]"/>
+										-->
+										<field name="p_contract_id" attrs="{'readonly': [('state','=','approve')]}" string="P Contract" />
+										
+										<!-- err
+										<field name="x_stk_code"/>
+										-->
+                                        <field name="shipper_id" attrs="{'readonly': [('state','=','approve')]}"/>
+                                        <field name="name" attrs="{'readonly': [('state','=','approve')]}"/>
+                                        <field name="scertificate_id" attrs="{'readonly': [('state','=','approve')]}"/>
+                                        <field name="p_qty" string="P Quantity" attrs="{'readonly': [('state','=','approve')]}" sum="P Qty"/>
+                                       
+                                        <field name="tobe_qty" attrs="{'readonly': [('state','=','approve')]}" sum="To be Allocate Qty"/>
+                                        <field name="tobe_bag" attrs="{'readonly': [('state','=','approve')]}" sum="To be Allocate Bags"/>
+                                        <field name="balance_qty" attrs="{'readonly': [('state','=','approve')]}" sum="Balance Qty"/>
+                                        <field name="x_bag_qty" attrs="{'readonly': [('state','=','approve')]}" sum="Balance Bags"/>
+                                        <field name="warehouse_id" attrs="{'readonly': [('state','=','approve')]}"/>
+                                        <button name="btn_approve" string="Confirm" type="object" states="draft"/>
+                                        <field name="allocated_qty" string="Real Qty" sum="Real Qty"/>
+                                        <field name="x_gd_qty" sum="Inspection Qty"/>
+                                        <field name="state" invisible="0"/>
+                                        <field name="confirm_date"/>
+                                        <field name="sp_id" invisible="1"/>
+                                        <field name="stack_on_hand"/>
+                                </tree>
+                            </field>
+                            <field name="lot_no"/>
+                            <field name="warehouse_id"/>
+                            <field name="picking_id" string="GDN"/>
+                            <field name="x_is_bonded" invisible="1"/>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter" groups="base.group_no_one">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                    
+                </form>
+            </field>
+        </record>
+	        
+	        
+	        
+        <record id="view_sale_contract_tree_allocate_sp_qc_confirm" model="ir.ui.view">
+	        <field name="name">view_sale_contract_tree_allocate_sp_qc_confirm</field>
+	        <field name="model">sale.contract</field>
+	        <field name="arch" type="xml">
+				<tree string="Contract List"
+				default_order="id desc">
+					<field name="state"/>
+					<field name="warehouse_id"/>
+                    <field name="name" string="Allocation ID"/>
+					<field name="shipping_id"/>
+					<field name="si_qty_contract"/>
+					<field name="scontract_id"/>
+					<field name="shipt_month" optional="show"/>
+					
+                    <field name="product_id"/>
+                    <field name="product_id1"/>
+                    <field name="p_quality" optional="show"/>
+					<field name="scertificate_id" optional="show"/>
+					<field name="nominated_etd"/>
+					<field name="bill_date" string="ETD/ BL date"/>
+					<field name="booking_ref_no" string="Booking No./ BL No."/>
+					<field name="packing_id"/>
+					
+                    <field name="partner_id"/>
+                    <field name="x_p_allocate" string="P No."/>
+<!--                    <field name="contract_p_id"/>-->
+					<field name="supplier_id" invisible="1"/>
+                    <field name="request_qty" string="Quantity" invisible="1"/>
+                    <field name="create_date"/>
+                    <field name="confirm_date"/>
+                    <field name="confirm_qc"/>
+                   
+                </tree>
+			</field>
+		</record>
+				
+	<record id="action_sale_contract_allocate_sp_qc_confirm" model="ir.actions.act_window">
+            <field name="name">S - P Allocation (QC Confirmed)</field>
+            <field name="res_model">sale.contract</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('confirm_qc','!=',False)]</field>
+            <field name="context">{'create': False}</field>
+            <field name="search_view_id" ref="sd_sale_contract.sale_contract_search"/>
+            <field name="help" type="html">
+            	<p class="oe_view_nocontent_create">
+					Create a S - P allocation, the first step of a new S - P allocation.
+				</p>
+            </field>
+        </record>
+    
+
+    </data>
+</odoo>

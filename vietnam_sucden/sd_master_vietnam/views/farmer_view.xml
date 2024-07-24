@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+     <record id="action_farmer_view" model="ir.actions.act_window">
+        <field name="name">Farmer</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.partner</field>
+         <field name="domain">[('is_farmer', '=', True)]</field>
+         <field name="context">{'default_is_farmer': True}</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_farmer"
+            name="Farmer"
+            action="action_farmer_view"
+            parent="sd_master.menu_master_contact_sucden_root"
+            sequence="150"/>
+</odoo>

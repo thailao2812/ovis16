@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="ned_certificate_license_form_view_inherit_india" model="ir.ui.view">
+        <field name="name">ned_certificate_license_form_view_inherit_india</field>
+        <field name="model">ned.certificate.license</field>
+        <field name="inherit_id" ref="sd_pur_sales.ned_certificate_license_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="estate_name"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="ned_certificate_license_tree_view_view_inherit_india" model="ir.ui.view">
+        <field name="name">ned_certificate_license_form_view_inherit_india</field>
+        <field name="model">ned.certificate.license</field>
+        <field name="inherit_id" ref="sd_pur_sales.ned_certificate_license_tree_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="replace">
+                <tree string="Certificate Licenses" decoration-danger="state == 'expired'" decoration-muted="state == 'deactive'">
+                        <field name="certificate_id"/>
+                        <field name="name"/>
+                        <field name="crop_id"/>
+                        <field name="partner_id"/>
+                        <field name="estate_name"/>
+                        <field name="expired_date"/>
+                        <field name="remark_cert"/>
+                        <field name="state"/>
+                        <field name="quota"/>
+                        <field name="available_amount"/>
+                        <field name="purchased_amount"/>
+                        <field name="sales_amount"/>
+                </tree>
+            </xpath>
+        </field>
+    </record>
+</odoo>

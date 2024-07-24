@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_shipping_instruction_add_page_certificate_allocation_form_inherit_sd_vietnam" model="ir.ui.view">
+		        <field name="name">view_shipping_instruction_add_page_certificate_allocation_form_inherit_sd_vietnam</field>
+		        <field name="model">shipping.instruction</field>
+		        <field name="inherit_id" ref="sd_pur_sales.view_shipping_instruction_add_page_certificate_allocation_form"/>
+		        <field name="arch" type="xml">
+					<xpath expr="//field[@name='license_allocation_ids']/tree/field[@name='shipping_id']" position="after">
+                        <field name="warehouse_id"/>
+                        <field name="date_etd"/>
+					</xpath>
+					<xpath expr="//field[@name='prodcompleted']" position="after">
+						<field name="process_state"/>
+					</xpath>
+
+		        </field>
+		    </record>
+</odoo>

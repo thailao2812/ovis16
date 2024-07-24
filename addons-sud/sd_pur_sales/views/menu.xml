@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+		<!--
+		<menuitem id="ned_certificate_license_sale_contract_menu" 
+      		action="action_ned_certificate_license" 
+      		sequence="20"
+            parent="sd_sale_contract.menu_master_data_contract" 
+            name="Certificate License"
+            groups="sd_sale_contract.group_sales_contract_user"/>
+        -->
+        
+        <menuitem id="ned_certificate_license_purchase_contract_menu" 
+      		action="action_ned_certificate_license" 
+      		sequence="25"
+            parent="sd_purchase_contract.purchase_contract_root_master_data_menu" 
+            name="Certificate License"
+            groups="sd_purchase_contract.group_purchase_contract_user,base.group_user"/>
+        
+        
+        <menuitem id="action_daily_confirmation_purchase_contract_menu" 
+      		action="sd_sale_contract.action_daily_confirmation" 
+      		sequence="20"
+            parent="sd_purchase_contract.purchase_contract_root_master_data_menu" 
+            groups="sd_purchase_contract.group_purchase_contract_user,base.group_user"/>
+    
+</odoo>

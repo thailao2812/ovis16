@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_api_synchronize_data_user,api.synchronize.data.user,model_api_synchronize_data,base.group_user,1,1,1,1
+access_api_synchronize_data_line_user,access_api_synchronize_data_line_user,model_api_synchronize_data_line,base.group_user,1,1,1,1
+access_api_synchronize_data_config_user,api.synchronize.data.config.user,model_api_synchronize_data_config,base.group_user,1,1,1,1
+access_api_synchronize_data_config_line_user,api.synchronize.data.config.line.user,model_api_synchronize_data_config_line,base.group_user,1,1,1,1
+access_api_synchronize_domain_config_user,api.synchronize.domain.config.user,model_api_synchronize_domain_config,base.group_user,1,1,1,1

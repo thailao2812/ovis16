@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    	
+    	<record id="view_fob_manager_search" model="ir.ui.view">
+            <field name="name">view.fob.manager.search</field>
+            <field name="model">fob.management</field>
+            <field name="arch" type="xml">
+                <search string="FOB Manager search">
+                	<field name="name" string="Lot"/>
+                	<field name="x_traffic_contract_id"/>
+					<field name="pcontract_id"/>
+					<field name="x_p_contract_name"/>
+					
+                    <field name="product_id"/>
+                    <field name="customer_id"/>
+					<field name="shipper_id"/>
+                    <group expand="1" string="Group By">
+                    	<filter string="S Contract" name ="filter_scontract_id" domain="[]" context="{'group_by':'scontract_id'}"/>
+						<filter string="P Contract" name ="filter_pcontract_id"  domain="[]" context="{'group_by':'pcontract_id'}"/>
+                    	<filter string="Product" name ="filter_product_id"  domain="[]" context="{'group_by':'product_id'}"/>
+                    	<filter string="Customer" name ="filter_customer_id"  domain="[]" context="{'group_by':'customer_id'}"/>
+                	</group>
+                </search>
+            </field>
+        </record>
+        
+        
+		<record id="view_fob_manager_tree" model="ir.ui.view">
+            <field name="name">view.fob.manager.tree</field>
+            <field name="model">fob.management</field>
+            <field name="arch" type="xml">
+            	<!-- err
+                <tree string="FOB Management" editable="top" attrs="{'readonly': [('state', '=', 'approve')]}" decoration-info="state == 'draft'" decoration-muted="state == 'approve'">
+                -->
+                <tree string="FOB Management" editable="top" default_order="id desc">
+                	<!-- <button name="get_qc" string="Load" class="oe_highlight" type="object" attrs="{'readonly': [('state', '=', 'approve')]}" groups="general_kcs.group_kcs_manager,sd_quality.group_kcs_user"/> -->
+                	<button name="btt_confirm" string="Confirm" class="oe_highlight" type="object" attrs="{'invisible': [('state', '=', 'approve')]}" groups="sd_quality.group_kcs_manager,sd_quality.group_kcs_user"/>
+                	<button name="btt_draft" string="S.T.Draft" type="object" attrs="{'invisible': [('state', '!=', 'approve')]}" groups="sd_quality.group_kcs_manager"/>
+					<field name="file" widget="binary"  filename="file_name"/>
+					<field name="file_name" invisible="1"/>
+					<field name="lot_date" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                	<field name="name" readonly="0" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                    <field name="lot_sucden" required="0" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                    <field name="contract_no" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                    <field name="shiping_line" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+					<field name="scontract_id" attrs="{'readonly': [('state', '=', 'approve')]}" invisible="1"/>
+                    <field name="x_traffic_contract_id"/>
+                    
+					<field name="pcontract_id" attrs="{'readonly': [('state', '=', 'approve')]}" invisible="1"/>
+                    <field name="x_p_contract_name" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                    <field name="x_p_contract_ids" attrs="{'readonly': [('state', '=', 'approve')]}" widget="many2many_tags" />
+                    <field name="stack_on_hand" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                    <field name="shipper_id" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                    
+                    <field name="x_stuff_place_id" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+					<field name="stuff_place" attrs="{'readonly': [('state', '=', 'approve')]}" invisible="1"/>
+					<field name="customer_id" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                    <field name="product_id" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+					<field name="packing_id" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+					<field name="port_of_destination"/>
+					<field name="qty_scontract" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+					<field name="real_qty_scontract" readonly="1"/>
+					<field name="net_qty" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+					<field name="real_container" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                    <field name="mc" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+					<field name="fm" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+					<field name="black" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+					<field name="broken" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+					<field name="brown" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+					<field name="mold" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+					<field name="screen20" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+					<field name="screen19" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+					<field name="screen18" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+					<field name="screen17" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+					<field name="screen16" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+					<field name="screen15" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+					<field name="screen14" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+					<field name="screen13" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+					<field name="screen12" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+					<field name="bscreen12" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+					<field name="burn" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+					<field name="excelsa" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+					<field name="insect" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+					<field name="defects" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+					<field name="bulk_density" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                    <field name="cup_taste"/>
+					<field name="inspect_sampler" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+					<field name="sup_suc" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                    <field name="x_fumi"/>
+					<field name="remark"/>
+                    <field name="x_quality_claim"/>
+                    <field name="weight_claim"/>
+                    <field name="x_reoclaim"/>
+                    <field name="x_claim_date"/>
+                    <field name="state" invisible="1"/>
+<!--                    <field name="p_on_hand"/>-->
+                </tree>
+            </field>
+        </record>
+
+    	<record id="action_fob_manager" model="ir.actions.act_window">
+            <field name="name">FOB Management</field>
+            <field name="res_model">fob.management</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{}</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+              		Create a Fob Management, the first step of a new Fob Management.
+              </p>
+            </field>
+        </record>
+    
+    	
+    	
+    </data>
+</odoo>

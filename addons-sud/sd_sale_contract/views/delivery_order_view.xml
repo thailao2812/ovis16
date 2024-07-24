@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    
+    	<!-- Delivery Orders -->
+        <record id="view_delivery_order_tree" model="ir.ui.view">
+            <field name="name">delivery.order.tree</field>
+            <field name="model">delivery.order</field>
+            <field name="arch" type="xml">
+                <tree string="Delivery Orders" decoration-info="state == 'draft'" decoration-muted="state == 'cancel'" decoration-danger="state not in ('cancel','done')">
+                    <field name="name" string="DO No."/>
+                    <field name="date" string="DO Date"/>
+                    
+                    <field name="date_invoice"/>
+					<field name="certificate_id"/>
+					
+                    <field name="shipping_id"/>
+                    <field name="contract_id" string="NVS-NLS"/>
+                    <field name="product_id"/>
+                    <field name="total_qty" sum="total_qty"/>
+                    
+                    
+                    <field name="packing_id" string="Packing"/>
+	        		<field name="from_warehouse_id"/>
+                    <field name="trucking_id" invisible="1"/>
+                    <field name="trucking_no"/>
+                    
+                    <field name="delivery_place_id"/>
+                    <field name="packing_place"/>
+                    <field name="picking_id"/>
+                    
+                    
+                    <field name="currency_id" invisible="1"/>
+                    <field name="state"/>
+                    <field name="transrate"/> 
+                    
+                    <field name="bagsfactory" sum="bagsfactory" string="Bags Factory"/>
+                    <field name="bags" sum="bags" string="Bags HCM"/>
+
+                    <field name="weightfactory" sum="weightfactory" string="Weight Factory (kg)"/>
+                    <field name="shipped_weight" sum="shipped_weight" string="Weight HCM (kg)"/>
+
+                    <field name="storing_loss" sum="storing_loss" invisible="1"/>
+                    <field name="transportation_loss" sum="transportation_loss"/>
+                    <field name="type_contract" optional="hide"/>
+                    
+                </tree>
+            </field>
+        </record>
+        
+        <record id="view_delivery_order_form" model="ir.ui.view">
+            <field name="name">delivery.order.form</field>
+            <field name="model">delivery.order</field>
+            <field name="arch" type="xml">
+                <form string="Delivery Orders">
+                	<header>
+                		<button name="button_approve" type="object" states='draft' string="Approve" class="oe_highlight" groups="sd_sale_contract.group_sales_contract_manager"/>
+                		<button name="create_picking" invisible="1" string="Create GDN" type="object"/>
+                		<button name="fix_factory_qty" invisible="1" string="Compute Factory" type="object" groups="base.group_system"/>
+                		<button name="printout_deilvery_order" type="object" string="Printout Delivery" class="oe_highlight"/>
+                		<button name="compute_factory_qty" type="object" string="Compute_qty" class="oe_highlight" group="base.group_xmlxml"/>
+                		<!--
+                		<button name="printout_deilvery_order" type="object" string="Preview Delivery" class="oe_highlight" attrs="{'invisible': ['|',('status','=','Success'),('state','in',['done','cancel'])]}"/>
+                		<button name="inventory_delivery" type="object" string="Issue Delivery" class="oe_highlight" attrs="{'invisible': ['|',('status','=','Success'),('state','in',['done','cancel','draft'])]}"/>
+                		<button name="convert_invoice" type="object" string="Convert Delivery" class="oe_highlight" attrs="{'invisible': [('status','!=','Success')]}"/>
+                		-->
+                		
+	                  	<button name="button_draft" states="approved,done" string="Set to Draft" type="object" class="oe_highlight" groups="sd_sale_contract.group_sales_contract_manager"/>
+	                    <field name="state" widget="statusbar" statusbar_visible="draft,approved"/>
+	                </header>
+                	<sheet>
+                		<div class="oe_title">
+							<span class="o_form_label"><label for="name" string="Delivery Order"/></span>
+                			<h1>
+                            	<field name="name" readonly="1"/>
+                        	</h1>
+                		</div>
+                		<group>
+                			<group>
+                				<label for="contract_id"/>
+								<div name="contract_id" class="o_row">
+									<field name="contract_id" domain="[('state','=','approved'), ('type','in',('export','local')),('x_is_bonded','=',False)]"/>
+									<button name="button_load_do" string="Load" type="object" icon="fa-truck" 
+										states="draft" class="btn-default" attrs="{'invisible': [('state','!=', 'draft')]}"/> 
+								</div>
+                				<field name="partner_id"/>
+                				 <field name="shipping_id"/>
+                				<!--
+                				<field name="trucking_id" domain="[('transfer','=',True),('company_type','=','company')]"/>
+                				-->
+                				<field name="trucking_id" domain="[('type','=','company')]"/>
+                				<label for="transrate"/>
+                				<!-- hddt
+                					<field name="base64_pdf" invisible="1"/>
+                					
+                					<group>
+					                    <group>
+					                        <field name="status"/>
+					                        <field name="ref_id"/>
+					                        <field name="invoice_number"/>
+					                        <field name="transaction_id"/>
+					                        <field name="invoice_issue_date"/>
+					                    </group>
+					                    <group/>
+					                </group>
+                				-->
+                				<div name="transrate" class="o_row">
+                					<field name="transrate"/>
+                					<field name="currency_id"/>	
+								</div>
+                			</group>
+                			<group>
+                				<field name="date" string="DO Date"/>
+                				<field name="is_bonded"/>
+                				<field name="trucking_no"/>
+                				
+                				<field name="type" required="0" invisible="1"/>
+			                    <field name="delivery_place_id" domain="[('type','=','sale')]"/>
+			                    <field name="packing_place"/>
+                				<field name="from_warehouse_id"/>
+                				<field name="picking_type_id" options='{"no_create": True, "no_write": True}' invisible="1"/>	
+                				<field name="warehouse_id"  string="To Warehouse"  />
+                				
+                				<!-- err
+                					<field name="warehouse_id"  string="To Warehouse" domain="[('type','=','sale')]" attrs="{'required': [('type','=','Transfer')], 'invisible': [('type','=','Sale')]'}"/>
+                				-->
+	           		
+                			</group>
+                		</group>
+                		<notebook>
+                			<page string="Products">
+                				<field name="delivery_order_ids">
+                					<tree editable="top">
+                						<field name="sequence" invisible="1"/>
+                						<field name="product_id"/>
+                						<field name="name"/>
+                						
+                						<field name="certificate_id"/>
+                 					   <field name="packing_id"/>
+                 					   
+                						<field name="product_uom"/>
+                						<field name="product_qty"/>
+                					</tree>
+                					<form string="Delivery Order Lines">
+						                <sheet>
+						                	<group>
+						                		<group>
+						                			<field name="product_id"/>
+						                			<label for="product_qty"/>
+						                            <div>
+							                            <field name="product_qty" class="oe_inline"/>
+						                                <field name="product_uom" class="oe_inline oe_no_button"/>
+						                            </div>
+						                		</group>
+						                	</group>
+						                	<label for="name"/>
+					                        <field name="name"/>
+					                        <field name="state" invisible="1"/>
+						                </sheet>
+					                </form>
+                				</field>
+                				<field name="markings" class="oe_inline" placeholder="Markings..."/>
+		            			<div class="oe_clear"/>
+		                        <group col="4">
+		                        	<field name="create_uid"/>
+		                			<field name="create_date"/>
+		                			<field name="user_approve"/>
+		                			<field name="date_approve"/>
+		                		</group>
+                			</page>
+                			<page string="Truck / Transporter Details" name="truck_list">
+                				<group>
+									<group>
+										<field name="vehicle_manufacture"/>
+										<field name="registration_certificate"/>
+										<field name="transporter_ref_guide"/>
+										<field name="move_id" readonly="1"/>
+										<field name="date_out"/>
+									</group>
+									<group>
+										<field name="driver_name"/>
+										<field name="company_ref_guide"/>
+										<field name="picking_id" readonly="0"/>
+										<field name="received_date"/>
+									</group>
+		            				
+		            			</group>
+		            			<newline/>
+		            			<separator string="Post Shippemnt"/>
+	            				<field name="post_shippemnt_ids" nolabel="1"/>
+		            			<newline/>
+		            				<separator string="Reason"/>
+	                    			<field name="reason" nolabel="1"/>
+                			</page>
+                		</notebook>
+                        <div class="oe_chatter">
+                            <field name="message_follower_ids" widget="mail_followers"/>
+                            <field name="message_ids" widget="mail_thread"/>
+                        </div>
+                	</sheet>
+                </form>
+            </field>
+        </record>
+        
+        <record id="view_delivery_order_search" model="ir.ui.view">
+            <field name="name">delivery.order.search</field>
+            <field name="model">delivery.order</field>
+            <field name="arch" type="xml">
+                <search string="Delivery">
+                    <field name="name"/>
+                    <field name="contract_id" string="NVS-NLS"/>
+                    <field name="shipping_id"/>
+                    <field name="picking_id"/>
+                    <field name="trucking_no"/>
+                    <field name="product_id"/>
+                    
+                	<filter name ="filter_type_sale" domain="[('type','=','Sale')]" string="Do-Export"/>
+                	<filter name ="filter_type_nosale" domain="[('type','!=','Sale')]" string="Do-Transfer"/>
+                	<filter name ="product_id"  string="Product" domain="[]" context="{'group_by':'product_id'}"/>
+                	<filter name ="group_by_contract_id" string="NVS-NLS" domain="[]" context="{'group_by':'contract_id'}"/>
+                	<filter name="group_by_shipping_id" string="Shipping" domain="[]" context="{'group_by':'shipping_id'}"/>
+                	<filter name="group_by_type_contract" string="Type Contract" domain="[]" context="{'group_by':'type_contract'}"/>
+                	
+                	
+               </search>
+            </field>
+        </record>
+        
+        <record model="ir.actions.act_window" id="action_delivery_order">
+            <field name="name">Delivery Orders</field>
+            <field name="res_model">delivery.order</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('type','=','Sale')]</field>
+            <field name="search_view_id" ref="view_delivery_order_search"/>
+            <field name="context">{
+            		'default_type':'Sale'
+                }
+            </field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a DO, the first step of a new DO.
+                </p><p>
+                </p>
+            </field>
+        </record>
+        
+        
+        <record model="ir.actions.act_window.view" id="action_delivery_order_view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_delivery_order_tree"/>
+            <field name="act_window_id" ref="action_delivery_order"/>
+        </record>
+        <record model="ir.actions.act_window.view" id="action_delivery_order_form">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_delivery_order_form"/>
+            <field name="act_window_id" ref="action_delivery_order"/>
+        </record>
+        
+        
+        
+    </data>
+</odoo>

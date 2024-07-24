@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_import_farmer" model="ir.ui.view">
+        <field name="name">Import Farmer</field>
+        <field name="model">import.farmer</field>
+        <field name="arch" type="xml">
+             <form string="Import Farmer">
+                <group>
+					<field name="file" filename="filename"/>
+					<field name="filename" invisible="1"/>
+                </group>
+                <group>
+                </group>
+                <footer>
+                    <button name="import_farmer" string="Import" type="object"
+                        class="btn-primary"/>
+                    <button string="Cancel" class="btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action of Reimbursement Report -->
+     <record id="action_import_farmer" model="ir.actions.act_window">
+            <field name="name">Import Farmer</field>
+            <field name="res_model">import.farmer</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_import_farmer"/>
+            <field name="target">new</field>
+        </record>
+
+    <menuitem id="menu_import_farmer"
+            name="Import Farmer"
+            action="action_import_farmer"
+              parent="sd_purchase_contract.purchase_contract_root_menu"
+            sequence="10"/>
+</odoo>

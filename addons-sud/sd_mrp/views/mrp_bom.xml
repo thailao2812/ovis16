@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+		
+		
+		<record id="mrp_bom_tree_inherit_add_fields_mrp" model="ir.ui.view">
+            <field name="name">mrp.bom.tree.inherit.add.fields.mrp</field>
+            <field name="model">mrp.bom</field>
+            <field name="inherit_id" ref="mrp.mrp_bom_tree_view"/>
+            <field name="arch" type="xml">
+            	<xpath expr="//field[@name='code']" position="replace">
+            		
+                </xpath>
+                <xpath expr="//field[@name='product_tmpl_id']" position="attributes">
+                	<attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='product_qty']" position="attributes">
+                	<attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='product_tmpl_id']" position="before">
+                	<field name="type_code"/>
+                	<field name="master_code_id"/>
+                	<field name="code"/>
+                	<field name="remarks" string ="Description"/>
+                	<field name="detail"/>
+                	<field name="grade_id"/>
+                </xpath>
+                <xpath expr="//field[@name='product_uom_id']" position="after">
+                	<field name="crop_id"/>
+                    <field name="last_revised"/>
+                </xpath>
+                <xpath expr="//field[@name='product_uom_id']" position="attributes">
+                    <attribute name="string">UoM</attribute>
+                </xpath>
+            </field>
+        </record>
+		
+		
+        <record id="view_partner_form_inherit_mrp_bom" model="ir.ui.view">
+            <field name="name">view_partner_form_inherit_mrp_bom</field>
+            <field name="model">mrp.bom</field>
+            <field name="inherit_id" ref="mrp.mrp_bom_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='code']" position="after">
+                    <field name="last_revised"/>
+                    <field name="crop_id"/>
+                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                    
+                    <field name="master_code_id" string="Master code"/>
+                    <field name="batch_code" string="Batch code"/>
+                    <field name="remarks" string="Remarks"/>
+                    <field name="detail"/>
+                    <field name="grade_id"/>
+                </xpath>
+                
+                <xpath expr="//notebook" position="replace">
+                <notebook>
+                	<page string="Components" name="components" attrs="{'invisible': [('type', 'in',('no'))]}">
+                        <field name="bom_line_ids" widget="one2many" context="{'default_parent_product_tmpl_id': product_tmpl_id, 'default_product_id': False, 'default_bom_id': id}">
+                            <tree string="Components" editable="bottom">
+                                <field name="company_id" invisible="1"/>
+                                <field name="sequence" widget="handle"/>
+                                <field name="product_id" context="{'default_detailed_type': 'product'}"/>
+                                <field name="product_tmpl_id" invisible="1"/>
+                                <button name="action_see_attachments" type="object" icon="fa-files-o" aria-label="Product Attachments" title="Product Attachments" class="float-end"/>
+                                <field name="attachments_count" class="text-start" string=" "/>
+                                <field name="product_qty"/>
+                                <field name="product_uom_category_id" invisible="1"/>
+                                <field name="parent_product_tmpl_id" invisible="1"/>
+                                <field name="product_uom_id" options="{'no_open':True,'no_create':True}" groups="uom.group_uom"/>
+                                <field name="possible_bom_product_template_attribute_value_ids" invisible="1"/>
+                                <field name="bom_product_template_attribute_value_ids" optional="hide" widget="many2many_tags" options="{'no_create': True}" attrs="{'column_invisible': [('parent.product_id', '!=', False)]}" groups="product.group_product_variant"/>
+                                <field name="allowed_operation_ids" invisible="1"/>
+                                <field name="operation_id" groups="mrp.group_mrp_routings" optional="hidden" attrs="{'column_invisible': [('parent.type','not in', ('normal', 'phantom'))]}" options="{'no_quick_create':True,'no_create_edit':True}"/>
+                                <field name="tracking" invisible="1"/>
+                                <field name="manual_consumption" groups="mrp.group_mrp_routings" optional="hide" width="1.0" attrs="{'readonly': ['|', ('tracking', '!=', 'none'), ('operation_id', '!=', False)]}"/>
+                            </tree>
+                        </field>
+                    </page>
+                        
+                    <page string="Bom Stage" attrs="{'invisible': [('type', 'in',('normal','phantom'))]}" >
+                    	<field name="bom_stage_lines">
+	                    	<tree  widget="one2many">
+	                    		<field name ="name"/>
+	                    		<field name="production_stage_id"/>
+	                    		<field name="workcenter_id"/>
+	                    	</tree>
+	                    	<form>
+		                    	<sheet>
+		                    		<group>
+		                    			<group>
+		                    				 <field name="name"/>
+		                    			</group>
+		                    			<newline/>
+		                    			<group col="4">
+	                                        <field name="workcenter_id"/>   
+	                                        <field name="production_stage_id"/>
+		                    			</group>
+		                    		</group>
+		                    		
+		                    		
+	                    		<div>
+		                			<separator string="Materials"/>
+			                		<field name="bom_stage_material_line" nolabel="1">
+	            						<tree editable="top">
+	            							<field name="sequence"/>
+                                                <field name="product_id" on_change="onchange_product_id(product_id)"/>
+                                                <field name="categ_id"/>
+                                                <field name="name"/>
+                                                <field name="product_uom"/>
+                                                <field name="off_topic" sum="Total"/>
+                                                <field name="type"/>
+	            						</tree>
+	            					</field>
+	                			</div>
+	                			 <newline/>
+	                			<div>
+		                			<separator string="Product To Produce"/>
+			                		<field name="bom_stage_output_line" nolabel="1">
+	            						<tree editable="top">
+	            							<field name="sequence"/>
+                                                <field name="product_id" on_change="onchange_product_id(product_id)"/>
+                                                <field name="categ_id"/>
+                                                <field name="product_uom"/>
+                                                <field name="off_topic" sum="Total"/>
+	            						</tree>
+	            					</field>
+	                			</div>
+		                    		
+                                   
+		                    	</sheet>
+	                    	</form>
+	                    </field>
+                    </page>
+                    
+                    <page string="Operations" name="operations" attrs="{'invisible': [('type', 'not in',('normal','phantom'))]}" 
+                    	groups="mrp.group_mrp_routings">
+                        <field name="operation_ids" attrs="{'invisible': [('type','not in',('normal','phantom'))]}" 
+                        groups="mrp.group_mrp_routings" 
+                        	context="{'bom_id_invisible': True, 'default_bom_id': id, 'tree_view_ref': 'mrp.mrp_routing_workcenter_bom_tree_view'}"/>
+                    </page>
+                    <page string="By-products" name="by_products" attrs="{'invisible': [('type','!=','normal')]}" groups="mrp.group_mrp_byproducts">
+                        <field name="byproduct_ids" context="{'form_view_ref' : 'mrp.mrp_bom_byproduct_form_view', 'default_bom_id': id}">
+                            <tree string="By-products" editable="top">
+                                <field name="company_id" invisible="1"/>
+                                <field name="product_uom_category_id" invisible="1"/>
+                                <field name="sequence" widget="handle"/>
+                                <field name="product_id" context="{'default_detailed_type': 'product'}"/>
+                                <field name="product_qty"/>
+                                <field name="product_uom_id" groups="uom.group_uom"/>
+                                <field name="cost_share" optional="hide"/>
+                                <field name="allowed_operation_ids" invisible="1"/>
+                                <field name="operation_id" groups="mrp.group_mrp_routings" options="{'no_quick_create':True,'no_create_edit':True}"/>
+                                <field name="possible_bom_product_template_attribute_value_ids" invisible="1"/>
+                                <field name="bom_product_template_attribute_value_ids" optional="hide" widget="many2many_tags" options="{'no_create': True}" attrs="{'column_invisible': [('parent.product_id', '!=', False)]}" groups="product.group_product_variant"/>
+                            </tree>
+                       </field>
+                   </page>
+                        
+                    </notebook>
+                </xpath>
+            </field>
+        </record>
+		
+		<!-- Giao dien Production Stage -->
+		<record id="view_mrp_production_stage_tree" model="ir.ui.view">
+	        <field name="name">mrp.production.stage.tree</field>
+	        <field name="model">mrp.production.stage</field>
+	        <field name="type">tree</field>
+	        <field eval="8" name="priority"/>
+	        <field name="arch" type="xml">
+	            <tree string="Production Stages" editable='top'>
+	            	<field name="sequence"/>
+	            	<field name="code"/>
+	                <field name="name"/>
+	            </tree>
+	        </field>
+	    </record>
+	        
+	        
+	    <record id="action_production_stage" model="ir.actions.act_window">
+	        <field name="name">Production Stage</field>
+	        <field name="res_model">mrp.production.stage</field>
+	        <field name="view_mode">tree,form</field>
+	        <field name="search_view_id"/>
+	    </record>
+    
+	
+	
+	
+    </data>
+</odoo>

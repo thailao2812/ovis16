@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	
+	
+	          
+	          
+	          <!-- Top menu item Top 0-->
+        <menuitem name="Delivery Registration"
+            id="menu_menu_security_root"
+            web_icon="sd_security_gate,static/description/icon_contract.jpg"
+            sequence="30"/>
+            
+	            <!-- Configuration Contracts Top 1-->
+		       <menuitem id="menu_menu_security_root_instore"
+		            name="In-Store"
+		            parent="menu_menu_security_root"
+		            sequence="50"/>
+		       	
+			       		<!-- In Store -->
+				      <menuitem name="Delivery Registration In-Store"
+				      			id="menu_security_gate_queue_instore" 
+				            	action="action_security_gate_queue_instore" 
+				            	sequence="51"
+					        	parent="menu_menu_security_root_instore"/>
+
+		       <menuitem id="menu_menu_security_root_exstore"
+		            name="Ex-Store"
+		            parent="menu_menu_security_root"
+		            sequence="70"/>
+		       	
+			       		<!-- Ex Store -->
+				      <menuitem name="Delivery Registration Ex-Store"
+				      			id="menu_security_gate_queue_exstore" 
+				            	action="action_security_gate_queue_exstore" 
+				            	sequence="2"
+					        	parent="menu_menu_security_root_exstore"/>
+				
+				<menuitem id="menu_security_gate_transfer"
+		            name="Transfer"
+		            parent="menu_menu_security_root"
+		            sequence="90"/>
+		            
+		            
+		            <menuitem name="Transfer In"
+			            id="menu_security_gate_transfer_in" 
+			            parent="menu_security_gate_transfer" 
+			            action="action_security_gate_transfer_in"
+			            sequence="3" />
+		            
+		            
+		            <menuitem name="Transfer Out"
+			            id="menu_security_gate_transfer_out" 
+			            parent="menu_security_gate_transfer" 
+			            action="action_security_gate_transfer_out"
+			            sequence="4" />
+			    	
+</odoo>

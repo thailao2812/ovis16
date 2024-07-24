@@ -1,0 +1,181 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+   
+    	<record id="view_tree_grn_matching_report" model="ir.ui.view">
+            <field name="name">view.grn.matching.report</field>
+            <field name="model">v.grn.matching</field>
+            <field name="arch" type="xml">
+    			<tree  decoration-info="deficit == 'Deficit'" >
+                    <field name = 'vehicle_no' readonly = '1'/>
+                    <field name = 'shortname' string="Partner" readonly = '1'/>
+
+                    <field name = 'grn_branch' string="GRN Branch" readonly = '1'/>
+                    <field name = 'branch_date_received' readonly = '1'/>
+                    <field name = 'grn_factory' string="GRN Factory" readonly = '1'/>
+                    <field name = 'truck_com' string="Trucking Co." readonly = '1'/>
+                    <field name = 'factory_date_received' readonly = '1'/>
+                    <field name = 'product' readonly = '1'/>
+                    <field name = 'deficit' invisible="1"/>
+                    
+                    <field name = 'deduction_branch' avg = 'Deduction at Branch Avg.' readonly = '1'/>
+                    <field name = 'deduction_factory' avg = 'Deduction at Factory Avg.' readonly = '1'/>
+                    <field name = 'brn_fac' avg = 'Deduction Difference Avg.' readonly = '1'/>
+
+                    <field name = 'net_weight_branch' sum='Branch Net total' readonly = '1'/>
+                    <field name = 'net_weight_factory' sum='Factory Net total' readonly = '1'/>
+                    <field name = 'net_weight_deficit' sum='NW Variance total' readonly = '1'/>
+                    <field name = 'net_var' avg = 'Net Variance' readonly = '1'/>
+
+                    <field name = 'basis_weight_branch' sum='Branch Weight total' readonly = '1'/>
+                    <field name = 'basis_weight_factory' sum='Factory Weight total' readonly = '1'/>
+                    <field name = 'basis_weight_deficit' sum='BW Variance total' readonly = '1'/>
+                    <field name = 'basis_var' avg = 'Basis Variance' readonly = '1'/>
+                    <field name="x_inspectator"/>
+                </tree>
+	         </field>
+        </record>
+
+        <record id="view_grn_matching_report_form" model="ir.ui.view">
+            <field name="name">grn.matching.report.form</field>
+            <field name="model">v.grn.matching</field>
+            <field name="arch" type="xml">
+                <form string="FAQ (FOT-Ned) deviation">
+                    <sheet border = '1'>
+                        <group name="group_top" col = '3'>
+                                <!-- <field name="branch_id" readonly="1"/> -->
+                           <group name="group_left">
+                                <field name="grn_branch" readonly="1"/>
+                                <field name="branch_date_received" readonly="1"/>
+                                
+                            </group>
+
+                            <group name="group_center">
+                                
+                            </group>
+                            <group name="group_right">
+                                <field name="grn_factory" readonly="1"/>
+                                <field name="factory_date_received" readonly="1"/>
+                                
+                            </group>
+                        </group>
+
+                        <group name="group_bottom" col = '3'>
+                           <group name="group_left">
+                                <field name="deduction_branch" readonly="1"/>
+                                <field name="net_weight_branch" readonly="1"/>
+                                <field name="basis_weight_branch" readonly="1"/>
+                                <field name="mc_branch" readonly="1"/>
+ 
+                                <field name="fm_branch" readonly="1"/>
+                                <field name="black_branch" readonly="1"/>
+                                <field name="broken_branch" readonly="1"/>
+                                <field name="brown_branch" readonly="1"/>
+                                <field name="mold_branch" readonly="1"/>
+                                <field name="cherry_branch" readonly="1"/>
+                                <field name="excelsa_branch" readonly="1"/>
+                                <field name="screen20_branch" readonly="1"/>
+                                <field name="screen19_branch" readonly="1"/>
+                                <field name="screen18_branch" readonly="1"/>
+                                <field name="screen16_branch" readonly="1"/>
+                                <field name="screen13_branch" readonly="1"/>
+                                <field name="belowsc12_branch" readonly="1"/>
+                                <field name="burned_branch" readonly="1"/>
+                                <field name="eaten_branch" readonly="1"/>
+                                <field name="immature_branch" readonly="1"/>
+                           </group>
+                           <group name = "group_center">
+                            <field name="brn_fac" readonly="1"/>
+                            <field name = 'net_weight_deficit' readonly = '1'/>
+                            <field name = 'basis_weight_deficit' readonly = '1'/>
+                            <field name = "mc_var" readonly = '1'/>
+                            <field name = "fm_var" readonly = '1'/>
+                            <field name = "black_var" readonly = '1'/>
+                            <field name = "broken_var" readonly = '1'/>
+                            <field name = "brown_var" readonly = '1'/>
+                            <field name = "mold_var" readonly = '1'/> 
+                            <field name = "cherry_var" readonly = '1'/>
+                            <field name = "excelsa_var" readonly = '1'/>
+                            <field name = "screen20_var" readonly = '1'/>
+                            <field name = "screen19_var" readonly = '1'/>
+                            <field name = "screen18_var" readonly = '1'/>
+                            <field name = "screen16_var" readonly = '1'/>
+                            <field name = "screen13_var" readonly = '1'/>
+                            <field name = "belowscr12_var" readonly = '1'/>
+                            <field name = "burned_var" readonly = '1'/>
+                            <field name = "eaten_var" readonly = '1' string="Insect var"/>
+                            <field name = "immature_var" readonly = '1'/>
+                           </group>
+                            <group name="group_right">
+                                <field name="deduction_factory" readonly="1"/>
+                                <field name="net_weight_factory" readonly="1"/>
+                                <field name="basis_weight_factory" readonly="1"/>
+                                <field name="mc_factory" readonly="1"/>
+
+                                <field name="fm_factory" readonly="1"/>
+                                <field name="black_factory" readonly="1"/>
+                                <field name="broken_factory" readonly="1"/>
+                                <field name="brown_factory" readonly="1"/>
+                                <field name="mold_factory" readonly="1"/>
+                                <field name="cherry_factory" readonly="1"/>
+                                <field name="excelsa_factory" readonly="1"/>
+                                <field name="screen20_factory" readonly="1"/>
+                                <field name="screen19_factory" readonly="1"/>
+                                <field name="screen18_factory" readonly="1"/>
+                                <field name="screen16_factory" readonly="1"/>
+                                <field name="screen13_factory" readonly="1"/>
+                                <field name="belowsc12_factory" readonly="1"/>
+                                <field name="burned_factory" readonly="1"/>
+                                <field name="eaten_factory" readonly="1"/>
+                                <field name="immature_factory" readonly="1"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="search_grn_matching_report" model="ir.ui.view">
+            <field name="name">search.grn.matching.report</field>
+            <field name="model">v.grn.matching</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name = "branch_id"/>
+                    <field name = "grn_branch"/>
+                    <field name = "grn_factory"/>
+                    <filter icon="terp-go-month" string="Branch Current Month" 
+                    	name="branch_date_received"
+                    	 domain="[('branch_date_received','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%Y-%m-%d')),('branch_date_received','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%Y-%m-%d'))]" help="Current Month" 
+                    	 />
+
+                    <group expand="1" string="Group By">
+                        <filter string="Supplier" domain="[]" name="filter_shortname" context="{'group_by':'shortname'}"/>
+                        <filter string="Truck" domain="[]" name="filter_vehicle_no" context="{'group_by':'vehicle_no'}"/>
+                        <filter string="Deduction at Branch" domain="[]" name="filter_deduction_branch" context="{'group_by':'deduction_branch'}"/>
+                        <filter string="Deduction at Factory" domain="[]" name="filter_deduction_factory" context="{'group_by':'deduction_factory'}"/>
+                        <filter string="Branch Date" domain="[]" name="filter_branch_date_received" context="{'group_by':'branch_date_received'}"/>
+                        <filter string="Factory Date" domain="[]" name="filter_factory_date_received" context="{'group_by':'factory_date_received'}"/>
+                    </group>
+                </search>
+             </field>
+         </record>
+
+        <!-- the block of code below is the action to trigger the list open -->
+        <record id="action_grn_matching_report" model="ir.actions.act_window">
+            <field name="name">FAQ (FOT-Ned) deviation</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">v.grn.matching</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" eval="False"/>
+            <field name="context">{"search_default_branch_date_received":True, 'search_by_field_date': ['branch_date_received', 'factory_date_received']}</field>
+        </record>
+
+        <!-- The below block of code will assign the abovementioned action to menu
+        tags:
+            - id: the identification name, this should be unique
+            - action: the action defines corresponding the abovementioned action to be triggered
+            - parrent: this specify which menu the current sub-menu will be nested under, in this case, this menu will be nested under MRP area of Master Report
+            - groups: defines a list of group users who have permission to access this report
+            - sequence: the order of the menu in the parrent menu -->
+    </data>
+</odoo>

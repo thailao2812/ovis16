@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record id="e_invoicing_form_inherit_account_move" model="ir.ui.view">
+            <field name="name">e.invoicing.form.inherit.account.move</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='button_cancel']" position="after">
+                    <button name="print_preview_invoice" type="object"
+                            string="Print Preview Invoice"
+                            state="daft,open,paid" class="oe_highlight"
+                            attrs="{'invisible': ['|',('status', '=', 'Success'),
+                                                  ('move_type', '=', 'out_refund')]}"/>
+                    <button name="e_invoicing" type="object"
+                            string="Create E-Invoicing" class="oe_highlight"
+                            attrs="{'invisible': ['|',('state', 'in', ['draft','cancel','paid']),
+                            '|',('status', '=', 'Success'),('move_type', '=', 'out_refund')]}"/>
+                    
+                    <button name="convert_invoice" type="object" class="oe_highlight"
+                            string="Convert Invoice" attrs="{'invisible': ['|', ('status', '!=', 'Success'), ('state', 'not in' , ('open', 'paid'))]}"/>
+                </xpath>
+                <xpath expr="//field[@name='ref']" position= "attributes">
+                     <attribute name="invisible">1</attribute>
+                </xpath>
+                
+                <xpath expr="//field[@name='partner_id']" position="after">
+                	<field name="origin" readonly="1"/>
+                	<field name="ref" string="VAT Invoice Number"/>
+                	<field name="reference_description"/>
+                </xpath>
+                <group>
+                    <group>
+                        <field name="status"/>
+                        <field name="ref_id"/>
+                        <field name="invoice_number"/>
+                        <field name="transaction_id"/>
+                        <field name="invoice_issue_date"/>
+                        <field name="base64_pdf" invisible="1"/>
+                    </group>
+                    <group>
+                        <!--                        Thong tin hoa don goc-->
+                        <field name="org_invoice_number" invisible="0"/>
+                        <field name="org_invoice_issued_date" invisible="0"/>
+                        <field name="type_invoice" invisible="0" widget="radio"/>
+                        <field name="ref_type" invisible="0"/>
+                    </group>
+                </group>
+            </field>
+        </record>
+    </data>
+</odoo>

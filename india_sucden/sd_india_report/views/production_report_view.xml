@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+	
+	<record id="view_tree_production_report" model="ir.ui.view">
+            <field name="name">view.production.report</field>
+            <field name="model">v.production.report</field>
+            <field name="arch" type="xml">
+    			<tree>
+                    <field name = 'batch_no' readonly = '1'/>
+                    <field name = 'operation_type' readonly = '1'/>
+                    <!-- <field name = 'bom_type' readonly = '1'/> -->
+                    <!-- <field name = 'start_date' readonly = '1'/> -->
+                    <field name = 'zone' readonly = '1'/>
+                    <field name = 'stack' readonly = '1'/>
+                    <field name = 'picking_date' readonly = '1'/>
+                    <field name = 'date_end'/>
+                    <field name = 'stock_note' readonly = '1'/>
+                    <field name = 'product' readonly = '1'/>
+                    <field name = 'bag_no' readonly = '1'/>
+                    <field name = 'packing' string='Packing Type' readonly = '1'/>
+                    <field name = 'net_quantity' string="Net Weight" sum = 'Total Net Weight (Kg)' readonly = '1'/>
+                    <!-- <field name = 'weighbridge' sum = 'Total Net Weight (Kg)' readonly = '1'/> -->
+
+                    
+<!--                    <field name = 'mc' avg = 'MC Avg.' readonly = '1'/>-->
+<!--                    <field name = 'fm' avg = 'FM Avg.' readonly = '1'/>-->
+<!--                    <field name = 'black' avg = 'Black Avg.' readonly = '1'/>-->
+<!--                    <field name = 'broken' avg = 'Broken Avg.' readonly = '1'/>-->
+<!--                    <field name = 'brown' avg = 'Brown Avg.' readonly = '1'/>-->
+<!--                    <field name = 'mold' avg = 'Moldy Avg.' readonly = '1'/>-->
+<!--                    <field name = 'cherry' avg = 'Cherry Avg.' readonly = '1'/>-->
+
+<!--                    <field name = 'excelsa' avg = 'Excelsa Avg.' readonly = '1'/>-->
+<!--                    <field name = 'screen20' avg = 'Scr20 Avg.' readonly = '1'/>-->
+<!--                    <field name = 'screen19' avg = 'Scr19 Avg.' readonly = '1'/>-->
+<!--                    <field name = 'screen18' avg = 'Scr18 Avg.' readonly = '1'/>-->
+<!--                    <field name = 'screen16' avg = 'Scr16 Avg.' readonly = '1'/>-->
+<!--                    <field name = 'screen13' avg = 'Scr13 Avg.' readonly = '1'/>-->
+<!--                    <field name = 'greatersc12' avg = 'Scr12 Avg.' readonly = '1'/>-->
+<!--                    <field name = 'belowsc12' avg = 'BlwSc12 Avg.' readonly = '1'/>-->
+
+<!--                    <field name = 'eaten' readonly = '1'/>-->
+<!--                    <field name = 'burn' readonly = '1'/>-->
+<!--                    <field name = 'immature' readonly = '1'/>-->
+<!--                    <field name = 'state' readonly='1'/>-->
+<!--                    <field name = 'remarks' readonly='1'/>-->
+                    <field name="outturn_percent" avg="outturn_percent" readonly="1"/>
+                    <field name="aaa_percent" avg="aaa_percent" readonly="1"/>
+                    <field name="aa_percent" avg="aa_percent" readonly="1"/>
+                    <field name="a_percent" avg="a_percent" readonly="1"/>
+                    <field name="b_percent" avg="b_percent" readonly="1"/>
+                    <field name="c_percent" avg="c_percent" readonly="1"/>
+                    <field name="pb_percent" avg="pb_percent" readonly="1"/>
+                    <field name="bb_percent" avg="bb_percent" readonly="1"/>
+                    <field name="bleached_percent" avg="bleached_percent" readonly="1"/>
+                    <field name="idb_percent" avg="idb_percent" readonly="1"/>
+                    <field name="bits_percent" avg="bits_percent" readonly="1"/>
+                    <field name="hulks_percent" avg="hulks_percent" readonly="1"/>
+                    <field name="stone_percent" avg="stone_percent" readonly="1"/>
+                    <field name="skin_out_percent" avg="skin_out_percent" readonly="1"/>
+                    <field name="triage_percent" avg="triage_percent" readonly="1"/>
+                    <field name="wet_bean_percent" avg="wet_bean_percent" readonly="1"/>
+                    <field name="red_beans_percent" avg="red_beans_percent" readonly="1"/>
+                    <field name="stinker_percent" avg="stinker_percent" readonly="1"/>
+                    <field name="faded_percent" avg="faded_percent" readonly="1"/>
+                    <field name="flat_percent" avg="flat_percent" readonly="1"/>
+                    <field name="pb1_percent" avg="pb1_percent" readonly="1"/>
+                    <field name="pb2_percent" avg="pb2_percent" readonly="1"/>
+                    <field name="sleeve_6_up_percent" avg="sleeve_6_up_percent" readonly="1"/>
+                    <field name="sleeve_5_5_up_percent" avg="sleeve_5_5_up_percent" readonly="1"/>
+                    <field name="sleeve_5_5_down_percent" avg="sleeve_5_5_down_percent" readonly="1"/>
+                    <field name="sleeve_5_down_percent" avg="sleeve_5_down_percent" readonly="1"/>
+
+                    <field name="sleeve_5_up_percent" avg="sleeve_5_up_percent" readonly="1"/>
+                    <field name="unhulled_percent" avg="unhulled_percent" readonly="1"/>
+                    <field name="remaining_coffee_percent" avg="remaining_coffee_percent" readonly="1"/>
+                    <field name="blacks_percent" avg="blacks_percent" readonly="1"/>
+                    <field name="half_monsoon_percent" avg="half_monsoon_percent" readonly="1"/>
+                    <field name="good_beans_percent" avg="good_beans_percent" readonly="1"/>
+
+                    <field name="moisture_percent" avg="moisture_percent" readonly="1"/>
+                </tree>
+	         </field>
+         </record>
+
+        <!-- The block of code bellow determines a list of search parameters appear once user type in the searchbar -->
+        <record id="search_production_report" model="ir.ui.view">
+            <field name="name">view.production.report.search</field>
+            <field name="model">v.production.report</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name = "batch_no"/>
+                    
+                    <group expand="1" string="Group By">
+                        <filter string="Batch" domain="[]" name="group_batch_no" context="{'group_by':'batch_no'}"/>
+                        <filter string="BOM type" domain="[]" name="group_bom_type" context="{'group_by':'bom_type'}"/>
+                        <filter string="Date" domain="[]" name="group_picking_date" context="{'group_by':'picking_date'}"/>
+                        <filter string="Opration type" domain="[]" name="group_operation_type" context="{'group_by':'operation_type'}"/>
+                        <filter string="Product" name="product_group" domain="[]" context="{'group_by':'product'}"/>
+                        
+                        <separator string = 'Shipper'/>
+                            <filter domain="[('operation_type','=','IN')]" string="Input" name='operation_type_in'/>
+                            <filter domain="[('operation_type','=','OUT')]" string="Output" name='operation_type_out'/>
+                            <filter domain="[('state','!=','done')]" string="Undone" name='status'/>
+                            <filter domain="[('state','=','done')]" string="Done" name='status_done'/>
+                        <separator string = 'Stauts'/>
+                    </group>
+                </search>
+             </field>
+         </record>
+         
+         <record id="action_production_report" model="ir.actions.act_window">
+            <field name="name">Production report</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">v.production.report</field>
+            <field name="view_mode">tree</field>
+        </record>
+	
+	
+</odoo>

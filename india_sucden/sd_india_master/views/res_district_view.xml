@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_res_district_tree_inherit_india" model="ir.ui.view">
+        <field name="name">view_res_district_tree_inherit_india</field>
+        <field name="model">res.district</field>
+        <field name="inherit_id" ref="sd_master.view_res_district_tree"/>
+        <field name="arch" type="xml">
+			 <xpath expr="//field[@name='name']" position="after">
+            	<field name="location"/>
+            </xpath>
+
+        </field>
+    </record>
+</odoo>

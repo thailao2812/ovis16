@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="contract_regular_india_report" model="ir.actions.report">
+	        <field name="name">Regular Contract</field>
+	        <field name="type">ir.actions.report</field>
+	        <field name="model">purchase.contract</field>
+	        <field name="binding_model_id" ref="sd_purchase_contract.model_purchase_contract"/>
+	        <field name="report_name">contract_regular_india_report</field>
+	        <field name="report_type">aeroo</field>
+	        <field name="in_format">oo-odt</field>
+	        <field name="out_format" model="report.mimetypes" search="[('code','=','oo-pdf'),('compatible_types','=','oo-odt')]"/>
+	        <field name="preview">True</field>
+	        <field name="parser_state">loc</field>
+	        <field name="parser_loc">sd_india_contract/report/report_regular_contract_parse.py</field>
+	        <field name="report_file">sd_india_contract/report/report_regular_contract.odt</field>
+	        <field name="tml_source">file</field>
+	        <field name="print_report_name">(object._get_printed_report_name())</field>
+    </record>
+
+	<record id="contract_consignment_india_report" model="ir.actions.report">
+	        <field name="name">Consignment Contract</field>
+	        <field name="type">ir.actions.report</field>
+	         <field name="model">purchase.contract</field>
+	        <field name="binding_model_id" ref="sd_purchase_contract.model_purchase_contract"/>
+	        <field name="report_name">contract_consignment_india_report</field>
+	        <field name="report_type">aeroo</field>
+	        <field name="in_format">oo-odt</field>
+	        <field name="out_format" model="report.mimetypes" search="[('code','=','oo-pdf'),('compatible_types','=','oo-odt')]"/>
+	        <field name="preview">True</field>
+	        <field name="parser_state">loc</field>
+	        <field name="parser_loc">sd_india_contract/report/report_consignment_contract_parse.py</field>
+	        <field name="report_file">sd_india_contract/report/report_consignment_contract.odt</field>
+	        <field name="tml_source">file</field>
+	        <field name="print_report_name">(object._get_printed_report_name())</field>
+    </record>
+
+	<record id="contract_consignment_detail_india_report" model="ir.actions.report">
+	        <field name="name">Consignment Contract Detail</field>
+	        <field name="type">ir.actions.report</field>
+	         <field name="model">purchase.contract</field>
+	        <field name="binding_model_id" ref="sd_purchase_contract.model_purchase_contract"/>
+	        <field name="report_name">contract_consignment_detail_india_report</field>
+	        <field name="report_type">aeroo</field>
+	        <field name="in_format">oo-odt</field>
+	        <field name="out_format" model="report.mimetypes" search="[('code','=','oo-pdf'),('compatible_types','=','oo-odt')]"/>
+	        <field name="preview">True</field>
+	        <field name="parser_state">loc</field>
+	        <field name="parser_loc">sd_india_contract/report/report_consignment_detail_parse.py</field>
+	        <field name="report_file">sd_india_contract/report/report_consignment_detail.odt</field>
+	        <field name="tml_source">file</field>
+	        <field name="print_report_name">(object._get_printed_report_name())</field>
+    </record>
+
+	<record id="contract_regular_detail_india_report" model="ir.actions.report">
+	        <field name="name">Regular Contract Detail</field>
+	        <field name="type">ir.actions.report</field>
+	         <field name="model">purchase.contract</field>
+	        <field name="binding_model_id" ref="sd_purchase_contract.model_purchase_contract"/>
+	        <field name="report_name">contract_regular_detail_india_report</field>
+	        <field name="report_type">aeroo</field>
+	        <field name="in_format">oo-odt</field>
+	        <field name="out_format" model="report.mimetypes" search="[('code','=','oo-pdf'),('compatible_types','=','oo-odt')]"/>
+	        <field name="preview">True</field>
+	        <field name="parser_state">loc</field>
+	        <field name="parser_loc">sd_india_contract/report/report_regular_detail_parse.py</field>
+	        <field name="report_file">sd_india_contract/report/report_regular_detail.odt</field>
+	        <field name="tml_source">file</field>
+	        <field name="print_report_name">(object._get_printed_report_name())</field>
+    </record>
+
+	<!-- report_s_contract  -->
+	<record id="report_s_contract" model="ir.actions.report">
+		<field name="name">S-Contract</field>
+		<field name="type">ir.actions.report</field>
+		<field name="model">s.contract</field>
+		<field name="binding_model_id" ref="sd_sale_contract.model_s_contract"/>
+		<field name="report_name">report_s_contract</field>
+		<field name="report_type">aeroo</field>
+		<field name="in_format">oo-odt</field>
+		<field name="out_format" model="report.mimetypes" search="[('code','=','oo-doc'),('compatible_types','=','oo-odt')]"/>
+		<field name="preview">True</field>
+		<field name="parser_state">loc</field>
+		<field name="parser_loc">sd_india_contract/report/report_s_contract_parser.py</field>
+		<field name="report_file">sd_india_contract/report/report_s_contract.odt</field>
+		<field name="tml_source">file</field>
+		<field name="print_report_name">'Print S-Contract'</field>
+	</record>
+
+
+	<record id="report_delivery_order_india" model="ir.actions.report">
+		<field name="name">Delivery Order</field>
+		<field name="type">ir.actions.report</field>
+		<field name="model">delivery.order</field>
+		<field name="binding_model_id" ref="sd_sale_contract.model_delivery_order"/>
+		<field name="report_name">report_delivery_order_india</field>
+		<field name="report_type">aeroo</field>
+		<field name="in_format">oo-odt</field>
+		<field name="out_format" model="report.mimetypes" search="[('code','=','oo-doc'),('compatible_types','=','oo-odt')]"/>
+		<field name="preview">True</field>
+		<field name="parser_state">loc</field>
+		<field name="parser_loc">sd_india_contract/report/report_delivery_order_parser.py</field>
+		<field name="report_file">sd_india_contract/report/report_delivery_order.odt</field>
+		<field name="tml_source">file</field>
+		<field name="print_report_name">(object._get_printed_report_name())</field>
+	</record>
+
+	<record id="report_shipping_advise_india" model="ir.actions.report">
+		<field name="name">Shipping Advise</field>
+		<field name="type">ir.actions.report</field>
+		<field name="model">post.shipment</field>
+		<field name="binding_model_id" ref="sd_sale_contract.model_post_shipment"/>
+		<field name="report_name">report_shipping_advise_india</field>
+		<field name="report_type">aeroo</field>
+		<field name="in_format">oo-odt</field>
+		<field name="out_format" model="report.mimetypes" search="[('code','=','oo-doc'),('compatible_types','=','oo-odt')]"/>
+		<field name="preview">True</field>
+		<field name="parser_state">loc</field>
+		<field name="parser_loc">sd_india_contract/report/report_shipping_advise_parser.py</field>
+		<field name="report_file">sd_india_contract/report/shipping_advise.odt</field>
+		<field name="tml_source">file</field>
+		<field name="print_report_name">'Shipping Advise'</field>
+	</record>
+
+	<record id="report_packing_list_india" model="ir.actions.report">
+		<field name="name">Packing List</field>
+		<field name="type">ir.actions.report</field>
+		<field name="model">post.shipment</field>
+		<field name="binding_model_id" ref="sd_sale_contract.model_post_shipment"/>
+		<field name="report_name">report_packing_list_india</field>
+		<field name="report_type">aeroo</field>
+		<field name="in_format">oo-odt</field>
+		<field name="out_format" model="report.mimetypes" search="[('code','=','oo-doc'),('compatible_types','=','oo-odt')]"/>
+		<field name="preview">True</field>
+		<field name="parser_state">loc</field>
+		<field name="parser_loc">sd_india_contract/report/report_packing_list_parser.py</field>
+		<field name="report_file">sd_india_contract/report/report_packing_list.odt</field>
+		<field name="tml_source">file</field>
+		<field name="print_report_name">'Shipping Advise'</field>
+	</record>
+
+	<record id="stock_transfer_invoice" model="ir.actions.report">
+		<field name="name">Stock Transfer Invoice</field>
+		<field name="type">ir.actions.report</field>
+		<field name="model">delivery.order</field>
+		<field name="binding_model_id" ref="sd_sale_contract.model_delivery_order"/>
+		<field name="report_name">stock_transfer_invoice</field>
+		<field name="report_type">aeroo</field>
+		<field name="in_format">oo-odt</field>
+		<field name="out_format" model="report.mimetypes" search="[('code','=','oo-pdf'),('compatible_types','=','oo-odt')]"/>
+		<field name="preview">True</field>
+		<field name="parser_state">loc</field>
+		<field name="parser_loc">sd_india_contract/report/report_stock_transfer_invoice_parser.py</field>
+		<field name="report_file">sd_india_contract/report/report_stock_transfer_invoice.odt</field>
+		<field name="tml_source">file</field>
+		<field name="print_report_name">'Stock Transfer Invoice'</field>
+	</record>
+
+</odoo>

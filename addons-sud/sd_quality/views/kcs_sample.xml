@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    	
+		<record id="view_kcs_sample_form" model="ir.ui.view">
+            <field name="name">view.kcs.sample.form</field>
+            <field name="model">kcs.sample</field>
+            <field name="arch" type="xml">
+                <form string="Intake Quality Average">
+                	<header>
+                		<button name="update_sample_quality" type="object" states='draft,approved' string="Update"
+	                    	class="oe_highlight"/>
+                	</header>
+	                <sheet>
+	                	<div class="oe_title">
+	                        <h1>
+	                            <field name="name" readonly="1"/>
+	                        </h1>
+	                    </div>
+	                	
+                  		<group>
+	                		<group>
+	                			<field name="partner_id"/>
+            		 			<field name="product_id"/>
+            		 			<field name="deduction" readonly="1"/>
+            		 			<field name="deduction_manual" attrs="{'readonly': [('check_user', '!=', True)]}"/>
+            		 			<field name="remark" attrs="{'readonly': [('check_user', '!=', True)]}"/>
+	                     		<field name="check_user" invisible="1"/>
+	                     		<field name="x_inspectator"/>
+	                     		<field name="test_sample"/>
+	                     		<field name="bag_no"/>
+							</group>
+							<group>
+								<field name="categ_id" />
+								<field name="date_kcs"/>
+								<field name="criterions_id" domain="['|',('product_id','=',product_id), ('categ_id','=',categ_id)]" />
+								<field name="picking_ids" widget="many2many_tags" 
+									domain="[('partner_id','=',partner_id), ('use_sample','=', True), ('kcs_sample_ids','=',False),('state_kcs','=','draft'),('product_id','=',product_id)]"/>
+							</group>	
+	                	</group>
+		            	<notebook>
+		            		<page string="Quality Test" name="quality_test">
+								<group class="row">
+									<group class="col-10">
+										<group class="col-6">
+											<field name="sample_weight" required="1" attrs="{'readonly': [('state', '=', 'approved'),('check_user', '!=', True)]}"/>
+											<field name="mc_degree" attrs="{'readonly': [('state', '=', 'approved'),('check_user', '!=', True)]}"/>
+											<field name="fm_gram" attrs="{'readonly': [('state', '=', 'approved'),('check_user', '!=', True)]}"/>
+											<field name="black_gram" attrs="{'readonly': [('state', '=', 'approved'),('check_user', '!=', True)]}"/>
+											<field name="broken_gram" attrs="{'readonly': [('state', '=', 'approved'),('check_user', '!=', True)]}"/>
+											<field name="brown_gram" attrs="{'readonly': [('state', '=', 'approved'),('check_user', '!=', True)]}"/>
+
+											<field name="mold_gram" attrs="{'readonly': [('state', '=', 'approved'),('check_user', '!=', True)]}"/>
+											<field name="cherry_gram" attrs="{'readonly': [('state', '=', 'approved'),('check_user', '!=', True)]}"/>
+											<field name="excelsa_gram" attrs="{'readonly': [('state', '=', 'approved'),('check_user', '!=', True)]}"/>
+											<field name="screen20_gram" attrs="{'readonly': [('state', '=', 'approved'),('check_user', '!=', True)]}"/>
+											<field name="screen19_gram" attrs="{'readonly': [('state', '=', 'approved'),('check_user', '!=', True)]}"/>
+											<field name="screen18_gram" attrs="{'readonly': [('state', '=', 'approved'),('check_user', '!=', True)]}"/>
+											<field name="screen17_gram" attrs="{'readonly': [('state', '=', 'approved'),('check_user', '!=', True)]}"/>
+											<field name="screen16_gram" attrs="{'readonly': [('state', '=', 'approved'),('check_user', '!=', True)]}"/>
+											<field name="screen15_gram" attrs="{'readonly': [('state', '=', 'approved'),('check_user', '!=', True)]}"/>
+											<field name="screen14_gram" attrs="{'readonly': [('state', '=', 'approved'),('check_user', '!=', True)]}"/>
+											<field name="screen13_gram" attrs="{'readonly': [('state', '=', 'approved'),('check_user', '!=', True)]}"/>
+											<field name="greatersc12_gram"/>
+											<field name="belowsc12_gram" attrs="{'readonly': [('state', '=', 'approved'),('check_user', '!=', True)]}"/>
+											<field name="burned_gram" attrs="{'readonly': [('state', '=', 'approved'),('check_user', '!=', True)]}"/>
+											<field name="eaten_gram" attrs="{'readonly': [('state', '=', 'approved'),('check_user', '!=', True)]}"/>
+											<field name="immature_gram" attrs="{'readonly': [('state', '=', 'approved'),('check_user', '!=', True)]}"/>
+											<field name="maize_yn" invisible="1"/>
+											<field name="sampler" string="Analysis By"/>
+											<field name="stone_count"/>
+											<field name="stick_count"/>
+											<field name="bb12_gram" invisible="1"/>
+											<field name="state" invisible="1"/>
+										</group>
+
+										<group class="col-4">
+											<field name="bb_sample_weight" string="BB Sample" required="1" attrs="{'readonly': [('state', '=', 'approved'),('check_user', '!=', True)]}"/>
+											<field name="mc" readonly="1" style="{padding: 2px 4px}"/>
+											<field name="fm" readonly="1" style="{padding: 2px 4px}"/>
+											<field name="black" readonly="1"/>
+											<field name="broken" readonly="1"/>
+											<field name="brown" readonly="1"/>
+											<field name="mold" readonly="1"/>
+											<field name="cherry" readonly="1"/>
+											<field name="excelsa" readonly="1"/>
+
+											<field name="screen20" readonly="1"/>
+											<field name="screen19" readonly="1"/>
+											<field name="screen18" readonly="1"/>
+											<field name="screen17" readonly="1"/>
+											<field name="screen16" readonly="1"/>
+
+
+
+											<field name="screen15" readonly="1"/>
+
+											<field name="screen14" readonly="1"/>
+											<field name="screen13" readonly="1"/>
+											<field name="greatersc12" readonly="1"/>
+											<field name="belowsc12" readonly="1"/>
+											<field name="burned" readonly="1"/>
+											<field name="eaten" readonly="1"/>
+
+											<field name="immature" readonly="1"/>
+											<field name="bb12" invisible="1"/>
+
+										</group>
+									</group>
+									<group class="col-4">
+											<field name="mc_deduct" style="{line-height:1.75em}" />
+											<field name="fm_deduct" style="{line-height:1.75em}"  />
+											<field style="{line-height:1.75em}"  name="broken_deduct"/>
+											<field style="{line-height:1.75em}" name="brown_deduct"/>
+											<field style="{margin-bottom: 100%}"  name="bbb"/>
+											<field style="{{margin-top: 100em}" name="mold_deduct"/>
+											<field style="{line-height:1.75em}" name="excelsa_deduct" />
+											<field style="{line-height:1.75em}" name="oversc18"/>
+
+											<field style="{line-height:1.75em}" name="oversc16"/>
+
+											<field style="{line-height:1.75em}" name="oversc13"/>
+
+											<field style="{line-height:1.75em}" name="oversc12"/>
+											<field style="{line-height:1.75em}" name="burned_deduct"/>
+											<field style="{line-height:1.75em}" name="insect_bean_deduct"/>
+									</group>
+								</group>
+	            		</page>
+		            		
+		            	</notebook>
+		                <div class="oe_chatter">
+		                    <field name="message_follower_ids" widget="mail_followers"/>
+		                    <field name="message_ids" widget="mail_thread"/>
+		                </div>
+		        	</sheet>
+                </form>
+            </field>
+        </record>
+        
+        <record id="view_kcs_sample_tree" model="ir.ui.view">
+            <field name="name">view.kcs.sample.tree</field>
+            <field name="model">kcs.sample</field>
+            <field eval="1" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Intake Quality Average" default_order="id desc">
+                	<field name="name"/>
+                    <field name="date_kcs"/>
+                	<field name="partner_id"/>
+                    <field name="product_id"/>
+                    <field name="criterions_id"/>
+                    <field name="x_inspectator"/>
+                    <field name="deduction" readonly="1"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id="action_kcs_sample" model="ir.actions.act_window">
+            <field name="name">Intake Quality Average</field>
+            <field name="res_model">kcs.sample</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+        </record>
+        
+        
+    	
+    </data>
+</odoo>

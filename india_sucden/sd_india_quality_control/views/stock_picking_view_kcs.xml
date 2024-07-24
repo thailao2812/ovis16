@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="view_stock_kcs_form_inherit_india" model="ir.ui.view">
+        <field name="name">view_stock_kcs_form_inherit_india</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="sd_quality.view_stock_kcs_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='kcs_line']/tree/field[@name='criterions_id']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='kcs_line']/tree/field[@name='deduction']" position="replace">
+            </xpath>
+            <xpath expr="//group" position="after">
+                <group name="reject" string="Reject reason">
+                    <field name="reject_in_qc" readonly="1"/>
+                </group>
+            </xpath>
+            <xpath expr="//button[@name='btt_reject']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='state_kcs']" position="attributes">
+                <attribute name="statusbar_visible">draft,commercial,approved,rejected</attribute>
+            </xpath>
+            <xpath expr="//button[@name='btt_approved']" position="after">
+                <button name="reopen_kcs_qc" string="Reopen" type="object" class="oe_highlight" attrs="{'invisible': [('state_kcs', '=', 'draft')]}" groups="sd_india_quality_control.group_reopen_kcs_qc"/>
+                <button name="button_assign_commercial" type="object" string="Approve" class="oe_highlight" attrs="{'invisible': [('state_kcs', '!=', 'draft')]}" groups="sd_india_master.group_quality_india"/>
+                <button name="%(sd_india_quality_control.action_view_reject_qc)d" type="action" string="Reject" class="oe_highlight" attrs="{'invisible': [('state_kcs', 'not in', ['commercial', 'draft'])]}" groups="sd_india_master.group_commercial_qa_india"/>
+            </xpath>
+            <xpath expr="//button[@name='btt_approved']" position="attributes">
+                <attribute name="string">Approve</attribute>
+                <attribute name="attrs">{'invisible': [('state_kcs','!=','commercial')]}</attribute>
+                <attribute name="groups">sd_india_master.group_commercial_qa_india</attribute>
+                <attribute name="confirm">Are you sure to approve this, please check all your deductions again, if everything is fine, press OK!</attribute>
+            </xpath>
+
+        </field>
+    </record>
+
+    <record id="group_reopen_kcs_qc" model="res.groups">
+            <field name="name">Reopen India QC Picking</field>
+        </record>
+
+    <record id="view_stock_kcs_tree_inherit_india" model="ir.ui.view">
+        <field name="name">view_stock_kcs_tree_inherit_india</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="sd_quality.view_stock_kcs_tree"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='districts_id']" position="attributes">
+                <attribute name="string">Source of Goods</attribute>
+            </xpath>
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="origin"/>
+            </xpath>
+
+        </field>
+    </record>
+
+    <record id="vpicktree_inherit_add_total_qty_inherit_india_inherit_india" model="ir.ui.view">
+        <field name="name">vpicktree_inherit_add_total_qty_inherit_india_inherit_india</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="sd_india_inventory.vpicktree_inherit_add_total_qty_inherit_india"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='total_init_qty']" position="after">
+                <field name="deduction_qty"/>
+            </xpath>
+
+        </field>
+    </record>
+</odoo>

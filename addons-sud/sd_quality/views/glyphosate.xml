@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    
+    	<record id="view_kcs_glyphosate_tree" model="ir.ui.view">
+            <field name="name">view.kcs.glyphosate.tree</field>
+            <field name="model">kcs.glyphosate</field>
+            <field name="arch" type="xml">
+                <tree string="Glyphosate List" decoration-info="pss_status == 'pending'" decoration-muted="pss_status in ('approved','done')" decoration-danger="pss_status == ('rejected')" default_order="id desc" editable="bottom">
+                    <field name="name"/>
+                    <field name="warehouse_id"/>
+                    <field name="si_id"/>
+                    <field name="customer_id"/>
+                    <field name="product_id"/>
+                    <field name="test_requirement"/>
+                    <field name="date_sent"/>
+                    <field name="pss_status"/>
+                    <field name="date_result"/>
+                    <field name="quantity"/>
+                    <field name="cont_qty"/>
+                    <field name="stack_no"/>
+                    <field name="original"/>
+                    <field name="our_comment"/>
+                    <field name="analysis_by"/>
+                    <field name="results" digits="[42, 3]"/>
+                    <field name="inspector_by"/>
+                    <field name="qc_staff"/>
+                    <field name="remark"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id="action_kcs_glyphosate" model="ir.actions.act_window">
+            <field name="name">Glyphosate</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">kcs.glyphosate</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+              		Create a PSS, the first step of a new Glyphosate.
+              </p>
+            </field>
+        </record>
+        
+    	
+    
+    	
+    	
+    </data>
+</odoo>

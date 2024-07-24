@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+		<!-- Commercial Invoice    -->
+	    <record id="report_template_import_qc_grn" model="ir.actions.report">
+	        <field name="name">Report Commercial Invoice</field>
+	        <field name="type">ir.actions.report</field>
+	        <field name="model">import.qc.grn</field>
+	        <field name="report_name">report_template_import_qc_grn</field>
+	        <field name="report_type">aeroo</field>
+	        <field name="in_format">oo-ods</field>
+	        <field name="out_format" model="report.mimetypes" search="[('code','=','oo-xls'),('compatible_types','=','oo-ods')]"/>
+	        <field name="preview">True</field>
+	        <field name="parser_state">loc</field>
+	        <field name="parser_loc">sd_quality/report/template_import_qc_grn_parser.py</field>
+	        <field name="report_file">sd_quality/report/template_import_qc_grn.ods</field>
+	        <field name="tml_source">file</field>
+	        <field name="print_report_name">'Template Import QC GRN'</field>
+	    </record>	     
+	    
+	    
+	    <record id="report_stock_kcs_qa_gdn" model="ir.actions.report">
+	        <field name="name">KCS QA</field>
+	        <field name="type">ir.actions.report</field>
+	        <field name="model">lot.kcs</field>
+	        <field name="report_name">report_stock_kcs_qa_gdn</field>
+	        <field name="binding_model_id" ref="sd_quality.model_lot_kcs"/>
+	        <field name="report_type">aeroo</field>
+	        <field name="in_format">oo-odt</field>
+	        <field name="out_format" model="report.mimetypes" search="[('code','=','oo-pdf'),('compatible_types','=','oo-odt')]"/>
+	        <field name="preview">True</field>
+	        <field name="parser_state">loc</field>
+	        <field name="parser_loc">sd_quality/report/qa_gdn_parser.py</field>
+	        <field name="report_file">sd_quality/report/qa-gdns.odt</field>
+	        <field name="tml_source">file</field>
+	        <field name="print_report_name">'Lot KCS'</field>
+	    </record>	     
+	    
+	        
+	        
+	</data>
+</odoo>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_action_wizard_import_p_contract" model="ir.ui.view">
+	      <field name="name">Import P Contract</field>
+	      <field name="model">import.p.contract</field>
+	      <field name="arch" type="xml">
+	        <form>
+	        	<sheet>
+	        		<group col="2" name="main">
+		       			<field name="file"/>
+			          	<field name="file_name" invisible="1"/>
+			        </group>
+			        <footer>
+			        	<button string="Import" name="import_p_contract" type="object" class="oe_highlight"/>
+                        <button string="Cancel" class="btn-default" special="cancel"/>
+			        </footer>
+	        	</sheet>
+    		</form>
+	      </field>
+	    </record>
+
+		<record id="action_wizard_import_p_contract" model="ir.actions.act_window">
+	        <field name="name">Import P Contract</field>
+	        <field name="res_model">import.p.contract</field>
+	        <field name="view_mode">form</field>
+	        <field eval="False" name="view_id"/>
+			<field name="target">new</field>
+	    </record>
+	
+</odoo>

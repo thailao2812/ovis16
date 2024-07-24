@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	
+			           	
+			           	<!-- MO -->  	
+				        <menuitem action="sd_mrp_quality.mrp_production_qcs_action"
+				            id="mrp_production_qcs_action_action"
+				            parent="sd_quality.quality_control_good_root_menu"
+				            sequence="38"/>
+				        	 
+</odoo>

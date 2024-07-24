@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <!-- Ned Packing -->
+    	<record id="view_ned_packing_tree" model="ir.ui.view">
+            <field name="name">ned.packing.tree</field>
+            <field name="model">ned.packing</field>
+            <field name="arch" type="xml">
+                <tree string="Packing List" editable="top">
+                    <field name="name"/>
+                    <field name="vn_description"/>
+                    <field name="en_description"/>
+                    <field name="capacity"/>
+                    <field name="tare_weight"/>
+                    <field name="Premium"/>
+                    <field name="price"/>
+                    <field name="active"/>
+                </tree>
+            </field>
+        </record>
+        
+        
+        <record id="action_ned_packing" model="ir.actions.act_window">
+            <field name="name">Packing List</field>
+            <field name="res_model">ned.packing</field>
+            <field name="view_mode">tree</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+              		Create a Packing, the first step of a Packing.
+              </p>
+            </field>
+        </record>
+        
+        <!-- Ned Fumigation -->
+    	<record id="view_ned_fumigation_tree" model="ir.ui.view">
+            <field name="name">ned.fumigation.tree</field>
+            <field name="model">ned.fumigation</field>
+            <field name="arch" type="xml">
+                <tree string="Fumigation" editable="top">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id="action_ned_fumigation" model="ir.actions.act_window">
+            <field name="name">Fumigation List</field>
+            <field name="res_model">ned.fumigation</field>
+            <field name="view_mode">tree</field>
+            <field name="context">{}</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+              		Create a Fumigation, the first step of a fumigation.
+              </p>
+            </field>
+        </record>
+        
+        	
+        
+        	<!-- Ned Fumigation -->
+    	<record id="view_ned_packing_terms_tree" model="ir.ui.view">
+            <field name="name">ned.packing.terms.tree</field>
+            <field name="model">packing.terms</field>
+            <field name="arch" type="xml">
+            <tree string="Market" editable="top">
+                	<field name="name"/>
+                    <field name="vietnamese"/>
+                    <field name="english"/>
+            </tree>
+            </field>
+        </record>
+        
+        <record model="ir.actions.act_window" id="action_view_ned_packing_terms">
+            <field name="name">Packing Terms</field>
+            <field name="res_model">packing.terms</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a Packing, the first step of a Packing.
+                </p><p>
+                </p>
+            </field>
+        </record>
+        
+        
+        <record id="view_ned_market_price_tree" model="ir.ui.view">
+            <field name="name">ned.market.price.tree</field>
+            <field name="model">market.price</field>
+            <field name="arch" type="xml">
+                <tree string="Market" editable="top">
+                	<field name="mdate" optional="show"/>
+                    <field name="interbankrate" optional="show"/>
+                    <field name="price" optional="show"/>
+                    <field name="bankceiling" optional="hide"/>
+                    <field name="note" optional="show"/>
+                    <field name="bank_floor" optional="show"/>
+                    <field name="eximbank" optional="show"/>
+                    <field name="techcombank" optional="show"/>
+                    <field name="acb_or_vietinbank" optional="show"/>
+                    <field name="commercialrate" optional="show"/>
+                    <field name="exporter_faq_price" optional="show"/>
+                   
+                    <field name="liffe_month" optional="show"/>
+                    <field name="liffe" optional="show"/>
+                    <field name="g2difflocal" optional="show"/>
+                    <field name="g2difffob" optional="show"/>
+                    <field name="g2_replacement" optional="hide"/>
+                    <field name="faq_price" string="FAQ replacement" optional="hide"/>
+                    <field name="fob_price" invisible="1" optional="hide"/>
+                    <field name="grade_price" invisible="1" optional="hide"/>
+                    
+                    <field name="privatedealer_faq_price" optional="hide" />
+                    <field name="dn_faq_ask" optional="hide"/>
+                    <field name="dn_g2_ask" optional="hide"/>
+                    <field name="bmt_faq_ask" optional="hide"/>
+                    <field name="bmt_g2_ask" optional="hide" />
+                    <field name="dn_exporter_faq" optional="hide" />
+                    <field name="dn_exporter_g2" optional="hide" />
+                    <field name="bmt_exporter_g2"  optional="hide"/>
+                    <field name="bmt_collector_g2" optional="hide"/>
+                </tree>
+            </field>
+        </record>
+        
+        
+        <record model="ir.actions.act_window" id="action_ned_market_price">
+            <field name="name">Market List</field>
+            <field name="res_model">market.price</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a res Market, the first step of a Market.
+                </p><p>
+                </p>
+            </field>
+        </record>
+        
+        
+        
+        <!-- Ned shipping.line -->
+    	<record id="view_ned_shipping_line_tree" model="ir.ui.view">
+            <field name="name">shipping.line.tree</field>
+            <field name="model">shipping.line</field>
+            <field name="arch" type="xml">
+                <tree string="Shipping Line" editable="top">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record model="ir.actions.act_window" id="action_ned_shipping_line">
+            <field name="name">Shipping line</field>
+            <field name="res_model">shipping.line</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a Shipping Line, the first step of a Shipping Line.
+                </p><p>
+                </p>
+            </field>
+        </record>
+    	
+        
+        
+        <!-- Ned Crop -->
+    	<record id="view_ned_crop_tree" model="ir.ui.view">
+            <field name="name">ned.crop.tree</field>
+            <field name="model">ned.crop</field>
+            <field name="arch" type="xml">
+                <tree string="Crop" decoration-info="state == 'current'">
+                    <field name="name"/>
+                    <field name="start_date"/>
+                    <field name="to_date"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id="view_ned_crop_form" model="ir.ui.view">
+            <field name="name">ned.crop.form</field>
+            <field name="model">ned.crop</field>
+            <field name="arch" type="xml">
+                <form string="Crop">
+                	<sheet>
+                		<group col="4">
+                			<field name="name"/>
+                			<field name="short_name" reuqired="1"/>
+                			<field name="state"/>
+                			<field name="start_date"/>
+                			<field name="to_date"/>
+                		</group>
+                		<label for="description"/>
+                		<field name="description"/>
+                		<div class="oe_clear"/>
+                        <group col="4">
+                        	<field name="create_uid"/>
+                			<field name="create_date"/>
+                		</group>
+                	</sheet>
+                </form>
+            </field>
+        </record>
+        
+        <record model="ir.actions.act_window" id="action_ned_crop">
+            <field name="name">Crop</field>
+            <field name="res_model">ned.crop</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a Crop, the first step of a new Crop.
+                </p><p>
+                </p>
+            </field>
+        </record>
+        
+        
+        <record id="view_delivery_place_tree" model="ir.ui.view">
+	            <field name="name">delivery.place.tree</field>
+	            <field name="model">delivery.place</field>
+	            <field name="arch" type="xml">
+	                <tree string="Delivery Place">
+	                    <field name="name"/>
+	                    <field name="code"/>
+	                    <field name="description"/>
+	                    <field name="transit_cost"/>
+	                    <field name="type"/>
+	                    <field name="phone"/>
+	                    <field name="fax"/>
+	                    <field name="active"/>
+	                </tree>
+	            </field>
+	        </record>
+	        
+        <record id="view_delivery_place_form" model="ir.ui.view">
+            <field name="name">delivery.place.form</field>
+            <field name="model">delivery.place</field>
+            <field name="arch" type="xml">
+                <form string="Delivery Place">
+                    <sheet>
+                        <group col="4">
+                            <field name="name"/>
+                            <field name="code"/>
+                            <label for="transit_cost"/>
+                            <div name="transit_cost" class="o_row">
+                                <field name="transit_cost"/>
+                                <field name="currency_id"/> 
+                            </div>
+                            <field name="phone"/>
+                            <field name="address"/>
+                            <field name="recipient"/>
+                    		<field name="fax"/>
+                            <field name="type"/>
+                            <field name="active"/>
+                            
+                        </group>
+                        <notebook>
+                        	<page string="Notes">
+                        		<field name="description"/>	
+                        	</page>
+                        	<page string="Define Acccount">
+                        		<field name="account_ids">
+                        			<tree editable="top">
+                        				<field name="description"/>
+                        				<field name="debit_acc_id"/>
+                        				<field name="credit_acc_id"/>
+                        				<field name="values"/>
+                        			</tree>
+                        		</field>
+                        	</page>
+                        </notebook>
+                        	
+                    </sheet>
+                </form>
+            </field>
+        </record>
+	     
+	     
+      <record model="ir.actions.act_window" id="action_sd_delivery_place">
+            <field name="name">Delivery Place</field>
+            <field name="res_model">delivery.place</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a sale contract, the first step of a new contract.
+                </p><p>
+                </p>
+            </field>
+        </record>
+        
+        
+        <!-- Ned Certificate -->
+        <record id="view_ned_certificate_tree" model="ir.ui.view">
+            <field name="name">ned.certificate.tree</field>
+            <field name="model">ned.certificate</field>
+            <field name="arch" type="xml">
+                <tree string="Certificate" decoration-info="active == True">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="active"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id="view_ned_certificate_form" model="ir.ui.view">
+            <field name="name">ned.certificate.form</field>
+            <field name="model">ned.certificate</field>
+            <field name="arch" type="xml">
+                <form string="Certificate">
+                	<sheet>
+                		<group col="4">
+                			<field name="name"/>
+		                    <field name="code"/>
+		                    <label for="premium"/>
+            				<div name="premium" class="o_row">
+            					<field name="premium"/><field name="currency_id"/>	
+							</div>
+		                    <field name="active"/>
+		                    <field name="combine"/>
+		                    <field name="name_print"/>
+                		</group>
+                		<label for="description"/>
+                		<field name="description" placeholder="Description..."/>
+                		<div class="oe_clear"/>
+                	</sheet>
+                </form>
+            </field>
+        </record>
+        
+        <record id="action_ned_certificate" model="ir.actions.act_window">
+            <field name="name">Certificate Type</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ned.certificate</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+              		Create a Certificate, the first step of a new Certificate.
+              </p>
+            </field>
+        </record>
+        
+        
+
+        
+        
+        	
+    </data>
+</odoo>

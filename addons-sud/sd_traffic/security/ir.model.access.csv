@@ -1,0 +1,9 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+,,,,,,,
+access_ned_traffic_contract_user,access_ned_traffic_contract_user,model_traffic_contract,sd_traffic.group_traffic_user,1,1,1,0
+access_ned_traffic_contract_manager,access_ned_traffic_contract_manager,model_traffic_contract,sd_traffic.group_traffic_manager,1,1,1,1
+access_traffic_contract_filter,access_traffic_contract_filter,model_traffic_contract_filter,base.group_user,1,1,1,1
+access_ned_origin,access_ned_origin,model_ned_origin,base.group_user,1,1,1,1
+access_unallocated_pcontract,access_unallocated_pcontract,model_x_unallocated_pcontract,base.group_user,1,1,1,1
+
+access_popup_result_import,access_popup_result_import,model_popup_result_import,base.group_user,1,1,1,1

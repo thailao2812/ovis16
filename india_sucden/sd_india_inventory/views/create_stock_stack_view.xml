@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_create_stock_stack_form_inherit_india" model="ir.ui.view">
+            <field name="name">view_create_stock_stack_form_inherit_india</field>
+            <field name="model">create.stock.stack</field>
+            <field name="inherit_id" ref="sd_inventory.view_create_stock_stack"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='zone_id']" position="before">
+                    <field name="building_id" required="1" domain="[('warehouse_id','=',warehouse_id)]"/>
+                </xpath>
+                <xpath expr="//field[@name='zone_id']" position="attributes">
+                    <attribute name="domain">[('warehouse_id', '=',warehouse_id),('location_wip','!=', True), ('building_id', '=', building_id)]</attribute>
+                </xpath>
+            </field>
+    </record>
+</odoo>

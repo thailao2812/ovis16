@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="ned_certificate_license_form_view" model="ir.ui.view">
+            <field name="name">ned.certificate.license.form.view</field>
+            <field name="model">ned.certificate.license</field>
+            <field name="arch" type="xml">
+                <form string="Certificate License">
+                    <header>
+						
+                        <button
+                            name="validate_license"
+                            string="Validate"
+                            type="object"
+                            class="oe_highlight"
+                            attrs="{'invisible': [('state','!=','draft')]}"/>
+                        <button
+                            name="reset_draft"
+                            string="Reset to draft"
+                            type="object"
+                            class="oe_highlight"
+                            attrs="{'invisible': [('state','!=','active')]}"/>
+                        <field name="state" widget="statusbar" />
+                        <field name="lock_purchase" invisible="1"/>
+                        
+                        <button name="copy_license" invisible="1" string="Copy" type="object" class="oe_highlight"/>
+                        <button name="btt_lock_purchase" invisible="1" string="Lock Purchase" type="object" class="oe_highlight"/>
+                        
+						<button name="expire_cert" string="Expired" type="object" class="oe_highlight"/>
+                        
+                        <button name="action_deactive" string="Deactive" type="object" class="oe_highlight" states="expired"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" />
+                            </h1>
+                        </div>
+                        <group>
+                            <group string="License Information">
+                                <field name="certificate_id" />
+                                <field name="partner_id"/>
+                                <!--
+                                <field name="partner_id" domain="[('is_supplier_coffee', '=', True)]"/>
+                                -->
+                                <field name="certification_date" attrs="{'readonly': [('state','!=','draft')]}"/>
+                                <field name="expired_date" required="1" attrs="{'readonly': [('state','!=','draft')]}"/>
+                                <field name="quota" required="1" attrs="{'readonly': [('state','!=','draft')]}"/>
+                                <field name="initial_amount" attrs="{'readonly': [('state','!=','draft')]}"/>
+                                <field name="consumed_amount" />
+                                <field name="available_amount" />
+                            </group>
+                            <group string="Purchase &amp; Sale">
+                                <field name="purchased_amount" />
+                                <field name="sales_amount" />
+                                <field name="balance" invisible="1"/>
+                                <field name="type" invisible="1"/>
+                                <field name="remark_cert" invisible="1"/>
+                    			<field name="type_license" invisible="1"/>
+                    			<field name="crop_id" invisible="1"/>
+                            </group>
+                            
+                            
+	                           <group string="Balance">
+	                            <field name="balance"/>
+	                            <field name="faq_balance" required="0"/>
+	                            <field name="g1_s18_balance" required="0"/>
+	                            <field name="g1_s16_balance" required="0"/>
+	                            <field name="g2_balance" required="0"/>
+	                        </group>
+	                        <group string="Initial Amount">
+	                            <field name="initial_amount"/>
+	                            <field name="g1_s16_initial"/>
+	                            <field name="g1_s18_initial"/>
+	                            <field name="g2_initial"/>
+	                        </group>
+	                        <group string="Other Information">
+	                            <field name="remark_cert"/>
+	                            <field name="type"/>
+	                            <field name="type_license" readonly="1"/>
+	                            <field name="crop_id" required="1"/>
+	                            <field name="parent_id"/>
+	                            <field name="count_date_expired" readonly="1"/>
+	                        </group>
+                            
+                        </group>
+                        <notebook>
+                            <page string="Purchase Contracts">
+                                <field name="allocated_purchase_contract_ids" readonly="1">
+                                    <tree>
+                                        <field name="id" invisible="1"/>
+                                        <field name="name" string="Contract"/>
+                                        <field name="date_order"/>
+                                        <field name="total_qty" sum="total_qty"/>
+                                        <field name="qty_received"/>
+                                        
+                                        <field name="delivery_place_id" readonly="1"/>
+					                    <field name="product_id" readonly="1"/>
+					                    <field name="grade_id"/>
+					                    <field name="qty_unreceived"/>
+                    
+                                        <field name="total_qty_fixed"/>
+                                        <field name="qty_unfixed"/>
+                                        <field name="qty_allocate" sum="qty_allocate"/>
+                                        <field name="origin"/>
+                                        <field name="state"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="GRN Allocated"  invisible="0">
+                                <field name="stock_allocation_ids" readonly="1" />
+                            </page>
+                            <page string="Sales Allocations" readonly="1">
+                                <field name="sales_allocation_ids">
+									<tree string="License Allocation" editable="bottom">
+					                    <field name="s_contract_id" required="1"/>
+					                    <field name="license_id" required="1"/>
+					                    
+					                    <field name="type"/>
+					                    <field name="product_id" readonly="1"/>
+					                    <field name="grade_id" readonly="1"/>
+					                    
+					                    <field name="allocation_qty" sum="allocation_qty" required="1"/>
+										<field name="create_uid"/>
+					                </tree>
+								</field>
+                            </page>
+                            
+                            <page name="si_license" string="Shipping Instruction Allocations">
+		                        <field name="shipping_instruction_allocation_ids" readonly="1">
+		                            <tree>
+		                                <field name="shipping_id"/>
+		                                <field name="license_id"/>
+		                                <field name="type"/>
+		                                <field name="product_id"/>
+		                                <field name="grade_id"/>
+		                                <field name="state"/>
+		                                <field name="crop_id"/>
+		                                <field name="allocation_qty"/>
+		                            </tree>
+		                        </field>
+		                    </page>
+		                    <page name="p_contract" string="P Contract" attrs="{'invisible': [('type_license','=','non_bonded')]}">
+		                        <field name="allocated_p_contract_ids" readonly="1">
+		                            <tree>
+		                                <field name="origin"/>
+		                                <field name="shipt_month"/>
+		                                <field name="partner_id"/>
+		                                <field name="name"/>
+		                                <field name="license_id"/>
+		                                <field name="standard_id"/>
+		                                <field name="state"/>
+		                            </tree>
+		                        </field>
+		                    </page>
+                            
+                            
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>               <!-- End ned_certificate_license_form_view -->
+
+        <record id="ned_certificate_license_tree_view" model="ir.ui.view">
+            <field name="name">ned.certificate.license.tree.view</field>
+            <field name="model">ned.certificate.license</field>
+            <field name="arch" type="xml">
+                <tree string="Certificate Licenses" decoration-danger="state == 'expired'" decoration-muted="state == 'deactive'">
+                        <field name="certificate_id"/>
+                        <field name="name"/>
+                        <field name="type"/>
+                        <field name="partner_id"/>
+                        <field name="expired_date"/>
+                        <field name="remark_cert"/>
+                        <field name="state"/>
+                        <field name="quota"/>
+                        <field name="faq_tobe_received"/>
+                        <field name="g1_s18_tobe_received"/>
+                        <field name="g1_s16_tobe_received"/>
+                        <field name="g2_tobe_received"/>
+                        <field name="faq_purchase"/>
+                        <field name="g1_s18_purchase"/>
+                        <field name="g1_s16_purchase"/>
+                        <field name="g2_purchase"/>
+                        <field name="faq_derivable"/>
+                        <field name="g1_s18_derivable"/>
+                        <field name="g1_s16_derivable"/>
+                        <field name="g2_derivable"/>
+                        <field name="faq_allocated"/>
+                        <field name="g1_s18_allocated"/>
+                        <field name="g1_s16_allocated"/>
+                        <field name="g2_allocated"/>
+                        <field name="faq_allocated_not_out"/>
+                        <field name="g1_s18_allocated_not_out"/>
+                        <field name="g1_s16_allocated_not_out"/>
+                        <field name="g2_allocated_not_out"/>
+                        <field name="faq_allocated_out"/>
+                        <field name="g1_s18_allocated_out"/>
+                        <field name="g1_s16_allocated_out"/>
+                        <field name="g2_allocated_out"/>
+                        <field name="faq_unallocated"/>
+                        <field name="g1_s18_unallocated"/>
+                        <field name="g1_s16_unallocated"/>
+                        <field name="g2_unallocated"/>
+                        <field name="faq_balance"/>
+                        <field name="g1_s18_balance"/>
+                        <field name="g1_s16_balance"/>
+                        <field name="g2_balance"/>
+                        <field name="final_balance"/>
+                        <field name="faq_position"/>
+                        <field name="g1_s18_position"/>
+                        <field name="g1_s16_position"/>
+                        <field name="g2_position"/>
+                    </tree>
+            </field>
+        </record>               <!-- End ned_certificate_license_tree_view -->
+
+        <record id="ned_certificate_license_search_view" model="ir.ui.view">
+            <field name="name">ned.certificate.license.search.view</field>
+            <field name="model">ned.certificate.license</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <field name="certificate_id"/>
+                    <field name="partner_id"/>
+                    <group expand="1" string="Group By">
+                        <filter string="Certificate" name="certificate" domain="[]" context="{'group_by': 'certificate_id'}"/>
+                        <filter string="Supplier" name="supplier" domain="[]" context="{'group_by': 'partner_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>               <!--End ned_certificate_license_search_view-->
+
+        
+        <record model="ir.actions.act_window" id="action_ned_certificate_license">
+            <field name="name">Certificate License</field>
+            <field name="res_model">ned.certificate.license</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="ned_certificate_license_search_view"/>
+            <field name="context">{}</field>
+            <field name="domain">[('type_license','=','non_bonded')]</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a Certificate license
+                </p><p>
+                </p>
+            </field>
+        </record>
+        
+
+        <record id="action_view_ned_certificate_license_tree" model="ir.actions.act_window.view">
+            <field eval="10" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="ned_certificate_license_tree_view"/>
+            <field name="act_window_id" ref="action_ned_certificate_license"/>
+        </record>
+
+        <record id="action_view_ned_certificate_license_form" model="ir.actions.act_window.view">
+            <field eval="20" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="ned_certificate_license_form_view"/>
+            <field name="act_window_id" ref="action_ned_certificate_license"/>
+        </record>
+
+    <record model="ir.cron" id="ir_cron_update_license_state">
+        <field name="name">Update: License State</field>
+        <field name="model_id" ref="sd_pur_sales.model_ned_certificate_license" />
+        <field name="state">code</field>
+        <field name="code">model.update_license_status()</field>
+        <field name="user_id" ref="base.user_root" />
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+    </record>
+
+    </data>
+</openerp>

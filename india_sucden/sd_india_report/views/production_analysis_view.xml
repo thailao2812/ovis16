@@ -1,0 +1,409 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    	<record id="view_ned_production_analysis_form" model="ir.ui.view">
+            <field name="name">view.ned.production.analysis.form</field>
+            <field name="model">production.analysis</field>
+            <field name="arch" type="xml">
+                <form string="Batch PnL">
+                	<header>
+                        <button name="load_data" string="Load Data" type="object" class="oe_highlight" attrs="{'invisible': [('type','=','upgrade')]}"/>
+                        <button name="load_data_upgrade" string="Load Data" type="object" class="oe_highlight" attrs="{'invisible': [('type','=','normal')]}"/>
+                        <button name="export_data_pnl_upgrade" string="Export Data" type="object" attrs="{'invisible': [('type','!=','upgrade')]}"/>
+                        <button name="export_data_pnl_bta" string="Export Data" type="object" attrs="{'invisible': [('type','=','upgrade')]}"/>
+                    </header>
+                    <group col="8" string='Batch &amp; Daily Confirmation'>
+	                    <group >
+	                        <field name="name" invisible="1"/>
+	                        <field name="daily_ids" widget='many2many_tags' readonly="1"
+	                            attrs="{'invisible': [('type','=','upgrade')]}"/>
+	                    </group >
+	                    <group>
+							<field name="production_id" required="1"/>
+						</group>
+						<group>
+							<field name='crop_id'/>
+						</group>
+						<group>
+							<field name='week' readonly="1"/>
+	                        <field name='notes' readonly="1"/>
+	                        <field name='type' invisible="1"/>
+						</group>
+	                </group>
+	                <newline/>
+	                 <button type="object" name="load_liffe_diff" string='Load from Daily Confirmation'
+                        attrs="{'invisible': ['|',('daily_ids','=',False),('type','=','upgrade')]}"/>
+                         <newline/>   
+                    <group col='4'>
+                        <group string='Confirmation &amp; Cost Price' col='2'>
+                               
+                            <newline/>
+                            <field name="liffe" required="1"/>
+                            <field name="diff" required="1"/>
+                            <field name="cost_price" required="1"/>
+                            <field name="exchange_rate" required="1"/>
+                            <field name="premium_utz" required="1"/>
+                            <field name="premium_4c" required="1"/>
+                             <field name="ra_input"/>
+		                    <field name="sml_quantity"/>
+		                    <field name="sml_value"/>
+                            <field name="trucking_cost" required="1"/>
+                        </group >
+                        <group string='Input'>
+                            <field name="input_quantity" required="1"/>
+                            <field name="input_value" required="1"/>
+                        </group >
+                        <group string='Output'>
+                            <field name="output_quantity" required="1"/>
+                            <field name="output_value" required="1"/>
+                        </group >
+                        <group col='2' string='PnL'>
+                            <field name="payment_weight" string="Payment Weight" required="1" attrs="{'invisible': [('type','=','upgrade')]}"/>
+                            <field name="total_pnl" required="1"/>
+                            <field name="pnl_per_ton" required="1"/>
+                            <field name="premium" required="1" attrs="{'invisible': [('type','=','upgrade')]}"/>
+                            <field name="real_extraction" required="1" attrs="{'invisible': [('type','=','upgrade')]}"/>
+                            <field name="p_average"/>
+                    		<field name="percent_discount"/>
+                            <br/>
+                            <br/>
+                            <field name="premium_total" required="1" attrs="{'invisible': [('type','=','upgrade')]}"/>
+                        </group >
+                        <group col="12" string='LOG NOTE INTERNAL'>
+	                        <field name="note_fail"/>
+	                    </group>
+                    </group >
+                    <notebook>
+                        <page string="Input Quantity" attrs="{'invisible': [('type','=','upgrade')]}">
+                            <field name="input_ids" nolabel="1" readonly="1">
+                                <tree>
+                                    <field name="production_id"/>
+                                    <field name="zone_id"/>
+                                    <field name="stack_id"/>
+                                    <field name="date"/>
+                                    <field name="picking_id"/>
+                                    <field name="product_id"/>
+                                    <field name="bag_no"/>
+                                    <field name="packing_id"/>
+                                    <field name="net_qty" sum='net_qty'/>
+                                    <field name="real_qty" sum='real_qty'/>
+<!--                                    <field name="mc"/>-->
+<!--                                    <field name="fm"/>-->
+<!--                                    <field name="black"/>-->
+<!--                                    <field name="broken"/>-->
+<!--                                    <field name="brown"/>-->
+<!--                                    <field name="mold"/>-->
+<!--                                    <field name="cherry"/>-->
+<!--                                    <field name="excelsa"/>-->
+<!--                                    <field name="screen18"/>-->
+<!--                                    <field name="screen16"/>-->
+<!--                                    <field name="screen13"/>-->
+<!--                                    <field name="screen12"/>-->
+<!--                                    <field name="greatersc12"/>-->
+<!--                                    <field name="burn"/>-->
+<!--                                    <field name="eaten"/>-->
+<!--                                    <field name="stone_count"/>-->
+<!--                                    <field name="stick_count"/>-->
+<!--                                    <field name="immature"/>-->
+                                    <field name="moisture_percent"/>
+                                    <field name="outturn_percent"/>
+                                    <field name="aaa_percent"/>
+                                    <field name="aa_percent"/>
+                                    <field name="a_percent"/>
+                                    <field name="b_percent"/>
+                                    <field name="c_percent"/>
+                                    <field name="pb_percent"/>
+                                    <field name="bb_percent"/>
+                                    <field name="bleached_percent"/>
+                                    <field name="idb_percent"/>
+                                    <field name="bits_percent"/>
+                                    <field name="hulks_percent"/>
+                                    <field name="stone_percent"/>
+                                    <field name="skin_out_percent"/>
+                                    <field name="triage_percent"/>
+                                    <field name="wet_bean_percent"/>
+                                    <field name="red_beans_percent"/>
+                                    <field name="stinker_percent"/>
+                                    <field name="faded_percent"/>
+                                    <field name="flat_percent"/>
+                                    <field name="pb1_percent"/>
+                                    <field name="pb2_percent"/>
+                                    <field name="sleeve_6_up_percent"/>
+                                    <field name="sleeve_5_5_up_percent"/>
+                                    <field name="sleeve_5_5_down_percent"/>
+                                    <field name="sleeve_5_down_percent"/>
+
+                                    <field name="sleeve_5_up_percent"/>
+                                    <field name="unhulled_percent"/>
+                                    <field name="remaining_coffee_percent"/>
+                                    <field name="blacks_percent"/>
+                                    <field name="half_monsoon_percent"/>
+                                    <field name="good_beans_percent"/>
+
+                                    <field name="state"/>
+                                </tree>
+                            </field>
+                        </page>
+
+                        <page string="Input" attrs="{'invisible': [('type','!=','upgrade')]}">
+                            <field name="input_upgrade_ids" nolabel="1" readonly="1">
+                                <tree>
+                                    <field name="stack_id"/>
+                                    <field name="date"/>
+                                    <field name="picking_id"/>
+                                    <field name="product_id"/>
+                                    <field name="bag_no"/>
+                                    <field name="packing_id"/>
+                                    <field name="net_qty" sum='net_qty'/>
+                                    <field name="real_qty" sum='real_qty'/>
+
+                                    <field name="moisture_percent"/>
+                                    <field name="outturn_percent"/>
+                                    <field name="aaa_percent"/>
+                                    <field name="aa_percent"/>
+                                    <field name="a_percent"/>
+                                    <field name="b_percent"/>
+                                    <field name="c_percent"/>
+                                    <field name="pb_percent"/>
+                                    <field name="bb_percent"/>
+                                    <field name="bleached_percent"/>
+                                    <field name="idb_percent"/>
+                                    <field name="bits_percent"/>
+                                    <field name="hulks_percent"/>
+                                    <field name="stone_percent"/>
+                                    <field name="skin_out_percent"/>
+                                    <field name="triage_percent"/>
+                                    <field name="wet_bean_percent"/>
+                                    <field name="red_beans_percent"/>
+                                    <field name="stinker_percent"/>
+                                    <field name="faded_percent"/>
+                                    <field name="flat_percent"/>
+                                    <field name="pb1_percent"/>
+                                    <field name="pb2_percent"/>
+                                    <field name="sleeve_6_up_percent"/>
+                                    <field name="sleeve_5_5_up_percent"/>
+                                    <field name="sleeve_5_5_down_percent"/>
+                                    <field name="sleeve_5_down_percent"/>
+
+                                    <field name="sleeve_5_up_percent"/>
+                                    <field name="unhulled_percent"/>
+                                    <field name="remaining_coffee_percent"/>
+                                    <field name="blacks_percent"/>
+                                    <field name="half_monsoon_percent"/>
+                                    <field name="good_beans_percent"/>
+<!--                                    <field name="mc"/>-->
+<!--                                    <field name="fm"/>-->
+<!--                                    <field name="black"/>-->
+<!--                                    <field name="broken"/>-->
+<!--                                    <field name="brown"/>-->
+<!--                                    <field name="mold"/>-->
+<!--                                    <field name="cherry"/>-->
+<!--                                    <field name="excelsa"/>-->
+<!--                                    <field name="screen18"/>-->
+<!--                                    <field name="screen16"/>-->
+<!--                                    <field name="screen13"/>-->
+<!--                                    <field name="screen12"/>-->
+<!--                                    <field name="greatersc12"/>-->
+<!--                                    <field name="burn"/>-->
+<!--                                    <field name="eaten"/>-->
+                                    <field name="exportale"/>
+                                    <field name="value_low_grade"/>
+                                    <field name="premium_discount"/>
+<!--                                    <field name="required_mc"/>-->
+<!--                                    <field name="excess_mc"/>-->
+<!--                                    <field name="mc_discount"/>-->
+                                    <field name="value_input"/>
+                                </tree>
+                            </field>
+                        </page>
+                        
+                        <page string="Input Value" attrs="{'invisible': [('type','=','upgrade')]}">
+                            <field name="input_value_ids" nolabel="1" readonly="1">
+                                <tree>
+                                    <field name="stack_id"/>
+                                    <field name="picking_id" string='Receipt Note'/>
+                                    <field name="contract_id"/>
+                                    <field name="contract_price"/>
+                                    <field name="exchange_rate"/>
+                                    <field name="diff_price"/>
+                                    <field name="qty_allocation" sum='qty_allocation'/>
+                                    <field name="premium"/>
+                                    <field name="trucking_cost"/>
+                                    <field name="raw_coffee_cost" sum='raw_coffee_cost'/>
+                                    <field name="factory_price"/>
+                                    <field name="total_paid" sum='total_paid'/>
+                                    <field name="liffe"/>
+                                    <field name="diff"/>
+                                    <field name="sale_to_ams"/>
+                                    <field name="factory_price_premium"/>
+                                    <field name="payment" sum="payment"/>
+                                    <field name="premium_total"/>
+                                    <field name="subsidy"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Output">
+                            <field name="output_ids" nolabel="1" readonly="1">
+                                <tree>
+                                    <field name="stack_id"/>
+                                    <field name="date"/>
+                                    <field name="picking_id" string='GIP'/>
+                                    <field name="product_id"/>
+                                    <field name="bag_no"/>
+                                    <field name="packing_id"/>
+                                    <field name="net_qty" sum='net_qty' string='NW (Mill)'/>
+                                    <field name="real_qty" sum='real_qty' string='NW (WH)'/>
+
+                                    <field name="moisture_percent"/>
+                                    <field name="outturn_percent"/>
+                                    <field name="aaa_percent"/>
+                                    <field name="aa_percent"/>
+                                    <field name="a_percent"/>
+                                    <field name="b_percent"/>
+                                    <field name="c_percent"/>
+                                    <field name="pb_percent"/>
+                                    <field name="bb_percent"/>
+                                    <field name="bleached_percent"/>
+                                    <field name="idb_percent"/>
+                                    <field name="bits_percent"/>
+                                    <field name="hulks_percent"/>
+                                    <field name="stone_percent"/>
+                                    <field name="skin_out_percent"/>
+                                    <field name="triage_percent"/>
+                                    <field name="wet_bean_percent"/>
+                                    <field name="red_beans_percent"/>
+                                    <field name="stinker_percent"/>
+                                    <field name="faded_percent"/>
+                                    <field name="flat_percent"/>
+                                    <field name="pb1_percent"/>
+                                    <field name="pb2_percent"/>
+                                    <field name="sleeve_6_up_percent"/>
+                                    <field name="sleeve_5_5_up_percent"/>
+                                    <field name="sleeve_5_5_down_percent"/>
+                                    <field name="sleeve_5_down_percent"/>
+
+                                    <field name="sleeve_5_up_percent"/>
+                                    <field name="unhulled_percent"/>
+                                    <field name="remaining_coffee_percent"/>
+                                    <field name="blacks_percent"/>
+                                    <field name="half_monsoon_percent"/>
+                                    <field name="good_beans_percent"/>
+<!--                                    <field name="mc"/>-->
+<!--                                    <field name="fm"/>-->
+<!--                                    <field name="bb"/>-->
+<!--                                    <field name="black"/>-->
+<!--                                    <field name="broken"/>-->
+<!--                                    <field name="brown"/>-->
+<!--                                    <field name="mold"/>-->
+<!--                                    <field name="cherry"/>-->
+<!--                                    <field name="excelsa"/>-->
+<!--                                    <field name="screen18"/>-->
+<!--                                    <field name="screen16"/>-->
+<!--                                    <field name="screen13"/>-->
+<!--                                    <field name="screen12"/>-->
+<!--                                    <field name="greatersc12"/>-->
+                                    <field name="exportale"/>
+                                    <field name="value_low_grade"/>
+                                    <field name="premium_discount"/>
+<!--                                    <field name="required_mc"/>-->
+<!--                                    <field name="excess_mc"/>-->
+<!--                                    <field name="mc_discount"/>-->
+                                    <field name="value_output"/>
+                                </tree>
+                            </field>
+                        </page>
+
+                        <page string="Daily Confirmation" attrs="{'invisible': [('type','=','upgrade')]}">
+                            <field name="daily_confirmation_ids" nolabel="1" readonly="1">
+                                <tree>
+                                    <field name="contract_id"/>
+                                    <field name="liffe"/>
+                                    <field name="diff"/>
+                                    <field name="diff_price"/>
+                                    <field name="exchange_rate"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </form>
+            </field>
+        </record>
+    	
+    	<record id="view_ned_production_analysis_search" model="ir.ui.view">
+            <field name="name">view.ned.production.analysis.search</field>
+            <field name="model">production.analysis</field>
+            <field name="arch" type="xml">
+                <search string="Batch PnL">
+                    <field name = 'production_id'/>
+                    <field name ='production_state'/>
+                    <filter name="production_done" string="Production Done" domain="[('production_state','=','done')]"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="view_ned_production_analysis_tree" model="ir.ui.view">
+            <field name="name">view.ned.production.analysis.tree</field>
+            <field name="model">production.analysis</field>
+            <field name="arch" type="xml">
+                <tree string="Batch PnL" delete="false" create="false">
+					<field name = "warehouse_id"/>
+                    <field name = 'production_id'/>
+                    <field name = 'input_quantity'/>
+                    <field name = 'input_value'/>
+                    <field name = 'output_quantity'/>
+                    <field name = 'output_value'/>
+                    <field name = 'total_pnl'/>
+                    <field name = 'pnl_per_ton'/>
+                    <field name = 'premium'/>
+                    <field name = 'real_extraction'/>
+                    <field name="payment_weight" string="Payment Weight"/>
+                    <field name='week'/>
+                    <field name='notes'/>
+                </tree>
+            </field>
+        </record>
+
+    	<record id="action_ned_production_analysis" model="ir.actions.act_window">
+            <field name="name">Batch PnL</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">production.analysis</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('type','=','normal')]</field>
+            <field name="context">{'default_type':'normal',
+                                    'normal': True,
+                                    'search_default_production_done':1}</field>
+            <field name="search_view_id" ref="view_ned_production_analysis_search"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                </p>
+            </field>
+        </record>
+
+        
+<!--
+        <menuitem id="menu_action_ned_production_analysis" 
+                action="action_ned_production_analysis" 
+                sequence="200" 
+        	    parent="general_kcs.menu_report_kcs" 
+        	    groups="mrp.group_mrp_user,mrp.group_mrp_manager"/>
+-->
+    </data>
+    <!--
+    <data noupdate="1">    
+       	<record forcecreate="True" id="ir_cron_load_all_pnl" model="ir.cron">
+			<field name="name">Load All Batch Pnl</field>
+			<field eval="True" name="active" />
+			<field name="user_id" ref="base.user_root" />
+			<field name="interval_number">24</field>
+			<field name="interval_type">hours</field>
+			<field name="numbercall">-1</field>
+			<field eval="False" name="doall" />
+			<field eval="'production.analysis'" name="model"/>
+			<field eval="'load_all_pnl'" name="function"/>
+			<field eval="'(False,)'" name="args"/>
+		</record>
+        
+    </data>
+    -->
+</odoo>
+  

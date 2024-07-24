@@ -1,0 +1,525 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    	
+    	<!-- Export -->
+    	<record id="view_s_contract_tree" model="ir.ui.view">
+            <field name="name">s.contract.tree</field>
+            <field name="model">s.contract</field>
+            <field name="arch" type="xml">
+                <tree string="S Contract List" default_order="id desc">
+					<field name="shipt_month" optional="show"/>				
+					<field name="status" invisible="context.get('p_contract')" optional="show"/>
+					<field name="name" string="P Contract No." optional="show"/>
+					<field name="si_id" invisible="1"/>
+					
+					<field name="date" optional="show"/>				
+                    <field name="origin"  optional="show" invisible="1"/>
+                    <field name="origin_new" optional="show"/>
+                    <field name="client_ref" optional="show"/>
+                    <field name="pss_type" optional="show"/>
+                    
+                    <field name="start_of_ship_period" optional="show"/>
+                    <field name="end_of_ship_period" optional="show"/>
+                    <field name="delivery_type" optional="show"/>
+                    <field name="incoterms_id" optional="show"/>
+                    
+					<!--
+					<field name="partner_id" string="Partner" domain="[('company_type','=','company')]"/>
+					-->
+					<field name="partner_id" string="Partner" optional="show"/>
+					<field name="char_license" optional="show"/>
+					<field name="certificate_supplier" optional="show"/>
+					<field name="no_of_pack" optional="show"/>
+					<field name="p_qty" optional="show" invisible="1"/>
+					<field name="product_id" string="Standard" invisible="context.get('p_contract')" optional="show"/>
+                    <field name="buyer_ref" invisible="1" optional="show"/>
+					
+					<field name="certificate_id" string="Cert" optional="show"/>
+					<field name="p_quality" optional="show"/>
+					<field name="incoterms_id" optional="show"/>
+					<field name="delivery_type" optional="show"/>
+					
+					<field name="warehouse_id" string="Whse name" optional="show"/>
+					<field name="packing_id" optional="show"/>
+					<field name="qty_allocated" sum="qty_allocated"/>
+					<field name="bag_allocated" sum="bag_allocated"/>
+					<field name="tb_qty_alloca" sum="tb_qty_alloca"/>
+					<field name="tb_bag_alloca" sum="tb_bag_alloca"/>
+					<field name="doc_wei" string="Docs Weight" invisible="1" optional="show"/>
+					
+					<field name="total_qty" sum="total_qty" invisible="context.get('p_contract')" optional="show"/>
+                    <field name="total_remaining_qty" sum="total_remaining_qty" invisible="not context.get('p_contract')" optional="show"/>
+                    
+                    <field name="currency_id" invisible="1" optional="show"/>        
+                    <field name="state" invisible="1" optional="show"/>
+                    <field name="shipment_date" optional="show"/>
+                    <field name="allowed_franchise" invisible="context.get('p_contract')" optional="show"/>
+                    <field name="pss" invisible="context.get('p_contract')" optional="show"/>
+                    <field name="x_final_price" optional="show"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id="view_s_contract_form" model="ir.ui.view">
+            <field name="name">s.contract.form</field>
+            <field name="model">s.contract</field>
+            <field name="arch" type="xml">
+                <form string="S Contract">
+	                <header>
+	                	<field name="state" widget="statusbar" statusbar_visible="draft,approved,done" invisible="1"/>
+	                </header>
+	                <sheet>
+	                	<div class="oe_button_box" name="button_box">
+							
+							<button type="object" name="action_view_shipping" class="oe_stat_button" icon="fa-truck" 
+									attrs="{'invisible': [('shipping_count','=',0)]}">
+								<field name="shipping_count" widget="statinfo" string="SI"/>
+							</button>
+							<field name="contract_ids" invisible="1"/>
+							<button type="object" name="action_view_contract_nls" class="oe_stat_button" icon="fa-pencil-square-o"
+									attrs="{'invisible': [('contract_count','=',0)]}">
+								<field name="contract_count" widget="statinfo" string="NLS"/>
+							</button>
+						</div>
+	                    <div class="oe_title">
+							<span class="o_form_label"><label for="name" string="S Contract"/></span>
+	                        <h1>
+	                            <field name="name" placeholder="S Contract Name"/>
+	                        </h1>
+	                    </div>
+                        
+	                    <group>
+	                    	<group>
+	                    		<!-- 
+	                    		<field name="partner_id" domain="[('is_customer_coffee','=',True),('company_type','=','company')]"/>
+	                    		-->
+	                            <field name="partner_id" domain="[('is_customer_coffee','=',True)]" options="{'no_create_edit': True, 'no_create': True}"/>
+	                            <field name="certificated_ids" widget="many2many_tags" invisible="0"/>
+	                            <!--
+	                    		<field name="partner_shipping_id" options="{'no_write': True, 'no_create': True}"/>
+	                    		-->
+	                    		<field name="status" attrs="{'invisible': [('type','=','p_contract')]}"/>
+	                    		
+	                    		<field name="currency_id" options="{'no_write': True, 'no_create': True}"/>
+            					<!--
+            					<field name="exchange_rate"/>
+            					-->
+            					<field name="origin" invisible="1"/>
+            					<field name="origin_new"/>
+			                	<field name="client_ref"/>
+			                	<field name="pss_type"/>
+			                    <field name="buyer_ref" attrs="{'invisible': [('type','=','p_contract')]}"/>
+			                    <field name="pss" attrs="{'invisible': [('type','=','p_contract')]}"/>
+			                    <field name="date_pss" string="Date Sent Pss" attrs="{'invisible': [('type','=','p_contract')]}" invisible="1"/>
+	                    	</group>
+	                    	<group>
+	                    		<field name="date"/>
+	                    		<field name="shipt_month" invisible="1"/>
+	                    		<!--
+	                    		<field name="weights"/>
+	                    		-->
+	                    		 <field name="weights" attrs="{'invisible': [('type','=','p_contract')]}"/>
+	                    		
+	                    		<field name="shipment_date"/>
+			                    <field name="crop_id"/>
+			                    <field name="delivery_place_id" invisible="1"/>
+			                    <field name="allowed_franchise" attrs="{'invisible': [('type','=','p_contract')]}"/>
+			                    <field name="differential" attrs="{'invisible': [('type','=','p_contract')]}"/>
+			                    <field name="date_catalog" attrs="{'invisible': [('type','!=','p_contract')]}"/>
+			                    <field name="check_by_cont" attrs="{'invisible': [('type','=','p_contract')]}"/>
+			                    <field name="shipt_month"/>
+			                    <field name="x_is_bonded" attrs="{'readonly': [('type','=','p_contract')]}"/>
+			                    <field name="type" invisible="1"/>
+	                    	</group>
+	                    </group>
+	                    <notebook>
+	                    	<page string="Products" name="product">
+	                    		<field name="contract_line" attrs="{'invisible': [('type','=','p_contract')]}">
+	                    			<tree editable="top">
+	                    				<field name="sequence" widget="handle"/>
+					    				<field name="contract_id" invisible="1"/>
+					    				<field name="product_id"/>
+					    				<field name="name"/>
+					    				<field name="certificate_id"/>
+					                    <field name="packing_id"/>
+					                    <field name="type" invisible="1"/>
+					    				<field name="product_qty"  sum="product_qty"/>
+					    				<field name="no_of_teus" sum="no_of_teus"/>
+					    				<field name="number_of_bags" sum="number_of_bags"/>
+					    				<field name="product_uom"/>
+					    				<field name="price_unit" optional="hide"/>
+					    				<field name="remainning_qty" invisible="not context.get('p_contract')"/>
+					                    <field name="market_price" invisible="not context.get('p_contract')"/>
+					                    <field name="p_contract_diff" invisible="not context.get('p_contract')"/>
+					                    <field name="final_price" invisible="not context.get('p_contract')"/>
+                    
+					    				<field name="tax_id" widget="many2many_tags" domain="[('type_tax_use','=','sale')]" invisible="1" />
+					    				<field name="price_subtotal" widget="monetary" optional="hide"/>
+	                    			</tree>
+	                    		</field>
+	                    		
+	                    		<field name="p_contract_line_ids" attrs="{'invisible': [('type','!=','p_contract')]}" context="{'p_contract': True}">
+									<tree editable="top">
+	                    				<field name="sequence" widget="handle"/>
+					    				<field name="contract_id" invisible="1"/>
+					    				<field name="product_id"/>
+					    				<field name="name"/>
+					    				<field name="certificate_id"/>
+					                    <field name="packing_id"/>
+					                    <field name="type" invisible="1"/>
+					    				<field name="product_qty"  sum="product_qty"/>
+					    				
+					    				<field name="number_of_bags"/>
+					    				<field name="product_uom"/>
+					    				<field name="price_unit" invisible="1"/>
+					    				
+					    				<field name="remainning_qty" invisible="not context.get('p_contract')"/>
+					                    <field name="market_price" invisible="not context.get('p_contract')"/>
+					                    <field name="p_contract_diff" invisible="not context.get('p_contract')"/>
+					                    <field name="original_diff"/>
+					                    <field name="final_price" invisible="not context.get('p_contract')"/>
+                    
+					    				<field name="tax_id" widget="many2many_tags" domain="[('type_tax_use','=','sale')]" invisible="1" />
+					    				<field name="price_subtotal" widget="monetary"/>
+	                    			</tree>
+								</field>
+	                    		
+	                            <field name="note" class="oe_inline" placeholder="Setup default terms and conditions in your company settings."/>
+	                            <div class="oe_clear"/>
+	                            <group col="4" name="users_validate" invisible="1" >
+	                            	<field name="create_uid"/>
+	                    			<field name="create_date"/>
+	                    			<field name="user_approve"/>
+	                    			<field name="date_approve"/>
+	                    		</group>
+	                    	</page>
+	                    	<page string="Shipment Details" attrs="{'invisible': [('type','=','p_contract')]}" invisible="1">
+	                    		<group>
+	                    			<group>
+		                    			<field name="port_of_loading" domain="[('type','=','port')]"/>
+		                    			<field name="port_of_discharge" domain="[('type','=','port')]"/>
+		                    			
+		                    			<field name="start_of_ship_period"/>
+					                	<field name="end_of_ship_period"/>
+					                	<field name="delivery_type"/>
+					                	<field name="end_of_ship_period_actual" invisble="1"/>
+					                	<field name="precalculated_freight_cost"/>
+		                    			
+		                    		</group>
+		                    		<group>
+		                    			<field name="container_status" invisble="1"/>
+		                    			<field name="fob_delivery" invisible="1"/>
+                   						<field name="incoterms_id"/>
+		                    		</group>
+		                    		
+	                    		</group>
+	                    	</page>
+	                    	<page string="Shipping Instructions" name="shipping" attrs="{'invisible': [('type','=','p_contract')]}" > 
+	                    		<field name="shipping_ids" options='{"no_create": True, "no_write": True}'/>	
+	                    	</page>
+	                    	<page string="NVS/NLS" name="nls_nvl" attrs="{'invisible': [('type','=','p_contract')]}">
+	                    		<field name="contract_ids" context="{'default_type': 'local'}"/>		
+	                    	</page>
+	                    	              
+	                    	<page string="Other Information" name="information" attrs="{'invisible': [('type','=','p_contract')]}">
+	                    		<group>
+	                    			<group>
+	                    				<field name="warehouse_id" options="{'no_write': True, 'no_create': True}"/>
+	                    			</group>
+	                    			<group>
+	                    				<field name="company_id" options="{'no_write': True, 'no_create': True}"/>
+	                    				<field name="company_representative" domain="[('parent_id','=',company_id)]" options="{'no_write': True, 'no_create': True}"/>
+			                    			
+	                    			</group>
+	                    			<group>
+	                    				<field name="payment_term_id"/>
+	                    				<field name="transportation_charges"/>
+										<field name="picking_policy"/>
+	                    			</group>
+	                    			<group >
+	                    				<field name="validity_date"/>
+	                    				<field name="expiration_date"/>
+	                    				<field name="date_done"/>
+	                    				<field name="certificate_id" invisible="1"/>
+	                    			</group>
+	                    		</group>
+	                    	</page>
+	                    	
+                    		<page string="Licenses" invisible="1">
+		                        <field name="license_allocation_ids" context="{'default_s_contract_id': active_id}" readonly="1">
+		                        	 <tree string="License Allocation" editable="bottom">
+					                    <field name="s_contract_id" required="1"/>
+					                    <!--  errr thieu dieu kien-->
+					                    <field name="license_id" required="1"/>
+					                    <field name="product_id" readonly="1"/>
+					                    <field name="grade_id"/>
+					                    <field name="allocation_qty" sum="allocation_qty" required="1"/>
+					                     <field name="create_uid"/>
+					                </tree>
+		                        </field>
+		                    </page>
+	                    	
+	                    	<page string="Pss Sent" attrs="{'invisible': [('type','=','p_contract')]}">
+		                        <field name="pss_sent_ids" context="{'default_s_contract_id': active_id}">
+									<tree string="Pss Sent" editable="bottom">
+					              		<field name="s_contract_id"/>
+					               		<field name="kgs"/>
+					               		<field name="quality"/>
+					               		<field name="ref_no"/>
+					               		<field name="date_sent"/>
+					               		<field name="courier"/>
+					               		<field name="awb"/>
+					               		<field name="delivered_date"/>
+					               		<field name="signed_by"/>
+					               		<field name="aproved_date"/>
+					               		<field name="rejected_date"/>
+					               	</tree>
+		                        </field>
+		                    </page>
+	                    </notebook>
+	                	</sheet>
+                </form>
+            </field>
+        </record>
+        
+        
+        <record id="s_contract_search" model="ir.ui.view">
+            <field name="name">s.contract.search</field>
+            <field name="model">s.contract</field>
+            <field name="arch" type="xml">
+                <search string="Search S Contract">
+                    <field name="name"/>
+                    <field name="origin_new"/>
+                    <field name="status"/>
+                    <field name="shipping_ids"/>
+                    <field name="certificated_ids"/>
+                    <field name="warehouse_id"/>
+                    <field name="product_id"/>
+                    <filter name="draft" string="Draft" domain="[('state','=','draft')]"/>
+                    <filter name="approve" string="Approved" domain="[('state','=','approved')]"/>
+                    <filter name="done" string="Done" domain="[('state','=','done')]"/>
+                    <separator/>
+                    <filter name="validity_date" string="Validity Date" domain="[('validity_date', '&lt;', time.strftime('%%Y-%%m-%%d'))]"/>
+                    <filter name="factory" string="In Factory" domain="[('warehouse_id.code','=','FA')]"/>
+					<filter name="nofactory" string="No Factory" domain="[('warehouse_id.code','!=','FA')]"/>
+					<separator/>
+                    <field name="partner_id"/>
+                    <filter name ="filter_create_uid" domain="[('create_uid','=',uid)]" help="My Contract"/>
+                    
+                    <filter string="Origin new" name="group_state" context="{'group_by':'origin_new'}"/>
+                    <filter string="Status" name="group_status" context="{'group_by':'status'}"/>
+                    <filter string="Product" name="group_product" context="{'group_by':'product_id'}"/>
+                    <filter string="Shipt Month" name="group_shipt_month" context="{'group_by':'shipt_month'}"/>
+                    <filter string="Partner" name="group_partner" context="{'group_by':'partner_id'}"/>
+                    
+                    
+               </search>
+            </field>
+        </record>
+        
+        
+        <record model="ir.actions.act_window" id="action_s_contract_local">
+            <field name="name">S Contract - Local</field>
+            <field name="res_model">s.contract</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('type','=','local'),('status','=','Factory'),('origin_new.code','=','VN')]</field>
+            <field name="search_view_id" ref="s_contract_search"/>
+            <field name="context">{
+                    'default_type':'local',
+                }
+            </field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a S Contract
+                </p><p>
+                </p>
+            </field>
+        </record>
+        
+
+		<record model="ir.actions.act_window.view" id="action_scontract_tree_lo_view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_s_contract_tree"/>
+            <field name="act_window_id" ref="action_s_contract_local"/>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="action_scontract_form_lo_view">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_s_contract_form"/>
+            <field name="act_window_id" ref="action_s_contract_local"/>
+        </record>
+        
+        
+        
+        <record model="ir.actions.act_window" id="action_s_contract_export">
+            <field name="name">S Contract - Export</field>
+            <field name="res_model">s.contract</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('type','=','export'),('status','=','Factory'),('origin_new.code','=','VN')]</field>
+            <field name="search_view_id" ref="s_contract_search"/>
+            <field name="context">{
+                    'default_type':'export',
+                }
+            </field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a S Contract
+                </p><p>
+                </p>
+            </field>
+        </record>
+
+		<record model="ir.actions.act_window.view" id="action_scontract_tree_ex_view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_s_contract_tree"/>
+            <field name="act_window_id" ref="action_s_contract_export"/>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="action_scontract_form_ex_view">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_s_contract_form"/>
+            <field name="act_window_id" ref="action_s_contract_export"/>
+        </record>
+        
+        
+        
+        
+        <!-- P Contract -->
+        
+        <record id="view_p_contract_traffic_tree" model="ir.ui.view">
+            <field name="name">s.contract.tree</field>
+            <field name="model">s.contract</field>
+            <field name="arch" type="xml">
+                <tree string="S Contract List">
+					<field name="shipt_month" invisible="1" optional="show"/>				
+					<field name="origin" invisible="1" optional="show"/>
+					<field name="status" optional="show" invisible="context.get('p_contract')"/>
+					<field name="name" string="P Contract No." optional="show"/>
+					<field name="date" optional="show"/>
+					
+					 <field name="si_id" invisible="context.get('p_contract')" optional="show"/>
+                    <field name="origin" invisible="context.get('p_contract')" optional="show"/>
+                    <field name="client_ref" optional="show"/>
+                    <field name="pss_type" optional="show"/>
+                    
+                    <field name="start_of_ship_period" optional="show"/>
+                    <field name="end_of_ship_period" optional="show"/>
+                    <field name="delivery_type" optional="show"/>
+                    <field name="incoterms_id" invisible="1" optional="show"/>
+					
+					
+					<field name="partner_id" string="Partner" domain="[('customer_rank','=',True)]" optional="show"/>
+					<field name="no_of_pack" sum="no_of_pack" optional="show"/>
+					<field name="p_qty" sum="p_qty" optional="show"/>
+					<field name="product_id" string="Standard" optional="show"/>
+                    <field name="buyer_ref" invisible="1" optional="show"/>
+					<field name="certificate_id" string="Cert" optional="show"/>
+					<field name="p_quality" optional="show"/>
+					<field name="incoterms_id" optional="show"/>
+					<field name="delivery_type" optional="show"/>
+					<field name="warehouse_id" string="WH" optional="show"/>
+					<field name="packing_id" optional="show"/>
+				
+					<field name="p_allocated" optional="show" sum="p_allocated"/>
+<!--					<field name="p_unallocated" optional="show" sum="p_allocated"/>-->
+					<!--
+					<field name="qty_allocated" optional="show"/>
+					<field name="bag_allocated" optional="show"/>
+					<field name="tb_qty_alloca" optional="show" />
+					<field name="tb_bag_alloca" optional="show"/>
+					-->
+					
+
+					
+					<field name="doc_wei" string="Docs Weight" invisible="1" optional="show"/>
+					<field name="total_qty" invisible="context.get('p_contract')" optional="show"/>
+                    <field name="total_remaining_qty" invisible="not context.get('p_contract')" optional="show" sum="total_remaining_qty"/>
+					
+					
+                    <field name="currency_id" invisible="1"/>  
+                     
+                    <field name="shipment_date"/>
+                    <field name="allowed_franchise" invisible="context.get('p_contract')"/>
+                    <field name="pss" invisible="context.get('p_contract')"/>
+					<field name="market_price" optional="show"/>
+					<field name="p_contract_diff" optional="show"/>
+                    <field name="x_final_price"/>
+                                                         
+                    <field name="state" invisible="1"/>
+                    
+                    
+                </tree>
+            </field>
+        </record>
+        
+        
+        <record model="ir.actions.act_window" id="action_p_contract_instore_traffic">
+            <field name="name">P Contract</field>
+            <field name="res_model">s.contract</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('type','=','p_contract'),('x_is_bonded','=',False)]</field>
+            <field name="search_view_id" ref="s_contract_search"/>
+            <field name="context">{
+                    'default_type':'p_contract',
+                    'p_contract':True,
+                    'traffic':True
+                }
+            </field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create an P Contract, the first step of a new P contract.
+                </p><p>
+                </p>
+            </field>
+        </record>
+
+		<record model="ir.actions.act_window.view" id="action_scontract_tree_p_contract_view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_p_contract_traffic_tree"/>
+            <field name="act_window_id" ref="action_p_contract_instore_traffic"/>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="action_scontract_form_p_contract_view">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_s_contract_form"/>
+            <field name="act_window_id" ref="action_p_contract_instore_traffic"/>
+        </record>
+        
+        
+        
+        <!-- -->
+        
+        
+        
+        
+        
+        
+        
+       <!-- Contract Line -->
+    	<record id="view_s_contract_line_tree" model="ir.ui.view">
+            <field name="name">s.contract.line.tree</field>
+            <field name="model">s.contract.line</field>
+            <field name="arch" type="xml">
+                <tree string="S Contract List" editable="top">
+    				<field name="sequence" widget="handle"/>
+    				<field name="contract_id" invisible="1"/>
+    				<field name="product_id"/>
+    				<field name="name"/>
+    				<field name="product_uom"/>
+    				<field name="product_qty"  sum="product_qty"/>
+    				<field name="price_unit"/>
+    				<field name="tax_id" widget="many2many_tags" domain="[('type_tax_use','=','sale'),('company_id','=',parent.company_id)]"/>
+    				<field name="price_subtotal" widget="monetary"/>
+    			</tree>
+            </field>
+        </record>
+
+    </data>
+</odoo>

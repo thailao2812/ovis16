@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+     <record id="e_invoicing_form_inherit_sucden_account_move_inherit_india" model="ir.ui.view">
+        <field name="name">e_invoicing_form_inherit_sucden_account_move_inherit_india</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="sd_account.e_invoicing_form_inherit_sucden_account_move"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='account_analytic_id']" position="attributes">
+                <attribute name="required">0</attribute>
+            </xpath>
+            <xpath expr="//field[@name='amount_residual']" position="before">
+                <field name="amount_total_india" attrs="{'invisible': [('currency_id', '!=', 20)]}"/>
+            </xpath>
+            <xpath expr="//button[@name='action_post']" position="attributes">
+                <attribute name="groups">sd_india_master.group_accounting_india</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_post']" position="after">
+                <button name="re_calculate_debit_credit" string="Re-Calculation" type="object" class="oe_highlight" states="posted" groups="sd_india_account.group_recalculate_invoice"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_account_supplier_payment_tree_inherit_india" model="ir.ui.view">
+        <field name="name">view_account_supplier_payment_tree_inherit_india</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_supplier_payment_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='amount']" position="attributes">
+                <attribute name="sum">amount</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_out_invoice_tree_sucden_inherit_inherit_india" model="ir.ui.view">
+        <field name="name">view_out_invoice_tree_sucden_inherit_inherit_india</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="sd_account.view_out_invoice_tree_sucden_inherit"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='amount_total_in_currency_signed']" position="attributes">
+                <attribute name="sum">amount_total_in_currency_signed</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

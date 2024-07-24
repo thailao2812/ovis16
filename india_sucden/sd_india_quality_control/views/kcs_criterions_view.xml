@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Inherit Form View to Modify it -->
+<odoo>
+
+    <record id="view_kcs_criterions_form_inherit_india_sucden" model="ir.ui.view">
+        <field name="name">view_kcs_criterions_form_inherit_india_sucden</field>
+        <field name="model">kcs.criterions</field>
+        <field name="inherit_id" ref="sd_quality.view_kcs_criterions_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//page[@name='standard_kcs']" position="replace">
+                <page name="rule_quality" string="Rule Quality">
+                    <group>
+                        <group >
+                        </group>
+                        <group>
+                        </group>
+                        <newline/>
+                        <div>
+                            <separator string="Moisture"/>
+                            <field name="moisture_india_ids" nolabel="1">
+                                <tree editable="top">
+                                    <field name="range_start"/>
+                                    <field name="range_end"/>
+                                    <field name="percent"/>
+                                </tree>
+                            </field>
+                        </div>
+                        <div>
+                            <separator string="Grade Percent"/>
+                            <field name="grade_percent_india_ids" nolabel="1">
+                                <tree editable="top">
+                                    <field name="range_start"/>
+                                    <field name="range_end"/>
+                                    <field name="percent"/>
+                                </tree>
+                            </field>
+                        </div>
+                        <div>
+                            <separator string="Defectives"/>
+                            <field name="defectives_india_ids" nolabel="1">
+                                <tree editable="top">
+                                    <field name="range_start"/>
+                                    <field name="range_end"/>
+                                    <field name="percent"/>
+                                </tree>
+                            </field>
+                        </div>
+                        <div>
+                            <separator string="Outturn"/>
+                            <field name="outturn_india_ids" nolabel="1">
+                                <tree editable="top">
+                                    <field name="range_start"/>
+                                    <field name="range_end"/>
+                                    <field name="percent"/>
+                                </tree>
+                            </field>
+                        </div>
+                        <div>
+                            <separator string="Foreign Matters"/>
+                            <field name="foreign_matter_india_ids" nolabel="1">
+                                <tree editable="top">
+                                    <field name="range_start"/>
+                                    <field name="range_end"/>
+                                    <field name="percent"/>
+                                </tree>
+                            </field>
+                        </div>
+                        <div>
+                            <separator string="Other"/>
+                            <field name="other_india_ids" nolabel="1">
+                                <tree editable="top">
+                                    <field name="range_start"/>
+                                    <field name="range_end"/>
+                                    <field name="percent"/>
+                                </tree>
+                            </field>
+                        </div>
+                    </group>
+                </page>
+            </xpath>
+            <xpath expr="//page[@name='over_screen']" position="replace">
+                <!-- Add your fields or attributes here -->
+            </xpath>
+
+        </field>
+    </record>
+</odoo>

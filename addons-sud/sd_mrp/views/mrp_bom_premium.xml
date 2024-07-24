@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    
+    	<record id="view_mrp_bom_premium_tree" model="ir.ui.view">
+            <field name="name">mrp.bom.premium.tree</field>
+            <field name="model">mrp.bom.premium</field>
+            <field name="arch" type="xml">
+                <tree string="Bom Premium">
+                	<field name="name"/>
+                	<field name="crop_id"/>
+                	<field name="bom_id"/>
+                	<field name="active"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id="view_mrp_bom_premium_form" model="ir.ui.view">
+            <field name="name">mrp.bom.premium.form</field>
+            <field name="model">mrp.bom.premium</field>
+            <field name="arch" type="xml">
+                <form string="Bom Premium">
+                    <header>
+	                	<button name="import_file" string="Import Data" type="object" />
+	                </header>
+	                <sheet>
+	                	<div class="oe_title">
+	                        <h1>
+	                            <field name="name" placeholder="Version ..."/>
+	                        </h1>
+	                    </div>
+	                    <group col="4">
+	                    	<field name="active"/>
+	                    	<field name="crop_id"/>
+	                    	<field name="standard_cost"/>
+	                    	<field name="file" filename="file_name"/>
+                			<field name="file_name" invisible="1"/>
+	                    </group>
+	                    <field name="prem_ids">
+	                    	<tree editabl="top">
+	                    		<field name="product_id"/>
+	                    		<field name="product_uom"/>
+	                    		<field name="premium"/>
+                                <field name="mc"/>
+                                <field name="fm"/>
+                                <field name="black"/>
+                                <field name="broken"/>
+                                <field name="brown"/>
+                                <field name="mold"/>
+                                <field name="cherry"/>
+                                <field name="excelsa"/>
+                                <field name="screen20"/>
+                                <field name="screen19"/>
+                                <field name="screen18"/>
+                                <field name="screen16"/>
+                                <field name="screen13"/>
+                                <field name="belowsc12"/>
+                                <field name="burned"/>
+                                <field name="eaten"/>
+                                <field name="immature"/>
+	                    		<field name="flag"/>
+	                    	</tree>
+	                    </field>
+	                </sheet>
+                </form>
+            </field>
+        </record>
+        
+        <record id="action_mrp_bom_premium" model="ir.actions.act_window">
+            <field name="name">Premium</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">mrp.bom.premium</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        
+        
+	    	
+    
+    </data>'    
+</odoo>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="view_unallocated_p_contract_tree" model="ir.ui.view">
+            <field name="name">view_unallocated_p_contract_tree</field>
+            <field name="model">x_unallocated.pcontract</field>
+            <field name="arch" type="xml">
+                <tree string="Unallocated P Contract" editable="top">
+                    <field name="entity_date" invisible="1"/>
+                    <field name="name"/>
+                    <field name="description" string="Counter Party"/>
+                    <field name="ship_month_id"/>
+                    <field name="product_id"/>
+                    <field name="quality"/>
+                    <field name="quantity"/>
+                    <field name="origin"/>
+                    <field name="dd_from" invisible="1"/>
+                    <field name="dd_to" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+    <record id="action_unallocated_p_contract" model="ir.actions.act_window">
+            <field name="name">Unallocated P Contract</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">x_unallocated.pcontract</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+              		Create an Unallocated PContract, the first step of a new Unallocated PContract.
+              </p>
+            </field>
+        </record>
+</odoo>

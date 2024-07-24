@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="diff_configuration_contract_tree" model="ir.ui.view">
+        <field name="name">diff_configuration_contract_tree</field>
+        <field name="model">diff.configuration</field>
+        <field name="arch" type="xml">
+            <tree string="Diff Configuration for Purchase Contract" editable ='top'>
+				<field name="delivery_place" domain="[('type', '=', 'purchase')]"/>
+				<field name="product_id"/>
+				<field name="crop_id"/>
+				<field name="diff"/>
+            </tree>
+        </field>
+    </record>
+
+     <record id="action_diff_configuration_contract_tree" model="ir.actions.act_window">
+        <field name="name">Diff Configuration for Contract</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">diff.configuration</field>
+        <field name="view_id" ref="diff_configuration_contract_tree"/>
+        <field name="view_mode">tree</field>
+    </record>
+
+    <menuitem id="menu_diff_configuration_contract"
+            name="Diff Configuration for Contract"
+            action="action_diff_configuration_contract_tree"
+            parent="sd_purchase_contract.purchase_contract_root_master_data_menu"
+            sequence="25"/>
+</odoo>

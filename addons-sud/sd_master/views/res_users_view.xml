@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+		<!-- Res Users -->
+	    <record id="view_users_form_inherit_reach_master_data" model="ir.ui.view">
+			<field name="name">view.users.form.inherit.reach.master.data</field>
+		    <field name="model">res.users</field>
+		    <field name="type">form</field>
+		    <field name="inherit_id" ref="base.view_users_form"/>
+		    <field name="arch" type="xml">
+
+				<xpath expr="//notebook/page/group[1]" position="after">
+                    <group string="Sales and Purchase" name="purchase_sale_contract">
+						<field name="trader"/>
+	                </group>
+                </xpath>
+		    </field>
+	    </record>
+		
+    </data>
+</odoo>

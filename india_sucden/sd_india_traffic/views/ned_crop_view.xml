@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_ned_crop_form_inherit_india" model="ir.ui.view">
+        <field name="name">view_ned_crop_form_inherit_india</field>
+        <field name="model">ned.crop</field>
+        <field name="inherit_id" ref="sd_master.view_ned_crop_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='short_name']" position="after">
+                <field name="fixed_cost"/>
+            </xpath>
+
+        </field>
+    </record>
+</odoo>

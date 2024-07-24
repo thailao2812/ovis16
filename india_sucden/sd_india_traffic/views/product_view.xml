@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="product_template_only_form_view_inherit_traffic_india" model="ir.ui.view">
+        <field name="name">product_template_only_form_view_inherit_traffic_india</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_only_form_view"/>
+        <field name="arch" type="xml">
+			 <xpath expr="//field[@name='default_code']" position="after">
+            	<field name="item_group_id"/>
+            </xpath>
+
+        </field>
+    </record>
+
+    <record id="product_normal_form_view_inherit_traffic_india" model="ir.ui.view">
+        <field name="name">product_normal_form_view_inherit_traffic_india</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view"/>
+        <field name="arch" type="xml">
+			 <xpath expr="//field[@name='default_code']" position="after">
+            	<field name="item_group_id"/>
+            </xpath>
+
+        </field>
+    </record>
+
+    <record id="product_template_tree_view_inherit_india" model="ir.ui.view">
+        <field name="name">product_template_tree_view_inherit_india</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_tree_view"/>
+        <field name="arch" type="xml">
+			 <xpath expr="//field[@name='barcode']" position="before">
+            	<field name="taxes_id" widget="many2many_tags"/>
+            	<field name="supplier_taxes_id" widget="many2many_tags"/>
+                 <field name="item_group_id"/>
+                 <field name="l10n_in_hsn_code"/>
+            </xpath>
+
+        </field>
+    </record>
+</odoo>

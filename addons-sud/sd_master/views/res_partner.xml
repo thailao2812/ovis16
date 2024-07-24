@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+		
+		<record model="ir.ui.view" id="view_partner_add_fields_inherit_tree">
+            <field name="name">res.partner.tree.add.fields.inherit.tree</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_tree"/>
+            <field name="arch" type="xml">
+                <field name="display_name" position="after">
+					<field name="partner_code" invisible="1"/>
+                </field>
+            </field>
+        </record>
+        
+        
+		<record id="view_partner_property_form" model="ir.ui.view">
+            <field name="name">res.partner.property.form.inherit</field>
+            <field name="model">res.partner</field>
+            <field name="priority">2</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+				<xpath expr="//field[@name='ref']" position="attributes">
+		        	<attribute name="invisible">1</attribute>
+		        </xpath>
+		        
+		        <xpath expr="//field[@name='city']" position="before">
+		        	<field name="district_id" placeholder="District..."/>
+		        </xpath>
+		        <xpath expr="//field[@name='parent_id']" position="before">
+		        	<field name="shortname" placeholder="Short Name..."/>
+		        </xpath>
+		        
+                <field name="vat" position="after">
+	            	<field name="transfer" />
+	            	<field name="partner_code"/>
+	            	<field name="is_supplier_coffee"/>
+	            	<field name="is_customer_coffee"/>
+<!--	            	<field name="accounting_type" required="1"/>-->
+	        	</field>
+	        	<xpath expr="//field[@name='vat']" position="after">
+		        	<field name="ref"/>
+		        </xpath>
+                
+            </field>
+        </record>
+    	
+    
+
+    </data>
+</odoo>

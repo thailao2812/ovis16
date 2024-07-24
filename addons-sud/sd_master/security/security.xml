@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data noupdate="0">
+		
+		<record id="module_category_sd_masterdata" model="ir.module.category">
+             <field name="name">SD Master Data</field>
+            <field name="sequence">10</field>
+        </record>
+        
+	</data>
+</openerp>

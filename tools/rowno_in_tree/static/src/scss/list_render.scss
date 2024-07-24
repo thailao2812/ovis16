@@ -1,0 +1,24 @@
+.pound {
+    color: gray;
+    font-weight: 600;
+}
+//THINH - make text-align center header row
+.o_list_renderer {
+    // THINH- override list table text-overflow and to make it wrap text
+    .o_list_table {
+        tbody > tr > td:not(.o_list_record_selector) {
+            &:not(.o_handle_cell):not(.o_list_button):not(.o_list_record_remove):not(
+                    .o_list_number
+                ) {
+                text-overflow: unset;
+                white-space: normal;
+                overflow-wrap: break-word;
+            }
+        }
+
+        tbody > tr > td.o_list_number {
+            text-overflow: unset !important;
+            white-space: nowrap !important;
+        }
+    }
+}

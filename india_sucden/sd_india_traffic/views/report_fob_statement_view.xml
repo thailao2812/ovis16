@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="report_fob_statement_tree_view" model="ir.ui.view">
+            <field name="name">report_fob_statement_tree_view</field>
+            <field name="model">report.fob.statement</field>
+            <field name="arch" type="xml">
+                <tree string="Report FOB Statement" editable="top" edit="false" create="false" delete="false">
+                    <field name="item_id"/>
+                    <field name="p_number"/>
+                    <field name="p_date"/>
+                    <field name="sn_no"/>
+                    <field name="sn_date"/>
+                    <field name="purchase_contract"/>
+                    <field name="pc_date"/>
+                    <field name="no_of_bag" sum="no_of_bag"/>
+                    <field name="pc_qty" sum="pc_qty"/>
+                    <field name="outturn"/>
+                    <field name="green_coffee" sum="green_coffee"/>
+                    <field name="fob_value" sum="fob_value"/>
+                    <field name="currency_uom"/>
+                    <field name="value_usd" sum="value_usd"/>
+                    <field name="forex"/>
+                    <field name="farm_gate"/>
+                    <field name="sale_value" sum="sale_value"/>
+                    <field name="value_raw_coffee" sum="value_raw_coffee"/>
+                    <field name="margin_value" sum="margin_value"/>
+                    <field name="margin_per_mt"/>
+                    <field name="market_price"/>
+                    <field name="currency_uom_fob"/>
+<!--                    <field name="contract_price"/>-->
+<!--                    <field name="currency_uom_2nd"/>-->
+                    <field name="differential"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="report_fob_statement_search_view" model="ir.ui.view">
+            <field name="name">report_fob_statement_search_view</field>
+            <field name="model">report.fob.statement</field>
+            <field name="arch" type="xml">
+                <search string="Report FOB Statement">
+                    <field name="item_id"/>
+                    <field name="p_number"/>
+                    <field name="sn_no"/>
+                    <field name="purchase_contract"/>
+                    <group expand="1" string="Group By">
+                        <filter string="Item Group" name="item_id" domain="[]"
+                                context="{'group_by':'item_id'}"/>
+                        <filter string="PSC Number" name="p_number" domain="[]"
+                                context="{'group_by':'p_number'}"/>
+                        <filter string="PC No." name="purchase_contract" domain="[]"
+                                context="{'group_by':'purchase_contract'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="report_fob_statement_act_window" model="ir.actions.act_window">
+            <field name="name">Report FOB Statement</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">report.fob.statement</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'search_default_groupby_product_id': True, 'search_default_groupby_p_number': True}</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    There is no examples click here to add new Report FOB Statement.
+                </p>
+            </field>
+        </record>
+
+
+    </data>
+</odoo>

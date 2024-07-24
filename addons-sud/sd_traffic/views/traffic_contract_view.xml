@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="view_traffic_contract_traffic_tree" model="ir.ui.view">
+            <field name="name">traffic.contract.tree</field>
+            <field name="model">traffic.contract</field>
+            <field name="arch" type="xml">
+                <tree string="S Contract List" editable="top" default_order="write_date desc">
+					<field name="status" invisible="1"/>
+					<field name="write_date" invisible="1"/>
+					<field name="create_date" invisible="1"/>
+
+<!--					<button name="split_scontract"-->
+<!--							type="object" class="oe_highlight" string="Split"/>-->
+<!--                    <button name="sync_scontract" attrs="{'invisible': [('state', '=', 'linked')]}"-->
+<!--							type="object" class="oe_highlight" string="Sync"/>-->
+					<field name="shipby_id"/>
+<!--					<field name="status"/>-->
+					<field name="allocated_date"/>
+					<field name="shipt_month"/>
+<!--					<field name="origin"/>-->
+					<field name="origin_new"/>
+					<field name="name" string="S-contract"/>
+					<field name="client_ref"/>
+                    <field name="partner_id" string="Customer" context="{'partner_traffic':True}" />
+					<field name="p_qty" widget="Integer"/>
+					<field name="no_of_pack" widget="Integer"/>
+					<field name="standard_id"/>
+					<field name="certificate_id"/>
+					<field name="p_quality"/>
+					<field name="packing_id"/>
+					<field name="pss_type"/>
+					<field name="incoterms_id" string="Delivery Term"/>
+					<field name="start_of_ship_period" string="Start of ship. Period"/>
+					<field name="end_of_ship_period" string="End of ship. Period"/>
+					<field name="delivery_type"/>
+					<field name="end_of_ship_period_actual" string="Delivery Period"/>
+					<field name="pic_id"/>
+					<field name="port_of_loading" string="POL"/>
+					<field name="port_of_discharge" string="POD"/>
+					<field name="precalculated_freight_cost"/>
+					<field name="p_contract_link" widget="many2many_tags" domain="[('type','=','p_contract')]" invisible="1"/>
+                    <field name="x_p_contract_link"/>
+					<field name="shipper_id"/>
+					<field name="si_received_date"/>
+					<field name="pss_send_schedule" readonly="1"/>
+					<field name="pss_amount_send" readonly="1"/>
+					<field name="pss_sent_date" invisible="1"/>
+					<field name="pss_approved_date" string="PSS approved date" readonly="1"/>
+					<field name="si_sent_date"/>
+					<field name="freight"/>
+					<field name="shipping_line_id"/>
+					<field name="factory_etd" string="Stuffing Date"/>
+                    <field name="x_stuff_place"/>
+					<field name="nominated_etd"/>
+					<field name="bill_date" string="ETD/ BL date"/>
+					<field name="booking_ref_no" string="Booking No./ BL No."/>
+					<field name="eta"/>
+                    <field name="x_remark1"/>
+                    <field name="x_remark2"/>
+					<field name="late_ship_end" invisible="1"/>
+					<field name="late_ship_est" invisible="1"/>
+					<field name="cause_by"/>
+					<field name="remarks"/>
+<!--					<field name="pss_late_ontime" string="Quality Detail"/>-->
+					<field name="contract_mship"/>
+<!--					<field name="act_freight_cost"/>-->
+					<field name="shipment_status"/>
+					<field name="od_doc_rec_date"/>
+					<field name="od_doc_rec_awb"/>
+					<field name="od_doc_sent_date"/>
+					<field name="awb_sent_no"/>
+					<field name="state"/>
+<!--					<button name="open_form_view"-->
+<!--							type="object" class="oe_highlight" string="Open Form"/>-->
+                </tree>
+            </field>
+        </record>
+
+		<record id="view_traffic_contract_form" model="ir.ui.view">
+			<field name="name">view_traffic_contract_form</field>
+			<field name="model">traffic.contract</field>
+			<field name="arch" type="xml">
+				 <form string="Traffic Contract">
+					 <header>
+						<button name="split_scontract" type="object" string="Split"/>
+						<button name="sync_scontract" type="object" string="sync"/>
+					</header>
+					<sheet>
+						 <div class="oe_title">
+	                        <h1>
+	                            <field name="name" string="S-contract"/>
+	                        </h1>
+	                    </div>
+	                    <group>
+	                    	<group>
+	                            <field name="partner_id"/>
+								<field name="client_ref"/>
+								<field name="origin"/>
+	                    	</group>
+	                    	<group>
+								<field name="shipt_month"/>
+								<field name="shipby_id"/>
+								<field name="allocated_date"/>
+	                    	</group>
+	                    </group>
+						<notebook>
+							<page string="Product">
+								<group>
+									<group>
+										<field name="standard_id"/>
+										<field name="p_quality"/>
+										<field name="p_qty"/>
+										<field name="no_of_pack"/>
+										<field name="packing_id"/>
+										<field name="certificate_id"/>
+										<field name="pss_type"/>
+									</group>
+									<group>
+										<field name="incoterms_id" string="Delivery Term"/>
+										<field name="start_of_ship_period" string="Start of ship. Period"/>
+										<field name="end_of_ship_period" string="End of ship. Period"/>
+										<field name="delivery_type"/>
+										<field name="end_of_ship_period_actual" string="Delivery Period"/>
+										<field name="pic_id"/>
+										<field name="port_of_loading" string="POL"/>
+										<field name="port_of_discharge" string="POD"/>
+									</group>
+								</group>
+							</page>
+							<page string="Shipment">
+								<group>
+									<group>
+										<field name="precalculated_freight_cost"/>
+										<field name="p_contract_link" widget="many2many_tags" domain="[('type','=','p_contract')]"/>
+										<field name="shipper_id"/>
+										<field name="si_received_date"/>
+										<field name="pss_send_schedule" readonly="1"/>
+										<field name="pss_amount_send" readonly="1"/>
+										<field name="pss_sent_date" invisible="1"/>
+										<field name="pss_approved_date" string="PSS approved date" readonly="1"/>
+										<field name="si_sent_date"/>
+										<field name="freight"/>
+										<field name="shipping_line_id"/>
+										<field name="factory_etd" string="Stuffing Date"/>
+										<field name="nominated_etd"/>
+									</group>
+									<group>
+										<field name="bill_date" string="ETD/ BL date"/>
+										<field name="booking_ref_no" string="Booking No./ BL No."/>
+										<field name="eta"/>
+										<field name="late_ship_end"/>
+										<field name="late_ship_est"/>
+										<field name="cause_by"/>
+										<field name="remarks"/>
+										<field name="pss_late_ontime"/>
+										<field name="act_freight_cost"/>
+										<field name="od_doc_rec_date"/>
+										<field name="od_doc_rec_awb"/>
+										<field name="od_doc_sent_date"/>
+										<field name="awb_sent_no"/>
+									</group>
+								</group>
+							</page>
+							<page string="PSS">
+								<field name="pss_sent_ids" colspan="4" nolabel="1">
+									<tree editable="top">
+										<field name="x_sequence"/>
+										<field name="ref_no"/>
+										<field name="x_type"/>
+										<field name="date_sent"/>
+										<field name="courier"/>
+										<field name="awb"/>
+										<field name="delivered_date"/>
+										<field name="signed_by"/>
+										<field name="rejected_date"/>
+										<field name="aproved_date"/>
+										<field name="x_remark"/>
+										<button name="choose_date_approve" type="object" string="Choose"
+												class="oe_highlight"/>
+									</tree>
+								</field>
+								<field name="status" invisible="1"/>
+							</page>
+						</notebook>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+
+
+		<record id="view_traffic_contract_search" model="ir.ui.view">
+            <field name="name">traffic.contract.search</field>
+            <field name="model">traffic.contract</field>
+            <field name="arch" type="xml">
+                <search string="Traffic Contract">
+					<field name="name"/>
+                    <field name="shipt_month"/>
+                    <field name="origin_new"/>
+					<field name="partner_id"/>
+					<field name="certificate_id"/>
+					<field name="standard_id"/>
+					<field name="booking_ref_no"/>
+					<field name="port_of_discharge"/>
+					<field name="pic_id"/>
+					<separator/>
+                	<filter name ="groupby_origin" string="Origin" domain="[]" context="{'group_by':'origin_new'}"/>
+                	<filter name ="groupby_shipt_month" string="Shipt Month" domain="[]" context="{'group_by':'shipt_month'}"/>
+                	<filter name ="groupby_certificate_id" string="Certificate" domain="[]" context="{'group_by':'certificate_id'}"/>
+                	<filter name ="groupby_product_id"  string="Product" domain="[]" context="{'group_by':'standard_id'}"/>
+                	<filter name ="group_by_partner_id" string="Partner" domain="[]" context="{'group_by':'partner_id'}"/>
+               </search>
+            </field>
+        </record>
+
+		<record id="action_traffic_contract" model="ir.actions.act_window">
+            <field name="name">S Contract</field>
+            <field name="res_model">traffic.contract</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{}</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+              		Create a Traffic Contract.
+              </p>
+            </field>
+        </record>
+        
+
+    </data>
+</odoo>

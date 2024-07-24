@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+		
+		
+	    
+    	<!--$###################################################################### -->
+		
+		<record id="batch_report" model="ir.actions.report">
+	        <field name="name">Batch Report</field>
+	        <field name="type">ir.actions.report</field>
+	        <field name="model">batch.report</field>
+	        <field name="report_name">batch_report</field>
+	        <field name="report_type">aeroo</field>
+	        <field name="in_format">oo-ods</field>
+	        <field name="out_format" model="report.mimetypes" search="[('code','=','oo-xls'),('compatible_types','=','oo-ods')]"/>
+	        <field name="preview">True</field>
+	        <field name="parser_state">loc</field>
+	        <field name="parser_loc">sd_report/report/batch_report_parser.py</field>
+	        <field name="report_file">sd_report/report/batch_report.ods</field>
+	        <field name="tml_source">file</field>
+	        <field name="print_report_name">'Batch Report'</field>
+	    </record>
+	    
+	    <record id="batch_report_pnl_upgrade" model="ir.actions.report">
+	        <field name="name">Batch Upgrade</field>
+	        <field name="type">ir.actions.report</field>
+	        <field name="model">production.analysis</field>
+	        <field name="report_name">batch_report_pnl_upgrade</field>
+	        <field name="report_type">aeroo</field>
+	        <field name="in_format">oo-ods</field>
+	        <field name="out_format" model="report.mimetypes" search="[('code','=','oo-xls'),('compatible_types','=','oo-ods')]"/>
+	        <field name="preview">True</field>
+	        <field name="parser_state">loc</field>
+	        <field name="parser_loc">sd_report/report/batch_report_pnl_upgrade_parser.py</field>
+	        <field name="report_file">sd_report/report/batch_report_pnl_upgrade.ods</field>
+	        <field name="tml_source">file</field>
+	        <field name="print_report_name">'Batch Upgrade'</field>
+	    </record>	
+	    
+	    <record id="batch_report_pnl_bta" model="ir.actions.report">
+	        <field name="name">batch_report_pnl_bta</field>
+	        <field name="type">ir.actions.report</field>
+	        <field name="model">production.analysis</field>
+	        <field name="report_name">batch_report_pnl_bta</field>
+	        <field name="report_type">aeroo</field>
+	        <field name="in_format">oo-ods</field>
+	        <field name="out_format" model="report.mimetypes" search="[('code','=','oo-xls'),('compatible_types','=','oo-ods')]"/>
+	        <field name="preview">True</field>
+	        <field name="parser_state">loc</field>
+	        <field name="parser_loc">sd_report/report/batch_report_pnl_bta_parser.py</field>
+	        <field name="report_file">sd_report/report/batch_report_pnl_bta.ods</field>
+	        <field name="tml_source">file</field>
+	        <field name="print_report_name">'Batch Upgrade BTA'</field>
+	    </record>	
+	        
+	
+	</data>
+</odoo>

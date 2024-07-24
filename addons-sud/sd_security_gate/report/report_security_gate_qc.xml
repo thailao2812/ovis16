@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+	
+	<template id="template_report_security_gate_qc">
+	    <t t-call="report.html_container">
+	            <div class="page" style="font-size:20px;">
+	            	<div class="row">
+		                <div class="col-xs-12 text-center">
+		                	<img t-if="o.company_id.logo" t-att-src="'data:image/png;base64,%s' % o.company_id.logo" style="max-height: 80px"/><br/>
+		                	<strong style="font-size:100%;">Phieu lay mau (lay tu xe tai)</strong><br/>
+		                	<div style="font-size:100%;">Sample card (from the Truck)</div><br/>
+		                	<div style="border:1px solid black;">
+		                		<div style="border:1px solid black;"><strong>QC</strong></div>
+		                		<div t-if="o.picking_ids" class ="text-left" style="font-size:16px;"><strong>GRN No. </strong><span t-esc="get_grn(o)"/><br/></div>
+			                	<div class ="text-left" style="font-size:16px;"><strong>Truck / </strong>So xe: <span t-field="o.license_plate"/><br/></div>
+			                	<div class ="text-left" style="font-size:16px;"><strong>Ghi chu / </strong>Remarks: <br/><br/><br/><br/><br/></div>
+		                	</div><br/>
+		                </div>
+		                <div class="col-xs-12 pull-right">
+				           <table class="table table-condensed">
+				               <tr style="border-black">
+			                        <tr>
+			                            <td class="text-center" style="border:1px solid black; font-size:18px;"><strong style ="text-decoration: underline;">QC SUCDEN</strong><br/><br/><br/><br/></td> 
+			                        </tr>
+		                        </tr>
+				           </table>
+		           		</div>
+		           		<div class="border-black text-center">
+	           				<img class="barcode" t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;humanreadable=1' % ('Code128', o.name)"/><br/>
+	           			</div>
+             	</div>
+           	</div>
+        </t>
+	</template>
+	
+	<template id="report_security_gate_qc">
+	    <t t-call="report.html_container">
+	        <t t-foreach="docs" t-as="o">
+	            <t t-call="ned_security_gate_queue.template_report_security_gate_qc" t-lang="o.security_id.partner_id.lang"/>
+	            <p style="page-break-before:always;"></p>
+	        </t>
+	    </t>
+	</template>
+	
+	
+	      
+	</data>
+</odoo>

@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+		
+		<record id="view_sale_contract_export_tree" model="ir.ui.view">
+            <field name="name">sale.contract.export.tree</field>
+            <field name="model">sale.contract</field>
+            <field name="arch" type="xml">
+                <tree string="Contract List" default_order="id desc"> 
+					<field name="warehouse_id"/>
+                    <field name="name" string="SVNS"  optional="show"/>
+                    <field name="partner_id" optional="show"/>
+                    <field name="validity_date" invisible="1" optional="show"/>
+                    <field name="p_name" string="P Contract" optional="hide"/>
+                    <field name="contract_p_id" string="P Contract" optional="show"/>
+					<field name="p_contract" string="P Contract" optional="show" invisible="1"/>
+					<field name="date" string="NVS Date" optional="show"/>
+					<field name="shipping_id" optional="show"/>
+					<field name="scontract_id" optional="show"/>
+					<field name="shipt_month" optional="show"/>
+					<field name="p_quality" optional="show"/>
+					<field name="scertificate_id" optional="show"/>
+					<field name="date_invoice" optional="show"/>
+					<field name="product_id" optional="show"/>
+					<field name="certificate_id" invisible="1" optional="show"/>
+					<field name="certificate_id_list" optional="show" widget="many2many_tags"/>
+					<field name="si" optional="show"/>
+					<field name="sd" optional="show"/>
+					<field name="total_qty" sum="total_qty" optional="show"/>
+                    <field name="currency_id" invisible="1" optional="show"/>
+                    <field name="price_unit" optional="show"/>
+					<field name="do_qty" sum="do_qty" optional="show"/>
+					<field name="remain_qty" sum="remain_qty" optional="show"/>
+					<field name="invoiced_qty" sum="invoiced_qty" optional="show"/>
+					<!-- <field name="invoiced_kg" sum="invoiced_kg"/> -->
+					<field name="loss_qty" sum="loss_qty" optional="show"/>
+					<field name="invoiced_amount_total" sum="invoiced_amount_total" optional="show"/>
+                    <field name="origin" invisible = "1" optional="show"/>
+                    <field name="state"  optional="show" widget="badge" decoration-info="state == 'draft'" decoration-muted="state in ('cancel')" decoration-success="state == 'done'" decoration-danger="state in ('approved')"/> 
+                    <field name="type" optional="show" invisible = "0"/>
+                </tree>
+            </field>
+        </record>
+        
+    
+    	<record id="view_sale_contract_tree" model="ir.ui.view">
+            <field name="name">sale.contract.tree</field>
+            <field name="model">sale.contract</field>
+            <field name="arch" type="xml">
+                <tree string="Contract List" default_order="id desc"> 
+                    <field name="name" string="SVNL"  optional="show"/>
+                    <field name="partner_id" optional="show"/>
+                    
+                    <field name="validity_date" invisible="1" optional="show"/>
+                    <field name="p_name" string="P Contract" optional="show"/>
+					<field name="p_contract" string="P Contract" optional="show" invisible="1"/>
+					<field name="date" string="NVS Date" optional="show"/>
+					<field name="shipping_id" optional="show"/>
+					<field name="scontract_id" optional="show"/>
+					<field name="date_invoice" optional="show"/>
+					<field name="product_id" optional="show"/>
+					<field name="certificate_id" invisible="0" optional="show"/>
+					<field name="certificate_id_list" optional="show" widget="many2many_tags"/>
+					<field name="si" optional="show"/>
+					<field name="sd" optional="show"/>
+					<field name="total_qty" sum="total_qty" optional="show"/>
+                    <field name="currency_id" invisible="1" optional="show"/>
+                    <field name="price_unit" optional="show"/>
+					<field name="do_qty" sum="do_qty" optional="show"/>
+					<field name="remain_qty" sum="remain_qty" optional="show"/>
+					<field name="invoiced_qty" sum="invoiced_qty" optional="show"/>
+					<!-- <field name="invoiced_kg" sum="invoiced_kg"/> -->
+					<field name="loss_qty" sum="loss_qty" optional="show"/>
+					<field name="invoiced_amount_total" sum="invoiced_amount_total" optional="show"/>
+                    
+                    
+                    <field name="origin" invisible = "1" optional="show"/>
+                    <field name="state"  optional="show" widget="badge" decoration-info="state == 'draft'" decoration-muted="state in ('cancel')" decoration-success="state == 'done'" decoration-danger="state in ('approved')"/> 
+                    <field name="type" optional="show" invisible = "0"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id="view_sale_contract_form" model="ir.ui.view">
+            <field name="name">sale.contract.form</field>
+            <field name="model">sale.contract</field>
+            <field name="arch" type="xml">
+                <form string="Sale Contract">
+	                <header>
+	                    <button name="button_approve" type="object" states='draft' string="Approve Contract" class="oe_highlight"/>
+	                    
+	                    <button name="print_printout_nvs" type="object" string="Printout Payment NVS" state="draft,approved,done"/>
+	                    <!--
+                		<button name="button_action_done" type="object" string="Done" state="approved" class="oe_highlight"/>
+                		
+                		-->
+                	
+	                    <button name="button_draft" states="approved" string="Set to Draft" type="object" confirm="Are you sure want to Draft contract?"/>  
+	                    
+	                    <button name="%(action_wizard_invoice)d" string="Internal Movement Invoice" type="action" states="approved"/>
+	                    <field name="state" widget="statusbar" statusbar_visible="draft,approved,invoice"/>
+	                </header>
+	                <sheet>
+	                	<div class="oe_button_box" name="button_box" attrs="{'invisible': [('state','=','draft')]}">
+	                		<field name="delivery_ids" invisible="1"/>
+							<button type="object" name="action_view_do" class="oe_stat_button" icon="fa-truck" 
+									attrs="{'invisible': [('delivery_count','=',0)]}">
+								<field name="delivery_count" widget="statinfo" string="DO"/>
+							</button>
+							<button type="object" name="action_view_invoice" class="oe_stat_button" icon="fa-truck" 
+									attrs="{'invisible': [('invoice_count','=',0)]}">
+								<field name="invoice_count" widget="statinfo" string="Invoice"/>
+							</button>
+						</div>
+	                    <div class="oe_title">
+	                        <h1>
+	                            <field name="name" readonly="1"/>
+	                        </h1>
+	                    </div>
+	                    <group>
+	                    	<group>
+	                            <field name="partner_id" domain="[('customer_rank','=',True),('type','=','company')]" attrs="{'readonly': [('state','=','done')]}" readonly="1"/> 
+	                    		<field name="customer_representative" domain="[('parent_id','=',partner_id)]" options="{'no_write': True, 'no_create': True}" invisible ="1"/>
+	                    		<field name="partner_shipping_id" options="{'no_write': True, 'no_create': True}" invisible ="1"/>
+	                    		<label for="shipping_id"/>
+	                    		<div name="shipping_id" class="o_row">
+									<field name="shipping_id"  options="{'no_write': True, 'no_create': True}"/>
+									<button name="button_load" string="Load" type="object" icon="fa-truck" 
+										states="draft" class="btn-default"/> 
+								</div>
+								<field name="scontract_id" options="{'no_write': True, 'no_create': True}" readonly="1"/>
+								
+								<label for="contract_p_id"/>
+									<div name="contract_p_id" class="o_row">
+										<field name="contract_p_id" options="{'no_write': True, 'no_create': True}" domain="[('type','=','p_contract')]"/>
+										<button name="button_load_p_contract" string="Load" type="object" icon="fa-truck" states="draft" class="btn-default"/> 
+									</div>
+					            
+					            <field name="type" invisible="1"/>
+			                    <field name="certificate_id_list" widget="many2many_tags"/>
+			                    <field name="license_certificate_ids" widget="many2many_tags"/>
+			                    <field name="si"/>
+			                    <field name="sd"/>
+	                    		<field name="currency_id"/>
+            					<field name="exchange_rate" invisible="1"/>	
+	                    	</group>
+	                    	<group>
+	                    		<field name="date"/>
+	                    		<field name="deadline"/>
+	                    		<field name="crop_id"/>
+                    			<field name="origin" invisible="1"/>
+                    			<field name="p_contract" attrs="{'invisible': [('p_contract','=',False)]}"/>
+	                    	</group>
+	                    </group>
+	                    <notebook>
+	                    	<page string="Products" name="product">
+	                    		<field name="contract_line">	
+	                    			<tree editable="top">
+					    				<field name="sequence" widget="handle"/>
+					    				<field name="contract_id" invisible="1"/>
+					    				<field name="product_id"/>
+					    				<field name="name"/>
+					    				<field name="certificate_id"/>
+										<field name="packing_id"/>
+					    				<field name="product_uom"/>
+					    				<field name="product_qty"/>
+					    				<field name="conversion" invisible="1"/>
+					    				
+					    				<field name="premium"/>
+										<field name="premium_adjustment"/>
+					                	<field name="provisional_g2_price"/>
+					                	<field name="provisional_g2_diff"/>
+					                	<field name="provisional_price" invisible="1"/>
+					                	<field name="final_g2_price" string="Final Marker Price"/>
+					                	<field name="final_g2_diff" string="Final Market Diff"/>
+					    				
+					    				
+					    				<field name="price_unit"/>
+					    				<field name="tax_id" widget="many2many_tags"  optional="hide"/>
+					    				<field name="price_subtotal" widget="monetary"/>
+					    			</tree>
+	                    		</field>
+	                    		<group class="oe_subtotal_footer oe_right" colspan="2" name="sale_total">
+	                                <field name="amount_untaxed" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+	                                <field name="amount_tax" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+	                                <div class="oe_subtotal_footer_separator oe_inline o_td_label">
+	                                    <label for="amount_total" />
+	                                </div>
+	                                <field name="amount_total" nolabel="1" class="oe_subtotal_footer_separator" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+	                            </group>
+	                            <field name="note" class="oe_inline" placeholder="Setup default terms and conditions in your company settings."/>
+	                            <div class="oe_clear"/>
+	                            <group col="4">
+	                            	<field name="create_uid"/>
+	                    			<field name="create_date"/>
+	                    			<field name="user_approve"/>
+	                    			<field name="date_approve"/>
+	                    		</group>
+	                    	</page>
+	                    	<page string="Shipment Details">
+	                    		<group>
+	                    			<group>
+		                    			<field name="dispatch_mode"/>
+		                    			<field name="port_of_loading" domain="[('type','=','port')]"/>
+		                    			<field name="port_of_discharge" domain="[('type','=','port')]"/>
+		                    		</group>
+		                    		<group>
+		                    			<field name="weights"/>
+		                    			<field name="container_status"/>
+		                    		</group>
+	                    		</group>
+	                    	</page>
+	                    	<page string="DO" name="do_gdn" attrs="{'invisible': [('state','not in',('approved','done'))]}">
+	                    		<field name="delivery_ids" options='{"no_create": True}'/>	
+	                    	</page>
+	                    	
+	                    	<!-- Kiet
+	                    	<page string="Invoice" attrs="{'invisible': [('invoice_count','=',0)]}">
+	                    		<field name="invoice_ids" options='{"no_create": True}'>
+	                    			<tree>
+	                    				<field name="date_invoice"/>
+	                    				<field name="partner_id"/>
+	                    				<field name="amount_total" sum="amount_total"/>
+	                    				<field name="state"/>
+	                    				<field name="currency_id"/>
+	                    			</tree>
+	                    		</field>	
+	                    	</page>
+	                    	
+	                    	-->
+	                    	<page string="Other Information" name="information">
+	                    		<group>
+	                    			<group>
+	                    				<field name="warehouse_id" options="{'no_write': True, 'no_create': True}"/>
+	                    			</group>
+	                    			<group>
+	                    				<field name="company_id" options="{'no_write': True, 'no_create': True}"/>
+	                    				<field name="company_representative" invisible="1" domain="[('parent_id','=',company_id)]" options="{'no_write': True, 'no_create': True}"/>
+			                    			 
+	                    			</group>
+	                    			<group>
+	                    				<field name="payment_term_id"/>
+	                    				<field name="transportation_charges"/>
+										<field name="picking_policy"/>
+	                    			</group>
+	                    			<group >
+	                    				<field name="validity_date"/>
+	                    				<field name="expiration_date"/>
+	                    				<field name="date_done" attrs="{'invisible': [('state','!=','done')]}"/>
+	                    				<field name="type"/>
+	                    				<field name="entries_id" readonly="1"/>
+	                    			</group>
+	                    		</group>
+	                    	</page>
+	                    	
+	                    	<page string="Clam">
+			            		<field name="clam_ids">
+			            			<tree editable="Top">
+			            				<field name="name" required="1"/>
+			            				<field name="product_qty"/>
+			            				<field name="price_unit"/>
+			            				<field name="amount" sum="amount"/>
+			            				<field name="move_id" readonly="1"/>
+			            				<field name="state"/>
+			            				<button name="btt_validate" type="object" string="Validated"/>
+			            				<button name="btt_cancel" type="object" string="Set to Draft"/>
+			            			</tree>
+			            		</field>
+			            	</page>
+	                    </notebook>
+	                    </sheet>
+                </form>
+            </field>
+        </record>
+        
+        <record id="sale_contract_search" model="ir.ui.view">
+            <field name="name">sale.contract.search</field>
+            <field name="model">sale.contract</field>
+            <field name="arch" type="xml">
+                <search string="Search Sale Contract">
+                    <field name="name"/>
+                    <field name="shipping_id"/>
+                    <field name="scontract_id"/>
+                    <field name="contract_p_id" string="P Contract"/>
+                    <field name="origin"/>
+                    <filter name="draft" string="Draft" domain="[('state','=','draft')]"/>
+                    <filter name="approve" string="Approved" domain="[('state','=','approved')]"/>
+                    <filter name="done" string="Done" domain="[('state','=','done')]"/>
+                    <separator/>
+                    <field name="partner_id"/>
+                    <separator/>
+                    <group expand="1" string="Group By">
+                    	<filter string="Partner" name="partner_id" context="{'group_by':'partner_id'}"/>
+                    	<filter string="Product" name="product_id" context="{'group_by':'product_id'}"/>
+                    	<filter string="S Contract" name="scontract_id" context="{'group_by':'scontract_id'}"/>
+                    	<filter string="Shipping" name="shipping_id" context="{'group_by':'shipping_id'}"/>
+                    	<filter string="Pcontract" name="contract_p_id" context="{'group_by':'contract_p_id'}"/>
+                    	
+                    	<filter string="Certificate" name="certificate_id" context="{'group_by':'certificate_id'}"/>
+                    	<filter string="Date Invoice" name="date_invoice" context="{'group_by':'date_invoice'}"/>
+                    	
+                    	<filter string="State" name="state" context="{'group_by':'state'}"/>
+                    	
+                	</group>
+               </search>
+            </field>
+        </record>
+        
+        
+        <record model="ir.actions.act_window" id="action_sale_contract_local">
+            <field name="name">SVNL</field>
+            <field name="res_model">sale.contract</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('type','=','local')]</field>
+            
+            <field name="search_view_id" ref="sale_contract_search"/>
+            <field name="context">{
+                    'default_type':'local',
+                }
+            </field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a sale contract, the first step of a new contract.
+                </p><p>
+                </p>
+            </field>
+        </record>
+        
+         <record id="action_sale_contract_local_local" model="ir.actions.act_window.view">
+            <field eval="100" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_sale_contract_tree"/>
+            <field name="act_window_id" ref="action_sale_contract_local"/>
+        </record> 
+        
+        
+        
+        
+        <record model="ir.actions.act_window" id="action_sale_contract_export">
+            <field name="name">SVNS</field>
+            <field name="res_model">sale.contract</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('type','=','export'),('x_is_bonded','=',False)]</field>
+            <field name="search_view_id" ref="sale_contract_search"/>
+            <field name="context">{
+                    'default_type':'export',
+                }
+            </field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a sale contract, the first step of a new contract.
+                </p><p>
+                </p>
+            </field>
+        </record>
+        
+        <record id="aaction_sale_contract_export_local" model="ir.actions.act_window.view">
+            <field eval="100" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_sale_contract_export_tree"/>
+            <field name="act_window_id" ref="action_sale_contract_export"/>
+        </record> 
+        
+    	
+    </data>
+</odoo>

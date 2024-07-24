@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+   
+        <record id="view_npe_unfixed_master_tree" model="ir.ui.view">
+            <field name="name">view.npe.unfixed.master.tree</field>
+            <field name="model">npe.unfixed.master</field>
+            <field name="arch" type="xml">
+                <tree string="NPE Unfixed Quality">
+                    <field name = 'name' string="_____________Supplier____________" readonly = '1'/>
+                    <field name = 'qty_contract' sum = 'Total Qty Contract' string="Contract Qty" readonly = '1'/>
+                    <field name = 'qty_received' sum = 'Total Qty Received' string="Received Qty" readonly = '1'/>
+                    <field name = 'to_receive' sum = 'Total To Receive' string="To Receive" readonly = '1'/>
+                    <field name = 'qty_fixed' sum = 'Total Qty Fixed' string="Fixed Qty" readonly = '1'/>
+                    <field name = 'unfixed' sum = 'Total Unfixed' string="Unfixed Qty" readonly = '1'/>
+                    <field name = 'mc' avg = 'Total MC' string="MC" readonly = '1'/>
+                    <field name = 'fm' avg = 'Total FM' string="FM" readonly = '1'/>
+                    <field name = 'black' avg = 'Total Black' string="Black" readonly = '1'/>
+                    <field name = 'broken' avg = 'Total Broken' string="Broken" readonly = '1'/>
+                    <field name = 'brown' avg = 'Total Brown' string="Brown" readonly = '1'/>
+                    <field name = 'mold' avg = 'Total Mold' string="Mold" readonly = '1'/>
+                    <field name = 'cherry' avg = 'Total Cherry' string="Cherry" readonly = '1'/>
+                    <field name = 'excelsa' avg = 'Total Excelsa' string="Excelsa" readonly = '1'/>
+                    <field name = 'screen20' avg = 'Total Screen20' string="Screen20" readonly = '1'/>
+                    <field name = 'screen19' avg = 'Total Screen19' string="Screen19" readonly = '1'/>
+                    <field name = 'screen18' avg = 'Total Screen18' string="Screen18" readonly = '1'/>
+                    <field name = 'screen16' avg = 'Total Screen16' string="Screen16" readonly = '1'/>
+                    <field name = 'screen13' avg = 'Total Screen13' string="Screen13" readonly = '1'/>
+                    <field name = 'greatersc12' avg = 'Total Screen12' string="Screen12" readonly = '1'/>
+                    <field name = 'belowsc12' avg = 'Total Belowsc12' string="BLSC12" readonly = '1'/>
+                    <field name = 'burned' avg = 'Total Burned' string="Burn" readonly = '1'/>
+                    <field name = 'eaten' avg = 'Total Insect' string="Insect" readonly = '1'/>
+                </tree>
+             </field>
+        </record>
+
+        <record id="view_npe_unfixed_master_form" model="ir.ui.view">
+            <field name="name">view.npe.unfixed.master.form</field>
+            <field name="model">npe.unfixed.master</field>
+            <field name="arch" type="xml">
+                <form string="NPE Unfixed Quality">
+                    <!-- <header>
+                        <button name="load_button" type="object" string="Load Qty Detail" class="oe_highlight"/>
+                    </header> -->
+                    <sheet>
+                         <!-- <div class="oe_title">
+                            <h1>
+                                <field name="partner_ids"/>
+                            </h1>
+                        </div> -->
+                        <group string="Quality Detail" col = '3'>
+                            <group name="group_left">
+                                <field name="qty_contract"/>
+                                <field name="qty_received"/>
+                                <field name="to_receive"/>
+                                <field name="qty_fixed"/>
+                                <field name="unfixed"/>
+                                <newline/>
+                                <newline/>
+                                <newline/>
+                                <newline/>
+                            </group>
+                            <group name="group_center">
+                                <field name="mc"/>
+                                <field name="fm"/>
+                                <field name="black"/>
+                                <field name="broken"/>
+                                <field name="brown"/>
+                                <field name="mold"/>
+                                <field name="cherry"/>
+                                <field name="excelsa"/>
+                                <newline/>
+                            </group>
+                            <group name="group_right">
+                                <field name="screen20"/>
+                                <field name="screen19"/>
+                                <field name="screen18"/>
+                                <field name="screen16"/>
+                                <field name="screen16"/>
+                                <field name="screen13"/>
+                                <field name="greatersc12"/>
+                                <field name="belowsc12"/>
+                                <field name="burned"/>
+                                <field name="eaten"/>
+                                <newline/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Detail of Supplier">
+                                <field name="link_to_detail">
+                                    <tree editable="top">
+                                        <field name = 'name' string="NPE" readonly = '1'/>
+                                        <field name = 'partner' string="______________Supplier____________" readonly = '1'/>
+                                        <field name = 'date_order' string="Date Contract" readonly = '1'/>
+                                        <field name = 'qty_contract' sum = 'Total Qty Contract' string="Qty Contract" readonly = '1'/>
+                                        <field name = 'qty_received' sum = 'Total Qty Received' string="Qty Received" readonly = '1'/>
+                                        <field name = 'to_receive' sum = 'Total To Receive' string="To Receive" readonly = '1'/>
+                                        <field name = 'qty_fixed' sum = 'Total Qty Fixed' string="Qty Fixed" readonly = '1'/>
+                                        <field name = 'unfixed' sum = 'Total Unfixed' string="Unfixed" readonly = '1'/>
+                                        <field name = 'mc' avg = 'Total MC' string="MC" readonly = '1'/>
+                                        <field name = 'fm' avg = 'Total FM' string="FM" readonly = '1'/>
+                                        <field name = 'black' avg = 'Total Black' string="Black" readonly = '1'/>
+                                        <field name = 'broken' avg = 'Total Broken' string="Broken" readonly = '1'/>
+                                        <field name = 'brown' avg = 'Total Brown' string="Brown" readonly = '1'/>
+                                        <field name = 'mold' avg = 'Total Mold' string="Mold" readonly = '1'/>
+                                        <field name = 'cherry' avg = 'Total Cherry' string="Cherry" readonly = '1'/>
+                                        <field name = 'excelsa' avg = 'Total Excelsa' string="Excelsa" readonly = '1'/>
+                                        <field name = 'screen20' avg = 'Total Screen20' string="Screen20" readonly = '1'/>
+                                        <field name = 'screen19' avg = 'Total Screen19' string="Screen19" readonly = '1'/>
+                                        <field name = 'screen18' avg = 'Total Screen18' string="Screen18" readonly = '1'/>
+                                        <field name = 'screen16' avg = 'Total Screen16' string="Screen16" readonly = '1'/>
+                                        <field name = 'screen13' avg = 'Total Screen13' string="Screen13" readonly = '1'/>
+                                        <field name = 'greatersc12' avg = 'Total Screen12' string="Screen12" readonly = '1'/>
+                                        <field name = 'belowsc12' avg = 'Total Belowsc12' string="Belowsc12" readonly = '1'/>
+                                        <field name = 'burned' avg = 'Total Burned' string="Burned" readonly = '1'/>
+                                        <field name = 'eaten' avg = 'Total Insect' string="Insect" readonly = '1'/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="search_npe_unfixed_master" model="ir.ui.view">
+            <field name="name">search.npe.unfixed.master</field>
+            <field name="model">npe.unfixed.master</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name = "name"/>
+                </search>
+             </field>
+        </record>
+                      
+        <record id="action_npe_unfixed_master" model="ir.actions.act_window">
+            <field name="name">NPE Unfixed Quality</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">npe.unfixed.master</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        
+       
+    </data>
+</openerp>

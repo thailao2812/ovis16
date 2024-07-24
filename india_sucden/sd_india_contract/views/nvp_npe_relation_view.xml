@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_npe_nvp_relation_tree_inherit_india" model="ir.ui.view">
+        <field name="name">view_npe_nvp_relation_tree_inherit_india</field>
+        <field name="model">npe.nvp.relation</field>
+        <field name="inherit_id" ref="sd_purchase_contract.view_npe_nvp_relation_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="product_id"/>
+            </xpath>
+            <xpath expr="//field[@name='total_qty_fixed']" position="after">
+                <field name="note"/>
+            </xpath>
+            <xpath expr="//field[@name='date_fixed']" position="replace">
+                <field name="contract_date"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

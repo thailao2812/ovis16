@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_category_property_form_add_code" model="ir.ui.view">
+            <field name="name">view.category.property.form.add.code</field>
+            <field name="model">product.category</field>
+            <field name="inherit_id" ref="product.product_category_form_view"/>
+            <field name="arch" type="xml">
+                <field name="parent_id" position="before">
+					<field name="code"/>
+            	</field>
+            </field>
+        </record>
+
+    </data>
+</odoo>

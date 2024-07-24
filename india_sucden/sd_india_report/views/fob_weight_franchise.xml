@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+   
+        <record id="view_v_fob_weight_franchise_tree" model="ir.ui.view">
+            <field name="name">view.v.fob.weight.franchise.tree</field>
+            <field name="model">v.fob.weight.franchise</field>
+            <field name="arch" type="xml">
+                <tree decoration-info="franchise_out !=''" default_order="id desc">
+                    <field name = 'factory_etd' string="Factory ETD" readonly = '1'/>
+                    <field name = 'si_name' string="SI" readonly = '1'/>
+                    <!-- <field name = 'do_date' string="DO Date" readonly = '1'/> -->
+                    <field name = 'customer' string="Customer" readonly = '1'/>
+                    <!-- <field name = 'p_contract' string="P-Contract" readonly = '1'/> -->
+                    <field name = 'product_name' string="Product" readonly = '1'/>
+                    <field name = 'description' string="Description" readonly = '1'/>
+                    <field name = 'product_qty' sum = 'Total Product Qty (Kg)' string="Product Qty (Kg)" readonly = '1'/>
+                    <!-- <field name = 'do_total_qty' sum = 'Total DO Qty (Kg)' string="DO Qty (Kg)" readonly = '1'/> -->
+                    <field name = 'gdn_weighbridge_qty' sum = 'Total Weightbridge Qty (Kg)' string="Quantity 31Jul2019 (Kg)" readonly = '1'/>
+                    <field name = 'gdn_total_init_qty' sum = 'Total Quantity (Kg)' string="Quantity (Kg)" readonly = '1'/>
+                    <field name = 'franchise_before_31072019' avg = 'AVG % Franchise' string="Frch 31Jul2019" readonly = '1'/>
+                    <field name = 'franchise' avg = 'AVG % Franchise' string="Franchise" readonly = '1'/>
+                    <field name = 'franchise_out' string="Out of range" readonly = '1' invisible = '1'/>
+                </tree>
+             </field>
+        </record>
+
+        <record id="search_v_fob_weight_franchise" model="ir.ui.view">
+            <field name="name">search.v.fob.weight.franchise</field>
+            <field name="model">v.fob.weight.franchise</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name = "si_name"/>
+                    <field name = "customer"/>
+                    <!-- <field name = "p_contract"/> -->
+                    <field name = "product_name"/>
+                    
+                    <group expand="1" string="Group By">
+                        <filter string="SI" domain="[]" name="filter_si_name" context="{'group_by':'si_name'}"/>
+                        <filter string="Customer" domain="[]" name="filter_customer" context="{'group_by':'customer'}"/>
+                        <filter string="Product" domain="[]" name="filter_product_name" context="{'group_by':'product_name'}"/>
+                    </group>
+                </search>
+             </field>
+        </record>
+                      
+        <record id="action_v_fob_weight_franchise" model="ir.actions.act_window">
+            <field name="name">FOB Weight Franchise</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">v.fob.weight.franchise</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'search_by_field_date': ['factory_etd']}</field>
+        </record>
+        
+    </data>
+</odoo>

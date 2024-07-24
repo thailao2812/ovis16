@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+   
+        <record id="view_input_value_tree" model="ir.ui.view">
+            <field name="name">view.input.value.tree</field>
+            <field name="model">v.input.value</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name = 'date_finished' string="MRP Date"/>
+                    <field name = 'batch_name' string="Batch No." />
+                    <field name = 'stack_name' string="Stack" />
+                    <field name = 'itr' string="ITR/GRN" />
+                    <field name = 'grn' string="GRN Branch" />
+                    <field name = 'deduction' string="Qty. deduction" />
+                    <field name = 'origin' string="Origin" />
+                    <field name = 'contract' />
+                    <field name = 'date_order' string="Date Order" />
+                    <field name = 'vehicle_no' />
+                    <field name = 'contract_price' avg = 'Contract Price Total' string = 'Contract Price' readonly='1'/>
+                    <field name = 'qty_allocation' sum = 'Allocated Qty Total (Kg)' string="Allocated Qty (Kg)" />
+                    
+                    <field name = 'total_bag' sum = 'Total Bags' string="Total Bags" />
+                    
+                    <field name = 'commrate' string='Commercialrate' />
+                </tree>
+             </field>
+        </record>
+
+        <record id="search_input_value" model="ir.ui.view">
+            <field name="name">search.input.value</field>
+            <field name="model">v.input.value</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name = "batch_name" string="Batch No."/>
+                    <field name = "stack_name" string="Stack"/>
+                    <field name = "itr" string="ITR/GRN"/>
+                    <field name = "grn" string="GRN Branch"/>
+                    <field name = "contract" string="Contract"/>
+                    
+                    <group expand="1" string="Group By">
+                        <filter name="group_by_batch_name" string="Batch No." domain="[]" context="{'group_by':'batch_name'}"/>
+                        <filter name="group_by_stack_name" string="Stack" domain="[]" context="{'group_by':'stack_name'}"/>
+                        <filter name="group_by_itr" string="ITR/GRN" domain="[]" context="{'group_by':'itr'}"/>
+                        <filter name="group_by_grn" string="GRN Branch" domain="[]" context="{'group_by':'grn'}"/>
+                        <filter name="group_by_contract" string="Contract" domain="[]" context="{'group_by':'contract'}"/>
+                    </group>
+                </search>
+             </field>
+        </record>
+                      
+        <record id="action_input_value" model="ir.actions.act_window">
+            <field name="name">Input Value</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">v.input.value</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" eval="False"/>
+        </record>
+        
+       
+
+    </data>
+</odoo>

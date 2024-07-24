@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+<record id="average_price_contract_tree" model="ir.ui.view">
+        <field name="name">average_price_contract_tree</field>
+        <field name="model">average.price.contract</field>
+        <field name="arch" type="xml">
+            <tree string="Average Price Un-receive Contract" editable ='top'>
+				<field name="partner_id" readonly="1"/>
+				<field name="total_un_receive" readonly="1" sum="total_un_receive"/>
+				<field name="average_price" readonly="1"/>
+            </tree>
+        </field>
+    </record>
+
+     <record id="action_average_price_contract" model="ir.actions.act_window">
+        <field name="name">Average Price Un-receive Contract</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">average.price.contract</field>
+        <field name="view_id" ref="average_price_contract_tree"/>
+         <field name="context">{'create': false}</field>
+        <field name="view_mode">tree</field>
+    </record>
+
+</odoo>

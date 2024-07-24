@@ -1,0 +1,72 @@
+stages:
+  - review
+  - integration
+  - staging
+
+#create_merge_request:
+#    stage: review
+#    tags:
+#      - docker
+#    only:
+#      refs:
+#        - /^T\d{7}$/
+#    script:
+#      - RESPONSE=$(curl --request POST --header PRIVATE-TOKEN:${MR_BOT_TOKEN} -d source_branch=${CI_COMMIT_BRANCH} -d target_branch=main -d title="Merge branch ${CI_COMMIT_BRANCH} into main" https://${CI_SERVER_HOST}/api/v4/projects/${CI_PROJECT_ID}/merge_requests);
+#      - MR_IID=$(python3 -c "import json; print(json.loads('${RESPONSE}').get('iid', ''))");
+#      - echo "${MR_IID}";
+#      - ERROR=$(python3 -c "import json; print(json.loads('${RESPONSE}').get('message', ''))");
+#      - echo "${ERROR}";
+#      - echo "curl --request PUT --header PRIVATE-TOKEN:${MR_BOT_TOKEN} https://${CI_SERVER_HOST}/api/v4/projects/${CI_PROJECT_ID}/merge_requests/${MR_IID}/merge";
+#      - if [[ ${ERROR} != '' ]]; then echo ${ERROR}; fi;
+#      - sleep 3;
+#      - if [[ ${MR_IID} != '' ]]; then curl --request PUT --header PRIVATE-TOKEN:${MR_BOT_TOKEN} https://${CI_SERVER_HOST}/api/v4/projects/${CI_PROJECT_ID}/merge_requests/${MR_IID}/merge; fi;
+
+deploy_integration:
+ stage: integration
+ tags:
+   - docker
+
+ retry:
+   max: 1
+   when:
+     - script_failure
+     - runner_system_failure
+
+ only:
+   refs:
+     - 'main'
+
+ before_script:
+
+ script:
+   - export SSHPASS=${SSHPASS_INTE}
+   - sshpass -e ssh -tt -o "StrictHostKeyChecking no" ${SSH_INTE} "
+     echo '=======Pull and Upgrade Latest Source Code=======';
+     ${INTE_COMMAND_UPDATE}
+     "
+ after_script:
+
+deploy_staging:
+    stage: staging
+    tags:
+      - docker
+
+    retry:
+      max: 1
+      when:
+        - script_failure
+        - runner_system_failure
+
+    only:
+      refs:
+        - 'staging'
+
+    before_script:
+
+    script:
+      - export SSHPASS=${SSHPASS_STAG}
+      - sshpass -e ssh -tt -o "StrictHostKeyChecking no" ${SSH_STAG} "
+          echo '=======Pull and Upgrade Latest Source Code=======';
+          ${STAG_COMMAND_UPDATE}
+        "
+    after_script:

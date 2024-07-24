@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+   
+        <record id="view_v_faq_stack_tracking_tree" model="ir.ui.view">
+            <field name="name">view.v.faq.stack.tracking.tree</field>
+            <field name="model">v.faq.stack.tracking</field>
+            <field name="arch" type="xml">
+                <tree >
+                    <field name = 'name' string="Stack Name" />
+                    <field name = 'coffee_type' string="Coffee Type" />
+                    <field name = 'product_name' string="Product Name" />
+                    <field name = 'warehouse_id' />
+                    <field name = 'date_in' string="Date In" />
+                    <field name = 'qty_in' sum='Qty. Out Total' string="Qty. In" />
+                    <field name = 'mc_in' string="MC In" />
+                    <field name = 'date_out' string="Date Out" />
+                    <field name = 'qty_out' sum='Qty. Out Total' string="Qty. Out" />
+                    <field name = 'mc_out' string="MC Out" />
+                    <field name = 'st_day' string="Storing Days" />
+                    <field name = 'loss_kg' sum='Storing Los Total' string="Storing loss (kg)" />
+                    <field name = 'loss_percent' string="Storing Loss (%)" />
+                    <field name = 'mc_loss_kg' avg = 'MC Los Total' string = 'MC Loss (kg)' readonly='1'/>
+                    <field name = 'loss_mc' string="MC Loss (%)" />
+
+                    <field name = 'unex_loss_kg' sum = 'Unex. Total Loss (Kg)' string="Unexplainable loss (Kg)" />
+                    <field name = 'unex_loss' avg = 'Unex. Total Loss (%)' string="Unexplainable loss (%)" />
+                </tree>
+             </field>
+        </record>
+
+        <record id="search_v_faq_stack_tracking" model="ir.ui.view">
+            <field name="name">search.v.faq.stack.tracking</field>
+            <field name="model">v.faq.stack.tracking</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name = "name" string="Stack Name"/>
+                    <filter icon="terp-go-month" string="Storing loss (kg) > 0" name="loss_kg" domain="[('loss_kg','!=','0')]" />
+                    <group expand="1" string="Group By">
+                        <filter string="Coffee Type" domain="[]" name = "coffee_type" context="{'group_by':'coffee_type'}"/>
+                    </group>
+                </search>
+             </field>
+        </record>
+                      
+        <record id="action_v_faq_stack_tracking" model="ir.actions.act_window">
+            <field name="name">Storing Loss Analysis</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">v.faq.stack.tracking</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" eval="False"/>
+            <field name="context">{
+            	'search_by_field_date': ['date_in','date_out'],
+                'search_default_coffee_type': True}</field>
+        </record>
+        
+        
+
+    </data>
+</openerp>

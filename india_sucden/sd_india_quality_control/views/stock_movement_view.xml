@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+     <record id="view_report_ned_stock_stack_tree_inherit_india" model="ir.ui.view">
+        <field name="name">view_report_ned_stock_stack_tree_inherit_india</field>
+        <field name="model">stock.lot</field>
+        <field name="inherit_id" ref="sd_quality.view_report_ned_stock_stack_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='gip_net']" position="after">
+                <field name="adj_qty"/>
+            </xpath>
+
+            <xpath expr="//field[@name='districts_id']" position="attributes">
+                <attribute name="string">Source of Goods</attribute>
+            </xpath>
+            <xpath expr="//field[@name='zone_id']" position="after">
+                <field name="building_id"/>
+            </xpath>
+            <xpath expr="//field[@name='mc']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='fm']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='black']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='broken']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='brown']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='mold']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='cherry']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='excelsa']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='screen20']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='screen19']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='screen18']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='screen17']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='screen16']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='screen15']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='screen14']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='screen13']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='greatersc12']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='screen12']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='immature']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='burn']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='eaten']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='stone_count']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='stick_count']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='remarks']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='remarks_note']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='sampler']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='bag_qty']" position="after">
+                <field name="outturn_percent" avg="outturn_percent"/>
+                <field name="aaa_percent" avg="aaa_percent"/>
+                <field name="aa_percent" avg="aa_percent"/>
+                <field name="a_percent" avg="a_percent"/>
+                <field name="b_percent" avg="b_percent"/>
+                <field name="c_percent" avg="c_percent"/>
+                <field name="pb_percent" avg="pb_percent"/>
+                <field name="bb_percent" avg="bb_percent"/>
+                <field name="bleached_percent" avg="bleached_percent"/>
+                <field name="idb_percent" avg="idb_percent"/>
+                <field name="bits_percent" avg="bits_percent"/>
+                <field name="hulks_percent" avg="hulks_percent"/>
+                <field name="stone_percent" avg="stone_percent"/>
+                <field name="skin_out_percent" avg="skin_out_percent"/>
+                <field name="triage_percent" avg="triage_percent"/>
+                <field name="wet_bean_percent" avg="wet_bean_percent"/>
+                <field name="red_beans_percent" avg="red_beans_percent"/>
+                <field name="stinker_percent" avg="stinker_percent"/>
+                <field name="faded_percent" avg="faded_percent"/>
+                <field name="flat_percent" avg="flat_percent"/>
+                <field name="pb1_percent" avg="pb1_percent"/>
+                <field name="pb2_percent" avg="pb2_percent"/>
+                <field name="sleeve_6_up_percent" avg="sleeve_6_up_percent"/>
+                <field name="sleeve_5_5_up_percent" avg="sleeve_5_5_up_percent"/>
+                <field name="sleeve_5_5_down_percent" avg="sleeve_5_5_down_percent"/>
+                <field name="sleeve_5_down_percent" avg="sleeve_5_down_percent"/>
+
+                <field name="sleeve_5_up_percent" avg="sleeve_5_up_percent"/>
+                <field name="unhulled_percent" avg="unhulled_percent"/>
+                <field name="remaining_coffee_percent" avg="remaining_coffee_percent"/>
+                <field name="blacks_percent" avg="blacks_percent"/>
+                <field name="half_monsoon_percent" avg="half_monsoon_percent"/>
+                <field name="good_beans_percent" avg="good_beans_percent"/>
+
+                <field name="moisture_percent" avg="moisture_percent"/>
+            </xpath>
+
+        </field>
+    </record>
+
+    <record id="sd_quality.action_report_ned_stock_stack_tree" model="ir.actions.act_window">
+        <field name="domain">[('product_id.hide_report','=',False), ('product_id.default_code', '!=', '16001')]</field>
+        </record>
+</odoo>

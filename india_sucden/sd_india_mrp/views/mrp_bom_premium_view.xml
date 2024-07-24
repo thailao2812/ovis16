@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="view_mrp_bom_premium_form_inherit_india" model="ir.ui.view">
+        <field name="name">view_mrp_bom_premium_form_inherit_india</field>
+        <field name="model">mrp.bom.premium</field>
+        <field name="inherit_id" ref="sd_mrp.view_mrp_bom_premium_form"/>
+        <field name="arch" type="xml">
+			 <xpath expr="//field[@name='prem_ids']/tree" position="replace">
+            	<tree editable="top">
+                    <field name="product_id"/>
+                    <field name="premium"/>
+                    <field name="product_uom"/>
+                    <field name="aaa"/>
+                    <field name="aa"/>
+                    <field name="a"/>
+                    <field name="b"/>
+                    <field name="pb"/>
+                    <field name="c"/>
+                    <field name="e_bulk"/>
+                    <field name="black_b"/>
+                    <field name="bits"/>
+                    <field name="ct"/>
+                    <field name="bulk"/>
+                    <field name="coffee_husk"/>
+                    <field name="husk"/>
+                    <field name="stone"/>
+                    <field name="dust"/>
+                </tree>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>

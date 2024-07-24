@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+,,,,,,,
+access_ned_security_gate_queue_user,access_ned_security_gate_queue_user,sd_security_gate.model_ned_security_gate_queue,base.group_user,1,1,1,0
+access_ned_security_gate_queue_manager,access_ned_security_gate_queue_manager,sd_security_gate.model_ned_security_gate_queue,mrp.group_mrp_manager,1,1,1,1
+,,,,,,,

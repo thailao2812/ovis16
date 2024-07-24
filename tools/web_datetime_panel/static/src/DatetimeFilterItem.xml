@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="web_datetime_panel.DatetimeFilterItem" owl="1">
+        <t t-if="isShowing()">
+            <div class="dt-filter" t-ref="date-filter-ref">
+                <t t-set="fieldType" t-value="fields[state.dateTimeSetting.field_index].type"/>
+                <select class="o_input o_generator_menu_field"
+                    t-on-change="ev => this.onFieldSelect(ev)"
+                    >
+                    <option t-foreach="fields" t-as="field" t-key="field_index"
+                        t-att-value="field.name"
+                        t-att-selected="field_index === state.dateTimeSetting.field_index"
+                        t-esc="field.string"
+                    />
+                </select>
+                <t t-if="fieldType === 'date'">
+                    <DatePicker
+                        date="state.dateTimeSetting.value[0]"
+                        onDateTimeChanged="date => this.onDateTimeChanged(0, date)"
+                    />
+                    <DatePicker
+                        date="state.dateTimeSetting.value[1]"
+                        onDateTimeChanged="date => this.onDateTimeChanged(1, date)"
+                    />
+                </t>
+                <t t-elif="fieldType === 'datetime'">
+                    <DateTimePicker
+                        date="state.dateTimeSetting.value[0]"
+                        onDateTimeChanged="date => this.onDateTimeChanged(0, date)"
+                    />
+                    <DateTimePicker
+                        date="state.dateTimeSetting.value[1]"
+                        onDateTimeChanged="date => this.onDateTimeChanged(1, date)"
+                    />
+                </t>
+                <div class="btn" t-att-class="isSearching ? 'btn-primary' : ''"><i class="fa fa-search" t-on-click="onApply"></i></div>
+                <div class="btn eraser"><i class="fa fa-eraser fa-fw" t-on-click="onErase"></i></div>
+                <div class="btn btn-primary arrow"><i class="fa fa-arrow-left" t-on-click="moveLeft"></i></div>
+                <div class="btn btn-secondary date-text" t-att-class="state.dateTimeSetting?.date_type==='day' and isSearching? 'selected': ''" t-on-click="filterOnDay">DAY</div>
+                <div class="btn btn-secondary date-text" t-att-class="state.dateTimeSetting?.date_type==='week' and isSearching? 'selected': ''" t-on-click="filterOnWeek">WEEK</div>
+                <div class="btn btn-secondary date-text" t-att-class="state.dateTimeSetting?.date_type==='month' and isSearching? 'selected': ''" t-on-click="filterOnMonth">MONTH</div>
+                <div class="btn btn-primary arrow"><i class="fa fa-arrow-right" t-on-click="moveRight"></i></div>
+            </div>
+        </t>
+    </t>
+
+</templates>

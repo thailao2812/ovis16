@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    	
+    	<!-- Ned Delivery Fee -->
+    	<record id="view_npe_nvp_relation_tree" model="ir.ui.view">
+            <field name="name">npe.nvp.relation.tree</field>
+            <field name="model">npe.nvp.relation</field>
+            <field name="arch" type="xml">
+                <tree string="Npe Nvp Relation" default_order="id desc">
+                	<field name="type" invisible="0"/>
+                	<field name="date_fixed"/>
+                	<field name="partner_id"/>
+                	<field name="npe_contract_id" string="From NPE"/>
+                	<field name="contract_id" string="To NVP"/>
+                	<field name="product_qty" string="Qty" sum="total_qty_fixed"/>
+                	<field name="total_qty_fixed" />
+
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_npe_nvp_relation_filter" model="ir.ui.view">
+            <field name="name">npe.nvp.relation.select</field>
+            <field name="model">npe.nvp.relation</field>
+            <field name="arch" type="xml">
+                <search string="Search Fixation">
+                    <field name="partner_id" operator="child_of"/>
+                    <field name="npe_contract_id" string="From NPE"/>
+                    <field name="contract_id" string="To NVP"/>
+                    
+                    <!--
+                    <group expand="0" string="Filter...">
+                    	<filter string="Fixed" domain="[('type','=','fixed')]"/>
+                    	<filter string="Temporary" domain="[('type','=','temporary')]"/>
+                    </group>
+                    <group expand="0" string="Group By...">
+                    	<filter string="Type" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'type'}"/>
+                    	<filter string="Supplier" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <filter string="NPE" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'npe_contract_id'}"/>
+                        <filter string="NVP" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'contract_id'}"/>
+                        <filter string="Day" context="{'group_by':'day_tz'}"/>
+                        <filter string="Month" context="{'group_by':'date_tz'}"/>
+                    </group>
+                    -->
+                </search>
+            </field>
+        </record>
+
+         <record model="ir.actions.act_window" id="action_npe_nvp_relation">
+            <field name="name">Fixation</field>
+            <field name="res_model">npe.nvp.relation</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{}</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+              		Create a 
+              </p>
+            </field>
+        </record>
+
+        
+        	
+        	
+        
+        
+
+    	
+    </data>
+</odoo>

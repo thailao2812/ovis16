@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        
+        <record id="vpicktree_inherit_add_allocated_total_qty" model="ir.ui.view">
+	        <field name="name">vpicktree.inherit.add.allocated.total.qty</field>
+	        <field name="model">stock.picking</field>
+	        <field name="inherit_id" ref="stock.vpicktree"/>
+	        <field name="arch" type="xml">
+	        	<xpath expr="//field[@name='state']" position="before">
+	        		<field name="qty_available" sum="qty_available"/>
+                    <field name="allocated_qty" sum="allocated_qty"/>
+                </xpath>
+
+				<xpath expr="//field[@name='name']" position="attributes">
+					<attribute name="invisible">context.get('fot', False)</attribute>
+				</xpath>
+                
+<!--                <xpath expr="//field[@name='name']" position="before">-->
+<!--	        		<field name="description_name"  optional="show" invisible="not context.get('fot', False)"/>-->
+<!--                </xpath>-->
+                
+	        </field>
+	    </record>
+        
+        
+        
+    </data>
+</odoo>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+	
+	<record id="paperformat_security_gate_qc" model="report.paperformat">
+            <field name="name">Security Gate</field>
+            <field name="default" eval="True"/>
+            <field name="format">custom</field>
+            <field name="page_height">3126</field>
+            <field name="page_width">80</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">2</field>
+            <field name="margin_bottom">0</field>
+            <field name="margin_left">1</field>
+            <field name="margin_right">1</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">0</field>
+            <field name="dpi">130</field>
+        </record>
+	
+	<record id="action_report_security_gate_qc" model="ir.actions.report">
+        <field name="name">Report Security Gate QC</field>
+        <field name="model">ned.security.gate.queue</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">sd_security_gate.template_report_security_gate_qc</field>
+        <field name="report_file">sd_security_gate.template_report_security_gate_qc</field>
+        <field name="print_report_name">(object._get_printed_report_name())</field>
+        <!--
+        <field name="attachment">(object.state == 'posted') and ((object.name or 'INV').replace('/','_')+'.pdf')</field>
+        -->
+        <field name="binding_model_id" ref="model_ned_security_gate_queue"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="paperformat_security_gate_qc"></field>
+        <field name="groups_id" eval="[(4, ref('stock.group_stock_user'))]"/>
+    </record>
+    
+    
+    
+    <template id="template_report_security_gate_qc">
+	    <t t-call="web.html_container">
+					 <t t-foreach="docs" t-as="o">
+						 <t t-call="web.report_layout">
+			            <div class="page" style="font-size:20px;text-align:center;">
+			            	<div class="row">
+				                <div class="col-xs-12 text-center">
+				                	<img class="rounded-circle mt-1 o_portal_contact_img" t-att-src="image_data_uri(o.company_id.logo)" alt="Logo" style="width:100%"/>
+				                	<strong style="font-size:100%;"><t t-out="o.get_name_report()"/></strong><br/>
+				                	<div style="font-size:100%;">Sample card (from the Truck)</div><br/>
+				                	<div style="border:1px solid black;">
+				                		<div style="border:1px solid black;"><strong>QC</strong></div>
+				                		<div t-if="o.picking_ids" class="text-left" style="font-size:16px;"><strong>GRN No. </strong><t t-out="o._get_grn(o)"/><br/></div>
+					                	<div class="text-left" style="font-size:16px;"><strong>Truck / </strong>Số xe: <span t-field="o.license_plate"/><br/></div>
+					                	<div class="text-left" style="font-size:16px;"><strong>Ghi chú / </strong>Remarks: <br/><br/><br/><br/><br/></div>
+				                	</div><br/>
+				                </div>
+				                <div class="col-xs-12 pull-right">
+						           <table style="font-size:20px;text-align:center;width:100%" class="table table-condensed">
+						               <tr style="bo300pxrder-black">
+					                        <tr>
+					                            <td class="text-center" style="border:1px solid black; font-size:18px;"><strong style="text-decoration: underline;">QC SUCDEN</strong><br/><br/><br/><br/></td> 
+					                        </tr>
+				                        </tr>
+						           </table>
+				           		</div>
+				           		<div class="border-black text-center">
+			           				<div t-field="o.name" t-options="{'widget': 'barcode', 'width': 800, 'height': 200, 'img_style': 'width: 600px;height:150px;'}"/>
+			           			</div>
+		             	</div>
+		           	</div>
+		           	 </t>
+	    </t>
+		        </t>
+	</template>
+	<!--
+	<template id="report_security_gate_qc">
+	    <t t-call="report.html_container">
+	        <t t-foreach="docs" t-as="o">
+	            <t t-call="ned_security_gate_queue.template_report_security_gate_qc" t-lang="o.security_id.partner_id.lang"/>
+	            <p style="page-break-before:always;"></p>
+	        </t>
+	    </t>
+	</template>
+	-->
+	      
+	</data>
+</odoo>

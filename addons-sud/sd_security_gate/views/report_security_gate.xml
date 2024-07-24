@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+	
+	<record id="paperformat_security_gate" model="report.paperformat">
+            <field name="name">Security Gate</field>
+            <field name="default" eval="True"/>
+            <field name="format">custom</field>
+            <field name="page_height">290</field>
+            <field name="page_width">80</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">0</field>
+            <field name="margin_bottom">0</field>
+            <field name="margin_left">1</field>
+            <field name="margin_right">1</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">0</field>
+            <!-- <field name="disable_shrinking" eval="True" /> -->
+            <field name="dpi">125</field>
+    </record>
+	      
+	<record id="action_report_security_gate" model="ir.actions.report">
+        <field name="name">Report Security Gate</field>
+        <field name="model">ned.security.gate.queue</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">sd_security_gate.template_report_security_gate</field>
+        <field name="report_file">sd_security_gate.template_report_security_gate</field>
+        <field name="print_report_name">(object._get_printed_report_name())</field>
+        <!--
+        <field name="attachment">(object.state == 'posted') and ((object.name or 'INV').replace('/','_')+'.pdf')</field>
+        -->
+        <field name="paperformat_id" ref="paperformat_security_gate"></field>
+        <field name="binding_model_id" ref="model_ned_security_gate_queue"/>
+        <field name="binding_type">report</field>
+        <field name="groups_id" eval="[(4, ref('stock.group_stock_user'))]"/>
+    </record>
+    
+	<template id="template_report_security_gate">
+	    <t t-call="web.html_container">
+			<t t-foreach="docs" t-as="o">
+				<t t-call="web.report_layout">
+	            <div class="page" style="font-size:15px;">
+	            	<div class="row">
+	            		<div style="border:1px solid black;">
+	            			<br/>
+			                <div class="col-xs-12 text-center">
+			                	<img class="rounded-circle mt-1 o_portal_contact_img" t-att-src="image_data_uri(o.company_id.logo)" alt="Logo" style="width: 200px"/>
+			                	<br></br>
+			                	<strong t-field="o.company_id.name"/><br/>
+			                	<strong style="font-size:100%;"><t t-out="o._get_crop(o)"/></strong><br/> 
+			                	<strong style="font-size:100%;">DELIVERY REGISTRATION</strong><br/>
+			                	<div style="font-size:100%;">PHIẾU ĐĂNG KÝ NHẬP HÀNG</div><br/>
+			                	<div style="border:1px solid black;">
+			                		<div style="border:1px solid black;font-size:14px"><strong>SECURITY</strong></div>
+				                	<div class="text-left" style="font-size:14px;"><strong>Registration No. / </strong>Số phiếu: <strong><span t-field="o.name"/></strong><br/> </div>
+				                	<div class="text-left" style="font-size:14px;"><strong>Date / </strong>Ngày Tháng: <span t-field="o.arrivial_time"/><br/></div>
+				                	<div class="text-left" style="font-size:14px;"><strong>Driver No. / </strong>Tài số: <span t-field="o.parking_order"/><br/></div>
+				                	<div class="text-left" style="font-size:14px;"><strong>Truck / </strong>Số xe: <strong><span t-field="o.license_plate"/></strong><br/></div>
+			                	</div><br/>
+			                	<div style="border:1px solid black;">
+				                	<div style="border:1px solid black;"><strong>QUALITY ANALYSIS</strong></div>
+				                	<div class="text-left" style="font-size:14px;"><strong>Seller / </strong>Người bán: <span t-field="o.supplier_id.name"/><br/></div>
+				                	<div class="text-left" style="font-size:14px;"><strong>Book code / </strong>Mã số HĐ:<span t-esc="o._get_contract(o)"/><br/></div>
+				                	<div class="text-left" style="font-size:14px;"><strong>Bags / </strong>Số bao: <span t-field="o.estimated_bags"/><br/></div>
+				                	<div class="text-left" style="font-size:14px;"><strong>Net Weight / </strong>TL ước tính: <span t-field="o.approx_quantity"/><br/></div>
+				                	<div class="text-left" style="font-size:14px;"><strong>Quality / </strong>Loại cà phê: <span t-field="o.aprroved_by_quality"/><br/></div>
+				                	<div class="text-left" style="font-size:14px;"><strong>Maisture / </strong>Độ ẩm: <span t-field="o.mc"/><br/></div>
+				                	<div class="text-left" style="font-size:14px;"><strong>Thử mốc </strong><br/> </div>
+				                	<div class="text-left" style="font-size:14px;"><strong>Thử khói </strong><br/> </div>
+			                	</div><br/>
+			                </div>
+					           <table style="text-align:center; width:100%" class="table table-condensed">
+					               <tr style="border-black">
+				                        <tr>
+				                        	<td width="20%" >
+				                        		<div class="border-black text-center" style="width:100%;text-align:center">
+							           				<div t-field="o.name" t-options="{'widget': 'barcode','symbology':'QR', 'width': 200, 'height': 200, 'img_style': 'width:80px;height:80px;'}"/>
+							           			</div>
+				                        	</td>
+				                        	<td width="40%" class="text-center" style="border:1px solid black; font-size:14px;"><strong style="text-decoration: underline;">SECURITY</strong><br/><br/><br/><br/></td>
+				                          	<td width="40%" class="text-center" style="border:1px solid black; font-size:14px;"><strong style="text-decoration: underline;">QC SUCDEN</strong><br/><br/><br/><br/></td> 
+				                        </tr>
+			                        </tr>
+					           </table>
+			           		<!-- <div class="border-black text-center" style="width:100%;text-align:center">
+		           				<div t-field="o.name" t-options="{'widget': 'barcode', 'width': 600, 'height': 125, 'img_style': 'width:300px;height:50px;'}"/>
+		           			</div> -->
+		           			
+		           			<br/>
+		           		</div>
+
+		           		<br/>
+		           		<!-- <p style="page-break-after:always;">   </p> -->
+	           			<div style="border:1px solid black;width:100%;text-align:center">
+	           				<br/>
+				           	<table style="text-align:center; width:100%; font-size:14px;" class="table table-condensed">
+				               	<tr style="border-black">
+			                        <tr>
+					           			<td width="20%" >
+			                        		<div class="border-black text-center" style="width:100%;text-align:center">
+						           				<div t-field="o.name" t-options="{'widget': 'barcode','symbology':'QR', 'width': 200, 'height': 200, 'img_style': 'width:80px;height:80px;'}"/>
+						           			</div>
+			                        	</td>
+					           			<td width="80%" class="text-center" style="border:1px solid black;">
+						           			<div class="border-black text-center" style="width:100%;text-align:center">
+						           				<strong>MẪU HÀNG NHẬP LIÊN 1</strong><br/>
+						           				<strong>VEHICLE NO.: <span t-field="o.license_plate"/></strong><br/>
+						           				<strong>Date:</strong> <span t-field="o.arrivial_time"/><br/>
+						           				<strong>Estimated Quantity: </strong> <span t-field="o.approx_quantity"/><br/>
+						           				<!-- <div width="100%" t-field="o.name" t-options="{'widget': 'barcode', 'width': 625, 'height': 125, 'img_style': 'width:300px;height:50px;'}"/> -->
+						           			</div>
+			                        	</td>
+			                        </tr>
+		                        </tr>
+				           	</table>
+				           	<br/>
+		           		</div>
+
+		           		<!-- <p style="page-break-after:always;">   </p> -->
+	           			<div style="border:1px solid black;">
+	           				<br/>
+				           	<table style="text-align:center; width:100%; font-size:14px;" class="table table-condensed">
+				               	<tr style="border-black">
+			                        <tr>
+					           			<td width="20%" >
+			                        		<div class="border-black text-center" style="width:100%;text-align:center">
+						           				<div t-field="o.name" t-options="{'widget': 'barcode','symbology':'QR', 'width': 200, 'height': 200, 'img_style': 'width:80px;height:80px;'}"/>
+						           			</div>
+			                        	</td>
+					           			<td width="80%" class="text-center" style="border:1px solid black;">
+						           			<div class="border-black text-center" style="width:100%;text-align:center">
+						           				<strong>MẪU HÀNG NHẬP LIÊN 2</strong><br/>
+						           				<strong>VEHICLE NO.: <span t-field="o.license_plate"/></strong><br/>
+						           				<strong>Date:</strong> <span t-field="o.arrivial_time"/><br/>
+						           				<strong>Estimated Quantity: </strong> <span t-field="o.approx_quantity"/><br/>
+						           			</div>
+			                        	</td>
+			                        </tr>
+		                        </tr>
+				           	</table>
+		           			<br/>
+		           		</div>
+		           		<!-- <p style="page-break-after:always;">   </p> -->
+		           		<!-- PAPER_PART_CUT  = '\x1d\x56\x01' # Partial cut paper -->
+	           			<div style="border:1px solid black;">
+	           				<br/>
+				           	<table style="text-align:center; width:100%; font-size:14px;" class="table table-condensed">
+				               	<tr style="border-black">
+			                        <tr>
+					           			<td width="20%" >
+			                        		<div class="border-black text-center" style="width:100%;text-align:center">
+						           				<div t-field="o.name" t-options="{'widget': 'barcode','symbology':'QR', 'width': 200, 'height': 200, 'img_style': 'width:80px;height:80px;'}"/>
+						           			</div>
+			                        	</td>
+					           			<td width="80%" class="text-center" style="border:1px solid black;">
+						           			<div class="border-black text-center" style="width:100%;text-align:center">
+						           				<strong>MẪU SƠ BỘ</strong><br/>
+						           				<strong>VEHICLE NO.: <span t-field="o.license_plate"/></strong><br/>
+						           				<strong>Date:</strong> <span t-field="o.arrivial_time"/><br/>
+						           				<strong>Estimated Quantity: </strong> <span t-field="o.approx_quantity"/><br/>
+						           			</div>
+			                        	</td>
+			                        </tr>
+		                        </tr>
+				           	</table>
+		           			<br/>
+		           		</div>
+
+	           		<!-- <p style="page-break-after:always;">   </p>
+           			<div class="row" style="top:400px;  position: fixed;">
+					<p> <strong>Test New Page </strong> </p> -->
+             	</div>
+           	</div>
+	    </t>
+        </t>
+	    </t>
+	</template>
+	
+
+	<!--
+	<template id="report_security_gate">
+	    <t t-call="report.html_container">
+	        <t t-foreach="docs" t-as="o">
+	            <t t-call="ned_security_gate_queue.template_report_security_gate" t-lang="o.security_id.partner_id.lang"/>
+	            <p style="page-break-before:always;"></p>
+	        </t>
+	    </t>
+	</template>
+	-->
+	
+
+    <!--    
+	<report 
+	      id="action_report_security_gate"
+	      string="Report Security Gate"
+	      model="ned.security.gate.queue" 
+	      report_type="qweb-pdf"
+	      file="sd_security_gate.report_security_gate" 
+	      name="sd_security_gate.report_security_gate"
+	      paperformat="paperformat_security_gate"/>
+	      -->
+	</data>
+</odoo>

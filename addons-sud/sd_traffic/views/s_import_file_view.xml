@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_contract_import_file_form_traffic" model="ir.ui.view">
+	        <field name="name">view_contract_import_file_form_traffic</field>
+	        <field name="model">s.import.file</field>
+	        <field name="arch" type="xml">
+				<form string="Import P Contract">
+					<sheet>
+	                    <div class="oe_title">
+	                        <h1>
+	                            <field name="im_file"/>
+								<field name="error"/>
+	                        </h1>
+	                    </div>
+					</sheet>
+					<footer>
+						<button name="import2p" string="Import" class="oe_highlight" type="object"/>
+						<button string="Cancel" class="btn-default" special="cancel"/>
+					</footer>
+				</form>
+			</field>
+		</record>
+
+    <record id="action_import_contract_traffic" model="ir.actions.act_window">
+            <field name="name">Import P Contract</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">s.import.file</field>
+            <field name="view_mode">form</field>
+			<field name="target">new</field>
+        </record>
+
+    <record id="action_import_p_contract_traffic" model="ir.actions.act_window.view">
+            <field eval="100" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_contract_import_file_form_traffic"/>
+            <field name="act_window_id" ref="action_import_contract_traffic"/>
+		</record>
+
+	<record id="view_scontract_import_file_form_traffic" model="ir.ui.view">
+	        <field name="name">view_scontract_import_file_form_traffic</field>
+	        <field name="model">s.import.file</field>
+	        <field name="arch" type="xml">
+				<form string="Import S Contract">
+					<sheet>
+	                    <div class="oe_title">
+	                        <h1>
+	                            <field name="im_file"/>
+								<field name="error"/>
+	                        </h1>
+	                    </div>
+					</sheet>
+					<footer>
+						<button name="import2s" string="Import" class="oe_highlight" type="object"/>
+						<button string="Cancel" class="btn-default" special="cancel"/>
+					</footer>
+				</form>
+			</field>
+		</record>
+
+	<record id="action_import_scontract_traffic" model="ir.actions.act_window">
+            <field name="name">Import S Contract</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">s.import.file</field>
+            <field name="view_mode">form</field>
+			<field name="target">new</field>
+        </record>
+
+	<record id="action_import_s_contract_traffic_form" model="ir.actions.act_window.view">
+            <field eval="100" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_scontract_import_file_form_traffic"/>
+            <field name="act_window_id" ref="action_import_scontract_traffic"/>
+		</record>
+
+
+	<record id="view_scontract_update_file_form_traffic" model="ir.ui.view">
+	        <field name="name">view_scontract_update_file_form_traffic</field>
+	        <field name="model">s.import.file</field>
+	        <field name="arch" type="xml">
+				<form string="Update S Contract">
+					<sheet>
+	                    <div class="oe_title">
+	                        <h1>
+	                            <field name="im_file"/>
+								<field name="error"/>
+	                        </h1>
+	                    </div>
+					</sheet>
+					<footer>
+						<button name="import2s" string="Update" class="oe_highlight" type="object"/>
+						<button string="Cancel" class="btn-default" special="cancel"/>
+					</footer>
+				</form>
+			</field>
+		</record>
+
+	<record id="action_update_scontract_traffic" model="ir.actions.act_window">
+            <field name="name">Update S Contract</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">s.import.file</field>
+            <field name="view_mode">form</field>
+			<field name="target">new</field>
+        </record>
+
+		<record id="action_update_scontract_trafficform" model="ir.actions.act_window.view">
+            <field eval="100" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_scontract_update_file_form_traffic"/>
+            <field name="act_window_id" ref="action_update_scontract_traffic"/>
+		</record>
+</odoo>

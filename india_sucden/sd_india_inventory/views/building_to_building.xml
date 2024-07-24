@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="sd_inventory.action_ned_stock_stack_transfer" model="ir.actions.act_window">
+            <field name="name">Zone to Zone</field>
+        <field name="context">{'default_type': 'zone'}</field>
+        <field name="domain">[('type', '=', 'zone')]</field>
+    </record>
+
+    <!-- Ned Stack Transfer -->
+    	<record id="view_building_to_building_transfer_tree" model="ir.ui.view">
+            <field name="name">view_building_to_building_transfer_tree</field>
+            <field name="model">stock.stack.transfer</field>
+            <field name="arch" type="xml">
+                <tree string="Transfer Stack" editable="top" default_order="id desc" delete="false">
+                    <field name="stack_id" domain="[('stack_wip', '!=', True)]" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                    <field name="stack_ids" domain="[('stack_wip', '!=', True)]" attrs="{'readonly': [('state', '!=', 'draft')]}" invisible="1"/>
+                	<field name="name" string="Product"  attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                    <field name="net_weight" readonly="1" force_save="1"/>
+                    <field name="no_of_bag" readonly="1" force_save="1"/>
+                	<field name="date_order" required="1" string="Date &amp; Time"  attrs="{'readonly': [('state', '!=', 'draft')]}" readonly="1"/>
+                	<field name="from_zone_id" required="1"  attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                	<field name="from_building" required="1"  attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                	<field name="to_zone_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                	<field name="to_building" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                	<field name="document" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                	<field name="doc_date" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                	<field name="user_approve_id"  attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                    <field name="state" readonly="1"  attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                    <button name="button_transfer_building" type="object" states="draft" string="Approved" class="oe_highlight"/>
+                    <button name="set_to_draft" type="object" states="approved" string="Set To Draft" class="oe_highlight"/>
+                </tree>
+            </field>
+        </record>
+
+    <record id="action_building_to_building" model="ir.actions.act_window">
+            <field name="name">Stack Transfer</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">stock.stack.transfer</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_building_to_building_transfer_tree"/>
+            <field name="domain">[('type', '=', 'building')]</field>
+            <field name="context">{'default_type': 'building'}</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+              		Create a Building to Building Transfer.
+              </p>
+            </field>
+        </record>
+
+    <menuitem id="menu_action_building_to_building"
+	        	action="action_building_to_building"
+	        	parent="stock.menu_stock_inventory_control"
+	        	sequence="300"
+	        	groups="stock.group_stock_manager,stock.group_stock_user"
+	        	/>
+
+    <menuitem
+	        	id="sd_inventory.menu_action_ned_stock_stack_transfer"
+	        	action="sd_inventory.action_ned_stock_stack_transfer"
+	        	parent="stock.menu_stock_inventory_control"
+	        	sequence="200"
+                name="Zone to Zone"
+                active="False"
+	        	groups="stock.group_stock_manager,stock.group_stock_user"
+	        	/>
+</odoo>

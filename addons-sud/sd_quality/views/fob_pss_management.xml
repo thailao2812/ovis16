@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+		
+    	
+		<record id="view_fob_pss_manager_tree" model="ir.ui.view">
+            <field name="name">view.fob.pss.manager.tree</field>
+            <field name="model">fob.pss.management</field>
+            <field name="arch" type="xml">
+                <tree string="PSS List" decoration-info="pss_status == 'pending'" decoration-muted="pss_status in ('approved','done')" decoration-danger="pss_status == ('rejected')" default_order="id desc" editable="top">
+                    <button name="btt_confirm" string="Confirm"
+                    	class="oe_highlight" type="object" attrs="{'readonly': [('state', '=', 'approve')]}" 
+                    	groups="sd_quality.group_kcs_manager,sd_quality.group_kcs_user"/>
+                	<button name="btt_draft" string="S.T.Draft" type="object" attrs="{'readonly': [('state', '!=', 'approve')]}" 
+                		groups="sd_quality.group_kcs_manager"/>
+                     <field name="state" invisible="1"/>
+                    <field name="file" widget="binary" filename="file_name"/>
+                	<field name="file_name" invisible="1"/>
+                    <field name="name"/>
+                    <field name="created_date" invisible="1"/>
+                    <field name="partner_id"/>
+                    <field name="x_shipper"/>
+                    <field name="warehouse_id" invisible="1"/>
+                    <field name="x_ex_warehouse"/>
+                    <field name="product_id"/>
+                    <field name="date_sampling"/>
+                    <field name="date_sent"/>
+                    <field name="shipment_date"/>
+                    <field name="date_result"/>
+                    <field name="pss_status"/>
+                    <field name="buyer_ref_name"/>
+                    <field name="buyer_ref" string="P Contract"/>
+                    <field name="x_traffic_contract"/>
+                    <!--
+                    <field name="x_buyer_ref"/>
+                    
+                    -->
+                    
+                    
+                    <field name="lot_quantity"/>
+                    <field name="cont_quantity"/>
+                    <field name="mc"/>
+                    <field name="fm"/>
+                    <field name="black"/>
+                    <field name="broken"/>
+                    <field name="brown"/>
+                    <field name="moldy"/>
+                    <field name="burned"/>
+                    <field name="scr20"/>
+                    <field name="scr19"/>
+                    <field name="scr18"/>
+                    <field name="scr16"/>
+                    <field name="scr13"/>
+                    <field name="blscr12"/>
+                    <field name="bulk_density"/>
+                    <field name="stack" widget="many2many_tags"/>
+                    <field name="ref_no" invisible="1"/>
+                    <field name="note" string="Cuptaste"/>
+                    <field name="inspector"/>
+                    <field name="buyer_comment"/>
+                    <field name="inspected_by"/>
+                    <field name="our_comment"/>
+                    <field name="qc_staff"/>
+                    <field name="awb_no"/>                    
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_fob_pss_search" model="ir.ui.view">
+            <field name="name">view_fob_pss_search</field>
+            <field name="model">fob.pss.management</field>
+            <field name="arch" type="xml">
+                <search string="FOB PSS">
+                	<field name="name" string="PSS Name"/>
+                	<field name="buyer_ref" string="P Contract"/>
+                	<field name="x_traffic_contract"/>
+                	<field name="partner_id"/>
+                	<field name="x_shipper"/>
+	        		<field name="x_ex_warehouse"/>
+                    <field name="product_id"/>
+                	<group expand="1" string="Group By">
+                    	<filter name ="group_by_partner_id" string="Customer" domain="[]" context="{'group_by':'partner_id'}"/>
+                    	<filter name ="group_by_x_ex_warehouse" string="Warehouse" domain="[]" context="{'group_by':'x_ex_warehouse'}"/>
+                	</group>
+               </search>
+            </field>
+        </record>
+        
+    	
+    	<record id="action_fob_pss_manager" model="ir.actions.act_window">
+            <field name="name">FOB PSS</field>
+            <field name="res_model">fob.pss.management</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{}</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+              		Create a FOB PSS, the first step of a new FOB PSS.
+              </p>
+            </field>
+        </record>
+       
+    	
+    	
+    </data>
+</odoo>

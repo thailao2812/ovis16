@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+		<!-- Res Users -->
+	    <record id="view_users_form_inherit_reach_stock" model="ir.ui.view">
+			<field name="name">view_users_form_inherit_reach_stock</field>
+		    <field name="model">res.users</field>
+		    <field name="type">form</field>
+		    <field name="inherit_id" ref="base.view_users_form"/>
+		    <field name="arch" type="xml">
+
+				<xpath expr="//notebook/page/group[1]" position="after">
+                    <group string="Warehouses" name="warehouses">
+						<field name="working_all_warehouse"/>
+	                    <field name="warehouse_ids" widget="many2many_tags" string="Working Warehouses"
+							   attrs="{'invisible': [('working_all_warehouse','=',True)]}"
+							   domain="[('company_id','=',company_id)]" options="{'no_create': True, 'no_open': True}"/>
+						<field name="warehouses_dom" invisible="1"/>
+
+						<field name="follow_all_warehouse"/>
+						<field name="warehouse_allow_ids" widget="many2many_tags" string="Follow Warehouses"
+							   attrs="{'invisible': [('follow_all_warehouse','=',True)]}"
+							   domain="[('company_id','=',company_id)]" options="{'no_create': True, 'no_open': True}"/>
+						<field name="warehouses_allow_dom" invisible="1"/>
+						
+						<field name="user_picking_type_ids" 
+						attrs="{'invisible': [('working_all_picking_type','=',True)]}"
+						widget="many2many_tags" string="Working Picking type"/>
+						<field name="working_all_picking_type"/>
+						<field name="picking_type_dom" invisible="1"/>
+	                </group>
+                </xpath>
+		    </field>
+	    </record>
+		
+    </data>
+</odoo>

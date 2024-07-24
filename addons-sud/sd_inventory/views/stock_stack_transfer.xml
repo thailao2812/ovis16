@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    
+    	<!-- Ned Stack Transfer -->
+    	<record id="view_ned_stock_stack_transfer_tree" model="ir.ui.view">
+            <field name="name">ned.stock.stack.transfer.tree</field>
+            <field name="model">stock.stack.transfer</field>
+            <field name="arch" type="xml">
+                <tree string="Transfer Stack" editable="top" default_order="id desc" delete="false">
+                    <field name="stack_id" domain="[('stack_wip', '!=', True)]" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                    <field name="stack_ids" domain="[('stack_wip', '!=', True)]" attrs="{'readonly': [('state', '!=', 'draft')]}" invisible="1"/>
+                	<field name="name" string="Product"  attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                    <field name="net_weight"  attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                    <field name="no_of_bag"  attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                	<field name="date_order" required="1" string="Date &amp; Time"  attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                	<field name="from_zone_id" required="1" domain="[('location_wip', '!=', True)]"   attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                	<field name="to_zone_id" required="1" domain="[('location_wip', '!=', True)]"  attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                	<field name="user_approve_id"  attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                    <field name="state" readonly="1"  attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                    <button name="button_approved" type="object" states="draft" string="Approved" class="oe_highlight"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id="view_ned_stock_stack_transfer_form" model="ir.ui.view">
+            <field name="name">ned.stock.stack.transfer.form</field>
+            <field name="model">stock.stack.transfer</field>
+            <field name="arch" type="xml">
+                <form string="Transfer Stack" delete="false">
+                	<header>
+	                    <button name="button_approved" type="object" states="draft" string="Approved" class="oe_highlight"/>
+	                    <field name="state" widget="statusbar" statusbar_visible="draft,approved"/>
+	                </header>
+                	<sheet>
+                		<div class="oe_title">
+                			<label for="name" string="Name" class="oe_edit_only"/>
+	                        <h1>
+	                            <field name="name" attrs="{'readonly': [('state', '!=', 'draft')]}" />
+	                        </h1>
+	                    </div>
+                		<group col="4">
+                            <field name="stack_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+		                    <field name="date_order" attrs="{'readonly': [('state', '!=', 'draft')]}" />
+		                    <field name="user_responsible_id" attrs="{'readonly': [('state', '!=', 'draft')]}" />
+		                    <field name="from_zone_id" attrs="{'readonly': [('state', '!=', 'draft')]}" />
+                			<field name="to_zone_id" attrs="{'readonly': [('state', '!=', 'draft')]}" />
+                			<field name="user_approve_id" attrs="{'readonly': [('state', '!=', 'draft')]}" />
+		                    <field name="date_approve" attrs="{'readonly': [('state', '!=', 'draft')]}" />
+                            <field name="stack_ids" attrs="{'readonly': [('state', '!=', 'draft')]}" invisible="1"/>
+                		</group>
+	                    <field name="note" class="oe_inline" placeholder="Setup default terms and conditions in your company settings."/>
+                        <div class="oe_clear"/>
+	                </sheet>
+	                <!--
+	                 <div class="oe_chatter">
+	                    <field name="message_follower_ids" widget="mail_followers"/>
+	                    <field name="message_ids" widget="mail_thread"/>
+	                </div>
+	                -->
+                </form>
+            </field>
+        </record>
+        
+        <record id="action_ned_stock_stack_transfer" model="ir.actions.act_window">
+            <field name="name">Stack Transfer</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">stock.stack.transfer</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+              		Create a Transfer Stack, the first step of a Transfer Stack.
+              </p>
+            </field>
+        </record>
+        
+        
+
+        
+
+
+    </data>
+</odoo>

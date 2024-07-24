@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="interest_configuration_tree" model="ir.ui.view">
+        <field name="name">interest_configuration_tree</field>
+        <field name="model">interest.configuration</field>
+        <field name="arch" type="xml">
+            <tree string="Interest Configuration" editable ='top'>
+				<field name="name" attrs="{'readonly': [('state', '=', 'approve')]}" options="{'no_create': True}"/>
+				<field name="number_of_day" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+				<button name="button_approve" string="Approve" type="object" attrs="{'invisible': [('state', '=', 'approve')]}"/>
+				<button name="button_set_draft" string="Set to Draft" type="object" attrs="{'invisible': [('state', '=', 'new')]}"/>
+				<field name="state" readonly="1"/>
+            </tree>
+        </field>
+    </record>
+
+     <record id="action_interest_configuration" model="ir.actions.act_window">
+        <field name="name">Interest Configuration</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">interest.configuration</field>
+        <field name="view_id" ref="interest_configuration_tree"/>
+        <field name="view_mode">tree</field>
+    </record>
+
+    <menuitem id="menu_interest_configuration"
+            name="Interest Configuration"
+            action="action_interest_configuration"
+            parent="sd_master.menu_master_data_sucden_root"
+            sequence="101"/>
+</odoo>

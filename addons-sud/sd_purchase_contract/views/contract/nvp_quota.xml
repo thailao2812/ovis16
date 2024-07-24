@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    	
+    	<!-- Quota NVP -->
+        
+        <record model="ir.actions.act_window" id="action_purchase_contract_quota">
+            <field name="name">NVP Quota</field>
+            <field name="res_model">purchase.contract</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('type','=','purchase'),('cert_type','=','quota')]</field>
+        	<field name="search_view_id" ref="purchase_contract_search"/>
+            <field name="context">{'default_type':'purchase', 'default_cert_type': 'quota'}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a contract quota, the first step of a new NVP.
+                </p><p>
+                </p>
+            </field>
+        </record>
+        
+    	
+    	<!--
+        <record id="action_view_nvp_contract_graph_quota" model="ir.actions.act_window.view">
+            <field eval="140" name="sequence"/>
+            <field name="view_mode">graph</field>
+            <field name="view_id" ref="view_nvp_contract_graph"/>
+            <field name="act_window_id" ref="action_purchase_contract_quota"/>
+        </record>
+
+
+        <record id="action_nvp_contract_pivot_quota" model="ir.actions.act_window.view">
+            <field eval="120" name="sequence"/>
+            <field name="view_mode">pivot</field>
+            <field name="view_id" ref="view_nvp_contract_pivot"/>
+            <field name="act_window_id" ref="action_purchase_contract_quota"/>
+        </record>
+        <record id="action_nvp_contract_pivot_quota" model="ir.actions.act_window.view">
+            <field eval="120" name="sequence"/>
+            <field name="view_mode">pivot</field>
+            <field name="view_id" ref="view_nvp_contract_pivot"/>
+            <field name="act_window_id" ref="action_purchase_contract_quota"/>
+        </record>
+	-->
+       <record id="action_view_nvp_contract_tree_quota" model="ir.actions.act_window.view">
+            <field eval="100" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_nvp_contract_tree"/>
+            <field name="act_window_id" ref="action_purchase_contract_quota"/>
+        </record>
+
+        
+    </data>
+</odoo>

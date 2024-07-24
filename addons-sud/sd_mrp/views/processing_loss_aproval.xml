@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    	
+    	<record id="view_processing_loss_aproval_search" model="ir.ui.view">
+            <field name="name">processing.loss.aproval.search</field>
+            <field name="model">processing.loss.aproval</field>
+            <field name="arch" type="xml">
+                <search string="Search Processing Loss">
+                    <field name="production_id" string="Mo"/>
+                    <field name="warehouse_id" />
+                    <field name="picking_id"/>
+                    <field name="batch_type"/>
+                    <separator/>
+                	<filter name="group_by_production" string="Production" context="{'group_by':'production_id'}"/>
+                	<filter name="group_by_warehouse" string="Warehouse" context="{'group_by':'warehouse_id'}"/>
+               </search>
+            </field>
+        </record>
+        
+        
+    	<record id="view_processing_loss_aproval_tree" model="ir.ui.view">
+            <field name="name">processing.loss.aproval.tree</field>
+            <field name="model">processing.loss.aproval</field>
+            <field name="arch" type="xml">
+                <tree editable="top" default_order="id desc" >
+                	<field name="production_id"/>
+                	<field name="warehouse_id"/>
+                	<field name="picking_id"/>
+                    <field name="batch_type" />
+                    <field name="product_issued"/>
+                    <field name="product_received" />
+                    <field name="mc_in"/>
+                    <field name="mc_out" />
+                    <field name="weight_loss"/>
+                     <field name="physical_weight" />
+                    <field name="mc_loss" />
+                    <field name="physical_loss"/>
+                    <field name="invisible_loss"/>
+                    <field name="start_date"/>
+                    <field name="end_date"/>
+                    <button string="Approve" name="button_approve" states="draft" type="object" class="oe_highlight"/>
+                    <button string="Computes" name="button_compute" states="draft" type="object" class="oe_highlight"/>
+                    <button string="Reopen" name="button_reopen" states="approved" type="object" class="oe_highlight"/>
+                    
+                    <field name="state" invisible ='0'/>
+                </tree>
+            </field>
+        </record>
+        
+        <record model="ir.actions.act_window" id="action_processing_loss_aproval">
+            <field name="name">Processing Loss Aproval</field>
+            <field name="res_model">processing.loss.aproval</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_mode">tree</field>
+            <field name="search_view_id"/>
+            <field name="domain">[('picking_id','!=',False)]</field>
+            <field name="context">{}</field>
+        </record>
+        
+       
+        	
+       <!--
+       <record id="view_ned_stock_stack_form_inherit_ned_mrp" model="ir.ui.view">
+            <field name="name">view_ned_stock_stack_form_inherit_ned_mrp</field>
+            <field name="model">stock.stack</field>
+            <field name="inherit_id" ref="ned_stock.view_ned_stock_stack_form"/>
+            <field name="arch" type="xml">
+            	<xpath expr="//field[@name='stack_empty']" position="after">
+	            	<field name ="stack_processing_loss"/>
+	            </xpath>
+            </field>
+        </record>
+        -->
+    	
+    
+    </data>'    
+</odoo>

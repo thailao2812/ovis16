@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+    
+    	<!-- Ned stock Stack -->
+        <!-- Ned stock stack -->
+    	<record id="view_ned_stock_stack_tree" model="ir.ui.view">
+            <field name="name">ned.stock.stack.tree</field>
+            <field name="model">stock.stack</field>
+            <field name="arch" type="xml">
+                <tree string="Stack" default_order="id desc">
+                	<field name="warehouse_id" invisible="1"/>
+                    <field name="zone_id"/>
+                    <field name="districts_id" string="Nguồn Hàng"/>
+                    <field name="code" invisible="1"/>
+                    <field name="name"/>
+                    <field name="stack_type"/>
+                    <field name="categ_id" invisible="1"/>
+                    <field name="product_id"/>
+					<field name="stack_qty" invisible="1"/>
+					<field name="init_qty" string="Net Weight" sum="init_qty"/>
+
+                    <!-- <field name="allocated_qty"/>
+                    <field name="allocated_bag"/>
+                    <field name="unallocated_qty"/>
+                    <field name="unallocated_bag"/> -->
+    
+    <!-- err du
+                    <field name="remaining_qty" sum="remaining_qty" string="Basis Weight" invisible="1"/>
+                    <field name="total_remain" sum="total_remain" string="Remain Allocated" invisible="1"/>
+	-->
+                    <field name="limit_qty" invisible="1"/>
+                    <field name="lock" invisible="1"/>
+                    <field name="active" invisible="1"/>
+                     <field name="picking_id" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id="view_ned_stock_stack_form" model="ir.ui.view">
+            <field name="name">ned.stock.stack.form</field>
+            <field name="model">stock.stack</field>
+            <field name="arch" type="xml">
+                <form string="Stack">
+                	<header>
+                		<button name="change_product" string="Change Product" type="object"/>
+                		<button name="dieuchinhqc" type="object" string="Update Deduct"/>
+                		<button name="stack_reports" type="object" string="Report Stack"/>
+                        <!-- <button name="btt_get_remaining_qty" type="object" string="Tinh chenh lech"/> -->
+                	</header>
+                	<sheet>
+                		<group col="4">
+		                    <field name="name"/>
+		                    <field name="stack_empty"/>
+		                    <field name="zone_id"/>
+		                    <field name="districts_id" string="Nguồn Hàng"/>
+		                    <field name="date"/>
+                            <field name="stack_type"/>
+		                    <field name="limit_qty"/>
+		                    <field name="active"/>
+		                    <field name="lock"/>
+		                    <field name="init_qty" string="Net Weight"/>
+		                    
+		                    <field name="remaining_qty"/>
+		                    <field name="pledged" string="Bank of Pledge"/>
+		                    <field name="product_id"/>
+		                    <field name="product_change_id"/>
+		                    <label for="avg_deduction"/>
+							<div name="avg_deduction" class="o_row">
+								<field name="avg_deduction" readonly="1"/>
+								<!-- err
+								<label string="%" class="oe_inline oe_no_button" readonly="1"/>
+								-->
+							</div>
+		                    <field name="code" invisible="1"/>
+		                    <field name="stack_qty" invisible="1"/>
+		                    
+                		</group>
+                		<notebook>
+	                		<page string="History Tranfer">
+		        				<field name="move_ids" nolabel="1" readonly="1">
+		        					<tree editable="top">
+		        						<field name="picking_id" string="GRN"/>
+		        						<field name="product_id"/>
+		        						<field name="product_uom" string="UoM"/>
+		        						<field name="init_qty" string="Net Weight" sum="total_init_qty"/>
+		        						<field name="product_uom_qty" string="Basis Weight" sum="product_uom_qty" invisible="1"/>
+		        						
+		        						<field name="location_id" string="From"/>
+		        						<field name="location_dest_id" string="To"/>
+		        						<field name="state"/>
+		        					</tree>
+		        				</field>
+		        			</page>
+	        			</notebook>
+                        <div class="oe_chatter">
+                            <field name="message_follower_ids" widget="mail_followers"/>
+                            <field name="message_ids" widget="mail_thread"/>
+                        </div>
+                	</sheet>
+
+                </form>
+            </field>
+        </record>
+        
+        <record id="action_ned_stock_stack" model="ir.actions.act_window">
+            <field name="name">Stacks</field>
+            <field name="res_model">stock.stack</field>
+            <field name="view_mode">tree,form,graph</field>
+            <!-- erro
+            <field name="domain">[('product_id.hide_report','=',False),('is_bonded','!=',True)]</field>
+            -->
+            <field name="domain">[('is_bonded','!=',True)]</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+              		Create a Stack, the first step of a new Stack.
+              </p>
+            </field>
+        </record>
+        
+       
+
+        
+
+
+    </data>
+</openerp>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	
+    <data>
+        <!-- Sequences for sale.contract --> 
+        <record id="seq_mrp_result" model="ir.sequence">
+            <field name="name">MOR</field>
+            <field name="code">mrp.operation.result</field>
+            <field name="prefix">MOR-%(y)s%(month)s-</field>
+            <field name="padding">4</field>
+            <field name="suffix"></field>
+            <field name="company_id" eval="False"/>
+        </record>
+        
+         <record id="sequence_mrp_production" model="ir.sequence">
+            <field name="name">sequence_mrp_production</field>
+            <field name="code">mrp.production</field>
+            <field name="prefix">-%(y)s-%(month)s/</field>
+            <field name="padding">4</field>
+            <field name="suffix"></field>
+            <field name="company_id" eval="False"/>
+        </record>
+        
+        <record id="seq_mrp_import_result" model="ir.sequence">
+            <field name="name">Import Result</field>
+            <field name="code">wizard.import.production.result</field>
+            <field name="prefix">IPR-%(y)s-</field>
+            <field name="padding">5</field>
+            <field name="suffix"></field>
+            <field name="company_id" eval="False"/>
+        </record>
+        
+        
+        
+    </data>
+</odoo>

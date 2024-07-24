@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_purchase_contract_form_inherit_vietnam" model="ir.ui.view">
+        <field name="name">view_purchase_contract_form_inherit_vietnam</field>
+        <field name="model">purchase.contract</field>
+        <field name="inherit_id" ref="sd_purchase_contract.view_purchase_contract_form"/>
+        <field name="arch" type="xml">
+			 <xpath expr="//page[@name='information']" position="after">
+            	<page name="farmer" string="Farmer Information">
+                    <field name="list_farmer" readonly="1">
+                        <tree editable="1" limit="100">
+                            <field name="date"/>
+                            <field name="farmer_id"/>
+                            <field name="farmer_code"/>
+                            <field name="quantity" sum="quantity"/>
+                        </tree>
+                    </field>
+
+                </page>
+            </xpath>
+            <xpath expr="//field[@name='contract_line']//tree//field[@name='difams']" position="after">
+                <field name="equiv_faq_price"/>
+            </xpath>
+            <xpath expr="//field[@name='premium']" position="after">
+                <field name="deposit_amount"/>
+                <field name="print_company"/>
+            </xpath>
+<!--            <xpath expr="//field[@name='request_payment_ids']//form//field[@name='payment_quantity']" position="after">-->
+<!--                <field name="product_id" invisible="1"/>-->
+<!--                <field name="purchase_contract_id" invisible="1"/>-->
+<!--                <field name="grn_fot_done_ids" options="{'no_create': True}" context="{'purchase_contract_id': purchase_contract_id, 'sequence': name, 'grn_fot_done': True}" widget="many2many_tags"/>-->
+<!--                <field name="grn_done_ids" options="{'no_create': True}" context="{'purchase_contract_id': purchase_contract_id, 'sequence': name, 'grn_done': True}" widget="many2many_tags"/>-->
+<!--                <field name="grn_ready_ids" options="{'no_create': True}" widget="many2many_tags" context="{'purchase_contract_id': purchase_contract_id, 'sequence': name, 'grn_ready': True}"/>-->
+<!--&lt;!&ndash;                <field name="grn_ready_ids" options="{'no_create': True}" widget="many2many_tags" context="{'purchase_contract_id': purchase_contract_id, 'sequence': name, 'grn_ready': True}"/>&ndash;&gt;-->
+<!--&lt;!&ndash;                <field name="delivery_registration_ids" options="{'no_create': True}" widget="many2many_tags" domain="[('supplier_id', '=', partner_id), ('state', 'not in', ['approved', 'closed'])]" context="{'product_id': product_id, 'request_payment': True}"/>&ndash;&gt;-->
+<!--            </xpath>-->
+<!--            <xpath expr="//field[@name='request_payment_ids']//form//notebook" position="after">-->
+<!--                <notebook>-->
+<!--                    <page name="delivery_ktn" string="Delivery Katoen 70%">-->
+<!--                    <field name="delivery_registration_ktn_ids">-->
+<!--                        <tree editable="top">-->
+<!--                            <field name="name"/>-->
+<!--                            <field name="quantity"/>-->
+<!--                        </tree>-->
+<!--                    </field>-->
+<!--                </page>-->
+<!--                </notebook>-->
+<!--            </xpath>-->
+
+        </field>
+    </record>
+    <record id="view_ptbf_contract_form_inherit_vietnam" model="ir.ui.view">
+        <field name="name">view_ptbf_contract_form_inherit_vietnam</field>
+        <field name="model">purchase.contract</field>
+        <field name="inherit_id" ref="sd_purchase_contract.view_ptbf_contract_form"/>
+        <field name="arch" type="xml">
+			 <xpath expr="//page[@name='information']" position="after">
+            	<page name="farmer" string="Farmer Information">
+                    <field name="list_farmer" readonly="1">
+                        <tree editable="1" limit="100">
+                            <field name="date"/>
+                            <field name="farmer_id"/>
+                            <field name="farmer_code"/>
+                            <field name="quantity" sum="quantity"/>
+                        </tree>
+                    </field>
+
+                </page>
+            </xpath>
+            <xpath expr="//field[@name='contract_line']//tree//field[@name='difams']" position="after">
+                <field name="equiv_faq_price"/>
+            </xpath>
+
+            <xpath expr="//field[@name='ptbf_ids']//form//field[@name='diff']" position="after">
+                <field name="contract_p_id"/>
+            </xpath>
+            <xpath expr="//field[@name='ptbf_ids']//tree//field[@name='date_fix']" position="after">
+                <field name="contract_p_id"/>
+            </xpath>
+            <xpath expr="//field[@name='premium']" position="after">
+                <field name="print_company"/>
+            </xpath>
+            <xpath expr="//field[@name='premium']" position="before">
+                <field name="percent_advance_price"/>
+            </xpath>
+
+        </field>
+    </record>
+
+    <record id="view_consignment_agreement_form_inherit_vietnam" model="ir.ui.view">
+        <field name="name">view_consignment_agreement_form_inherit_vietnam</field>
+        <field name="model">purchase.contract</field>
+        <field name="inherit_id" ref="sd_purchase_contract.view_consignment_agreement_form"/>
+        <field name="arch" type="xml">
+			 <xpath expr="//page[@name='information']" position="after">
+            	<page name="farmer" string="Farmer Information">
+                    <field name="list_farmer" readonly="1">
+                        <tree editable="1" limit="100">
+                            <field name="date"/>
+                            <field name="farmer_id"/>
+                            <field name="farmer_code"/>
+                            <field name="quantity" sum="quantity"/>
+                        </tree>
+                    </field>
+
+                </page>
+            </xpath>
+            <xpath expr="//field[@name='interest']" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </xpath>
+            <xpath expr="//field[@name='premium']" position="after">
+                <field name="print_company"/>
+            </xpath>
+
+        </field>
+    </record>
+
+    <record id="view_nvp_contract_allocation_invoiced_tree_inherit_vietnam" model="ir.ui.view">
+        <field name="name">view_nvp_contract_allocation_invoiced_tree_inherit_vietnam</field>
+        <field name="model">purchase.contract</field>
+        <field name="inherit_id" ref="sd_purchase_contract.view_nvp_contract_allocation_invoiced_tree"/>
+        <field name="arch" type="xml">
+			 <xpath expr="//field[@name='deadline_date']" position="after">
+                 <field name="equiv_faq_price"/>
+            </xpath>
+
+        </field>
+    </record>
+    <record id="view_purchase_contract_tree_inherit_vietnam" model="ir.ui.view">
+        <field name="name">view_purchase_contract_tree_inherit_vietnam</field>
+        <field name="model">purchase.contract</field>
+        <field name="inherit_id" ref="sd_purchase_contract.view_purchase_contract_tree"/>
+        <field name="arch" type="xml">
+			 <xpath expr="//field[@name='product_id']" position="after">
+                 <field name="interest"/>
+            </xpath>
+
+        </field>
+    </record>
+</odoo>

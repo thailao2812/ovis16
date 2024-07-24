@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	
+	
+    <record model="ir.cron" id="ir_cron_update_count_date_expired">
+        <field name="name">Update: Count Date Expired</field>
+        <field name="model_id" ref="sd_pur_sales.model_ned_certificate_license" />
+        <field name="state">code</field>
+        <field name="code">model.cron_update_count_date_expired()</field>
+        <field name="user_id" ref="base.user_root" />
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+    </record>
+    
+</odoo>

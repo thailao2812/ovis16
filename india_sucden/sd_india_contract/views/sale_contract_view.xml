@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+     <record id="view_sale_contract_form_inherit_india_contract" model="ir.ui.view">
+        <field name="name">view_sale_contract_form_inherit_india_contract</field>
+        <field name="model">sale.contract</field>
+        <field name="inherit_id" ref="sd_sale_contract.view_sale_contract_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='contract_line']/tree/field[@name='packing_id']" position="after">
+                <field name="no_of_bags" readonly="0"/>
+            </xpath>
+            <xpath expr="//field[@name='contract_line']/tree/field[@name='price_unit']" position="attributes">
+                <attribute name="readonly">0</attribute>
+            </xpath>
+            <xpath expr="//field[@name='amount_total']" position="after">
+                <field name="amount_total_india" options="{'currency_field': 'currency_id'}" attrs="{'invisible': [('type', '!=', 'local')]}"/>
+            </xpath>
+            <xpath expr="//field[@name='currency_id']" position="attributes">
+                <attribute name="required">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='warehouse_id']" position="replace">
+<!--                <attribute name="required">1</attribute>-->
+            </xpath>
+            <xpath expr="//field[@name='crop_id']" position="after">
+                <field name="warehouse_id" required="1"/>
+            </xpath>
+            <xpath expr="//button[@name='button_approve']" position="attributes">
+                <attribute name="groups">sd_india_master.group_accounting_india</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_sale_contract_export_tree_inherit_india_contract" model="ir.ui.view">
+        <field name="name">view_sale_contract_export_tree_inherit_india_contract</field>
+        <field name="model">sale.contract</field>
+        <field name="inherit_id" ref="sd_sale_contract.view_sale_contract_export_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='si']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='sd']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='p_quality']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='loss_qty']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='total_qty']" position="before">
+                <field name="no_of_bags"/>
+            </xpath>
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="crop_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_sale_contract_tree_inherit_india_contract" model="ir.ui.view">
+        <field name="name">view_sale_contract_tree_inherit_india_contract</field>
+        <field name="model">sale.contract</field>
+        <field name="inherit_id" ref="sd_sale_contract.view_sale_contract_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='si']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='sd']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='loss_qty']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='invoiced_qty']" position="attributes">
+                <attribute name="string">Invoice Qty</attribute>
+            </xpath>
+            <xpath expr="//field[@name='total_qty']" position="before">
+                <field name="no_of_bags"/>
+            </xpath>
+            <xpath expr="//field[@name='invoiced_qty']" position="after">
+                <field name="amount_total_india"/>
+            </xpath>
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="crop_id"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

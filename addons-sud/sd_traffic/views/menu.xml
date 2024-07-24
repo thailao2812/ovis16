@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	
+	
+	          
+	          
+	          <!-- Top menu item Top 0-->
+        <menuitem name="Traffic"
+            id="menu_menu_traffic_contract_root"
+            web_icon="sd_traffic,static/description/icon_contract.jpg"
+			groups="sd_traffic.group_traffic_user,sd_traffic.group_traffic_manager"
+            sequence="35"/>
+            
+	            <!-- Traffic Management-->
+		       <menuitem id="menu_menu_traffic_management"
+		            name="Traffic Management"
+		            parent="menu_menu_traffic_contract_root"
+		            sequence="1"/>
+		       	
+			       		<!-- S Contract -->
+				      <menuitem id="menu_traffic_s_contract"
+				            	action="action_traffic_contract"
+				            	sequence="1"
+					        	parent="menu_menu_traffic_management"/>
+					<menuitem id="menu_traffic_p_contract"
+				            	action="action_p_contract_traffic"
+				            	sequence="2"
+					        	parent="menu_menu_traffic_management"/>
+					<menuitem id="menu_s_p_allocation"
+				            	action="action_sale_contract_allocate_sp_traffic"
+				            	sequence="3"
+					        	parent="menu_menu_traffic_management"/>
+					<menuitem id="menu_traffic_contract_filter"
+				            	action="action_traffic_contract_filter"
+				            	sequence="4"
+					        	parent="menu_menu_traffic_management"/>
+					<menuitem id="menu_unallocated_pcontract_traffic"
+				            	action="action_unallocated_p_contract"
+				            	sequence="5"
+					        	parent="menu_menu_traffic_management"/>
+					<menuitem id="menu_import_p_contract_traffic"
+				            	action="action_import_contract_traffic"
+				            	sequence="6"
+					        	parent="menu_menu_traffic_management"/>
+					<menuitem id="menu_import_s_contract_traffic"
+				            	action="action_import_scontract_traffic"
+				            	sequence="7"
+					        	parent="menu_menu_traffic_management"/>
+					<menuitem id="menu_update_s_contract_traffic"
+				            	action="action_update_scontract_traffic"
+				            	sequence="8"
+					        	parent="menu_menu_traffic_management"/>
+			<!-- Warehouse Management-->
+			<menuitem id="menu_menu_warehouse_management"
+		            name="Warehouse"
+		            parent="menu_menu_traffic_contract_root"
+		            sequence="2"/>
+					<menuitem id="menu_instore_traffic"
+				            	action="action_instore_traffic"
+				            	sequence="1"
+					        	parent="menu_menu_warehouse_management"/>
+					<menuitem id="menu_bonded_movement_traffic"
+				            	action="action_bonded_movement_traffic"
+				            	sequence="2"
+					        	parent="menu_menu_warehouse_management"/>
+					<menuitem id="menu_gdn_bonded_traffic"
+				            	action="action_gdn_bonded_traffic"
+				            	sequence="3"
+					        	parent="menu_menu_warehouse_management"/>
+
+			 <!-- Configuration Management-->
+		       <menuitem id="menu_menu_configuration_management"
+		            name="Configuration"
+		            parent="menu_menu_traffic_contract_root"
+		            sequence="3"/>
+					<menuitem id="menu_sucden_origin"
+				            	action="action_ned_origin"
+				            	sequence="1"
+					        	parent="menu_menu_configuration_management"/>
+					<menuitem id="menu_shipt_month_traffic"
+				            	action="sd_sale_contract.action_ship_month_traffic"
+				            	sequence="2"
+					        	parent="menu_menu_configuration_management"/>
+					<menuitem id="menu_certificate_license_traffic"
+				            	action="action_ned_certificate_license_traffic"
+				            	sequence="3"
+					        	parent="menu_menu_configuration_management"/>
+					<menuitem action="sd_sale_contract.action_ship_by_traffic"
+							id="menu_ship_by_traffic"
+							parent="menu_menu_configuration_management"
+							sequence="4"/>
+					<menuitem action="sd_sale_contract.action_pic_traffic"
+							id="menu_pic_traffic"
+							parent="menu_menu_configuration_management"
+							sequence="5"/>
+
+
+
+
+			    	
+</odoo>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    
+    <record id="view_shipping_split_form" model="ir.ui.view">
+	        <field name="name">view.shipping.split.form.</field>
+	        <field name="model">shipping.split</field>
+	        <field name="arch" type="xml">
+				<form string="Split Shipment">
+					<sheet>
+	                    <group>
+	                        <group>
+	                            <field name="name"/>
+								<field name="shipment_id" invisible="1"/>
+								<field name="scontract_id" invisible="1"/>
+								<field name="qty_contract"/>
+								<field name="new_qty"/>
+								<field name="res_qty"/>
+	                        </group>
+	                    </group>
+					</sheet>
+					<footer>
+						<!-- <button name="split_shipment" string="Split" class="oe_highlight" type="object"/> -->
+						<button name="split_scontract" string="Split SContract" class="oe_highlight" type="object"/>
+						<button string="Cancel" class="btn-default" special="cancel"/>
+					</footer>
+				</form>
+			</field>
+		</record>
+        
+
+    </data>
+</odoo>

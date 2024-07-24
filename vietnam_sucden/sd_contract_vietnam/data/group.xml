@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="group_full_right_shipping_instruction" model="res.groups">
+        <field name="name">Full right shipping instruction</field>
+        <field name="comment">This group have permission to edit and create shipping instruction</field>
+    </record>
+</odoo>

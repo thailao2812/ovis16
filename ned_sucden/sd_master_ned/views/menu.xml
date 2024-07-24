@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <menuitem name="EUDR Coffee"
+            id="menu_eudr_root"
+            web_icon="sd_master_ned,static/description/pic.jpg"
+            sequence="20"/>
+
+		       <menuitem id="menu_master_supplier"
+		            name="EUDR Master"
+		            parent="menu_eudr_root"
+		            sequence="1"/>
+
+						  <menuitem name="Supplier Master"
+									id="menu_supplier_master"
+									action="action_supplier_master"
+									sequence="1"
+									parent="menu_master_supplier"/>
+						<menuitem id="menu_import_geojson_farmer"
+							name="Import Geojson"
+							action="action_import_geojson_farmer" parent="menu_master_supplier"
+							sequence="2"/>
+</odoo>

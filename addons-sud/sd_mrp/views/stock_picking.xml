@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    	<record id="view_stock_kcs_tree_add_field_mrp_note" model="ir.ui.view">
+	        <field name="name">stock.production.lot.inherit.add.fields.form</field>
+	        <field name="model">stock.picking</field>
+	        <field name="inherit_id" ref="sd_quality.view_stock_kcs_tree"/>
+	        <field name="arch" type="xml">
+			
+			<xpath expr="//field[@name='production_id']" position="after">
+			 	<field name="mrp_note" optional="hide"/>
+			 </xpath>
+				 
+	        </field>
+	    </record>
+		   
+		   <record id="view_picking_inherit_sucden_add_button_loss_form" model="ir.ui.view">
+            <field name="name">view.picking.inherit.sucden.add.button.loss.form</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="arch" type="xml">
+			
+				<xpath expr="//button[@name='action_confirm']" position="after">
+	            	<button name="create_processing_loss_aproval" string="Create Processing Loss Aproval"  attrs="{'invisible': ['|',('processing_loss_aproval_id','!=',False),('picking_type_code','!=','production_in')]}"
+						type="object" class="oe_highlight" />
+               </xpath>
+               
+               <xpath expr="//button[@name='do_unreserve']" position="attributes">
+	          	  <attribute name="invisible">1</attribute>
+              </xpath>
+              <xpath expr="//field[@name='date_done']" position="replace">
+                  <field name="processing_loss_aproval_id" invisible="1"/>
+              </xpath>
+              
+              
+            </field>
+        </record>
+        
+        <record id="view_picking_inherit_sucden_edit_btt_done_form" model="ir.ui.view">
+            <field name="name">view.picking.inherit.sucden.edit.btt.done.form</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="sd_inventory.view_picking_inherit_sucden_form"/>
+            <field name="arch" type="xml">
+               <xpath expr="//button[@name='button_sd_validate']" position="replace">
+	          	  <button name="button_sd_validate" string="Validate"  states="assigned"
+						type="object" class="oe_highlight" attrs="{'invisible': ['|',('processing_loss_aproval_id','!=',False)]}"/>
+              </xpath>
+             
+            </field>
+        </record>
+		    	
+		    	
+    </data>
+</odoo>

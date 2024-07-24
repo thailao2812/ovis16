@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    
+    	<record id="view_wizard_ptbf_contract" model="ir.ui.view">
+	        <field name="name">view.wizard.ptbf.contract.form</field>
+	        <field name="model">wizard.ptbf.contract</field>
+	        <field name="arch" type="xml">
+	        <form string="Convert purchase contract">
+	            <group col="4">
+	            	<field name="rate"/>
+	            	<field name="date_order" required="1"/>
+                </group>
+            	<field name="contract_line_ids" nolabel="1">
+            		<tree editable="top">
+            			<field name="product_qty" sum="product_qty"/>
+            			<field name="purchase_contract_id" string="PTBF Contract" readonly="1" force_save="1"/>
+            			<field name="product_id" readonly="1" force_save="1"/>
+            			<field name="product_uom" readonly="1" force_save="1"/>
+            			<field name="price_fix" sum="price_unit" readonly="True" force_save="1"/>
+            			<field name="total_amount" sum="total_amount"/>
+            			<field name="price_amount_vn" sum="price_amount_vn"/>
+            			<field name="total_amount_vn" sum="total_amount_vn"/>
+            		</tree>
+            	</field>
+                <footer>
+                    <button string="PTBF Fix Price" name="button_convert" type="object" class="oe_highlight"/>
+                    <button string="_Cancel" class="btn-default" special="cancel" />
+                </footer>
+            </form>
+	        </field>
+	    </record>
+	    
+	    <record id="action_wizard_ptbf_contract" model="ir.actions.act_window">
+            <field name="name">PTBF-FIX PRICE</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">wizard.ptbf.contract</field>
+            <field name="view_id" ref="view_wizard_ptbf_contract"/>
+            <field name="target">new</field>
+            <field name="view_mode">form</field>
+        </record>
+        
+      </data>
+</odoo>

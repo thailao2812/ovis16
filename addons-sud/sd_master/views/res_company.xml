@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_company_form_add_second_currency" model="ir.ui.view">
+            <field name="name">res.company.form.add.second.currency</field>
+             <field name="inherit_id" ref="base.view_company_form" />
+            <field name="model">res.company</field>
+            <field name="arch" type="xml">
+	             <field name="currency_id" position="after">
+	                   <field name="second_currency_id"/>
+	                   <field name="transfer_account_id"/>
+	                   <field name="incomce_from_advance_payment_id"/>
+	                   <field name="default_cash_difference_income_account_id"/>
+	                   <field name="default_cash_difference_expense_account_id"/>
+	                   <field name="account_journal_suspense_account_id"/>
+	                   <field name="account_journal_payment_debit_account_id"/>
+	                   <field name="account_journal_payment_credit_account_id"/>
+	                   <field name="account_journal_early_pay_discount_gain_account_id"/>
+	                   <field name="account_journal_early_pay_discount_loss_account_id"/>
+	                   <field name="interest_income_shipment_id"/>
+	                   <field name="account_sale_tax_id"/>
+	                   <field name="account_purchase_tax_id"/>
+	                   <field name="income_currency_exchange_account_id"/>
+	                   <field name="expense_currency_exchange_account_id"/>
+	                   <field name="account_default_pos_receivable_account_id"/>
+	                   
+                 </field>
+       		 </field>
+       	</record>
+
+
+    </data>
+</odoo>

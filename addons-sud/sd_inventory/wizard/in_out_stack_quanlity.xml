@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+		
+   	  <record id="view_wizard_in_out_stack" model="ir.ui.view">
+	        <field name="name">wizard.wizard.in.out.stack.form</field>
+	        <field name="model">wizard.in.out.stack</field>
+	        <field name="arch" type="xml">
+		        <form string="Transfer">
+		        	<sheet>
+						<group>
+				            <group col="4">
+								<field name="warehouse_id" required="1"/>
+			            		<field name="date"/>
+<!--			            		<field name="qty_stack" string="Qty Split"/>-->
+								      		
+			                </group>
+							<group>	
+								<field name="zone_id" required="1" domain="[('warehouse_id','=',warehouse_id)]"/>	
+								<field name="packing_id"/>
+<!--								<field name="bag"/>	              -->
+							</group>
+							<field name="stack_ids" readonly="1" nolabel="1">
+								<tree>
+									<field name="warehouse_id"/>
+									<field name="zone_id" required="1"/>
+									<field name="name"/>
+									<field name="product_id"/>
+									<field name="init_qty" sum="init_qty"/>			
+									<field name="bag_qty" sum="bag_qty"/>						
+								</tree>
+							</field>  
+						</group>
+						<footer>
+<!--		                	<button string="Split Stack" name="stack" type="object" class="oe_highlight"/>-->
+		                	<button string="_Cancel" class="btn-default" special="cancel"/>
+							<button string="Merge Stack" name="merg_stack" type="object" class="oe_highlight"/>		                	
+		                </footer>
+	                </sheet>
+	            </form>
+	        </field>
+	    </record>
+	    
+    	<record id="action_wizard_in_out_stack" model="ir.actions.act_window">
+            <field name="name">Merge/Split Stack</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">wizard.in.out.stack</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="binding_model_id" ref="stock.model_stock_lot" />
+            <field name="binding_view_types">list</field>
+        </record>
+	    
+    
+      </data>
+</odoo>
+

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_building_warehouse_tree" model="ir.ui.view">
+            <field name="name">view_building_warehouse_tree</field>
+            <field name="model">building.warehouse</field>
+            <field name="arch" type="xml">
+                <tree string="Building">
+                	<field name="name"/>
+                	<field name="warehouse_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_building_warehouse_form" model="ir.ui.view">
+            <field name="name">view_building_warehouse_form</field>
+            <field name="model">building.warehouse</field>
+            <field name="arch" type="xml">
+                <form string="Zone">
+                	<sheet>
+                		<group>
+                			<group>
+			                    <field name="name"/>
+		                    </group>
+		                    <group>
+			                    <field name="warehouse_id"/>
+                			</group>
+                		</group>
+                	</sheet>
+                	<div class="oe_chatter">
+	                    <field name="message_follower_ids" widget="mail_followers"/>
+	                    <field name="message_ids" widget="mail_thread"/>
+	                </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_building_warehouse" model="ir.actions.act_window">
+            <field name="name">Building</field>
+            <field name="res_model">building.warehouse</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+              		Create a Building, the first step of a new Building.
+              </p>
+            </field>
+        </record>
+
+    <menuitem id="menu_action_building_warehouse" action="action_building_warehouse" sequence="21"
+        	parent="stock.menu_warehouse_config" name="Building"/>
+</odoo>

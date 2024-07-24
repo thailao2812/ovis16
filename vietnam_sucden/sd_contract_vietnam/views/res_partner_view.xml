@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_res_partner_form_inherit_inherit_sucden_vn_sucden_vn_master" model="ir.ui.view">
+            <field name="name">view_res_partner_form_inherit_inherit_sucden_vn_sucden_vn_master</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="sd_master_vietnam.view_res_partner_form_inherit_inherit_sucden_vn"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='farmer_information']" position="inside">
+                    <separator string="Purchase"/>
+                        <field name="list_purchase_contract" readonly="1">
+                            <tree>
+                                <field name="purchase_contract_id"/>
+                                <field name="quantity" sum="quantity"/>
+                                <field name="date"/>
+                            </tree>
+                        </field>
+                        <separator string="Sale"/>
+                        <field name="list_sale_contract" readonly="0" domain="[('type','!=','p_contract'),('status','=','Factory'),('origin_new.code','=','VN'), ('x_is_bonded', '=', False)]">
+                            <tree>
+                                <field name="name"/>
+                                <field name="shipt_month"/>
+                                <field name="status"/>
+                                <field name="partner_id"/>
+                                <field name="certificated_ids" widget="many2many_tags"/>
+                                <field name="char_license"/>
+                                <field name="total_qty"/>
+                            </tree>
+                        </field>
+                </xpath>
+                <xpath expr="//field[@name='in_deforestation']" position="after">
+                    <field name="certificate_ids" widget="many2many_tags" readonly="1"/>
+                </xpath>
+            </field>
+    </record>
+</odoo>

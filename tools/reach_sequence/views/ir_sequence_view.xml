@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <!-- Sequences -->
+        
+        <record id="sequence_form_view_inherit" model="ir.ui.view">
+        	<field name="name">sequence_form_view_inherit</field>
+            <field name="model">ir.sequence</field>
+            <field name="inherit_id" ref="base.sequence_view"/>
+            <field name="arch" type="xml">
+            	<xpath expr="//field[@name='code']" position="after">
+                    <field name="rollback_rule"/>
+                    <field name="encoding"/>
+                </xpath>
+	        	 <!-- THANH: display field number next actual to manually modify current number -->
+	        	 <xpath expr="//field[@name='number_next_actual']" position="replace">
+	        	 	<field name="number_next" required='1'/>
+	        		<field name="number_next_actual" invisible='1'/>
+	        	</xpath>
+
+				<xpath expr="//field[@name='use_date_range']" position="replace">
+	        		<field name="use_date_range" invisible='1'/>
+	        	</xpath>
+
+	        	<xpath expr="//notebook" position="inside">
+	               	<page string="Sequence Histories" name="seq_his">
+	                   	<field name="sequence_his" nolabel="1" colspan="4" widget="no_delete_one2many">
+	                   		<tree>
+	                   			<field name="generate_code"/>
+		                        <field name="number_current"/>
+		                        <field name="day"/>
+		                        <field name="month"/>
+		                        <field name="year"/>
+								<field name="company_id"/>
+	                   		</tree>
+	                   	</field>
+                   </page>
+               </xpath>
+            </field>
+        </record>
+
+</odoo>

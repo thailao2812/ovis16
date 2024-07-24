@@ -1,0 +1,13 @@
+<odoo>
+    <data>
+
+	    
+	     <record id="warehouse_mrp_production_user_rule" model="ir.rule">
+	        <field name="name">Warehouse Mrp Production Rule</field>
+	        <field name="model_id" ref="model_mrp_production"/>
+	        <field name="domain_force">[('warehouse_id','in',user._warehouses_domain())]</field>
+	        <field name="groups" eval="[(4, ref('mrp.group_mrp_user'))]"/>
+	    </record>
+	    
+    </data>
+</odoo>

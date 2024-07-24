@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    	
+    	<record id="view_vessel_registration_tree" model="ir.ui.view">
+            <field name="name">view_vessel_registration_tree</field>
+            <field name="model">vessel.registration</field>
+            <field eval="100" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Vessel Registration" create="false" delete="false" editable="top" decoration-muted="status == 'done'" default_order="id desc">
+                    <field name="do_date"/>
+                    <field name="status"/>
+                    <field name="registration_date"/>
+                    <field name="shipping_instruction" readonly="1"/>
+                    <field name="closing_time" readonly="1"/>
+                    <field name="product_id" readonly="1"/>
+                    <field name="si_qty" readonly="1"/>
+                    <field name="delivery_place" readonly="1"/>
+                    <field name="from_warehouse"/>
+                    <field name="booking_no" readonly="1"/>
+                    <field name="shipping_line" readonly="1"/>
+                    <field name="custom_declaration"/>
+                    <field name="quality_staff"/>
+                </tree>
+            </field>
+        </record>
+
+    <record id="view_vessel_registration_search" model="ir.ui.view">
+            <field name="name">view_vessel_registration_search</field>
+            <field name="model">vessel.registration</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Vessel Registration">
+                    <field name="shipping_instruction"/>
+                    <field name="product_id"/>
+                    <field name="delivery_place"/>
+                    <field name="from_warehouse"/>
+                    <field name="booking_no"/>
+                    <field name="shipping_line"/>
+                    <field name="quality_staff"/>
+	                <newline/>
+    	            <group expand="0" string="Group By...">
+                    	<filter string="Shipping Instruction" name="shipping_instruction" icon="terp-personal" context="{'group_by':'shipping_instruction'}"/>
+						<filter string="Product" name="product" icon="terp-go-month" context="{'group_by':'product_id'}"/>
+						<filter string="Delivery Place" name="delivery_place" icon="terp-go-month" context="{'group_by':'delivery_place'}"/>
+						<filter string="From Warehouse" name="from_warehouse" icon="terp-go-month" context="{'group_by':'from_warehouse'}"/>
+						<filter string="State" name="state" icon="terp-go-month" context="{'group_by':'status'}"/>
+                	</group>
+                </search>
+            </field>
+        </record>
+
+    <record id="action_view_vessel_registration" model="ir.actions.act_window">
+            <field name="name">Vessel Registration</field>
+            <field name="res_model">vessel.registration</field>
+            <field name="view_mode">tree</field>
+            <field name="domain">[]</field>
+            <field name="context">{'search_by_field_date': ['do_date', 'registration_date']}</field>
+           <field name="search_view_id" ref="view_vessel_registration_search"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Create a Vessel Registration, the first step of a new Vessel Registration.
+                </p>
+            </field>
+        </record>
+
+        
+    
+    	
+    	
+    </data>
+</odoo>

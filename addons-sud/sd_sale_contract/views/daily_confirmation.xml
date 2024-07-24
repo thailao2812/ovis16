@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    
+	    <record id="view_daily_confirmation_form" model="ir.ui.view">
+		    <field name="name">view.daily.confirmation.form</field>
+		    <field name="model">daily.confirmation</field>
+		    <field name="arch" type="xml">
+		    	<form string="Data Import">
+		        	<header>
+				        <button string="Confirm" name="confirm_import" states="draft" type="object"/>
+						<button string="Set to Draft" name="action_cancel" states="done" type="object"/>
+						<field name="state" widget="statusbar" statusbar_visible="draft,done"/>				         
+			        </header>
+			        <sheet>
+		        		<div class="oe_title">
+	                        <h1>
+	                            <field name="name" readonly="1"/>
+	                        </h1>
+                    	</div>
+			        	<group col="4">
+							<field name="date_create" readonly="True"/>
+							<field name="user_id" readonly="True"/>
+							<field name="liffe" required="True"/>
+							<field name="diff" required="True"/>
+							<field name="cost_price" required="True"/>
+							<field name="exchange_rate" required="True"/>
+							<label for='file'/>>
+                            <div class="o_row">
+                                <field name="file_name" invisible="1"/>
+                                <field name="file" filename="file_name"/>
+								<button name="print_template" string="Template" type="object" icon="STOCK_PRINT" 
+										attrs="{'invisible': [('state','!=',('draft'))]}" class="btn-default" />
+								<button type="object" class="btn-link" name="button_warning_mess" 
+									attrs="{'invisible': [('failure','=',0)]}">
+									<field string="Error(s)" name="failure" widget="statinfo"/>
+							</button>
+                            </div>
+                            <div></div>
+		        		</group>
+						<notebook>
+							<page string="Daily Confirmation Detail">
+								<field name="daily_confirmation_ids" nolabel="1" readonly="1">
+									<tree>
+										<field name="p_contract"/>
+										<field name="liffe"/>
+										<field name="diff"/>
+										<field name="diff_price"/>
+										<field name="exchange_rate"/>
+										<field name="qty"/>
+									</tree>
+								</field>
+							</page>
+						</notebook>
+	            	</sheet>
+		        </form>
+		    </field>
+		</record>
+		
+		<record id="view_daily_confirmation_tree" model="ir.ui.view">
+            <field name="name">view.daily.confirmation.tree</field>
+            <field name="model">daily.confirmation</field>
+            <field name="arch" type="xml">
+                <tree string="Data Import" delete="false">
+                	<field name="name"/>
+					<field name="user_id"/>
+					<field name="date_create"/>
+					<field name="state"/>		
+	        	</tree>
+            </field>
+        </record>
+		
+		<record id="action_daily_confirmation" model="ir.actions.act_window">
+            <field name="name">Daily Confirmation</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">daily.confirmation</field>
+            <field name="view_mode">tree,form</field>
+			<field name="domain">[]</field>
+            <field name="view_id" ref="view_daily_confirmation_tree"/>
+            <field name="context">{}</field>
+        </record>
+        
+		
+		
+        
+        
+    </data>
+</odoo>

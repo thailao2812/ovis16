@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="group_recalculate_invoice" model="res.groups">
+            <field name="name">Re-Calculate Invoice India</field>
+        </record>
+</odoo>

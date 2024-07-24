@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+     <record id="view_outturn_percent_tree_india" model="ir.ui.view">
+            <field name="name">view_outturn_percent_tree_india</field>
+            <field name="model">outturn.percent</field>
+            <field name="arch" type="xml">
+                <tree string="Category Outturn Percent" editable="top" default_order="id desc">
+                	<field name="categ_id"/>
+                	<field name="percent"/>
+                	<field name="crop_id"/>
+                	<field name="expected"/>
+                </tree>
+            </field>
+        </record>
+
+    <record id="action_outturn_percent_india" model="ir.actions.act_window">
+            <field name="name">Category Outturn Percent</field>
+            <field name="res_model">outturn.percent</field>
+            <field name="view_mode">tree</field>
+            <field name="context">{}</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+              		Create a Category Outturn Percent
+              </p>
+            </field>
+        </record>
+    <menuitem id="menu_outturn_percent_india"
+        action="action_outturn_percent_india"
+        parent="mrp.menu_mrp_configuration" sequence="10"/>
+</odoo>

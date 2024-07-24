@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_import_geojson_farmer" model="ir.ui.view">
+        <field name="name">Import GeoJSON File</field>
+        <field name="model">import.geojson</field>
+        <field name="arch" type="xml">
+             <form string="Import Farmer">
+                 <header>
+                     <button name="import_file" string="Import" states="new" type="object" class="btn-primary"/>
+                      <field name="state" widget="statusbar" nolabel="1" statusbar_visible="new,imported"/>
+                 </header>
+                 <sheet>
+                     <div class="oe_button_box" name="button_box">
+                        <button name="open_view_polygon" type="object"
+                                class="oe_stat_button" icon="fa-bars"
+                                attrs="{'invisible': [('count_polygon','=', 0)]}">
+                            <field name="count_polygon" widget="statinfo" string="Polygon"/>
+                        </button>
+                         <button name="open_view_point" type="object"
+                                class="oe_stat_button" icon="fa-bars"
+                                attrs="{'invisible': [('count_point','=', 0)]}">
+                            <field name="count_point" widget="statinfo" string="Point"/>
+                        </button>
+                     </div>
+                    <group>
+                        <field name="vendor_id" required="1" options="{'no_create': True}" attrs="{'readonly': [('state', '=', 'imported')]}"/>
+                        <field name="purchase_no" required="1" attrs="{'readonly': [('state', '=', 'imported')]}"/>
+                        <field name="contact_number" required="1" attrs="{'readonly': [('state', '=', 'imported')]}"/>
+                        <field name="supplier_id" required="1" options="{'no_create': True}" attrs="{'readonly': [('state', '=', 'imported')]}"/>
+                        <field name="supplier_number" required="1" attrs="{'readonly': [('state', '=', 'imported')]}"/>
+                        <field name="country_id" required="1" options="{'no_create': True}" attrs="{'readonly': [('state', '=', 'imported')]}"/>
+                        <field name="create_uid" string="Import User"/>
+                        <field name="import_date" readonly="1"/>
+                        <field name="file" filename="filename" attrs="{'readonly': [('state', '=', 'imported')]}"/>
+                        <field name="filename" invisible="1"/>
+                        <field name="count_polygon" readonly="1"/>
+                        <field name="count_point" readonly="1"/>
+                    </group>
+                     <notebook>
+                         <page string="Import Data" name="import_data">
+                             <field name="line_ids" readonly="1">
+                                 <tree>
+                                     <field name="name"/>
+                                     <field name="type"/>
+                                     <field name="missing_geometry"/>
+                                     <field name="decimal_precision"/>
+                                     <field name="is_unclose"/>
+                                     <field name="is_duplicate_partial"/>
+                                     <field name="is_overlapping"/>
+                                     <field name="state_check" widget="color" readonly="1"/>
+                                 </tree>
+                             </field>
+
+                         </page>
+                     </notebook>
+                 </sheet>
+                 <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+            </form>
+        </field>
+    </record>
+    <record id="view_import_geojson_tree_farmer" model="ir.ui.view">
+        <field name="name">Import GeoJSON File</field>
+        <field name="model">import.geojson</field>
+        <field name="arch" type="xml">
+             <tree string="Import Farmer">
+                 <field name="vendor_id"/>
+                 <field name="country_id"/>
+                 <field name="create_uid" string="Import User"/>
+                 <field name="import_date"/>
+                 <field name="file" filename="filename" widget="binary"/>
+                 <field name="filename" invisible="1"/>
+            </tree>
+        </field>
+    </record>
+
+
+    <!-- Action of Reimbursement Report -->
+     <record id="action_import_geojson_farmer" model="ir.actions.act_window">
+            <field name="name">Import GeoJson</field>
+            <field name="res_model">import.geojson</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+    <menuitem id="menu_import_geojson_farmer"
+            name="Import Geojson"
+            action="action_import_geojson_farmer"
+              parent="sd_master.menu_master_contact_sucden_root"
+            sequence="100"/>
+</odoo>

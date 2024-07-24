@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+   
+        <record id="view_tree_v_itn_tracking_report" model="ir.ui.view">
+            <field name="name">view.v.itn.tracking.report</field>
+            <field name="model">v.itn.tracking</field>
+            <field name="arch" type="xml">
+                <tree >
+                    <field name = 'deficit' invisible="1"/>
+
+                    <field name = 'name' readonly = '1'/>
+                    <field name = 'truck_com' string="Trucking Co." readonly = '1'/>
+                    <field name = 'vehicle_no' string="Vehicle No." readonly = '1'/>
+                    <field name = 'product' readonly = '1'/>
+                    <field name = 'packing_name' string="Packing" readonly = '1'/>
+                    <field name = 'bag_issue' readonly = '1'/>
+                    <field name = 'from_wh' string="From WH" readonly = '1'/>
+                    <field name = 'to_wh' string="To WH" readonly = '1'/>
+
+                    <field name = 'gti_name' string="GTI Name" readonly = '1'/>
+                    <field name = 'gtr_name' string="GTR Name" readonly = '1'/>
+                    <field name = 'date_issue' string = 'Date Issue' readonly = '1'/>
+                    <field name = 'date_receipt' string = 'Date Receipt' readonly = '1'/>
+                    <field name = 'gti_stack' string = 'Stack Issue' readonly = '1'/>
+                    <field name = 'gtr_stack' string = 'Stack Receipt' readonly = '1'/>
+
+                    <field name = 'qty_issue' sum='Total Qty. Issue' readonly = '1'/>
+                    <field name = 'qty_receipt' sum='Total Qty. Receipt' readonly = '1'/>
+                    <field name = 'diff_qty' sum='Total Qty. Variance' readonly = '1'/>
+                    <field name = 'qty_per' avg = 'Percent Qty. Variance' readonly = '1'/>
+                </tree>
+             </field>
+        </record>
+
+        <record id="search_itn_tracking_report" model="ir.ui.view">
+            <field name="name">search.v.itn.tracking.report</field>
+            <field name="model">v.itn.tracking</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name = "name"/>
+                    <field name = "vehicle_no"/>
+                    <field name = "product"/>
+                    <field name = "gti_name"/>
+                    <field name = "gtr_name"/>
+                    <field name = "gti_stack"/>
+                    <field name = "gtr_stack"/>
+                    <filter icon="terp-go-month" string="Current Month" name="date_issue" domain="[('date_issue','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%Y-%m-%d')),('date_issue','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%Y-%m-%d'))]" 
+                    	help="Current Month" />
+
+                    <group expand="1" string="Group By">
+                        <filter name="group_by_name" string="Transfer Orders" domain="[]" context="{'group_by':'name'}"/>
+                        <filter name="group_by_product" string="Product" domain="[]" context="{'group_by':'product'}"/>
+                        <filter name="group_by_vehicle_no" string="Truck" domain="[]" context="{'group_by':'vehicle_no'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="itn_tracking_pivot" model="ir.ui.view">
+        <field name="name">view.v.itn.tracking.pivot</field>
+        <field name="model">v.itn.tracking</field>
+            <field name="arch" type="xml">
+               <pivot string="Internal Transfer Tracking">
+                   <field name="name" group="True"/>
+                   <field name="qty_issue" operator="*"/>
+                   <field name="qty_receipt" operator="*"/>
+               </pivot>
+            </field>
+        </record>
+
+        <record id="itn_tracking_graph" model="ir.ui.view">
+            <field name="name">view.v.itn.tracking.graph</field>
+            <field name="model">v.itn.tracking</field>
+            <field name="arch" type="xml">
+                <graph string="Internal Transfer Tracking" type="bar" stacked="True">
+                    <field name="name" type="row"/>
+                    <!-- <field name="from_wh" type="row"/>
+                    <field name="to_wh" type="row"/> -->
+                    <field name="qty_issue" type="measure"/>
+                    <field name="qty_receipt" type="measure"/>
+                </graph>
+            </field>
+        </record>
+
+        <!-- the block of code below is the action to trigger the list open -->
+        <record id="action_itn_tracking_report" model="ir.actions.act_window">
+            <field name="name">Internal Transfer Tracking</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">v.itn.tracking</field>
+            <field name="view_mode">tree,form,pivot,graph</field>
+            <field name="context">{"search_default_date_receipt":True, 'search_by_field_date': ['date_issue', 'date_receipt']}</field>
+        </record>
+
+        
+
+    </data>
+</odoo>

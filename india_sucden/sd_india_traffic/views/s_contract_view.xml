@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="s_contract_report_for_allocated" model="ir.ui.view">
+        <field name="name">s_contract_report_for_allocated</field>
+        <field name="model">s.contract</field>
+        <field name="arch" type="xml">
+            <tree string="PSC to SC Linked Report" create='false' edit="false" editable="top" default_order="id desc">
+                <field name="name" readonly="1"/>
+                <field name="partner_id" readonly="1"/>
+                <field name="date" readonly="1"/>
+                <field name="product_id" readonly="1"/>
+                <field name="total_qty" readonly="1"/>
+                <field name="open_qty" readonly="1"/>
+                <field name="total_allocated_sc" readonly="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="s_contract_psc_sc_report_search" model="ir.ui.view">
+        <field name="name">s_contract_psc_sc_report_search</field>
+        <field name="model">s.contract</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" string="S No"/>
+                <field name="product_id" string="Item Name - Item Code"/>
+                <field name="partner_id" string="Customer"/>
+                <separator/>
+                <group expand="0" string="Group By">
+                   <filter string="Item" name="product" context="{'group_by': 'product_id'}"/>
+                   <filter string="Customer" name="partner_id" context="{'group_by': 'partner_id'}"/>
+               </group>
+            </search>
+        </field>
+    </record>
+
+     <record model="ir.actions.act_window" id="action_s_contract_report_allocated">
+            <field name="name">PSC to SC Linked Report</field>
+            <field name="res_model">s.contract</field>
+            <field name="view_mode">tree</field>
+            <field name="domain">[('type', 'in', ['local', 'export'])]</field>
+            <field name="context">{}</field>
+        	<field name="search_view_id" ref="s_contract_psc_sc_report_search"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new record
+                </p><p>
+                </p>
+            </field>
+        </record>
+
+     <record id="action_s_contract_report_allocated_tree" model="ir.actions.act_window.view">
+            <field eval="500" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="s_contract_report_for_allocated"/>
+            <field name="act_window_id" ref="action_s_contract_report_allocated"/>
+        </record>
+
+
+    <record id="view_s_contract_form_inherit_india" model="ir.ui.view">
+        <field name="name">view_s_contract_form_inherit_india</field>
+        <field name="model">s.contract</field>
+        <field name="inherit_id" ref="sd_sale_contract.view_s_contract_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='differential']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='differential']" position="before">
+                <field name="exchange_product" options="{'no_create': True}"/>
+            </xpath>
+            <xpath expr="//field[@name='differential']" position="after">
+                <field name="incoterm_id" options="{'no_create': True}"/>
+                <field name="truck_no"/>
+            </xpath>
+            <xpath expr="//field[@name='contract_line']/tree/field[@name='number_of_bags']" position="attributes">
+                <attribute name="force_save">1</attribute>
+                <attribute name="readonly">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='contract_line']/tree/field[@name='tax_id']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='contract_line']/tree/field[@name='number_of_bags']" position="after">
+                <field name="differential"/>
+                <field name="type" invisible="1"/>
+                <field name="premium_cert" readonly="1" force_save="1"/>
+                <field name="packing_cost" force_save="1" attrs="{'readonly': ['|', ('type', '=', 'export'), ('parent.state', '!=', 'draft')]}"/>
+                <field name="tax_id" readonly="1" force_save="1" widget="many2many_tags"/>
+            </xpath>
+            <xpath expr="//field[@name='warehouse_id']" position="after">
+                <field name="arbitration"/>
+                <field name="special_condition"/>
+                <field name="fixation_by"/>
+            </xpath>
+            <xpath expr="//field[@name='company_id']" position="after">
+                <field name="general_condition"/>
+            </xpath>
+            <xpath expr="//field[@name='x_is_bonded']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='check_by_cont']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='allowed_franchise']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//page[@name='nls_nvl']" position="attributes">
+                <attribute name="string">Sale Contract</attribute>
+            </xpath>
+
+        </field>
+    </record>
+
+    <record id="view_s_contract_tree_inherit_india" model="ir.ui.view">
+        <field name="name">view_s_contract_tree_inherit_india</field>
+        <field name="model">s.contract</field>
+        <field name="inherit_id" ref="sd_sale_contract.view_s_contract_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='allowed_franchise']" position="replace">
+                <field name="differential"/>
+                <field name="premium_cert"/>
+                <field name="packing_cost"/>
+            </xpath>
+            <xpath expr="//field[@name='name']" position="attributes">
+                <attribute name="string">S Contract No</attribute>
+            </xpath>
+            <xpath expr="//field[@name='pss']" position="after">
+                <field name="state"/>
+            </xpath>
+            <xpath expr="//field[@name='x_final_price']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='certificate_id']" position="replace">
+                <field name="certificated_ids" widget="many2many_tags"/>
+            </xpath>
+            <xpath expr="//field[@name='packing_id']" position="replace">
+                <field name="packing_id_s_contract"/>
+            </xpath>
+            <xpath expr="//field[@name='qty_allocated']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='bag_allocated']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='tb_qty_alloca']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='tb_bag_alloca']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='total_qty']" position="after">
+                <field name="qty_allocated_si"/>
+                <field name="bag_allocated_si"/>
+                <field name="qty_tobe_allocated_si"/>
+                <field name="bag_tobe_allocated_si"/>
+                <field name="qty_allocated_so"/>
+                <field name="bag_allocated_so"/>
+                <field name="qty_tobe_allocated_so"/>
+                <field name="bag_tobe_allocated_so"/>
+            </xpath>
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="crop_id"/>
+            </xpath>
+        </field>
+    </record>
+
+
+</odoo>

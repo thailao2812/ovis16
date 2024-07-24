@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_tranfers_delivery_order_form_inherit_india" model="ir.ui.view">
+        <field name="name">view_tranfers_delivery_order_form_inherit_india</field>
+        <field name="model">delivery.order</field>
+        <field name="inherit_id" ref="sd_sale_contract.view_tranfers_delivery_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </xpath>
+            <xpath expr="//button[@name='button_approve']" position="after">
+                <button name="printout_transfer_order" string="Stock Transfer Invoice" type="object" class="oe_highlight"/>
+            </xpath>
+            <xpath expr="//field[@name='picking_id']" position="attributes">
+                <attribute name="string">GTI No.</attribute>
+            </xpath>
+            <xpath expr="//field[@name='picking_id']" position="after">
+                <field name="gtr_picking_id" readonly="1"/>
+            </xpath>
+            <xpath expr="//field[@name='trucking_id']" position="attributes">
+                <attribute name="domain">[('transfer','=',True),('is_company','=', True)]</attribute>
+            </xpath>
+            <xpath expr="//field[@name='transrate']" position="attributes">
+                <attribute name="attrs">{'readonly': [('state', '!=', 'draft')]}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_tranfers_delivery_order_tree_inherit_india" model="ir.ui.view">
+        <field name="name">view_tranfers_delivery_order_tree_inherit_india</field>
+        <field name="model">delivery.order</field>
+        <field name="inherit_id" ref="sd_sale_contract.view_tranfers_delivery_order_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='storing_loss']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='transportation_loss']" position="attributes">
+               <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

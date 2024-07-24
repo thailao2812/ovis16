@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="group_sale_contract_button" model="res.groups">
+        <field name="name">Set To Draft Sale Contract</field>
+        <field name="comment">This group have permission to press Set To Draft in Sale Contract</field>
+<!--        <field name="category_id" ref="base.module_category_hidden"/>-->
+    </record>
+</odoo>

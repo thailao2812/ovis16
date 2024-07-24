@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+		
+		<record id="view_sud_packing_branch_search" model="ir.ui.view">
+            <field name="name">view.sud.packing.branch.search</field>
+            <field name="model">sud.packing.branch</field>
+            <field name="arch" type="xml">
+                <search string="Packing Branch">
+                    <field name="name"/>
+                    <field name="description_name"/>
+                    <field name="packing_id"/>
+                    <group expand="1" string="Group By">
+                        <filter string="Packing Type" name="filter_packing_id" context="{'group_by':'packing_id'}"/>
+                        <filter string="State" name="filter_state"  context="{'group_by':'state'}"/>
+                    </group>
+               </search>
+            </field>
+        </record>
+			
+    	<record id="view_sud_packing_branch_tree" model="ir.ui.view">
+            <field name="name">sud.packing.branch.tree</field>
+            <field name="model">sud.packing.branch</field>
+            <field name="arch" type="xml">
+                <tree string="Packing Branch List" default_order="id desc" decoration-info="state == 'draft'" decoration-muted="state in ('done')">
+                	<field name="warehouse_id" invisible="0"/>
+                    <field name="write_date"/>
+                	<field name="name"/>
+                    <field name="description_name"/>
+                    <field name="packing_id"/>
+                    <field name="dimension"/>
+                    <field name="tare_weight"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+	        
+        <record id="view_sud_packing_branch_form" model="ir.ui.view">
+            <field name="name">sud.packing.branch.form</field>
+            <field name="model">sud.packing.branch</field>
+            <field name="arch" type="xml">
+                <form string="Packing Branch List">
+                	<header>
+	                    <button name="button_draft" type="object" states='done' string="Set to Draft" class="oe_highlight"/>
+	                    <button name="button_done" type="object" states='draft,approved' string="Done" class="oe_highlight"/>
+	                    <field name="state" widget="statusbar" statusbar_visible="draft,done"/>
+	                </header>
+	                <sheet>
+		                <div class="oe_title">
+	                        <h1>
+	                            <field name="name" readonly="1"/>
+	                        </h1>
+	                    </div>
+	                    <group>
+	                    	<group>
+	                    		<field name="description_name"/>
+	                    		<field name="packing_id"/>
+	                    		<field name="tare_weight"/>
+	                    	</group>
+	                    	<group>
+	                    		<field name="create_date"/>
+                                <field name="write_date"/>
+		                    	<field name="warehouse_id" invisible="0"/>
+	                    		<field name="dimension"/>
+	                   		 </group>
+	                    </group>
+	                    <notebook>
+	                    	<page string="Repair History" name="packing">
+	                    		<field name="repair_line">
+	                    			<tree editable="top"> 
+	                    				<field name="repair_reason" required="1"/>
+	                    				<field name="tare_weight_old" required="1"/>
+	                    				<field name="tare_weight_new" required="1"/>
+              							<field name="state"/>
+	                    			</tree>
+	                    			<form>
+	                    				<header>
+	                    					<field name="state" widget="statusbar" statusbar_visible="approved,cancel"/>
+	                    				</header>
+	                    				<sheet>
+	                    					<group col="4">
+		                    					<field name="repair_id"/>
+			                    				<field name="repair_reason"/>
+		                    					<field name="tare_weight_old" required="1"/>
+			                    				<field name="tare_weight_new" required="1"/>
+		                    				</group>
+	                    				</sheet>
+	                    			</form>
+	                    		</field>
+	                    	</page>
+                    	</notebook>
+                        <div class="oe_chatter">
+                            <field name="message_follower_ids" widget="mail_followers"/>
+                            <field name="message_ids" widget="mail_thread"/>
+                        </div>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        
+        <record id="action_sud_packing_branch" model="ir.actions.act_window">
+            <field name="name">Packing Branch List</field>
+            <field name="res_model">sud.packing.branch</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+            <field name="search_view_id"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+              		Create a Packing Branch, the first step of a new Packing Branch List.
+              </p>
+            </field>
+        </record>
+        
+        <record model="ir.actions.act_window.view" id="action_sud_packing_branch_view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_sud_packing_branch_tree"/>
+            <field name="act_window_id" ref="action_sud_packing_branch"/>
+        </record>
+        
+        <record model="ir.actions.act_window.view" id="action_sud_packing_branch_form">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_sud_packing_branch_form"/>
+            <field name="act_window_id" ref="action_sud_packing_branch"/>
+        </record>
+
+    </data>
+</odoo>

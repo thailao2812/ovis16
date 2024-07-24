@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    
+    	<record id="view_restack_management_tree" model="ir.ui.view">
+            <field name="name">view_restack_management_tree</field>
+            <field name="model">restack.management</field>
+            <field eval="100" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Restack Management" editable="top" decoration-muted="status == 'done'" default_order="id desc">
+					<field name="status" string="Status"/>
+                	<field name="type"/>
+                	<field name="date_request"/>
+                	<field name="finished_date"/>
+                    <field name="date_export"/>
+                    <field name="storing_days"/>
+                    <field name="warehouse_id" options="{'no_create_edit': True}"/>
+                    <field name="traffic_contract"/>
+                    <field name="x_p_contract_name"/>
+                    <field name="stack_no" widget="many2many_tags"/>
+                    <field name="partner_id"/>
+                    <field name="buyer_ref"/>
+                    <field name="product_id"/>
+                    <field name="packing_id"/>
+                    <field name="goods_status"/>
+                    <field name="name"/>
+                    <field name="qty_per_contain"/>
+                    <field name="qty_request"/>
+                    <field name="quantity"/>
+                    <field name="balance_net"/>
+                    <field name="payment"/>
+<!--                    <button name="button_confirm_payment" string="Done Payment" type="object" class="oe_highlight" attrs="{'invisible': [('payment', '=', 'done')]}"/>-->
+
+                    
+<!--                    <button name="button_confirm" string="Confirm" type="object" class="oe_highlight" attrs="{'invisible': [('status', '=', 'done')]}"/>-->
+
+                    <field name="remark"/>
+                </tree>
+            </field>
+        </record>
+
+    <record id="view_restack_management_search" model="ir.ui.view">
+            <field name="name">view_restack_management_search</field>
+            <field name="model">restack.management</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Restack Management">
+                    <field name="name"/>
+                    <field name="traffic_contract"/>
+                    <field name="warehouse_id"/>
+                    <field name="x_p_contract_name"/>
+                    <field name="partner_id"/>
+                    <field name="buyer_ref"/>
+                    <field name="product_id"/>
+                    <field name="packing_id"/>
+                    <filter string="On Hand"
+                            name="on_hand"
+                            domain="[('balance_net','>',0)]"/>
+                            
+    	            <group expand="0" string="Group By...">
+                    	<filter string="Warehouse" name="group_warehouse" icon="terp-personal" context="{'group_by':'warehouse_id'}"/>
+						<filter string="Partner" name="group_partner"  icon="terp-go-month" context="{'group_by':'partner_id'}"/>
+						<filter string="Product" name="group_product"  icon="terp-go-month" context="{'group_by':'product_id'}"/>
+						<filter string="Packing" name="group_packing"  icon="terp-go-month" context="{'group_by':'packing_id'}"/>
+						<filter string="type" name="group_type" icon="terp-go-month" context="{'group_by':'type'}"/>
+                	</group>
+                </search>
+            </field>
+        </record>
+
+    <record id="action_restack_management" model="ir.actions.act_window">
+            <field name="name">Restack Management</field>
+            <field name="res_model">restack.management</field>
+            <field name="view_mode">tree</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+           <field name="search_view_id" ref="view_restack_management_search"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Create a Restack Management, the first step of a new Restack Management.
+                </p>
+            </field>
+        </record>
+
+	<!--
+    <record id="ir_cron_update_restack_management" model="ir.cron">
+            <field name="name">Update data restack management</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="model">restack.management</field>
+            <field name="function">update_data_restack_management</field>
+            <field name="active" eval="False"/>
+            <field eval="'()'" name="args"/>
+        </record>
+	-->
+    
+    	
+    	
+    </data>
+</odoo>

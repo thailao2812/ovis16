@@ -1,0 +1,403 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    		
+        <record id="view_ned_batch_report_form" model="ir.ui.view">
+            <field name="name">view.ned.batch.report.form</field>
+            <field name="model">batch.report</field>
+            <field name="arch" type="xml">
+                <form string="Batch Report">
+                	<header>
+						<button name="load_data" string="Load Data" type="object"/>
+						<button name="export_datas" string="Export Data" type="object"/>
+					</header>
+					
+					
+					<div class="oe_title">
+                        <h1 class="d-flex">
+                            <field name="production_id" required="1"/>
+                            <newline/>
+							<field name="name" invisible="1"/>
+                        </h1>
+                    </div>
+                    	
+                        <notebook>
+                        	<page string="INPUT">
+								<group col="5">
+									<group>
+										<field name="in_moisture"/>
+										<field name="in_outturn"/>
+										<field name="in_aaa"/>
+										<field name="in_aa"/>
+										<field name="in_a"/>
+										<field name="in_b"/>
+										<field name="in_c"/>
+									</group>
+									<group>
+										<field name="in_pb"/>
+										<field name="in_bb"/>
+										<field name="in_bleach"/>
+										<field name="in_idb"/>
+										<field name="in_bits"/>
+										<field name="in_husk"/>
+										<field name="in_sleeve_5_up_percent"/>
+									</group>
+									<group>
+										<field name="in_stone"/>
+										<field name="in_skin_out"/>
+										<field name="in_triage"/>
+										<field name="in_wet_bean"/>
+										<field name="in_red_bean"/>
+										<field name="in_stinker"/>
+										<field name="in_unhulled_percent"/>
+									</group>
+									<group>
+										<field name="in_faded"/>
+										<field name="in_flat"/>
+										<field name="in_pb1"/>
+										<field name="in_pb2"/>
+										<field name="in_remaining_coffee_percent"/>
+										<field name="in_blacks_percent"/>
+
+									</group>
+									<group>
+										<field name="in_6_up"/>
+										<field name="in_5_5_up"/>
+										<field name="in_5_5_down"/>
+										<field name="in_5_down"/>
+										<field name="in_half_monsoon_percent"/>
+										<field name="in_good_beans_percent"/>
+									</group>
+								</group>
+								
+								
+	                        	<field name="input_ids" nolabel="1" readonly="1">
+	                        		<tree>
+										<field name="date"/>
+										<field name="picking_id"/>
+										<field name="zone_id"/>
+										<field name="stack_id"/>
+										<field name="categ_id"/>
+										<field name="product_id"/>
+										<field name="packing_id"/>
+										<field name="bag_no"/>
+										<field name="net_qty" sum="net_qty"/>
+										<field name="real_qty" sum="real_qty"/>
+
+										<field name="moisture_percent"/>
+										<field name="outturn_percent"/>
+										<field name="aaa_percent"/>
+										<field name="aa_percent"/>
+										<field name="a_percent"/>
+										<field name="b_percent"/>
+										<field name="c_percent"/>
+										<field name="pb_percent"/>
+										<field name="bb_percent"/>
+										<field name="bleached_percent"/>
+										<field name="idb_percent"/>
+										<field name="bits_percent"/>
+										<field name="hulks_percent"/>
+										<field name="stone_percent"/>
+										<field name="skin_out_percent"/>
+										<field name="triage_percent"/>
+										<field name="wet_bean_percent"/>
+										<field name="red_beans_percent"/>
+										<field name="stinker_percent"/>
+										<field name="faded_percent"/>
+										<field name="flat_percent"/>
+										<field name="pb1_percent"/>
+										<field name="pb2_percent"/>
+										<field name="sleeve_6_up_percent"/>
+										<field name="sleeve_5_5_up_percent"/>
+										<field name="sleeve_5_5_down_percent"/>
+										<field name="sleeve_5_down_percent"/>
+
+										<field name="sleeve_5_up_percent"/>
+										<field name="unhulled_percent"/>
+										<field name="remaining_coffee_percent"/>
+										<field name="blacks_percent"/>
+										<field name="half_monsoon_percent"/>
+										<field name="good_beans_percent"/>
+
+										<field name="state"/>
+	                        		</tree>
+	                        	</field>
+	                        </page>
+							<page string="Instore">
+								<group col="5">
+									<group>
+										<field name="ins_moisture"/>
+										<field name="ins_outturn"/>
+										<field name="ins_aaa"/>
+										<field name="ins_aa"/>
+										<field name="ins_a"/>
+										<field name="ins_b"/>
+										<field name="ins_c"/>
+									</group>
+									<group>
+										<field name="ins_pb"/>
+										<field name="ins_bb"/>
+										<field name="ins_bleach"/>
+										<field name="ins_idb"/>
+										<field name="ins_bits"/>
+										<field name="ins_husk"/>
+										<field name="ins_sleeve_5_up_percent"/>
+									</group>
+									<group>
+										<field name="ins_stone"/>
+										<field name="ins_skin_out"/>
+										<field name="ins_triage"/>
+										<field name="ins_wet_bean"/>
+										<field name="ins_red_bean"/>
+										<field name="ins_stinker"/>
+										<field name="ins_unhulled_percent"/>
+									</group>
+									<group>
+										<field name="ins_faded"/>
+										<field name="ins_flat"/>
+										<field name="ins_pb1"/>
+										<field name="ins_pb2"/>
+										<field name="ins_remaining_coffee_percent"/>
+										<field name="ins_blacks_percent"/>
+
+									</group>
+									<group>
+										<field name="ins_6_up"/>
+										<field name="ins_5_5_up"/>
+										<field name="ins_5_5_down"/>
+										<field name="ins_5_down"/>
+										<field name="ins_half_monsoon_percent"/>
+										<field name="ins_good_beans_percent"/>
+									</group>
+									<newline/>
+								
+								</group>
+	                        	<field name="instore_ids" nolabel="1" readonly="1">
+	                        		<tree>
+	                        			<field name="production_id"/>
+	                        			<field name="stack_id"/>
+										<field name="net_qty" sum="net_qty"/>
+<!--	                        			<field name="mc"/>-->
+<!--					                    <field name="fm"/>-->
+<!--					                    <field name="black"/>-->
+<!--					                    <field name="broken"/>-->
+<!--					                    <field name="brown"/>-->
+<!--					                    <field name="mold"/>-->
+<!--					                    <field name="cherry"/>-->
+<!--										<field name="excelsa"/>-->
+<!--					                    <field name="screen20"/>-->
+<!--					                    <field name="screen19"/>-->
+<!--					                    <field name="screen18"/>-->
+<!--					                    <field name="screen16"/>-->
+<!--					                    <field name="screen13"/>-->
+<!--					                    <field name="screen12"/>-->
+<!--										<field name="greatersc12"/>-->
+<!--										<field name="burn"/>-->
+<!--										<field name="eaten"/>-->
+<!--										<field name="immature"/>-->
+										<field name="moisture_percent"/>
+										<field name="outturn_percent"/>
+										<field name="aaa_percent"/>
+										<field name="aa_percent"/>
+										<field name="a_percent"/>
+										<field name="b_percent"/>
+										<field name="c_percent"/>
+										<field name="pb_percent"/>
+										<field name="bb_percent"/>
+										<field name="bleached_percent"/>
+										<field name="idb_percent"/>
+										<field name="bits_percent"/>
+										<field name="hulks_percent"/>
+										<field name="stone_percent"/>
+										<field name="skin_out_percent"/>
+										<field name="triage_percent"/>
+										<field name="wet_bean_percent"/>
+										<field name="red_beans_percent"/>
+										<field name="stinker_percent"/>
+										<field name="faded_percent"/>
+										<field name="flat_percent"/>
+										<field name="pb1_percent"/>
+										<field name="pb2_percent"/>
+										<field name="sleeve_6_up_percent"/>
+										<field name="sleeve_5_5_up_percent"/>
+										<field name="sleeve_5_5_down_percent"/>
+										<field name="sleeve_5_down_percent"/>
+
+										<field name="sleeve_5_up_percent"/>
+										<field name="unhulled_percent"/>
+										<field name="remaining_coffee_percent"/>
+										<field name="blacks_percent"/>
+										<field name="half_monsoon_percent"/>
+										<field name="good_beans_percent"/>
+
+										<field name="product_id"/>
+	                        		</tree>
+	                        	</field>
+	                        </page>
+	                        <page string="OUTPUT">
+								<group col="5">
+									<group>
+										<field name="out_moisture"/>
+										<field name="out_outturn"/>
+										<field name="out_aaa"/>
+										<field name="out_aa"/>
+										<field name="out_a"/>
+										<field name="out_b"/>
+										<field name="out_c"/>
+									</group>
+									<group>
+										<field name="out_pb"/>
+										<field name="out_bb"/>
+										<field name="out_bleach"/>
+										<field name="out_idb"/>
+										<field name="out_bits"/>
+										<field name="out_husk"/>
+										<field name="out_sleeve_5_up_percent"/>
+									</group>
+									<group>
+										<field name="out_stone"/>
+										<field name="out_skin_out"/>
+										<field name="out_triage"/>
+										<field name="out_wet_bean"/>
+										<field name="out_red_bean"/>
+										<field name="out_stinker"/>
+										<field name="out_unhulled_percent"/>
+									</group>
+									<group>
+										<field name="out_faded"/>
+										<field name="out_flat"/>
+										<field name="out_pb1"/>
+										<field name="out_pb2"/>
+										<field name="out_remaining_coffee_percent"/>
+										<field name="out_blacks_percent"/>
+
+									</group>
+									<group>
+										<field name="out_6_up"/>
+										<field name="out_5_5_up"/>
+										<field name="out_5_5_down"/>
+										<field name="out_5_down"/>
+										<field name="out_half_monsoon_percent"/>
+										<field name="out_good_beans_percent"/>
+									</group>
+								</group>
+								
+	                        	<field name="outputs_ids" nolabel="1" readonly="1">
+	                        		<tree>
+										<field name="date"/>
+										<field name="picking_id"/>
+										<field name="zone_id"/>
+										<field name="stack_id"/>
+										<field name="categ_id"/>
+										<field name="product_id"/>
+										<field name="packing_id"/>
+										<field name="bag_no"/>
+										<field name="net_qty" sum="net_qty"/>
+										<field name="real_qty" sum="real_qty"/>
+<!--										<field name="mc"/>-->
+<!--										<field name="fm"/>-->
+<!--										<field name="black"/>-->
+<!--										<field name="broken"/>-->
+<!--										<field name="brown"/>-->
+<!--										<field name="mold"/>-->
+<!--										<field name="cherry"/>-->
+<!--										<field name="excelsa"/>-->
+<!--										<field name="screen20"/>-->
+<!--										<field name="screen19"/>-->
+<!--										<field name="screen18"/>-->
+<!--										<field name="screen16"/>-->
+<!--										<field name="screen13"/>-->
+<!--										<field name="screen12"/>-->
+<!--										<field name="greatersc12"/>-->
+<!--										<field name="burn"/>-->
+<!--										<field name="eaten"/>-->
+<!--										<field name="stone_count"/>-->
+<!--										<field name="stick_count"/>-->
+<!--										<field name="immature"/>-->
+										<field name="moisture_percent"/>
+										<field name="outturn_percent"/>
+										<field name="aaa_percent"/>
+										<field name="aa_percent"/>
+										<field name="a_percent"/>
+										<field name="b_percent"/>
+										<field name="c_percent"/>
+										<field name="pb_percent"/>
+										<field name="bb_percent"/>
+										<field name="bleached_percent"/>
+										<field name="idb_percent"/>
+										<field name="bits_percent"/>
+										<field name="hulks_percent"/>
+										<field name="stone_percent"/>
+										<field name="skin_out_percent"/>
+										<field name="triage_percent"/>
+										<field name="wet_bean_percent"/>
+										<field name="red_beans_percent"/>
+										<field name="stinker_percent"/>
+										<field name="faded_percent"/>
+										<field name="flat_percent"/>
+										<field name="pb1_percent"/>
+										<field name="pb2_percent"/>
+										<field name="sleeve_6_up_percent"/>
+										<field name="sleeve_5_5_up_percent"/>
+										<field name="sleeve_5_5_down_percent"/>
+										<field name="sleeve_5_down_percent"/>
+
+										<field name="sleeve_5_up_percent"/>
+										<field name="unhulled_percent"/>
+										<field name="remaining_coffee_percent"/>
+										<field name="blacks_percent"/>
+										<field name="half_monsoon_percent"/>
+										<field name="good_beans_percent"/>
+
+										<field name="state"/>
+	                        		</tree>
+	                        	</field>
+								
+	                        </page>
+                        </notebook>
+                </form>
+            </field>
+        </record>
+
+		<record id="view_ned_batch_report_tree" model="ir.ui.view">
+            <field name="name">view.ned.batch.report.tree</field>
+            <field name="model">batch.report</field>
+            <field name="arch" type="xml">
+                <tree string="Batch Report" delete="false" create="false">
+                	<field name="production_id"/>
+	        	</tree>
+            </field>
+        </record>
+
+		<record id="view_ned_batch_report_search" model="ir.ui.view">
+            <field name="name">view.ned.batch.report.search</field>
+            <field name="model">batch.report</field>
+            <field name="arch" type="xml">
+                <search string="Batch Report">
+                    <field name = 'production_id'/>
+                </search>
+            </field>
+        </record>
+        
+		<record id="action_ned_batch_report" model="ir.actions.act_window">
+            <field name="name">Batch Report</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">batch.report</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+			<field name="search_view_id" ref="view_ned_batch_report_search"/>
+            <field name="help" type="html">
+            	<p class="oe_view_nocontent_create">
+            	</p>
+            </field>
+        </record>
+        
+    	
+        
+        
+        
+    
+    
+    </data>
+</odoo>

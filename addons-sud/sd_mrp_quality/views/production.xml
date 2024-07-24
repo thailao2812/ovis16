@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    
+    	<record id="mrp_production_tree_qc_view" model="ir.ui.view">
+            <field name="name">mrp.production.qc.tree</field>
+            <field name="model">mrp.production</field>
+            <field name="arch" type="xml">
+                <tree string="Manufacturing Orders" multi_edit="1" sample="1" decoration-info="state == 'draft'" create="true" default_order="id desc">
+                   	<field name="warehouse_id"/>
+                    <field name="company_id" invisible="1"/>
+                    <field name="product_uom_category_id" invisible="1"/>
+                    <field name="priority" optional="show" widget="priority" nolabel="1"/>
+                    <field name="message_needaction" invisible="1"/>
+                    <field name="name" decoration-bf="1"/>
+                    
+                    <field name="bom_id"/>
+	            	<field name="grade_id"/>
+            	    <field name="batch_type"/>
+            	    
+            	    
+                    <field name="date_planned_start" optional="show" widget="remaining_days"/>
+                    <field name="date_deadline" widget="remaining_days" attrs="{'invisible': [('state', 'in', ['done', 'cancel'])]}" optional="hide"/>
+                    <field name="product_id" readonly="1" optional="show" invisible="1"/>
+                    <field name="lot_producing_id" optional="hide"/>
+                    <field name="bom_id" readonly="1" optional="hide"/>
+                    <field name="activity_ids" string="Next Activity" invisible="1" widget="list_activity" optional="show"/>
+                    <field name="origin" optional="show" invisible="1"/>
+                    <field name="user_id" optional="hide" widget="many2one_avatar_user"/>
+                    <field name="components_availability_state" invisible="1" options='{"lazy": true}'/>
+                    <field name="components_availability" options='{"lazy": true}'
+                        attrs="{'invisible': [('state', 'not in', ['confirmed', 'progress'])]}"
+                        optional="show"
+                        decoration-success="reservation_state == 'assigned' or components_availability_state == 'available'"
+                        decoration-warning="reservation_state != 'assigned' and components_availability_state in ('expected', 'available')"
+                        decoration-danger="reservation_state != 'assigned' and components_availability_state == 'late'"/>
+                    <field name="reservation_state" optional="hide" decoration-danger="reservation_state == 'confirmed'" decoration-success="reservation_state == 'assigned'"/>
+	            	<field name="product_issued" sum="product_issued"/>
+	            	<field name="product_received" sum="product_received"/>
+	            	<field name="product_balance" sum="product_balance"/>
+	            	<field name="stored_loss"/>
+	            	<field name="notes"/>
+                    <field name="product_uom_id" string="UoM" readonly="1" options="{'no_open':True,'no_create':True}" groups="uom.group_uom" optional="show"/>
+                    <field name="production_duration_expected" attrs="{'invisible': [('production_duration_expected', '=', 0)]}" groups="mrp.group_mrp_routings" widget="float_time" sum="Total expected duration" optional="show"/>
+                    <field name="production_real_duration" attrs="{'invisible': [('production_real_duration', '=', 0)]}" groups="mrp.group_mrp_routings" widget="float_time" sum="Total real duration" optional="show"/>
+                    <field name="company_id" readonly="1" groups="base.group_multi_company" optional="show"/>
+                    <field name="state"
+                           decoration-success="state in ('done', 'to_close')"
+                           decoration-warning="state == 'progress'"
+                           decoration-info="state == 'confirmed'"
+                           decoration-danger="state == 'cancel'"
+                           decoration-muted="state == 'draft'"
+                           optional="show" widget="badge" class="text-dark"/>
+                    <field name="activity_exception_decoration" widget="activity_exception"/>
+                    <field name="delay_alert_date" invisible="1"/>
+                    <field nolabel="1" name="json_popover" widget="stock_rescheduling_popover" attrs="{'invisible': [('json_popover', '=', False)]}"/>
+                </tree>
+            </field>
+        </record>
+        
+        
+        <record id="mrp_production_qcs_action" model="ir.actions.act_window">
+            <field name="name">Manufacturing Orders</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">mrp.production</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" eval="False"/>
+            <field name="search_view_id" ref="mrp.view_mrp_production_filter"/>
+            <field name="context">{}</field>
+            <field name="domain"></field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                No manufacturing order found. Let's create one.
+              </p><p>
+              </p>
+            </field>
+        </record>
+        
+         <record model="ir.actions.act_window.view" id="mrp_production_qc_action_view">
+            <field name="sequence" eval="100"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="mrp_production_tree_qc_view"/>
+            <field name="act_window_id" ref="mrp_production_qcs_action"/>
+        </record>
+        
+        
+        
+        
+         
+        
+        
+    </data>
+</odoo>

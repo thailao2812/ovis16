@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+	
+	<menuitem 
+      		id="menu_stock_account" 
+      		name="Stock Accounting" 
+      		sequence="20"
+      		parent="account.menu_finance" 
+      		groups="account.group_account_readonly,account.group_account_invoice"
+      		/>
+	            
+	        <menuitem 
+	        	id="menu_action_fiscal"
+	        	parent="menu_stock_account" 
+	        	name="Fiscal Years"
+	        	groups="account.group_account_readonly,account.group_account_invoice"
+	        	sequence="5"/> 
+	        
+	        	
+		        	<menuitem action ="action_account_fiscalyear"
+			        	id="menu_action_account_fiscalyear"
+			        	parent="menu_action_fiscal" 
+			        	groups="account.group_account_readonly,account.group_account_invoice"
+			        	sequence="5"/>    
+	        	  
+	        
+	        <menuitem 
+	        	id="menu_stock_costing"
+	        	parent="menu_stock_account" 
+	        	name="Stock Costing"
+	        	groups="account.group_account_readonly,account.group_account_invoice"
+	        	sequence="10"/> 
+	        
+	        	
+	        	<menuitem
+		      		id="menu_action_report_stock_balance_sheet_acc" 
+		      		name="Report Stock Balance Sheet"
+		      		action="sd_inventory.action_report_stock_balance_sheet" 
+		      		parent="menu_stock_costing"
+		      		sequence="5"/>
+	        
+	        	<menuitem action="action_periodical_production_costing" 
+		        	id="menu_action_periodical_production_costing"
+		        	parent="menu_stock_costing" 
+		        	sequence="10"/>
+	        	
+	
+</odoo>

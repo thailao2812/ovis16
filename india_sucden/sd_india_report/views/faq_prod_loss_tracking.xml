@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_faq_prod_loss_tracking_tree" model="ir.ui.view">
+            <field name="name">view.v.faq.prod.tree</field>
+            <field name="model">v.faq.prod</field>
+            <field name="arch" type="xml">
+                <tree >
+                    <field name = 'mrp_name' string="Batch No." />
+                    <field name = 'ss_name' string="Stack No." />
+                    <field name = 'net_quantity' sum = 'GIP Qty total (Kg)' string="GIP Qty (Kg)" />
+                    <field name = 'sum_itr_qty' sum = 'ITR Qty total (Kg)' string="ITR Qty (Kg)" />
+                    <field name = 'sum_grn_qty' sum = 'GRN Qty total (Kg)' string="GRN Qty (Kg)" />
+                    <field name = 'deficit_grn_itr' sum = 'Deficit GRN-ITR(Kg)' string="Deficit GRN-ITR(Kg)" />
+                    <field name = 'deficit_itr_gip' sum = 'Deficit ITR-GIP(Kg)' string="Deficit ITR-GIP(Kg)" />
+                    <field name = 'deficit_grn_gip' sum = 'Deficit GRN-GIP(Kg)' string="Deficit GRN-GIP(Kg)" />
+                </tree>
+             </field>
+        </record>
+
+        <record id="search_faq_prod_loss_tracking" model="ir.ui.view">
+            <field name="name">search.v.faq.prod</field>
+            <field name="model">v.faq.prod</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name = "mrp_name"/>
+                    <field name = "ss_name"/>
+                    
+                    <group expand="1" string="Group By">
+                        <filter name="group_by_mrp_name" string="Batch No." domain="[]" context="{'group_by':'mrp_name'}"/>
+                        <filter name="group_by_ss_name" string="Stack No." domain="[]" context="{'group_by':'ss_name'}"/>
+                    </group>
+                </search>
+             </field>
+        </record>
+                      
+        <record id="action_faq_prod_loss_tracking" model="ir.actions.act_window">
+            <field name="name">FAQ-Prod. Loss tracking</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">v.faq.prod</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+       
+
+    </data>
+</odoo>

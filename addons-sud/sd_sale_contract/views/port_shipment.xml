@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    	
+    	
+    	<record id="view_post_shipment_search" model="ir.ui.view">
+            <field name="name">post.shipment.search</field>
+            <field name="model">post.shipment</field>
+            <field name="arch" type="xml">
+                <search string="Search shipment">
+                    <field name="name"/>
+                    <field name="do_id"/>
+                    <field name="nvs_nls_id"/>
+                    <field name="truck_plate"/>
+                    <field name="cont_no"/>
+                    <field name="bl_no"/>
+                    <group expand="0" string="Filter...">
+                    </group>
+                    <group expand="0" string="Group By...">
+                        <filter string="Do" icon="terp-accessories-archiver" name ="group_by_do_id" context="{'group_by':'do_id'}"/>
+                        <filter string="Nvs-Nls" icon="terp-accessories-archiver" name ="group_by_nvs_nls_id" context="{'group_by':'nvs_nls_id'}"/>
+                        <filter string="Delivery place" icon="terp-accessories-archiver" name ="group_by_delivery_place_id" context="{'group_by':'delivery_place_id'}"/>
+                    </group>
+               </search>
+            </field>
+        </record>
+        
+        
+	    <record id="view_post_shipment_tree" model="ir.ui.view">
+	            <field name="name">post.shipment.tree</field>
+	            <field name="model">post.shipment</field>
+	            <field name="arch" type="xml">
+                <tree string="Post Shipment" default_order="id desc" decoration-danger="state == 'draft'" decoration-info="state == 'approved'">
+    				<field name="name"/>
+    				<field name="create_date"/>
+    				<field name="do_id"/>
+    				<field name="nvs_nls_id"/>
+    				<field name="shipping_id"/>
+    				<field name="delivery_place_id"/>
+    				<field name="packing_id"/>
+    				<field name="truck_plate"/>
+    				<field name="cont_no" />
+                    <field name="bl_no"/>
+                    <field name="state"/>
+    			</tree>
+	            </field>
+	        </record>
+	        
+	        <record id="view_post_shipment_form" model="ir.ui.view">
+            <field name="name">post.shipment.form</field>
+            <field name="model">post.shipment</field>
+            <field name="arch" type="xml">
+                <form string="Post Shipment">
+	                <header>
+                		<button name="button_approve" type="object" states='draft' string="Approve" class="oe_highlight" groups="sd_sale_contract.group_sales_contract_manager"/>
+	                	<button name="button_draft" states="approved,done" string="Set to Draft" type="object" class="oe_highlight" groups="sd_sale_contract.group_sales_contract_manager"/>
+	                    <field name="state" widget="statusbar" statusbar_visible="draft,approved"/>
+	                </header>
+	                <sheet>
+	                    <div class="oe_title">
+	                        <h1>
+	                            <field name="name" readonly="1"/>
+	                        </h1>
+	                    </div>
+                    	<group>
+	                    	<group col="4">
+	                    		<label for="do_id"/>
+	                    		<div name="do_id" class="o_row">
+									<field name="do_id" required="1" options="{'no_write': True, 'no_create': True}"/>
+									<button name="button_load" string="Load" type="object" 
+										class="btn-default"/> 
+								</div>
+			    				<field name="nvs_nls_id" readonly="1"/>
+			    				<field name="shipping_id" readonly="1"/>
+	                    	</group>
+	                    	<group>
+			    				<field name="delivery_place_id"/>
+			    				<field name="packing_id"/>
+			    				<field name="truck_plate"/>
+	                    	</group>
+                    	</group>
+	                    <notebook>
+	                    	<page string="Post Shipment Line">
+	                    		<field name="post_line" >
+	                    			<tree editable="top">
+	                    				<field name="cont_no"/>
+	                    				<field name="loading_date"/>
+	                    				<field name="bags"  sum="bags"/>
+	                    				<field name="shipped_weight" sum="shipped_weight"/>
+					    				<field name="bl_no"/>
+					    				<field name="bl_date"/>
+					    				<field name="supervisor_id"/>
+	                    			</tree>
+	                    		</field>
+	                    		<field name="notes" class="oe_inline" placeholder="Description"/>
+	                    	</page>
+	                    	
+	                    </notebook>
+	                </sheet>
+                </form>
+            </field>
+        </record>
+        
+       
+        <record id="action_post_shipments" model="ir.actions.act_window">
+            <field name="name">Post Shipment</field>
+            <field name="res_model">post.shipment</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_post_shipment_search"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+              		Create a Packing, the first step of a Packing.
+              </p>
+            </field>
+        </record>
+       
+        
+        
+        <record id="view_post_shipment_line_tree" model="ir.ui.view">
+            <field name="name">post.shipment.line.tree</field>
+            <field name="model">post.shipment.line</field>
+            <field name="arch" type="xml">
+                <tree string="Post Shipment Line">
+                	<field name="post_id"/>
+                	<field name="do_id"/>
+                	<field name="nvs_nls_id"/>
+    				<field name="cont_no"/>
+         			<field name="loading_date"/>
+         			<field name="bags" sum="bags"/>
+         			<field name="shipped_weight" sum="shipped_weight" string="Weight"/>
+         			<field name="bl_no"/>
+	   				<field name="bl_date"/>
+	   				<field name="supervisor_id"/>
+    			</tree>
+            </field>
+        </record>
+        
+        
+        <record model="ir.actions.act_window" id="action_post_shipment_lines">
+            <field name="name">Post Shipment Line</field>
+            <field name="res_model">post.shipment.line</field>
+            <field name="view_mode">tree</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a Post Shipment line, the first step of a new Post Shipment.
+                </p><p>
+                </p>
+            </field>
+        </record>
+        
+    </data>
+</odoo>

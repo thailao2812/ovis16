@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+		<!-- Top menu item -->
+        <menuitem name="Sales Contracts"
+            id="menu_contract_root"
+            groups="sd_sale_contract.group_sales_contract_user,sd_sale_contract.group_sales_contract_manager"
+            web_icon="sd_sale_contract,static/description/icon_contract.jpg"
+            sequence="135"/>
+            
+      	 	<!-- S Contracts -->
+	       <menuitem id="s_contract_root_menu"
+	            name="S Contracts"
+	            parent="menu_contract_root"
+	            sequence="2"/>
+				
+				<!-- contract_local -->
+				<menuitem action="action_s_contract_local" 
+					id="menu_action_s_contract_local" 
+					parent="s_contract_root_menu" sequence="6"
+					groups="sd_sale_contract.group_sales_contract_user,sd_sale_contract.group_sales_contract_manager"/>
+				
+				<!-- contract_export -->
+				<menuitem action="action_s_contract_export" 
+					id="menu_action_s_contract_export" 
+					parent="s_contract_root_menu" sequence="1"
+					groups="sd_sale_contract.group_sales_contract_user,sd_sale_contract.group_sales_contract_manager"/>	
+				
+				<!-- P Contract -->
+				<menuitem action="action_p_contract_instore_traffic" 
+					id="menu_sale_p_contract_instore_traffic" 
+					parent="s_contract_root_menu" sequence="8"
+					name="P Contract"
+					groups="sd_sale_contract.group_sales_contract_user,sd_sale_contract.group_sales_contract_manager"/>	
+					
+							
+				
+				<menuitem action="action_shipping_instruction" 
+					id="menu_action_shipping_instruction" 
+					parent="s_contract_root_menu" sequence="10"
+					groups="sd_sale_contract.group_sales_contract_user,sd_sale_contract.group_sales_contract_manager"/>	
+				
+				 <menuitem id="menu_action_shipping_instruction_line"
+		            action="action_shipping_instruction_line" sequence="25" 
+		            parent="s_contract_root_menu" name="Shipping Instruction Line"
+		            groups="sd_sale_contract.group_sales_contract_user"/>     
+		        
+		        
+		        <menuitem action="action_daily_confirmation" 
+					id="menu_daily_confirmation" 
+					parent="s_contract_root_menu" 
+					groups="sd_sale_contract.group_sales_contract_user"
+					sequence="30"/>
+			
+			<!-- Sales Contracts-->
+			<menuitem id="menu_sale_contract_root" 
+		    	parent= "menu_contract_root" sequence= "5" 
+		    	name= "Sale Contracts"
+		    	/>	
+		    		<!-- NLS -->
+					<menuitem action="action_sale_contract_local" 
+						id="menu_action_sale_contract_local" 
+						name="SVNL"
+						parent="menu_sale_contract_root" sequence="6"
+						groups="sd_sale_contract.group_sales_contract_user,sd_sale_contract.group_sales_contract_manager"/>
+					
+					<!-- NVS -->
+					<menuitem action="action_sale_contract_export" 
+						id="menu_action_sale_contract_export" 
+						name="SVNS"
+						parent="menu_sale_contract_root" sequence="10"
+						groups="sd_sale_contract.group_sales_contract_user,sd_sale_contract.group_sales_contract_manager"/>
+					
+					<!-- Delivery Orders -->
+					<menuitem id="menu_action_delivery_order" action="action_delivery_order" sequence="15" 
+			        	parent="menu_sale_contract_root" name="Delivery Orders"
+			        	groups="sd_sale_contract.group_sales_contract_user"/>
+			        	
+			        <!-- Tranfers Orders -->
+			        <menuitem id="menu_action_tranfers_delivery_order" 
+			        	action="action_tranfers_delivery_order" sequence="17" 
+			        	parent="menu_sale_contract_root"
+			        	name="Transfer order"
+			        	groups="sd_sale_contract.group_sales_contract_user"/>
+			        	
+			        <!-- Post shipment-->
+			        <menuitem id="menu_action_post_shipment" 
+			        	action="action_post_shipments" 
+			        	sequence="20" 
+			        	parent="menu_sale_contract_root"
+			        	groups="sd_sale_contract.group_sales_contract_user"/>
+			        
+			        <!-- Post shipment Line-->
+			        <menuitem id="menu_action_post_shipment_line" 
+			        	action="action_post_shipment_lines" 
+			        	sequence="25"
+			        	parent="menu_sale_contract_root"
+			        	groups="sd_sale_contract.group_sales_contract_user"/>
+			      
+			     
+			<!-- Master Data -->      
+			<menuitem id="menu_master_data_root" 
+		    	parent= "menu_contract_root" sequence= "20" 
+		    	name= "Master Data"
+		    	/>	
+		    	
+		    	<menuitem id="menu_master_data_contract" 
+			    	parent= "menu_master_data_root" sequence= "20" 
+			    	name= "Master Data Sales Contract" 
+			    	/>	
+		    		
+		    		<menuitem id="res_partner_sale_contract_menu"
+		                action="account.res_partner_action_customer"
+		                parent="menu_master_data_contract"
+		                groups="sd_sale_contract.group_sales_contract_user"
+		                sequence="2"/>
+			    	
+				      <menuitem id="menu_saction_sd_delivery_place" 
+				      		action="sd_master.action_sd_delivery_place" 
+				      		sequence="5" 
+				            parent="menu_master_data_contract"
+				            groups="sd_sale_contract.group_sales_contract_user"/>
+			      
+				
+						<menuitem id="menu_sd_action_ned_shipping_line" 
+							action="sd_master.action_ned_shipping_line" 
+							sequence="10" 
+				        	parent="menu_master_data_contract" 
+				        	name="Shipping Lines"
+				        	groups="sd_sale_contract.group_sales_contract_user"/>
+		        		
+		        		
+		        		<!-- Market List -->
+		        		<!-- move wa bên Purchase -->
+					    <menuitem id="sd_sale_action_ned_market_price" 
+					      		action="sd_master.action_ned_market_price" 
+					      		sequence="30"
+					            parent="menu_master_data_contract" 
+					            name="Market List"
+					            groups="sd_sale_contract.group_sales_contract_user"/>
+			    
+			    	    <!-- packing List -->
+					    <menuitem 
+					    		id="menu_sd_action_view_ned_packing_terms" 
+					    		action="sd_master.action_view_ned_packing_terms" 
+					    		sequence="40" 
+		        				parent="menu_master_data_contract"
+		        				groups="sd_sale_contract.group_sales_contract_user"/>
+		        		
+		        		<!-- fumigation -->
+		    		    <menuitem id="menu_sd_action_ned_fumigation" 
+		    		    		action="sd_master.action_ned_fumigation" sequence="50" 
+		        				parent="menu_master_data_contract"/>
+		        		
+		        		<!-- packing -->
+		        		<menuitem id="menu_sd_action_ned_packing" 
+		    		    		action="sd_master.action_ned_packing" sequence="60" 
+		        				parent="menu_master_data_contract"/>
+				        
+				        <!-- ned_crop -->
+				        <!-- move qua master data -->
+				        <!--
+				        <menuitem action="sd_master.action_ned_crop" 
+							id="sd_sale_action_ned_crop" 
+							parent="menu_master_data_contract" 
+							sequence="100"
+							groups="sd_sale_contract.group_sales_contract_user,sd_sale_contract.group_sales_contract_manager"/>
+						-->
+						<!-- certificate -->
+						<!--
+						<menuitem action="sd_master.action_ned_certificate" 
+							id="menu_sd_sale_action_ned_certificate" 
+							parent="menu_master_data_contract" 
+							sequence="110"
+							groups="sd_sale_contract.group_sales_contract_user,sd_sale_contract.group_sales_contract_manager"/>
+						-->
+				
+				<menuitem id="menu_master_data_traffic" 
+			    	parent= "menu_master_data_root" sequence= "40" 
+			    	name= "Master Data Traffic Contract" 
+			    	/>	
+			    		
+			    		<menuitem action="action_pic_traffic" 
+							id="sd_sale_action_pic_traffic" 
+							parent="menu_master_data_traffic" 
+							sequence="10"
+							groups="sd_sale_contract.group_sales_contract_user,sd_sale_contract.group_sales_contract_manager"/>
+							
+						
+						<menuitem action="action_ship_by_traffic" 
+							id="sd_sale_menu_ship_by" 
+							parent="menu_master_data_traffic" 
+							sequence="20"
+							groups="sd_sale_contract.group_sales_contract_user,sd_sale_contract.group_sales_contract_manager"/>
+						
+						<menuitem action="action_ship_month_traffic" 
+							id="sd_sale_menu_ship_month" 
+							parent="menu_master_data_traffic" 
+							name="Shipt Month"
+							sequence="30"
+							groups="sd_sale_contract.group_sales_contract_user,sd_sale_contract.group_sales_contract_manager"/>
+						
+						
+			    	
+</odoo>

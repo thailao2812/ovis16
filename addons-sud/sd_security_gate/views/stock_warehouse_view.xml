@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+		
+		<!-- Warehouse -->
+		<record id="stock_warehouse_form_inherit_besco_session" model="ir.ui.view">
+            <field name="model">stock.warehouse</field>
+            <field name="inherit_id" ref="general_stock.view_warehouse_general_inherit"/>
+            <field name="arch" type="xml">
+            	<xpath expr="//field[@name='reception_steps']" position="before">
+            		<field name="sequence_id"/>
+	          	</xpath>
+            </field>
+       	</record>
+		
+</odoo>

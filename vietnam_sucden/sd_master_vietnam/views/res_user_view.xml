@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_users_form_inherit_reach_master_data_inherit_sucden_vn" model="ir.ui.view">
+            <field name="name">view_users_form_inherit_reach_master_data_inherit_sucden_vn</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="sd_master.view_users_form_inherit_reach_master_data"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='trader']" position="after">
+                    <field name="create_partner"/>
+                </xpath>
+            </field>
+    </record>
+</odoo>

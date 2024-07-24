@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+		
+        <record id="request_materials_inherit_reach_add_packing" model="ir.ui.view">
+			<field name="name">request.materials.inherit.reach.add.packing</field>
+			<field name="model">request.materials</field>
+			<field name="inherit_id" ref="sd_inventory.view_request_materials_form"/>
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='request_line']/tree/field[@name='stack_id']" position="after">
+					<field name="packing_id"/>
+				</xpath>
+	        </field>
+        </record>
+		        
+    </data>
+</odoo>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+		
+		<record id="view_post_shipment_form_inherit_ned_add_lot_kcs" model="ir.ui.view">
+	        <field name="name">view.post.shipment.form.inherit.ned.add.kcs</field>
+	        <field name="model">post.shipment</field>
+	        <field name="inherit_id" ref="sd_sale_contract.view_post_shipment_form"/>
+	        <field name="arch" type="xml">
+                <xpath expr="//field[@name='post_line']/tree/field[@name='bl_date']" position="after">
+                    <field name="lot_id"/>
+                    <field name="lot_ned" string='Lot Ned'/>
+                </xpath>
+	        </field>
+	    </record>
+	    
+	    <record id="view_post_shipment_line_tree_inherit_ned_add_lot_kcs" model="ir.ui.view">
+            <field name="name">post.shipment.line.tree.inherit.add.lot.kcs</field>
+            <field name="model">post.shipment.line</field>
+             <field name="inherit_id" ref="sd_sale_contract.view_post_shipment_line_tree"/>
+            <field name="arch" type="xml">
+				<xpath expr="//tree" position="replace">
+	                <tree string="Post Shipment Line">
+	                	<field name="post_id"/>
+	                	<field name="do_id"/>
+	                	<field name="nvs_nls_id"/>
+	    				<field name="cont_no"/>
+	         			<field name="loading_date"/>
+	         			<field name="bags" sum="bags"/>
+	         			<field name="shipped_weight" sum="shipped_weight" string="Weight"/>
+						<field name="lot_id"/> 
+	         			<field name="bl_no"/>
+		   				<field name="bl_date"/>
+		   				<field name="supervisor_id"/>
+	    			</tree>
+	    			</xpath>
+            </field>
+        </record>
+    	
+    </data>
+</odoo>
+

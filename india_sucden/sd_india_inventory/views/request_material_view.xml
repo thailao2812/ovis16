@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_request_materials_form_inherit_india" model="ir.ui.view">
+        <field name="name">view_request_materials_form_inherit_india</field>
+        <field name="model">request.materials</field>
+        <field name="inherit_id" ref="sd_inventory.view_request_materials_form"/>
+        <field name="arch" type="xml">
+			 <xpath expr="//field[@name='production_id']" position="attributes">
+            	<attribute name="domain">[('state', 'not in', ['done', 'cancel'])]</attribute>
+            	<attribute name="options">{'no_create': True}</attribute>
+            </xpath>
+
+        </field>
+    </record>
+</odoo>

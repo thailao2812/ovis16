@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <menuitem id="sd_inventory.menu_action_grn_quota_receipt_sucden_purchase_contract" active="False"/>
+    <menuitem id="sd_inventory.menu_action_grn_quota_temp" active="False"/>
+    <menuitem id="sd_inventory.menu_action_grn_fot_receipt_sucden" active="False"/>
+</odoo>

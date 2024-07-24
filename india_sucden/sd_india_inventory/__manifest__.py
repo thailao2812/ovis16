@@ -1,0 +1,31 @@
+# -*- coding: utf-8 -*-
+{
+    'name': 'SUCDEN INDIA INVENTORY',
+    'category': 'Sucden India',
+    'version' : '16.0.1.0',
+    'author': 'Sucden Viet Nam',
+    'website': 'https://www.sucden.com',
+    'depends': ['base', 'sd_inventory'],
+    'description': """
+    """,
+    'data': [
+        'security/ir.model.access.csv',
+        'report/report.xml',
+        'security/group.xml',
+        'views/building_warehouse_view.xml',
+        'views/product_view.xml',
+        'views/grn_quota_view.xml',
+        'views/warehouse_view.xml',
+        'views/stock_picking_type_view.xml',
+        'views/stock_picking_view.xml',
+        'views/create_stock_stack_view.xml',
+        'views/stock_lot_view.xml',
+        'views/building_to_building.xml',
+        'views/import_stack_view.xml',
+        'views/stock_zone_view.xml',
+        'views/request_material_view.xml',
+    ],
+    'installable': True,
+    'auto_install': False,
+    'application': False,
+}

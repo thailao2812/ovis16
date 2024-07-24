@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+     <!-- <record id="view_picking_inherit_ned_security_gate_queue" model="ir.ui.view">
+            <field name="name">view.stock.kcs.form.inherit.ned.security.gate.queue</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="sd_inventory.view_picking_inherit_sucden_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='delivery_place_id']" position="after">
+                    <field name="transfer_picking_type" invisible="1"/>
+                    <field name="date_done" invisible="1"/>
+                    <label for="link_backorder_id" attrs="{'invisible': [('transfer_picking_type', '=', False)]}" groups="base.user_root,sd_purchase_contract.group_purchase_contract_user"/>
+                    <div name="link_backorder_id" class="o_row" attrs="{'invisible': [('transfer_picking_type', '=', False)]}"  groups="base.user_root,sd_purchase_contract.group_purchase_contract_user">
+                        <field name='link_backorder_id'
+                               groups="base.user_root,sd_purchase_contract.group_purchase_contract_user"
+                               attrs="{'invisible': [('transfer_picking_type', '=', False)]}"
+                               options="{'no_create': True, 'no_edit': True, 'no_create_edit':True}" context="{'back_order': True, 'date_done': date_done, 'partner_id': partner_id}"/>
+                        <button name="button_link_backorder" states="done" string="Link Backorder" type="object" 
+                            groups="base.user_root,sd_purchase_contract.group_purchase_contract_user" attrs="{'invisible': [('transfer_picking_type', '=', False)]}"/>
+                    </div>
+                </xpath>
+            </field>
+        </record> -->
+
+
+   <!--  <record id="view_security_gate_queue_exstore_tree_inherit_exstore" model="ir.ui.view">
+        <field name="name">view_security_gate_queue_exstore_tree_inherit_exstore</field>
+        <field name="model">ned.security.gate.queue</field>
+        <field name="inherit_id" ref="view_security_gate_queue_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='supplier_id']" position="before">
+                <field name='customer_id'/>
+                <field name="districts_id" invisible="context.get('exstore', True)"/>
+                
+            </xpath>
+        </field>
+    </record> -->
+
+
+    <!-- Security gate queue ExStore action -->
+   <!--  <record model="ir.actions.act_window" id="action_security_gate_queue_exstore">
+        <field name="name">Delivery Registration Ex-Store</field>
+        <field name="res_model">ned.security.gate.queue</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="ned_security_gate_queue_search"/>
+        <field name="domain">[('type_transfer','=','queue-exstore')]</field>
+        <field name="context">{'filter_by_company':True,'default_type_transfer':'queue-exstore','exstore': True}</field>
+    </record> -->
+    <record id="view_queue_exstore_more_access" model="ir.ui.view">
+        <field name="name">view_queue_exstore_more_access</field>
+        <field name="model">ned.security.gate.queue</field>
+        <field name="inherit_id" ref="view_security_gate_queue_exstore_tree"/>
+        <!-- <field name="groups_id" eval="[(6, 0, [ref('sd_traffic.group_traffic_user'),ref('sd_traffic.group_traffic_manager')])]"/> -->
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="create">true</attribute>
+            </xpath>            
+            <xpath expr="//*[@class='btn btn-primary o_list_button_add']" position="attributes">
+                <attribute name="groups">sd_traffic.group_traffic_user</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

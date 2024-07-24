@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_crm_partner_geo_form_inherit_ned_sucden" model="ir.ui.view">
+        <field name="name">view_crm_partner_geo_form_inherit_ned_sucden</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base_geolocalize.view_crm_partner_geo_form"/>
+        <field name="priority">1000</field>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='geo_location']" position="inside">
+                <separator string="Multiple Point Geolocation"/>
+                <field name="multiple_point_ids" no_label="1">
+                    <tree editable="top">
+                        <field name="partner_id" invisible="1"/>
+                        <field name="partner_latitude"/>
+                        <field name="partner_longitude"/>
+                        <field name="marker_color" widget="color_picker"/>
+<!--                        <field name="contact_address"/>-->
+<!--                        <field name="display_name"/>-->
+                        <button name="button_view_google_map" type="object" class="oe_stat_button" icon="fa-map-marker" string="Google Map" attrs="{'invisible': ['|',('partner_latitude', '=', 0.0), ('partner_longitude', '=', 0.0)]}"/>
+                    </tree>
+                </field>
+            </xpath>
+        </field>
+    </record>
+</odoo>

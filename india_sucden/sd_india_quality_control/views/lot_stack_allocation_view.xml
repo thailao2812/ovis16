@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_lot_stack_allocation_tree_inherit_india" model="ir.ui.view">
+        <field name="name">view_lot_stack_allocation_tree_inherit_india</field>
+        <field name="model">lot.stack.allocation</field>
+        <field name="inherit_id" ref="sd_quality.view_lot_stack_allocation_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='mc_on_despatch']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='defects']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='defects_tcvn']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='cuptaste']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='nvs_id']" position="attributes">
+                <attribute name="string">DOM - EXP Contract</attribute>
+            </xpath>
+            <xpath expr="//field[@name='delivery_id']" position="attributes">
+                <attribute name="domain">[('state', '=', 'approved')]</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

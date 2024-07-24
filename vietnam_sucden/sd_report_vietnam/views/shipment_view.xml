@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_sales_shipment_inherit_sucden_vn" model="ir.ui.view">
+            <field name="name">view_sales_shipment_inherit_sucden_vn</field>
+            <field name="model">v.shipment</field>
+            <field name="inherit_id" ref="sd_report.view_sales_shipment"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='grade_id']" position="after">
+                    <field name="quality_type" readonly="1"/>
+                </xpath>
+                <xpath expr="//field[@name='pss_rejected']" position="after">
+                    <field name="approved_nestle" readonly="1" sum="approved_nestle"/>
+                    <field name="rejected_nestle" readonly="1" sum="rejected_nestle"/>
+                </xpath>
+            </field>
+    </record>
+
+    <record id="sales_shipment_search_inherit_sucden_vn" model="ir.ui.view">
+            <field name="name">sales_shipment_search_inherit_sucden_vn</field>
+            <field name="model">v.shipment</field>
+            <field name="inherit_id" ref="sd_report.sales_shipment_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='grade_id']" position="after">
+                    <field name="quality_type"/>
+                </xpath>
+                <xpath expr="//filter[@name='grade_id']" position="after">
+                    <filter string="Quality Type" name="quality_type" domain="[]" context="{'group_by':'quality_type'}"/>
+                </xpath>
+            </field>
+    </record>
+</odoo>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_action_wizard_import_qc" model="ir.ui.view">
+	      <field name="name">Import QC GRN</field>
+	      <field name="model">import.qc.grn</field>
+	      <field name="arch" type="xml">
+	        <form>
+	        	<sheet>
+	        		<group col="2" name="main">
+		       			<field name="file"/>
+			          	<field name="file_name" invisible="1"/>
+			          	<button name="template_import" type="object" string="Template" class="oe_highlight"/>
+			        </group>
+			        <footer>
+			        	<button string="Import" name="import_qc_grn" type="object" class="oe_highlight"/>
+                        <button string="Cancel" class="btn-default" special="cancel"/>
+			        </footer>
+	        	</sheet>
+    		</form>
+	      </field>
+	    </record>
+
+		<record id="action_wizard_import_qc_grn" model="ir.actions.act_window">
+	        <field name="name">Import QC GRN</field>
+	        <field name="res_model">import.qc.grn</field>
+	        <field name="view_mode">form</field>
+	        <field eval="False" name="view_id"/>
+			<field name="target">new</field>
+	    </record>
+	
+</odoo>

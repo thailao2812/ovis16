@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="ned_certificate_license_form_view_inherit_sd_vietnam" model="ir.ui.view">
+		        <field name="name">ned_certificate_license_form_view_inherit_sd_vietnam</field>
+		        <field name="model">ned.certificate.license</field>
+		        <field name="inherit_id" ref="sd_pur_sales.ned_certificate_license_form_view"/>
+		        <field name="arch" type="xml">
+					<xpath expr="//field[@name='shipping_instruction_allocation_ids']/tree/field[@name='shipping_id']" position="after">
+                        <field name="warehouse_id"/>
+                        <field name="date_etd"/>
+					</xpath>
+                    <xpath expr="//field[@name='shipping_instruction_allocation_ids']/tree/field[@name='shipping_id']" position="after">
+                        <field name="warehouse_id"/>
+                        <field name="date_etd"/>
+					</xpath>
+                    <xpath expr="//field[@name='partner_id']" position="after">
+                        <field name="state_id"/>
+                    </xpath>
+
+		        </field>
+		    </record>
+
+    <record id="ned_certificate_license_search_view_inherit_sd_vietnam" model="ir.ui.view">
+		        <field name="name">ned_certificate_license_search_view_inherit_sd_vietnam</field>
+		        <field name="model">ned.certificate.license</field>
+		        <field name="inherit_id" ref="sd_pur_sales.ned_certificate_license_search_view"/>
+		        <field name="arch" type="xml">
+                    <xpath expr="//field[@name='partner_id']" position="after">
+                        <field name="state_id"/>
+                    </xpath>
+                    <xpath expr="//filter[@name='certificate']" position="after">
+                        <filter string="Province" name="province" domain="[]" context="{'group_by': 'state_id'}"/>
+                    </xpath>
+
+
+		        </field>
+		    </record>
+
+	<record id="ned_certificate_license_tree_view_inherit_vietnam" model="ir.ui.view">
+        <field name="name">ned_certificate_license_tree_view_inherit_vietnam</field>
+        <field name="model">ned.certificate.license</field>
+        <field name="inherit_id" ref="sd_pur_sales.ned_certificate_license_tree_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="state_id"/>
+            </xpath>
+			 <xpath expr="//field[@name='g2_derivable']" position="after">
+                    <field name="g3_derivable"/>
+            </xpath>
+            <xpath expr="//field[@name='g2_allocated']" position="after">
+                    <field name="g3_allocated"/>
+            </xpath>
+            <xpath expr="//field[@name='g2_allocated_not_out']" position="after">
+                    <field name="g3_allocated_not_out"/>
+            </xpath>
+            <xpath expr="//field[@name='g2_allocated_out']" position="after">
+                    <field name="g3_allocated_out"/>
+            </xpath>
+            <xpath expr="//field[@name='g2_unallocated']" position="after">
+                    <field name="g3_unallocated"/>
+            </xpath>
+            <xpath expr="//field[@name='g2_balance']" position="after">
+                    <field name="g3_balance"/>
+            </xpath>
+            <xpath expr="//field[@name='g2_position']" position="after">
+                    <field name="g3_position"/>
+                    <field name="total_position"/>
+            </xpath>
+
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_wizard_ptbf_contract_inherit_india" model="ir.ui.view">
+        <field name="name">view_wizard_ptbf_contract_inherit_india</field>
+        <field name="model">wizard.ptbf.contract</field>
+        <field name="inherit_id" ref="sd_purchase_contract.view_wizard_ptbf_contract"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='rate']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='contract_line_ids']/tree/field[@name='price_amount_vn']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='contract_line_ids']/tree/field[@name='total_amount_vn']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

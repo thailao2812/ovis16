@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_stock_allocation_tree_tree_inherit_sucden_vn" model="ir.ui.view">
+            <field name="name">view_stock_allocation_tree_tree_inherit_sucden_vn</field>
+            <field name="model">stock.allocation</field>
+            <field name="inherit_id" ref="sd_purchase_contract.view_stock_allocation_tree_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='picking_id']" position="after">
+                    <field name="fot_name" string="GRN FOT Name"/>
+                </xpath>
+            </field>
+    </record>
+
+    <record id="view_nvp_contract_allocation_invoiced_form_inherit_sucden_vn" model="ir.ui.view">
+            <field name="name">view_nvp_contract_allocation_invoiced_form_inherit_sucden_vn</field>
+            <field name="model">purchase.contract</field>
+            <field name="inherit_id" ref="sd_purchase_contract.view_nvp_contract_allocation_invoiced_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='stock_allocation_ids']/tree/field[@name='picking_id']" position="after">
+                    <field name="description" string="GRN Name"/>
+                    <field name="picking_fot_id" string="GRN FOT Name" domain="[('partner_id','=',parent.partner_id),
+                    ('picking_type_code','=','incoming'),
+                    ('picking_type_id.operation', '=', 'station'),
+                    ('qty_available','!=',0),
+                    ('allocation_id','=',False)]" context="{'grn_fot_allocation': True, 'partner_id': parent.partner_id}" options="{'no_create': True}"/>
+                </xpath>
+                <xpath expr="//field[@name='stock_allocation_ids']/tree/field[@name='picking_id']" position="attributes">
+                    <attribute name="attrs">{'invisible': [('picking_fot_id', '!=', False)]}</attribute>
+                    <attribute name="context">{'grn_fot_allocation': True, 'partner_id': parent.partner_id}</attribute>
+                </xpath>
+            </field>
+    </record>
+
+    <record id="sd_purchase_contract.action_nvp_contract_allocation_invoiced" model="ir.actions.act_window">
+        <field name="context">{'grn_fot_allocation': True}</field>
+    </record>
+
+
+</odoo>

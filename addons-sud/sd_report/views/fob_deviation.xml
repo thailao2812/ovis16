@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+   
+        <record id="view_fob_deviation_tree" model="ir.ui.view">
+            <field name="name">view.v.fob.deviation.tree</field>
+            <field name="model">v.fob.deviation</field>
+            <field name="arch" type="xml">
+                <tree decoration-danger="claim_percent > 0">
+                    <field name = 'do_no' string="DO No." readonly = '1'/>
+                    <field name = 'fob_date' string="DO Date" readonly = '1'/>
+                    <field name = 'si_no' string="SI No." readonly = '1'/>
+                    <field name = 'con_name' readonly = '1'/>
+                    <field name = 'product' string="Product" readonly = '1'/>
+                    <field name = 'total_qty' string="Qty (Kg)" readonly = '1'/>
+                    <field name = 'trucking_no' string = 'Trucking No.' invisible="1"/>
+                    
+                    <field name = 'placename' string = 'Delivery Place' readonly = '1'/>
+                    <field name = 'pickingname' string = 'GDN No.' readonly = '1'/>
+                    <field name = 'state' string = 'Status' readonly = '1'/>
+
+                    <field name = 'transrate' sum='Trans. Rate Total (VNĐ)' string = 'Trans. Rate (VNĐ)' readonly = '1'/>
+                    <field name = 'bagsfactory' sum='Bags Factory' string = 'Bags Factory' readonly = '1'/>
+                    <field name = 'bagshcm' sum = 'Bags HCM' string = 'Bags HCM' readonly = '1'/>
+
+                    <field name = 'weightfactory' sum='Weight Factory Total (Kg)' readonly = '1'/>
+                    <field name = 'shipped_weight' sum='Weight HCM Total (Kg)' string = 'Weight HCM (Kg)' readonly = '1'/>
+                    <field name = 'storing_loss' sum='Storing Loss Total (Kg)' string = 'Storing Loss (Kg)' readonly = '1'/>
+                    <field name = 'transportation_loss' sum = 'Trans. Loss Total (Kg)' string = 'Trans. Loss (Kg)' readonly = '1'/>
+
+                    <field name = 'trans_loss_per' sum='Trans. Loss % Total' string='Trans. Loss %' readonly = '1'/>
+                    <field name = 'store_loss_per' sum='Storing Loss % Total' string = 'Storing Loss %' readonly = '1'/>
+                    <field name = 'claim_percent' sum = 'Claim (>0.1%) Total (Kg)' string = 'Claim (>0.1%) (kg)' readonly = '1'/>
+
+                </tree>
+             </field>
+        </record>
+
+        <record id="search_fob_deviation" model="ir.ui.view">
+            <field name="name">search.fob.diviation</field>
+            <field name="model">v.fob.deviation</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name = "do_no"/>
+                    <field name = "si_no"/>
+                    <field name = "product"/>
+                    <field name = "trucking_no"/>
+                    <field name = "pickingname"/>
+                    
+                    <group expand="1" string="Group By">
+                        <filter string="NVS-NLS" domain="[]" name="filter_con_name" context="{'group_by':'con_name'}"/>
+                        <filter string="Truck" domain="[]" name="_filtertrucking_no" context="{'group_by':'trucking_no'}"/>
+                        <filter string="Delivery Place" domain="[]" name="filter_placename" context="{'group_by':'placename'}"/>
+                        <filter string="DO Date" domain="[]" name="filter_fob_date" context="{'group_by':'fob_date'}"/>
+                        <filter string="Product" domain="[]" name="filter_product" context="{'group_by':'product'}"/>
+<!--                        <filter string="Factory Date" domain="[]" context="{'group_by':'factory_date_received'}"/> -->
+                    </group>
+                </search>
+             </field>
+        </record>
+                      
+        <record id="action_fob_diviation" model="ir.actions.act_window">
+            <field name="name">FOB Diviation</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">v.fob.deviation</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'search_by_field_date': ['fob_date']}</field>
+        </record>
+        
+    </data>
+</openerp>

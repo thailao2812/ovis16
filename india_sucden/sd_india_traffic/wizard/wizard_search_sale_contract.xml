@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="wizard_search_sale_contract_form" model="ir.ui.view">
+            <field name="name">wizard.search.sale.contract.form</field>
+            <field name="model">wizard.search.sale.contract</field>
+            <field name="arch" type="xml">
+                <form string="PSC to PC Linked">
+                    <sheet>
+			            <group>
+		            		<label for="date_from" string="Date from"/>
+							<div>
+								<field name="date_from" class="oe_inline"/>
+								<span>       </span><span>   Date to</span>
+								<field name="date_to" class="oe_inline ms-3"/>
+							</div>
+							<field name="sale_contract_ids" required="1" widget="many2many_tags" options="{'no_create': true}" context="{'search_sale_contract': True}"/>
+		                </group>
+		                <group>
+
+		                </group>
+		                <footer>
+		                	<button string="Search" name="button_search" type="object" class="oe_highlight"/>
+		                    <button string="Cancel" class="btn-default" special="cancel"/>
+		                </footer>
+	                </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_search_sale_contract" model="ir.actions.act_window">
+            <field name="name">PSC to PC Link</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">wizard.search.sale.contract</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+
+    </data>
+</odoo>

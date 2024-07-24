@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    	
+    	<record id="view_mrp_operation_result_inherit_production_result_tree" model="ir.ui.view">
+	        <field name="name">view.mrp.operation.result.inherit.production.result.tree</field>
+	        <field name="model">mrp.operation.result</field>
+	        <field name="inherit_id" ref="sd_mrp.view_mrp_operation_result_tree"/>
+	        <field name="arch" type="xml">
+	        	<xpath expr="//field[@name='create_uid']" position="before">
+					<field name="all_line_products"/>
+					<field name="total_line_qty"/>
+					<field name="all_pending_grn"/>
+					<!-- <field name="all_stack_wip"/> -->
+                </xpath>
+	        </field>
+	    </record>
+
+    	<record id="view_mrp_operation_result_inherit_add_scale_page_form" model="ir.ui.view">
+	        <field name="name">view.mrp.operation.result.inherit.add.scale.page.form</field>
+	        <field name="model">mrp.operation.result</field>
+	        <field name="inherit_id" ref="sd_mrp.view_mrp_operation_result_form"/>
+	        <field name="arch" type="xml">
+								
+		        <xpath expr="//page[@name='page_additional_info']" position="after">
+	                <page string="Weight Scale">
+	    				<field name="scale_ids" nolabel="1">
+	    					<tree string="Weight Scale Line" ediable="top">
+	        					 <field name="operation_result_id" invisible="1"/>
+	                             <field name="product_id"/>
+	                             <field name="packing_id"/>
+	                             <field name="weight_scale" sum="weight_scale"/>
+	                             <field name="bag_no" sum="bag_no"/>
+	                             <field name="tare_weight" sum="tare_weight"/>
+	                             <field name="lining_bag"/>
+	                             <field name="packing_branch_id"/>
+	                             <field name="pallet_weight" sum="pallet_weight"/>
+	                             <field name="net_weight" sum="net_weight"/>
+	                             <field name="usr_api_create"/>
+	                             <field name="create_date"/>
+	                             <field name="state_scale"/>
+	                             <field name="scale_no"/>
+	                             <field name="scale_grp_line_id"/>
+	                        </tree>
+	    				</field>
+	    			</page>
+	        	</xpath>
+	        </field>
+        </record>
+    
+    	<record id="view_stock_picking_inherit_add_scale_page_form" model="ir.ui.view">
+	        <field name="name">view.stock.picking.inherit.add.scale.page.form</field>
+	        <field name="model">stock.picking</field>
+	        <field name="inherit_id" ref="stock.view_picking_form"/>
+	        <field name="arch" type="xml">
+								
+		        <xpath expr="//page[@name='note']" position="after">
+	                <page string="Weight Scale">
+	    				<field name="scale_ids" nolabel="1">
+	    					<tree string="Weight Scale Line" ediable="top">
+	        					 <field name="picking_scale_id" invisible="1"/>
+	                             <field name="product_id"/>
+	                             <field name="packing_id"/>
+	                             <field name="weight_scale" sum="weight_scale"/>
+	                             <field name="bag_no" sum="bag_no"/>
+	                             <field name="tare_weight" sum="tare_weight"/>
+	                             <field name="lining_bag"/>
+	                             <field name="packing_branch_id"/>
+	                             <field name="pallet_weight" sum="pallet_weight"/>
+	                             <field name="net_weight" sum="net_weight"/>
+	                             <field name="old_weight" sum="old_weight"/>
+	                             <field name="bag_code"/>
+	                             <field name="usr_api_create"/>
+	                             <field name="create_date"/>
+	                             <field name="state_scale"/>
+	                             <field name="scale_no"/>
+	                             <field name="scale_gip_line_id"/>
+	                        </tree>
+	    				</field>
+	    			</page>
+	        	</xpath>
+	        </field>
+        </record>
+
+    </data>  
+</odoo>

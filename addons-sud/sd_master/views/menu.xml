@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+
+		
+		<!-- Top menu item -->
+        <menuitem name="Master Data"
+            id="menu_master_data_sucden_root"
+            groups="base.group_user"
+            web_icon="sd_master,static/description/icon_contract.jpg"
+            sequence="50"/>
+            
+            <!-- Master Partner Lv1 -->
+            <menuitem name="Partner Master"
+	            id="menu_master_partner_sucden_root"
+	            parent="menu_master_data_sucden_root"
+	            groups="base.group_user"
+	            sequence="10"/>
+				
+				<!-- CONTACT Lv2-->
+	        	<menuitem id="menu_master_contact_sucden_root"
+	                name="CONTACTS"
+	                parent="menu_master_partner_sucden_root"
+	                groups="base.group_user"
+	                sequence="5"/>
+				
+					<!-- Customer Lv3-->
+		        	<menuitem id="menu_master_customer_sucden_root"
+		                action="account.res_partner_action_customer"
+		                parent="menu_master_contact_sucden_root"
+		                groups="base.group_user"
+		                sequence="10"/>
+		            
+		            
+		            
+	               <!--Supplier Lv3 menu-->
+			        <menuitem id="menu_master_supplier_sucden_root" name="Vendors"
+			            parent="menu_master_contact_sucden_root"
+			            action="account.res_partner_action_supplier" sequence="20"
+			            groups="base.group_user"/>
+			         
+		         <!--
+		           <menuitem action="action_mapping_product" 
+						id="menu_action_mapping_product" 
+						parent="menu_master_contact_sucden_root" sequence="30"/>
+					
+					<menuitem action="action_mapping_partner" 
+						id="menu_action_mapping_partner" 
+						parent="menu_master_contact_sucden_root" sequence="40"/>
+						-->
+			    
+			    <!-- AREA Lv2-->
+	        	<menuitem id="menu_master_area_sucden_root"
+	                name="AREA"
+	                parent="menu_master_partner_sucden_root"
+	                groups="base.group_user"
+	                sequence="10"/>
+				
+					
+					<menuitem 
+		        		action="base.action_country_group" 
+		        		id="menu_sucden_action_country_group" 
+		        		parent="menu_master_area_sucden_root" 
+		        		sequence="2"/>
+				
+					<!-- Customer Lv3 -->
+					<menuitem 
+		        		action="base.action_country" 
+		        		id="menu_sucden_action_country" 
+		        		parent="menu_master_area_sucden_root" sequence="5"/>
+		        	
+		        	<menuitem 
+		        		action="base.action_country_state" 
+		        		id="menu_sucden_action_country_state" 
+		        		parent="menu_master_area_sucden_root" sequence="10"/>
+					
+					
+		        	<menuitem 
+		        		action="action_res_district" 
+		        		id="menu_action_res_district" 
+		        		parent="menu_master_area_sucden_root" sequence="15"/>
+		        	
+	               <!--Supplier Lv3 menu-->
+	           
+	           
+	            <!--BANK ACC-->
+	        	<menuitem id="menu_master_bank_acc_sucden_root"
+	                name="BANK ACCOUNTS"
+	                parent="menu_master_partner_sucden_root"
+	                groups="base.group_user,account.group_account_invoice"
+	                sequence="10"/>
+	                
+	                
+	                
+	                <!-- Res bank -->
+					<menuitem 
+		        		action="base.action_res_bank_form" 
+		        		id="menu_action_res_bank_form" 
+		        		parent="menu_master_bank_acc_sucden_root" 
+		        		sequence="5" 
+		        		groups="base.group_user,account.group_account_invoice"
+		        		/>
+		        	
+		        	<menuitem 
+		        		action="base.action_res_partner_bank_account_form" 
+		        		id="menu_sucden_action_res_partner_bank_account_form" 
+		        		parent="menu_master_bank_acc_sucden_root" 
+		        		groups="base.group_user,account.group_account_invoice"
+		        		sequence="10"/>
+	                
+	                
+	                
+			   
+		   <!-- Master Partner -->
+            <menuitem name="Coffee Master"
+	            id="menu_master_coffee_root"
+	            parent="menu_master_data_sucden_root"
+	            groups="base.group_user"
+	            sequence="20"/>
+		            
+		            
+		            <menuitem id="menu_master_data_action_delivery_place" 
+			      		action="sd_master.action_sd_delivery_place" 
+			      		sequence="5" 
+			            parent="menu_master_coffee_root"
+			            groups="base.group_user"/>
+					
+						<menuitem id="menu_master_data_action_ned_shipping_line" 
+							action="sd_master.action_ned_shipping_line" 
+							sequence="10" 
+				        	parent="menu_master_coffee_root" 
+				        	name="Shipping Lines"
+				        	groups="base.group_user"/>
+			        		
+			        		
+		        		<!-- Market List -->
+					    <menuitem id="menu_master_data_action_ned_market_price" 
+				      		action="sd_master.action_ned_market_price" 
+				      		sequence="30"
+				            parent="menu_master_coffee_root" 
+				            name="Market List"
+				            groups="base.group_user"/>
+			    
+			    	    <!-- packing List -->
+					    <menuitem 
+				    		id="menu_master_data_action_view_ned_packing_terms" 
+				    		action="sd_master.action_view_ned_packing_terms" 
+				    		sequence="40" 
+	        				parent="menu_master_coffee_root"
+	        				groups="base.group_user"/>
+		        		
+		        		<!-- fumigation -->
+		    		    <menuitem id="menu_master_data_action_ned_fumigation" 
+	    		    		action="sd_master.action_ned_fumigation" sequence="50" 
+	        				parent="menu_master_coffee_root"/>
+		        		
+		        		<!-- packing -->
+		        		<menuitem id="menu_master_data_action_ned_packing" 
+	    		    		action="sd_master.action_ned_packing" sequence="60" 
+	        				parent="menu_master_coffee_root"/>
+				        
+				        <!-- ned_crop -->
+				        <menuitem action="sd_master.action_ned_crop" 
+							id="menu_master_data__action_ned_crop" 
+							parent="menu_master_coffee_root" 
+							sequence="100"
+							/>
+						
+						<!-- certificate -->
+						<menuitem action="sd_master.action_ned_certificate" 
+							id="menu_master_data_action_ned_certificate" 
+							parent="menu_master_coffee_root" 
+							sequence="110"
+							/>
+			
+			<!-- Master Product -->
+            <menuitem name="Product Master"
+	            id="menu_master_product_sucden_root"
+	            parent="menu_master_data_sucden_root"
+	            groups="base.group_user"
+	            sequence="30"/>
+	            
+	            	 <menuitem
+				        action="product.product_category_action_form" 
+				        id="menu_master_product_category_sucden"
+				        parent="menu_master_product_sucden_root" 
+				        sequence="5"/>
+				     
+				     <menuitem id="menu_master_product_variant_sucden_action" 
+				     	name="Products" 
+				     	action="stock.product_template_action_product"
+        				parent="menu_master_product_sucden_root" 
+        				sequence="10"/>
+        			
+        			<menuitem
+				        action="uom.product_uom_categ_form_action" 
+				        id="menu_master_uom_sucden_action"
+				        name="UoM Categories"
+				        parent="menu_master_product_sucden_root" 
+				        sequence="15"/>
+			        
+			    	
+				
+			
+    
+</odoo>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_sale_contract_tree_inherit_sd_vietnam" model="ir.ui.view">
+        <field name="name">view_sale_contract_tree_inherit_sd_vietnam</field>
+        <field name="model">sale.contract</field>
+        <field name="inherit_id" ref="sd_sale_contract.view_sale_contract_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='type']" position="after">
+                <field name="note"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

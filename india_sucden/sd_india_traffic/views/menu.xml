@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <menuitem name="Traffic"
+            id="menu_menu_traffic_contract_root_india"
+            web_icon="sd_india_traffic,static/description/icon_contract.jpg"
+			groups="sd_traffic.group_traffic_user,sd_traffic.group_traffic_manager"
+            sequence="36"/>
+
+        <menuitem id="menu_menu_traffic_management_india"
+                        name="Traffic Management"
+                        parent="menu_menu_traffic_contract_root_india"
+                        sequence="1"/>
+            	<!-- FOB Management -->
+				      <menuitem id="menu_traffic_fob_management_india"
+				            	action="action_fob_management_india"
+				            	sequence="1"
+					        	parent="menu_menu_traffic_management_india"/>
+				<!-- Purchase Contract - FOB Link -->
+				      <menuitem id="menu_purchase_contract_fob_link_india"
+				            	action="action_view_search_purchase_contract"
+				            	sequence="2"
+					        	parent="menu_menu_traffic_management_india"/>
+				<!-- Purchase Contract - FOB already Linked -->
+				      <menuitem id="menu_purchase_contract_fob_linked_together"
+				            	action="action_purchase_contract_fob_linked_view"
+				            	sequence="3"
+					        	parent="menu_menu_traffic_management_india"/>
+				<!-- Pro Forma Sales Contract - Create -->
+				      <menuitem id="menu_pro_forma_sale_contract_create_india"
+				            	action="action_sale_contract_india"
+				            	sequence="4"
+					        	parent="menu_menu_traffic_management_india"/>
+				<!-- PSC to PC Linked -->
+				      <menuitem id="menu_psc_to_pc_linked"
+				            	action="action_search_sale_contract"
+				            	sequence="5"
+					        	parent="menu_menu_traffic_management_india"/>
+						<menuitem id="menu_psc_to_pc_linked_report"
+				            	action="action_purchase_contract_report_allocated"
+				            	sequence="6"
+					        	parent="menu_menu_traffic_management_india"/>
+					<menuitem id="menu_psc_to_sc_link"
+				            	action="action_psc_to_sc_link"
+				            	sequence="7"
+					        	parent="menu_menu_traffic_management_india"/>
+					<menuitem id="menu_psc_to_sc_link_report"
+				            	action="action_report_psc_to_sc_link"
+				            	sequence="8"
+					        	parent="menu_menu_traffic_management_india"/>
+				<!-- Report FOB Statement -->
+					<menuitem id="menu_report_fob_statement"
+				            	action="action_report_fob_statement"
+				            	sequence="9"
+					        	parent="menu_menu_traffic_management_india"/>
+
+	<menuitem id="menu_menu_traffic_master_data_india"
+                        name="Master data"
+                        parent="menu_menu_traffic_contract_root_india"
+                        sequence="3"/>
+			<!-- Exchange Management -->
+				      <menuitem id="menu_traffic_exchange_india"
+				            	action="action_exchange_india"
+				            	sequence="1"
+					        	parent="menu_menu_traffic_master_data_india"/>
+			<!-- Exchange Management -->
+				      <menuitem id="menu_traffic_exchange_product_india"
+				            	action="action_exchange_product_india"
+				            	sequence="2"
+					        	parent="menu_menu_traffic_master_data_india"/>
+			<!-- Exchange Management -->
+				      <menuitem id="menu_market_india"
+				            	action="market_india_act_window"
+				            	sequence="3"
+					        	parent="menu_menu_traffic_master_data_india"/>
+			<!-- Fixed Cost Management -->
+				      <menuitem id="menu_traffic_fixed_cost_india"
+				            	action="action_fixed_cost_india"
+				            	sequence="3" active="False"
+					        	parent="menu_menu_traffic_master_data_india"/>
+
+			<!-- Item Group -->
+				      <menuitem id="menu_traffic_item_group"
+				            	action="item_group_act_window"
+				            	sequence="3"
+					        	parent="menu_menu_traffic_master_data_india"/>
+</odoo>

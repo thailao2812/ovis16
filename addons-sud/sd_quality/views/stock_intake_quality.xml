@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+   
+    	<record id="view_supplier_risk_management" model="ir.ui.view">
+            <field name="name">view.v.qc.details.ned</field>
+            <field name="model">v.qc.details</field>
+            <field name="arch" type="xml">
+    			<tree>
+                    
+                    <field name = 'zone' readonly = '1'/>
+                    <field name = "stack" readonly = '1'/>
+                    <field name = "stack_id" invisible = '1'/>
+                    <field name = "p_contract" readonly = '1'/>
+                    <!-- <field name = 'balance_basis' readonly = '1'/> -->
+                    
+                    <field name = 'receipt_note' readonly = '1'/>
+                    <field name = 'supplier' readonly = '1' />
+                    <field name = 'supplier_id' invisible = '1' />
+                    <field name = 'source_province' readonly = '1' />
+                    <field name = 'source_dis' string = 'District' readonly = '1' />
+                    <field name = 'warehouse_id' readonly = '1'/>
+                    <field name = 'product' readonly = '1'/>
+                    <field name = 'net_qty' readonly = '1' sum="net_qty"/>
+                    <field name = 'receiving_date' readonly = '1'/>
+                    <field name = 'packing' readonly = '1'/>
+                    <field name = 'bag_no' sum="bag_no"/>
+                    <field name = 'mc'/>
+                    <field name = 'fm' readonly = '1'/>
+
+                    <field name = 'black' readonly = '1'/>
+                    <field name = 'broken' readonly = '1'/>
+                    <field name = 'brown' readonly = '1'/>
+
+                    <field name = 'mold' readonly = '1'/>
+                    <field name = 'cherry' readonly = '1'/>
+                    <field name = 'excelsa' readonly = '1'/>
+                    <field name = 'screen20' readonly = '1'/>
+                    <field name = 'screen19' readonly = '1'/>
+                    <field name = 'screen18' readonly = '1'/>
+
+                    <field name = 'screen16' readonly = '1'/>
+                    <field name = 'screen13' readonly = '1'/>
+                    <field name = 'greatersc12' readonly = '1'/>
+                    <field name = 'belowsc12' readonly = '1'/>
+
+                    <field name = 'burned' readonly = '1'/>
+                    <field name = 'eaten' readonly = '1'/>
+                    <field name = 'immature' readonly = '1'/>
+                    
+                    <field name="remark"/>
+					<field name="x_inspectator" string="Inspected / Sampler"/>
+					<field name="sampler" string="Analysis By"/>
+					
+                </tree>
+	         </field>
+         </record>
+
+        <!-- The block of code bellow determines a list of search parameters appear once user type in the searchbar -->
+        <record id="v_qc_details_ned_search" model="ir.ui.view">
+            <field name="name">view.v.qc.details.ned.search</field>
+            <field name="model">v.qc.details</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name = "product"/>
+                    <field name = "zone"/>
+                    <field name = 'stack'/>
+                    <field name = 'receipt_note'/>
+                    <field name = 'p_contract'/>
+                    <group expand="1" string="Group By">
+                        <filter domain="[('product','=','FAQ')]" string="Product is FAQ" name='product'/>
+                        <filter name ="group_by_zone" string="Zone" domain="[]" context="{'group_by':'zone'}"/>
+                        <filter name ="group_by_stack" string="Stack" domain="[]" context="{'group_by':'stack'}"/>
+                        <filter name ="group_by_product" string="Product" domain="[]" context="{'group_by':'product'}"/>
+                        <filter domain="[('balance_basis','!=',0)]" string="Real Stock" name='status'/>
+                    </group>
+                </search>
+             </field>
+         </record>
+
+        <!-- the block of code below is the action to trigger the list open -->
+        <record id="action_v_qc_details_ned" model="ir.actions.act_window">
+            <field name="name">Stock Intake Quality</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">v.qc.details</field>
+            <field name="view_mode">tree</field>
+            <field name="search_view_id"/>
+            <field name="context">{'search_by_field_date': ['receiving_date']}</field>
+            <!-- <field name="context">{"search_default_status":True}</field> -->
+        </record>
+
+        <!-- The below block of code will assign the abovementioned action to menu
+        tags:
+            - id: the identification name, this should be unique
+            - action: the action defines corresponding the abovementioned action to be triggered
+            - parrent: this specify which menu the current sub-menu will be nested under, in this case, this menu will be nested under MRP area of Master Report
+            - groups: defines a list of group users who have permission to access this report
+            - sequence: the order of the menu in the parrent menu -->
+        
+        <!-- Create a menu item to open this report in Manufacturing -->
+       
+        
+    </data>
+</odoo>

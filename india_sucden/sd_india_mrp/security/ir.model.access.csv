@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_outturn_percent,access_outturn_percent,model_outturn_percent,base.group_user,1,1,1,1
+
+access_truck_quality_production,access_truck_quality_production,model_truck_quality_production,base.group_user,1,1,1,1

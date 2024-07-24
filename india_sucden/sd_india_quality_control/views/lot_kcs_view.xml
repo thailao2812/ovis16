@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_lot_kcs_tree_inherit_india" model="ir.ui.view">
+        <field name="name">view_lot_kcs_tree_inherit_india</field>
+        <field name="model">lot.kcs</field>
+        <field name="inherit_id" ref="sd_quality.view_lot_kcs_tree"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='x_ex_warehouse_id']" position="replace">
+                <field name="warehouse_id"/>
+                <field name="state" invisible="1"/>
+            </xpath>
+            <xpath expr="//button[@name='btt_confirm']" position="attributes">
+                <attribute name="attrs">{'invisible': [('state', '=', 'approve')]}</attribute>
+            </xpath>
+            <xpath expr="//button[@name='btt_draft']" position="attributes">
+                <attribute name="attrs">{'invisible': [('state', '!=', 'approve')]}</attribute>
+            </xpath>
+
+            <xpath expr="//button[@name='get_qc']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='nvs_id']" position="attributes">
+                <attribute name="string">Sale Contract</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='mc']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='mc_on_despatch']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='fixed_fm']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='fixed_black']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='fixed_broken']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='fixed_brown']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='fixed_mold']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='fixed_cherry']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='fixed_screen20']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='fixed_screen19']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='fixed_screen18']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='fixed_screen17']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='fixed_screen16']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='fixed_screen15']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='fixed_screen14']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='fixed_screen13']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='fixed_greatersc12']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='fixed_screen12']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='fixed_burn']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='fixed_immature']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='fixed_excelsa']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='fixed_eaten']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='stone']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='stick']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='defects']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='x_bulk_density']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='cuptaste']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='sampler']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='supervisor']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='lot_ned']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='lot_quantity']" position="after">
+                <field name="outturn_percent" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                <field name="aaa_percent" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                <field name="aa_percent" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                <field name="a_percent" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                <field name="b_percent" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                <field name="c_percent" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                <field name="pb_percent" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                <field name="bb_percent" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                <field name="bleached_percent" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                <field name="idb_percent" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                <field name="bits_percent" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                <field name="hulks_percent" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                <field name="stone_percent" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                <field name="skin_out_percent" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                <field name="triage_percent" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                <field name="wet_bean_percent" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                <field name="red_beans_percent" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                <field name="stinker_percent" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                <field name="faded_percent" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                <field name="flat_percent" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                <field name="pb1_percent" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                <field name="pb2_percent" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                <field name="sleeve_6_up_percent" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                <field name="sleeve_5_5_up_percent" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                <field name="sleeve_5_5_down_percent" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                <field name="sleeve_5_down_percent" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                <field name="moisture_percent" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+            </xpath>
+
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_post_shipment_form_inherit_india" model="ir.ui.view">
+        <field name="name">view_post_shipment_form_inherit_india</field>
+        <field name="model">post.shipment</field>
+        <field name="inherit_id" ref="sd_sale_contract.view_post_shipment_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='button_approve']" position="after">
+                <button name="print_shipping_advise" string="Shipping Advice" type="object" class="oe_highlight"/>
+                <button name="print_packing_list" string="Packing List" type="object" class="oe_highlight"/>
+            </xpath>
+            <xpath expr="//field[@name='truck_plate']" position="attributes">
+                <attribute name="string">Vessel No</attribute>
+            </xpath>
+            <xpath expr="//field[@name='truck_plate']" position="after">
+                <field name="ioc_lot_number" attrs="{'readonly': [('state', '=', 'approved')]}"/>
+                <field name="shipping_bill_no" attrs="{'readonly': [('state', '=', 'approved')]}"/>
+                <field name="shipping_bill_date" attrs="{'readonly': [('state', '=', 'approved')]}"/>
+                <field name="bl_no" attrs="{'readonly': [('state', '=', 'approved')]}"/>
+                <field name="bl_date" attrs="{'readonly': [('state', '=', 'approved')]}"/>
+            </xpath>
+            <xpath expr="//field[@name='shipping_id']" position="after">
+                <field name="partner_id"/>
+                <field name="address" readonly="1" force_save="1"/>
+                <field name="ship_to"  attrs="{'readonly': [('state', '=', 'approved')]}"/>
+                <field name="address_ship_to"  attrs="{'readonly': [('state', '=', 'approved')]}"/>
+            </xpath>
+<!--            <xpath expr="//field[@name='post_line']/tree/field[@name='shipped_weight']" position="attributes">-->
+<!--                <attribute name="string">Gross Qty (In Kgs)</attribute>-->
+<!--            </xpath>-->
+            <xpath expr="//field[@name='delivery_place_id']" position="attributes">
+                <attribute name="attrs">{'readonly': [('state', '=', 'approved')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='packing_id']" position="attributes">
+                <attribute name="attrs">{'readonly': [('state', '=', 'approved')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='truck_plate']" position="attributes">
+                <attribute name="attrs">{'readonly': [('state', '=', 'approved')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='post_line']" position="attributes">
+                <attribute name="attrs">{'readonly': [('state', '=', 'approved')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='post_line']/tree" position="replace">
+                <tree editable="top">
+                    <field name="do_id"/>
+                    <field name="do_date"/>
+                    <field name="cont_no"/>
+                    <field name="seal_number"/>
+                    <field name="bags" string="No Of Bags"/>
+                    <field name="net_qty"/>
+                    <field name="shipped_weight" string="Gross Qty (In Kgs)"/>
+                </tree>
+            </xpath>
+            <xpath expr="//label[@for='do_id']" position="replace">
+            </xpath>
+            <xpath expr="//div[@name='do_id']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='nvs_nls_id']" position="replace">
+                <label for="nvs_nls_id" string="Sale Contract"/>
+                <div name="nvs_nls_id" class="o_row">
+                    <field name="nvs_nls_id" required="1" attrs="{'readonly': [('state', '=', 'approved')]}" options="{'no_write': True, 'no_create': True}"/>
+                    <button name="button_load" string="Load" type="object" class="btn-default" attrs="{'invisible': [('state', '=', 'approved')]}"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

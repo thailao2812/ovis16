@@ -1,0 +1,28 @@
+version: '2'
+services:
+  web:
+    image: sud16c:latest
+    depends_on:
+      - db
+    ports:
+      - 8069:8069
+      - 8072:8072
+    entrypoint: /opt/odoo/odoo-venv/bin/python3 /opt/odoo/odoo-server/odoo-bin -c /etc/odoo/odoo-prod.conf
+    restart: always
+
+  db:
+    image: postgres:14
+    ports:
+      - 5432:5432
+    shm_size: '2gb'
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_PASSWORD=odoo
+      - POSTGRES_USER=odoo
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - odoo-db-data:/var/lib/postgresql/data/pgdata
+    restart: always
+
+volumes:
+  odoo-db-data:

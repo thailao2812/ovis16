@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_ned_certificate_form_inherit_india" model="ir.ui.view">
+        <field name="name">view_ned_certificate_form_inherit_india</field>
+        <field name="model">ned.certificate</field>
+        <field name="inherit_id" ref="sd_master.view_ned_certificate_form"/>
+        <field name="arch" type="xml">
+			 <xpath expr="//field[@name='active']" position="after">
+            	<field name="sale_premium" required="1" invisible="1"/>
+            	<field name="purchase_premium" required="1" invisible="1"/>
+            </xpath>
+            <xpath expr="//div[@name='premium']" position="replace">
+            </xpath>
+            <xpath expr="//label[@for='premium']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='code']" position="after">
+                <field name="currency_id"/>
+            </xpath>
+
+        </field>
+    </record>
+</odoo>

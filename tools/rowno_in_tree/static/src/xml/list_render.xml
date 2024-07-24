@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template>
+
+   
+
+    <t
+        t-name="rowno_in_tree.AccountListRenderer"
+        t-inherit="account.ListRenderer"
+        t-inherit-mode="extension"
+        owl="1"
+    >
+        <xpath expr="//table/thead/tr/th[@t-if='hasSelectors']" position="before">
+            <th class="align-middle o_column_sortable position-relative"><div class="pound">#</div></th>
+        </xpath>
+        <xpath expr="//div/table/tfoot/tr/td" position="before">
+            <td />
+        </xpath>
+    </t>
+
+    <t t-name="rowno_in_tree.sectionAndNoteListRenderer"
+        t-inherit="account.sectionAndNoteListRenderer"
+        t-inherit-mode="extension"
+        owl="1"
+    >
+        <xpath expr="//table/thead/tr/th[@t-if='hasSelectors']" position="before">
+            <th class="align-middle o_column_sortable position-relative"><div class="pound">#</div></th>
+        </xpath>
+        <xpath expr="//div/table/tfoot/tr/td" position="before">
+            <td />
+        </xpath>
+    </t>
+
+    <t
+        t-name="rowno_in_tree.ListRenderer"
+        t-inherit="web.ListRenderer"
+        t-inherit-mode="extension"
+        owl="1"
+    >
+        <xpath expr="//table/thead/tr/th[@t-if='hasSelectors']" position="before">
+            <th class="align-middle o_column_sortable position-relative"><div class="pound">#</div></th>
+        </xpath>
+        <xpath expr="//div/table/tfoot/tr/td" position="before">
+            <td />
+        </xpath>
+        <!-- THINH override odoo header to have text-align: center -->
+        <xpath expr="//table/thead/tr/t[@t-foreach='state.columns']" position="replace">
+            <t t-foreach="state.columns" t-as="column" t-key="column.id">
+                <th t-if="column.type === 'field'"
+                    t-att-data-name="column.name"
+                    t-att-class="getColumnClass(column) + ' opacity-trigger-hover'"
+                    t-on-mouseenter="ev => this.onHoverSortColumn(ev, column)"
+                    t-on-mouseleave="ev => this.onHoverSortColumn(ev, column)"
+                    t-on-click="() => this.onClickSortColumn(column)"
+                    t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev)"  t-att-data-tooltip-template="isDebugMode ? 'web.FieldTooltip' : false" t-att-data-tooltip-info="isDebugMode ? makeTooltip(column) : false"
+                    tabindex="-1">
+                    <t t-if="column.hasLabel and column.widget !== 'handle'">
+                    <t t-set="isNumeric" t-value="isNumericColumn(column)"/>
+                        <div t-att-class="{'d-flex': true, 'flex-row-reverse': isNumeric}">
+                            <span class="d-block min-w-0 flex-grow-1"
+                                    t-esc="column.label"/>
+                            <i t-att-class="getSortableIconClass(column)"/>
+                        </div>
+                        <span t-if="!isEmpty"
+                                class="o_resize position-absolute top-0 end-0 bottom-0 ps-1 bg-black-25 opacity-0 opacity-50-hover z-index-1"
+                                t-on-mousedown.stop.prevent="onStartResize"/>
+                    </t>
+                </th>
+                <th t-else="" t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev)" t-att-class="{o_list_button: column.type === 'button_group'}"/>
+            </t>
+        </xpath>
+        <!-- THINH add middle align to the toggle button -->
+        <xpath expr="//table/thead/tr/th[@t-if='displayOptionalFields or activeActions.onDelete']" position="replace">
+            <th t-if="displayOptionalFields or activeActions.onDelete" t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev)" class="o_list_controller align-middle o_list_actions_header" style="width: 32px; min-width: 32px">
+                <Dropdown t-if="displayOptionalFields"
+                    class="'o_optional_columns_dropdown text-center border-top-0'"
+                    togglerClass="'btn p-0'"
+                    skipTogglerTabbing="true"
+                    position="'bottom-end'">
+                    <t t-set-slot="toggler">
+                        <i class="o_optional_columns_dropdown_toggle oi oi-fw oi-settings-adjust"/>
+                    </t>
+
+                    <t t-foreach="getOptionalFields" t-as="field" t-key="field_index">
+                        <DropdownItem parentClosingMode="'none'" onSelected="() => this.toggleOptionalField(field.name)">
+                            <CheckBox
+                                onChange="() => this.toggleOptionalField(field.name)"
+                                value="field.value"
+                                name="field.name"
+                            >
+                                <t t-esc="field.label"/> <t t-if="env.debug" t-esc="' (' + field.name + ')'" />
+                            </CheckBox>
+                        </DropdownItem>
+                    </t>
+                </Dropdown>
+            </th>
+        </xpath>
+    </t>
+
+    <t
+        t-name="rowno_in_tree.add_number"
+        t-inherit="web.ListRenderer.Rows"
+        t-inherit-mode="extension"
+        owl="1"
+    >
+        <xpath expr="//t[@t-foreach='list.records']" position="before">
+            <t t-set="RowNumber" t-value="1" />
+        </xpath>
+        <xpath
+            expr="//t[@t-call='{{ constructor.recordRowTemplate }}']"
+            position="after"
+        >
+            <t t-set="RowNumber" t-value="RowNumber+1" />
+        </xpath>
+
+    </t>
+
+    <t
+        t-name="rowno_in_tree.ListRenderer.RecordRowNumber"
+        t-inherit="web.ListRenderer.RecordRow"
+        t-inherit-mode="extension"
+        owl="1"
+    >
+        <xpath expr="//td[@class='o_list_record_selector']" position="before">
+            <td tabindex="-1">
+                <span t-esc="RowNumber" />
+            </td>
+        </xpath>
+    </t>
+
+    
+
+</template>

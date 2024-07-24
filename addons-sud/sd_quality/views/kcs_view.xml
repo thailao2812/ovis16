@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    
+    	<record id="view_degree_mc_tree" model="ir.ui.view">
+            <field name="name">degree.mc.tree</field>
+            <field name="model">degree.mc</field>
+            <field name="arch" type="xml">
+                <tree string="Mold" editable="top">
+                    <field name="mconkett"/>
+                    <field name="deduction"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id="action_view_mconKett" model="ir.actions.act_window">
+            <field name="name">Degree</field>
+            <field name="res_model">degree.mc</field>
+            <field name="view_mode">tree</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+              		Create a MconKett, the first step of a MconKett.
+              </p>
+            </field>
+        </record>
+    	
+    	
+    </data>
+</odoo>

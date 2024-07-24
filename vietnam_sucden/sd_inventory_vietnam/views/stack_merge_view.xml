@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="action_stock_stack_merge" model="ir.actions.act_window">
+            <field name="name">Stacks Merged</field>
+            <field name="res_model">stock.lot</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('merge','=',True), ('product_id.hide_report','=',False)]</field>
+            <field name="context">{'search_default_group_by_product': 1, 'display_complete': True, 'default_company_id': allowed_company_ids[0], 'create': False}</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+              		Create a Stack, the first step of a new Stack.
+              </p>
+            </field>
+        </record>
+
+    <menuitem id="menu_stack_merge" action="action_stock_stack_merge"
+              parent="stock.menu_stock_inventory_control"
+					name="Stack Merge" sequence="55"/>
+</odoo>

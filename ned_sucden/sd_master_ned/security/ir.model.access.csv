@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_import_geojson,access_import_geojson,model_import_geojson,base.group_user,1,1,1,1
+access_line_geojson,access_line_geojson,model_geojson_data,base.group_user,1,1,1,1
+access_partner_multiple_point,access_partner_multiple_point,model_partner_multiple_point,base.group_user,1,1,1,1
+
+access_supplier_master,access_supplier_master,model_supplier_master_data,base.group_user,1,1,1,1

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="wizard_psc_to_sc_link" model="ir.ui.view">
+            <field name="name">wizard_psc_to_sc_link</field>
+            <field name="model">wizard.psc.to.sc.link</field>
+            <field name="arch" type="xml">
+                <form string="PSC to SC Linked">
+                    <sheet>
+			            <group>
+		            		<label for="date_from" string="Date from"/>
+							<div>
+								<field name="date_from" class="oe_inline"/>
+								<span>       </span><span>   Date to</span>
+								<field name="date_to" class="oe_inline ms-3"/>
+							</div>
+							<field name="sale_contract_ids" required="1" widget="many2many_tags" options="{'no_create': true}" domain="[('state', '=', ['approve', 'approve_allocation']), '|', ('p_date', '!=', False), ('p_number', '!=', '')]"/>
+		                </group>
+		                <group>
+
+		                </group>
+		                <footer>
+		                	<button string="Search" name="button_search" type="object" class="oe_highlight"/>
+		                    <button string="Cancel" class="btn-default" special="cancel"/>
+		                </footer>
+	                </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_psc_to_sc_link" model="ir.actions.act_window">
+            <field name="name">PSC to SC Link</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">wizard.psc.to.sc.link</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+
+    </data>
+</odoo>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="delivery_registration_india" model="ir.actions.report">
+	        <field name="name">Delivery Registration</field>
+	        <field name="type">ir.actions.report</field>
+	        <field name="model">ned.security.gate.queue</field>
+	        <field name="binding_model_id" ref="sd_security_gate.model_ned_security_gate_queue"/>
+	        <field name="report_name">delivery_registration_india</field>
+	        <field name="report_type">aeroo</field>
+	        <field name="in_format">oo-odt</field>
+	        <field name="out_format" model="report.mimetypes" search="[('code','=','oo-pdf'),('compatible_types','=','oo-odt')]"/>
+	        <field name="preview">True</field>
+	        <field name="parser_state">loc</field>
+	        <field name="parser_loc">sd_india_security_gate/report/report_delivery_registration_parse.py</field>
+	        <field name="report_file">sd_india_security_gate/report/report_delivery_registration.odt</field>
+	        <field name="tml_source">file</field>
+	        <field name="print_report_name">(object._get_printed_report_name())</field>
+    </record>
+</odoo>

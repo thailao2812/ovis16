@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_picking_type_form_inherit_sucden_inherit_india" model="ir.ui.view">
+            <field name="name">view_picking_type_form_inherit_sucden_inherit_india</field>
+            <field name="model">stock.picking.type</field>
+            <field name="inherit_id" ref="sd_inventory.view_picking_type_form_inherit_sucden"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='operation']" position="after">
+            	    <field name="bag_transfer"/>
+                </xpath>
+            </field>
+
+
+    </record>
+    <record id="sd_inventory.action_gdns_good" model="ir.actions.act_window">
+            <field name="context">{'warehouse_receipt': True, 'gdn_out': True}</field>
+        </record>
+</odoo>

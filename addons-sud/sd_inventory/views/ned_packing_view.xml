@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	   <data>
+        <record id="view_ned_packing_tree" model="ir.ui.view">
+            <field name="name">view.ned.packing.tree</field>
+            <field name="model">ned.packing</field>
+            <field eval="100" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Pallets Management" default_order="id desc" decoration-info="active == 'true'" decoration-muted="active == 'false'">
+                	 <field name="warehouse_id"/>
+                	<field name="name"/>
+                	<field name="create_uid"/>
+                    <field name="create_date"/>
+                    <field name="vn_description"/>
+                    <field name="tare_weight"/>
+                    <field name="active"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id="view_ned_packing_form" model="ir.ui.view">
+            <field name="name">view.ned.packing.form</field>
+            <field name="model">ned.packing</field>
+            <field eval="100" name="priority"/>
+            <field name="arch" type="xml">
+                <form string="Pallets Management">
+                	<header>
+	                    <!-- <button name="button_approve" type="object" states='draft' string="Approve" class="oe_highlight"/> -->
+                        <button name="button_done" type="object" states='approved' string="Done" class="oe_highlight"/>
+	                    <!-- <field name="state" widget="statusbar" statusbar_visible="draft,approved,done"/> -->
+	                </header>
+	                <sheet>
+		                <div class="oe_title">
+	                        <h1>
+	                            <field name="name" readonly="1"/>
+	                        </h1>
+	                    </div>
+	                    <group>
+	                  
+		                    <group col="4">
+								<field name="warehouse_id"  required="1" attrs="{'readonly': [('active', 'in', ['true', 'false'])]}"/>
+			                    <field name="picking_type_id" required="1" domain="[('warehouse_id','=',warehouse_id),('code','in',['material_in','material_out'])]"  attrs="{'readonly': [('state', 'in', ['done', 'cancel'])]}"/>
+			                    <field name="location_id" required="1" attrs="{'readonly': [('state', 'in', ['done', 'cancel'])]}"/>
+			                    <field name="location_dest_id" required="1" attrs="{'readonly': [('state', 'in', ['done', 'cancel'])]}"/>
+								
+							</group>
+		                    <group col="4">
+	                            <field name="user_id"/>
+	                            <field name="request_date"/>
+	                            <field name="type" required="1" invisible="1"/>
+	                            <field name="picking_id" readonly="1"/>
+		                    </group>
+	                      </group>
+	                    <notebook>
+	                    	<page string="Products" name="product">
+	                    		<field name="request_line_ids">
+	                    			<tree editable="top">
+	                    				<field name="product_id" required="1" domain="[('type','=','consu')]"/>
+                                        <field name="name"/>
+	                    				<field name="product_uom" required="1"/>
+	                    				<field name="product_qty" string="Request Qty" sum="product_qty"/>
+	                    			</tree>
+	                    			<form>
+	                    				<header>
+	                    					<field name="state" widget="statusbar" statusbar_visible="draft,cancel"/>
+	                    				</header>
+	                    				<sheet>
+	                    					<group col="4">
+		                    					<field name="request_id"/>
+		                    					<field name="product_id" required="1"/>
+			                    				<field name="product_uom" required="1"/>
+			                    				<field name="product_qty"/>
+		                    				</group>
+		                    				<newline/>
+	                    				</sheet>
+	                    			</form>
+	                    		</field>
+	                    		<field name="notes" class="oe_inline" placeholder="Description"/>
+	                    	</page>
+                    	</notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        
+        
+        <record id="action_ned_packing" model="ir.actions.act_window">
+            <field name="name">Request Other Material</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ned.packing</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+            <field name="search_view_id"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Create a Request Other Materials, the first step of a new Request Materials.
+                </p>
+            </field>
+        </record>
+        
+        <record model="ir.actions.act_window.view" id="action_ned_packing_tree">
+            <field name="sequence" eval="50"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_ned_packing_tree"/>
+            <field name="act_window_id" ref="action_ned_packing"/>
+        </record>
+        
+        <record model="ir.actions.act_window.view" id="action_ned_packing_form">
+            <field name="sequence" eval="51"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_ned_packing_form"/>
+            <field name="act_window_id" ref="action_ned_packing"/>
+        </record>
+        <!--
+        
+		<menuitem action="action_ned_packing" id="menu_action_ned_packing" 
+        	parent="mrp.menu_mrp_manufacturing" sequence="1500"/>
+		-->
+        
+    </data>
+</odoo>

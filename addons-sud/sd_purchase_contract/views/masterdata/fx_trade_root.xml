@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <record id="view_fx_trade_tree" model="ir.ui.view">
+            <field name="name">view_fx_trade_tree</field>
+            <field name="model">fx.trade.root</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="effective_date"/>
+                    <field name="end_date"/>
+                    <field name="state"/>
+                </tree>
+             </field>
+        </record>
+
+        <record id="view_fx_trade_form" model="ir.ui.view">
+	      <field name="name">view_fx_trade_form</field>
+			<field name="model">fx.trade.root</field>
+			<field name="arch" type="xml">
+	        <form>
+                <header>
+                        <button string="Stop Configuration" type="object" name="action_stop_config" class="oe_highlight" states="run"/>
+                        <field name="state" widget="statusbar"/>
+                </header>
+	        	<sheet>
+                    <h1>
+                        <field name="name" readonly="1"/>
+                    </h1>
+                    <group>
+                        <group>
+                            <field name="effective_date" required="1"/>
+                            <field name="end_date" attrs="{'invisible': [('end_date', '=', False)], 'readonly': [('state', '=', 'stop')]}"/>
+                            </group>
+                        <group>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="FX Configuration" name="fx_trade">
+                            <field name="fx_trade_line_ids">
+                                <tree editable="bottom">
+                                    <field name="location_id" required="1"/>
+                                    <field name="delivery_team_id"/>
+                                    <field name="t_cost_factory"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+				</sheet>
+    		</form>
+	      </field>
+	    </record>
+	    
+	    <record model="ir.actions.act_window" id="action_fx_trade">
+            <field name="name">FX</field>
+            <field name="res_model">fx.trade.root</field>
+            <field name="view_mode">tree,form</field>
+        <!--    <field name="search_view_id" ref="sale_contract_search"/>  -->
+            <field name="context">{}
+            </field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a fix trade, the first step of a new Trade.
+                </p><p>
+                </p>
+            </field>
+        </record>
+        
+        
+    </data>
+</odoo>

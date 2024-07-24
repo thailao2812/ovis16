@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_cron_form_inherit_reach" model="ir.ui.view">
+            <field name="name">view_cron_form_inherit_reach</field>
+            <field name="model">ir.cron</field>
+            <field name="inherit_id" ref="base.ir_cron_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='priority']" position="after">
+                    <field name="is_api_reach"/>
+                    <field name="number_of_retries" />
+                </xpath>
+<!--                <xpath expr="//field[@name='args']/.." position="attributes">-->
+<!--                    <attribute name="groups">base.group_no_one,api_restful.group_api_synchronize_data_user</attribute>-->
+<!--                </xpath>-->
+            </field>
+        </record>
+
+        <record id="ir_cron_act_inherit_reach" model="ir.actions.act_window">
+            <field name="name">Scheduled Actions</field>
+            <field name="res_model">ir.cron</field>
+<!--            <field name="view_type">form</field>-->
+            <field name="view_mode">tree,form,calendar</field>
+            <field name="context">{'active_test': False, 'default_is_api_reach': True}</field>
+            <field name="domain">[('is_api_reach', '!=', False)]</field>
+        </record>
+
+    </data>
+</openerp>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_stock_kcs_form_inherit_india_gate_security" model="ir.ui.view">
+        <field name="name">view_stock_kcs_form_inherit_india_gate_security</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="sd_quality.view_stock_kcs_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="attributes">
+                <attribute name="groups">sd_india_security_gate.allow_to_see_field_supplier</attribute>
+            </xpath>
+        </field>
+    </record>
+    <record id="view_stock_kcs_tree_inherit_india_gate_security" model="ir.ui.view">
+        <field name="name">view_stock_kcs_tree_inherit_india_gate_security</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="sd_quality.view_stock_kcs_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="quality_slip_no"/>
+                <field name="vehicle_no"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="vpicktree_inherit_add_total_qty_inherit_india_gate_security_adding_quality_slip_no" model="ir.ui.view">
+        <field name="name">vpicktree_inherit_add_total_qty_inherit_india_gate_security_adding_quality_slip_no</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="sd_inventory.vpicktree_inherit_add_total_qty"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="quality_slip_no"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="group_edit_ned_packing" model="res.groups">
+        <field name="name">Packing List India</field>
+    </record>
+</odoo>

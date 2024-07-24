@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="report_stack_merge" model="ir.actions.report">
+	        <field name="name">Report Stack Merge</field>
+	        <field name="type">ir.actions.report</field>
+	        <field name="model">wizard.report.stack.merge</field>
+	        <field name="binding_model_id" ref="sd_inventory_vietnam.model_wizard_report_stack_merge"/>
+	        <field name="report_name">report_stack_merge</field>
+	        <field name="report_type">aeroo</field>
+	        <field name="in_format">oo-odt</field>
+	        <field name="out_format" model="report.mimetypes" search="[('code','=','oo-xls'),('compatible_types','=','oo-ods')]"/>
+	        <field name="preview">True</field>
+	        <field name="parser_state">loc</field>
+	        <field name="parser_loc">sd_inventory_vietnam/report/report_stack_merge_parse.py</field>
+	        <field name="report_file">sd_inventory_vietnam/report/report_stack_merge.ods</field>
+	        <field name="tml_source">file</field>
+	        <field name="print_report_name">'Report Stack Merge'</field>
+    </record>
+</odoo>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+    
+        <record id="stock_sack_seq" model="ir.sequence">
+            <field name="name">Stack</field>
+            <field name="code">stock.sack.seq</field>
+            <field name="prefix">STACK-%(y)s-</field>
+            <field name="padding">5</field>
+            <field name="suffix"></field>
+            <field name="company_id" eval="False"/>
+        </record>
+        
+        <record id="stock_sack_hopper_seq" model="ir.sequence">
+            <field name="name">Stock Stack Hopper Seq</field>
+            <field name="code">stock.stack.hopper.seq</field>
+            <field name="prefix">HP-%(y)s-</field>
+            <field name="padding">4</field>
+            <field name="suffix"></field>
+            <field name="company_id" eval="False"/>
+        </record>
+        
+        <record id="stock_sack_wip_seq" model="ir.sequence">
+            <field name="name">Stock Stack Wip Seq</field>
+            <field name="code">stock.stack.wip.seq</field>
+            <field name="prefix">WIP-%(y)s-</field>
+            <field name="padding">4</field>
+            <field name="suffix"></field>
+            <field name="company_id" eval="False"/>
+        </record>
+        
+         <!-- Request Materials -->
+        <record id="seq_request_materials" model="ir.sequence">
+            <field name="name">Request Materials</field>
+            <field name="code">request.materials</field>
+            <field name="prefix">PMR-%(y)s-</field>
+            <field name="padding">5</field>
+            <field name="suffix"></field>
+            <field name="company_id" eval="False"/>
+        </record>
+        
+         <record id="seq_request_stock_material" model="ir.sequence">
+            <field name="name">Request Stock Material Sequence</field>
+            <field name="code">request.stock.material</field>
+            <field name="prefix">RM-%(y)s%(month)s</field>
+            <field name="padding">2</field>
+            <field name="suffix"></field>
+            <field name="company_id" eval="False"/>
+        </record>
+        
+        
+    </data>
+</odoo>

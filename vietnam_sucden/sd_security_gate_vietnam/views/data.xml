@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="coffee_inside" model="status.goods.name">
+        <field name="name">Hàng trong khuôn viên kho của Sucden coffee.
+The coffee is inside Sucdencoffee’s facility</field>
+        <field name="code">1</field>
+        <field name="payment_percent">70</field>
+    </record>
+    <record id="coffee_load_80" model="status.goods.name">
+        <field name="name">Nhận tai kho khách hàng, đã lên xe của Sucden Cofffee.
+The coffee is loaded into trucks of  SCVN at Supplier WH</field>
+        <field name="code">2</field>
+        <field name="payment_percent">80</field>
+    </record>
+    <record id="coffee_received_net" model="status.goods.name">
+        <field name="name">Hàng nhận tại kho, có số Net.
+The coffee is received and have Net weight</field>
+        <field name="code">3</field>
+        <field name="payment_percent">90</field>
+    </record>
+    <record id="coffee_received_basic" model="status.goods.name">
+        <field name="name">Hàng nhận tại kho, có số Basic
+The coffee is received and have basic weight</field>
+        <field name="code">4</field>
+        <field name="payment_percent">100</field>
+    </record>
+    <record id="coffee_load_100" model="status.goods.name">
+        <field name="name">Nhận tai kho khách hàng, đã lên xe của Sucden Coffee
+The coffee is loaded into trucks of  SCVN at Supplier WH</field>
+        <field name="code">5</field>
+        <field name="payment_percent">100</field>
+    </record>
+
+    <record id="coffee_load_section_1" model="status.goods.name">
+        <field name="name">Hàng chưa chốt chất lương
+Not yet finalized quality</field>
+        <field name="code">10</field>
+    </record>
+    <record id="coffee_load_section_2" model="status.goods.name">
+        <field name="name">Hàng đã có chất lượng
+Finalized quality</field>
+        <field name="code">11</field>
+    </record>
+
+    <record id="group_request_payment_seeing_money_value" model="res.groups">
+            <field name="name">Request Payment Seeing Money Value</field>
+        </record>
+
+    <record id="group_request_payment" model="res.groups">
+            <field name="name">Request Payment</field>
+        </record>
+
+    <record id="group_security_request_payment" model="res.groups">
+            <field name="name">Security Payment</field>
+        </record>
+
+    <record id="group_confirm_request_payment" model="res.groups">
+            <field name="name">Confirm Request Payment</field>
+        </record>
+    <record id="group_approve_1st_accounting_request_payment" model="res.groups">
+            <field name="name">Approve 1st Accounting Request Payment</field>
+        </record>
+    <record id="group_approve_2st_accounting_request_payment" model="res.groups">
+            <field name="name">Approve 2st Accounting Request Payment</field>
+        </record>
+    <record id="group_director_request_payment" model="res.groups">
+            <field name="name">Approve Director Request Payment</field>
+        </record>
+    <record id="group_payment_request_payment" model="res.groups">
+            <field name="name">Payment Request Payment</field>
+        </record>
+</odoo>
