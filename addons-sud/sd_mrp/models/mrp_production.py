@@ -43,16 +43,15 @@ class MrpProduction(models.Model):
             self.state = 'draft'
         else:
             raise UserError(_('This Manufacturing Order have had GIP or GRP already. You can not set to draft!!!'))
-            
-    
+
     def action_cancel(self):
         """ Kiểm tra các điều kiện rùi cập nhật trạng thái cancel """
         if self.state == 'done':
-            raise UserError(_('Lệnh sản Xuất đã được hoàn thành'))
-        #Trường hợp đã tạo git rùi thì ko có tạo phiếu Cancel
+            raise UserError(_('The Other is Done, cannot cancel'))
+        # Trường hợp đã tạo git rùi thì ko có tạo phiếu Cancel
         if self.request_count > 0:
-            raise UserError(_('Đã Có phiếu Request material, Không được Cancel Lệnh sản Xuất'))
-        
+            raise UserError(_('You have Request Material for this MO, cannot Cancel it!'))
+
         self.state = 'cancel'
         # self._action_cancel()
         return True
