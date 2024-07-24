@@ -28,7 +28,7 @@ services:
       ODOO_DB_NAME: odoo
     volumes:
       - odoo_data:/var/lib/odoo
-      - /opt/sud16c:/opt/avis16
+      - /opt/ovis16:/opt/avis16
 
 volumes:
   db_data:
