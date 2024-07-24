@@ -27,7 +27,7 @@ class StockPicking(models.Model):
     def action_cancel(self):
         """ Kiểm tra các điều kiện rùi cập nhật trạng thái cancel """
         if self.state_kcs == 'draft' and self.picking_type_id.code in ('production_in'):
-            raise UserError(_('Qc chưa đánh giá chất lượng, Không cho phép Cancel phiếu khokho'))
+            raise UserError(_('QC have not done yet, cannot cancel this!'))
         #Trường hợp đã tạo git rùi thì ko có tạo phiếu Cancel
         
         return super(StockPicking, self).action_cancel()
