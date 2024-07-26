@@ -468,8 +468,8 @@
     </record>
 
 
-    <record id="vview_ptbf_contract_form_inherit_security_gate_vietnam" model="ir.ui.view">
-        <field name="name">vview_ptbf_contract_form_inherit_security_gate_vietnam</field>
+    <record id="view_ptbf_contract_form_inherit_security_gate_vietnam" model="ir.ui.view">
+        <field name="name">view_ptbf_contract_form_inherit_security_gate_vietnam</field>
         <field name="model">purchase.contract</field>
         <field name="inherit_id" ref="sd_contract_vietnam.view_ptbf_contract_form_inherit_vietnam"/>
         <field name="arch" type="xml">
@@ -500,7 +500,7 @@
                         <group>
                             <field name="type_of_ptbf_payment" required="1"/>
                             <field name="price_tobe_fix" domain="[('contract_id', '=', parent_id_purchase_contract)]" attrs="{'required': [('type_of_ptbf_payment', 'in', ['fixation'])], 'invisible': [('type_of_ptbf_payment', '!=', 'fixation')]}"/>
-                            <field name="fixation_advance_id" />
+
                             <field name="partner_id" readonly="1"/>
                             <field name="product_id" invisible="1"/>
                             <field name="purchase_contract_id" readonly="1"/>

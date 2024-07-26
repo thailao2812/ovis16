@@ -16,6 +16,21 @@
                     <xpath expr="//field[@name='partner_id']" position="after">
                         <field name="state_id"/>
                     </xpath>
+                    <xpath expr="//field[@name='name']" position="attributes">
+                        <attribute name="attrs">{'readonly': [('state','!=','draft')]}</attribute>
+                    </xpath>
+                    <xpath expr="//field[@name='partner_id']" position="attributes">
+                        <attribute name="attrs">{'readonly': [('state','!=','draft')]}</attribute>
+                    </xpath>
+                    <xpath expr="//field[@name='certificate_id']" position="attributes">
+                        <attribute name="attrs">{'readonly': [('state','!=','draft')]}</attribute>
+                    </xpath>
+                    <xpath expr="//button[@name='validate_license']" position="after">
+                        <button name="button_approve" string="Approve" type="object" class="oe_highlight" states="draft"/>
+                    </xpath>
+                    <xpath expr="//button[@name='validate_license']" position="attributes">
+                        <attribute name="attrs">{'invisible': [('state','!=','approve')]}</attribute>
+                    </xpath>
 
 		        </field>
 		    </record>

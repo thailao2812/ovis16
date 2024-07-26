@@ -9,6 +9,9 @@
                         <field name="warehouse_id"/>
                         <field name="date_etd"/>
 					</xpath>
+					<xpath expr="//field[@name='license_allocation_ids']/tree/field[@name='license_id']" position="attributes">
+                         <attribute name="domain">[('state', '=', 'active')]</attribute>
+					</xpath>
 					<xpath expr="//field[@name='prodcompleted']" position="after">
 						<field name="process_state"/>
 					</xpath>

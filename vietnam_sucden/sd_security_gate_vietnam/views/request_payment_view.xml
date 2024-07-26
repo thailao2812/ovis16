@@ -46,6 +46,7 @@
                     <group>
                         <group>
                             <field name="is_dr_request" invisible="1"/>
+                            <field name="type_of_ptbf_payment" invisible="1"/>
                             <field name="partner_id" readonly="1"/>
                             <field name="product_id" invisible="1"/>
                             <field name="purchase_contract_id" readonly="1"/>
@@ -68,6 +69,50 @@
                             <field name="name" readonly="1"/>
                             <field name="currency_id" readonly="1"/>
                             <field name="date"/>
+                        </group>
+                    </group>
+                    <separator string="Fixation Information" attrs="{'invisible': ['|', ('type_of_ptbf_payment', '!=', 'fixation'), ('type', '!=', 'ptbf')]}"/>
+                    <group attrs="{'invisible': ['|', ('type_of_ptbf_payment', '!=', 'fixation'), ('type', '!=', 'ptbf')]}">
+                        <group>
+                            <field name="payment_quantity"/>
+                            <field name="price_usd"/>
+                            <field name="price_diff"/>
+                            <field name="final_price_usd"/>
+                            <field name="rate"/>
+                            <field name="final_price_vnd"/>
+                            <field name="request_amount"/>
+                        </group>
+                    </group>
+                    <separator string="Advance Information" attrs="{'invisible': ['|', ('type_of_ptbf_payment', '!=', 'advance'), ('type', '!=', 'ptbf')]}"/>
+                    <group attrs="{'invisible': ['|', ('type_of_ptbf_payment', '!=', 'advance'), ('type', '!=', 'ptbf')]}">
+                        <group>
+                            <field name="quantity_advance"/>
+                            <field name="liffe_price"/>
+                            <field name="price_diff"/>
+                            <field name="differencial_price"/>
+                            <field name="advance_price_usd"/>
+                            <field name="total_advance_payment_usd"/>
+                            <field name="rate"/>
+                            <field name="advance_price_vnd"/>
+                        </group>
+                    </group>
+                    <separator string="Fixation For Advance" attrs="{'invisible': ['|', ('type_of_ptbf_payment', '!=', 'advance'), ('type', '!=', 'ptbf')]}"/>
+                    <group attrs="{'invisible': ['|', ('type_of_ptbf_payment', '!=', 'advance'), ('type', '!=', 'ptbf')]}">
+                        <group>
+                            <field name="fixation_advance_ids" domain="[('purchase_contract_id', '=', parent_id_purchase_contract)]"
+                                   attrs="{'required': [('type_of_ptbf_payment', 'in', ['fixation_advance'])], 'invisible': [('type_of_ptbf_payment', '!=', 'fixation_advance')]}">
+                                <tree editable="top">
+                                    <field name="name"/>
+                                    <field name="quantity_advance"/>
+                                    <field name="remain_qty_advance"/>
+                                    <field name="quantity_fix_advance"/>
+                                </tree>
+                            </field>
+                            <field name="qty_advance_fix" readonly="1"/>
+                            <field name="price_usd"/>
+                            <field name="price_diff"/>
+                            <field name="final_price_usd"/>
+                            <field name="rate"/>
                         </group>
                     </group>
                     <separator string="Payment Information"/>
