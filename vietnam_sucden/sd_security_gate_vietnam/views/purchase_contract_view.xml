@@ -495,11 +495,12 @@
                         <button name="request_payment" string="Request" type="object" class="oe_highlight" states="draft" groups="sd_security_gate_vietnam.group_request_payment"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,request,security,purchasing,approved,accounting_2,approved_director,paid"/>
                     </header>
-                    <separator string="Contract Information123"/>
+                    <separator string="Contract Information"/>
                     <group>
                         <group>
-                            <field name="type_of_ptbf_payment" required="1"/>
-                            <field name="price_tobe_fix" domain="[('contract_id', '=', parent_id_purchase_contract)]" attrs="{'required': [('type_of_ptbf_payment', 'in', ['fixation'])], 'invisible': [('type_of_ptbf_payment', '!=', 'fixation')]}"/>
+                            <field name="type_of_ptbf_payment" invisible="1"/>
+<!--                            <field name="price_tobe_fix" domain="[('contract_id', '=', parent_id_purchase_contract)]" attrs="{'required': [('type_of_ptbf_payment', 'in', ['fixation'])], 'invisible': [('type_of_ptbf_payment', '!=', 'fixation')]}"/>-->
+                            <field name="price_tobe_fix" invisible="1"/>
 
                             <field name="partner_id" readonly="1"/>
                             <field name="product_id" invisible="1"/>
