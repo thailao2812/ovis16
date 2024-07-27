@@ -29,6 +29,19 @@ class NedCertificateLicense(models.Model):
     total_position = fields.Float(string='Total Position', compute='_compute_total_allocated_amount', store=True )
     state_id = fields.Many2one('res.country.state', string='Province')
 
+    state = fields.Selection(
+        [('draft', 'Draft'),
+         ('approve', 'Approve'),
+         ('active', 'Active'),
+         ('expired', 'Expired'),
+         ('deactive', 'Deactive'),
+         ('transfered', 'Transfered')],
+        string="Status", default='draft')
+
+    def button_approve(self):
+        for rec in self:
+            rec.state ='approve'
+
     @api.depends('shipping_instruction_allocation_ids.allocation_qty', 'shipping_instruction_allocation_ids',
                  'sales_allocation_ids', 'sales_allocation_ids.allocation_qty',
                  'shipping_instruction_allocation_ids.state', 'g1_s16_initial', 'g1_s18_initial', 'g2_initial')

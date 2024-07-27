@@ -92,7 +92,7 @@ class RequestPayment(models.Model):
     remain_qty_advance = fields.Integer(string='Remain Qty Advance')
 
     # PTBF Field for fixation for advance
-    fixation_advance_ids = fields.Many2many('request.payment', 'request_payment_advance_payment_rel', string='Fixation For Advance No.')
+    fixation_advance_ids = fields.Many2many('request.payment', 'request_payment_advance_payment_rel', 'request_main_id', 'request_second_id', string='Fixation For Advance No.')
     qty_advance_fix = fields.Integer(string='Fix Quantity', compute='compute_total_qty', store=True)
     total_amount_usd = fields.Float(string='Total Amount USD', compute='compute_price', store=True, digits=(12, 0))
 
