@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="sd_sale_contract.view_delivery_order_tree"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='shipped_weight']" position="attributes">
-                <attribute name="string">Post Shipment Weight123</attribute>
+                <attribute name="string">Post Shipment Weight</attribute>
             </xpath>
             <xpath expr="//field[@name='bags']" position="attributes">
                 <attribute name="invisible">1</attribute>
