@@ -461,3 +461,33 @@ class MasterDataApiService(Component):
         for p in self.env["res.users"].search(domain):
             res.append(UserShortInfo(id=p.id, name=p.partner_id.name, email=p.login))
         return res
+
+### SQL EXECUTE QUERY ###
+    def _input_execute_query_schema(self):
+        return {"exe_query": {"type": "string"}}
+        
+    def _output_execute_query_schema(self):
+        return {
+                'status_code': {"type": "string"},
+                'message': {"type": "string"},
+                }
+
+    @restapi.method(
+        [(["/execute_query"], "POST")],
+        input_param=restapi.CerberusValidator("_input_execute_query_schema"),
+        output_param=restapi.CerberusValidator("_output_execute_query_schema"),
+        auth="api_key",
+    )
+
+    def execute_query(self, **params):
+        exe_query = params.get('exe_query')
+        records = request.cr.execute(exe_query)
+        result = request.env.cr.dictfetchall()
+        if result == []:
+            mess = {
+                    'status_code': "SUD23-204",
+                    'message': 'Record does not exist.',
+                    }
+            return mess
+        else:
+            return records
