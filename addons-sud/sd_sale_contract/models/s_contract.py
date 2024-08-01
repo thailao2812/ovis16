@@ -782,6 +782,8 @@ class SContract(models.Model):
                         self.certificated_ids = [(6, 0, another_certificate.ids)]
                     else:
                         self.certificated_ids = [(6, 0, line.certificate_id.ids)]
+                else:
+                    self.certificated_ids = [(5, 0)]
 
     qty_allocated = fields.Float(string='Allocated (Kg)', compute='_compute_allocated')
     bag_allocated = fields.Float(string='Allocated Bag No.', compute='_compute_allocated')
