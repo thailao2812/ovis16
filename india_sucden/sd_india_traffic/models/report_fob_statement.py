@@ -33,3 +33,4 @@ class ReportFOBStatement(models.Model):
     contract_price = fields.Float(string='Contract Price')
     currency_uom_2nd = fields.Char(string='Currency / UOM')
     differential = fields.Float(string='Differential')
+    market_month = fields.Many2one('s.period', string='Market Month')

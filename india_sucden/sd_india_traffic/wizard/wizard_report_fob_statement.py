@@ -23,6 +23,7 @@ class WizardReportFobStatement(models.TransientModel):
             for sale in self.sale_contract_ids:
                 for line in sale.line_purchase_ids:
                     fob_value = forex = farm_gate = market_price = 0
+                    market_month = False
                     if line.outturn / 100 == 0:
                         green_coffee = 0
                     else:
@@ -32,6 +33,7 @@ class WizardReportFobStatement(models.TransientModel):
                         forex = line.purchase_contract_id.fob_management_id.forex_rate_inr
                         farm_gate = line.purchase_contract_id.fob_management_id.price
                         market_price = line.purchase_contract_id.fob_management_id.market_price
+                        market_month = line.purchase_contract_id.fob_management_id.market_month and line.purchase_contract_id.fob_management_id.market_month.id or False
                     value_usd = (fob_value * green_coffee) / 1000
                     sale_value = fob_value * (green_coffee/1000) * forex
                     value_raw_coffee = (farm_gate/50) * green_coffee
@@ -65,6 +67,7 @@ class WizardReportFobStatement(models.TransientModel):
                         'currency_uom_fob': 'USD / MT',
                         'contract_price': 0,
                         'currency_uom_2nd': False,
+                        'market_month': market_month,
                         'differential': line.purchase_contract_id.differential_india
                     }
                     self.env['report.fob.statement'].create(value)
@@ -87,6 +90,7 @@ class WizardReportFobStatement(models.TransientModel):
             for sale in sale_contract:
                 for line in sale.line_purchase_ids:
                     fob_value = forex = farm_gate = market_price = 0
+                    market_month = False
                     if line.outturn / 100 == 0:
                         green_coffee = 0
                     else:
@@ -96,6 +100,7 @@ class WizardReportFobStatement(models.TransientModel):
                         forex = line.purchase_contract_id.fob_management_id.forex_rate_inr
                         farm_gate = line.purchase_contract_id.fob_management_id.price
                         market_price = line.purchase_contract_id.fob_management_id.market_price
+                        market_month = line.purchase_contract_id.fob_management_id.market_month and line.purchase_contract_id.fob_management_id.market_month.id or False
                     value_usd = (fob_value * green_coffee) / 1000
                     sale_value = fob_value * (green_coffee / 1000) * forex
                     value_raw_coffee = (farm_gate / 50) * green_coffee
@@ -129,6 +134,7 @@ class WizardReportFobStatement(models.TransientModel):
                         'currency_uom_fob': 'USD / MT',
                         'contract_price': 0,
                         'currency_uom_2nd': False,
+                        'market_month': market_month,
                         'differential': line.purchase_contract_id.differential_india
                     }
                     self.env['report.fob.statement'].create(value)

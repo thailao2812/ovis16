@@ -46,6 +46,10 @@ class PurchaseContract(models.Model):
                 raise UserError(_("You have to select FOB Number!"))
             record.state_fob = 'submit'
 
+    def button_reset_submit_fob_link(self):
+        for record in self:
+            record.state_fob = 'draft'
+
     @api.onchange('certificate_id')
     def onchange_certificate_id(self):
         for rec in self:

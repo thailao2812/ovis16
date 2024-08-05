@@ -29,6 +29,7 @@
                     <field name="margin_per_mt"/>
                     <field name="market_price"/>
                     <field name="currency_uom_fob"/>
+                    <field name="market_month"/>
 <!--                    <field name="contract_price"/>-->
 <!--                    <field name="currency_uom_2nd"/>-->
                     <field name="differential"/>
