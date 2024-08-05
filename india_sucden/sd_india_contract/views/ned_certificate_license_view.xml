@@ -23,6 +23,7 @@
                         <field name="crop_id"/>
                         <field name="partner_id"/>
                         <field name="estate_name"/>
+                        <field name="certification_date"/>
                         <field name="expired_date"/>
                         <field name="remark_cert"/>
                         <field name="state"/>
