@@ -9,6 +9,7 @@
                 	<field name="fob_date"/>
                 	<field name="exchange"/>
                 	<field name="market_id"/>
+                	<field name="market_month"/>
                 	<field name="forex_rate_inr"/>
                 	<field name="fob"/>
                 	<field name="fob_usd"/>
@@ -58,6 +59,7 @@
                                 <field name="farm_gate_price_1st" readonly="1"/>
                                 <field name="farm_gate_price_2nd" readonly="1"/>
                                 <field name="price" readonly="1"/>
+                                <field name="market_month" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                 		    </group>
                         </group>
 
