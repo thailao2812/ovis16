@@ -91,11 +91,16 @@ class ImportGeoJson(models.Model):
                 geometry = feature.get('geometry', {})
                 if geometry.get('type') in ['Polygon', 'MultiPolygon']:
                     coordinates = False
+                    less_4_point = False
                     if geometry.get('type') == 'Polygon':
                         coordinates = geometry.get('coordinates', [])[0]
                     if geometry.get('type') == 'MultiPolygon':
                         coordinates = geometry.get('coordinates', [])[0][0]
                     count_polygon += 1
+
+                    if len(coordinates) < 4:
+                        less_4_point = True
+
 
                     # Chuyển đổi tọa độ thành polygon shapely
                     new_polygon = Polygon([(coord[0], coord[1]) for coord in coordinates])
@@ -130,6 +135,15 @@ class ImportGeoJson(models.Model):
                             check_decimal = True
                             continue
                         paths.append({"lat": lat, "lng": lng})
+                    if less_4_point:
+                        self.env['geojson.data'].create({
+                            'name': 'Polygon number %s' % str(count_polygon),
+                            'type': 'polygon',
+                            'points_check': True,
+                            'state_check': 'red',
+                            'import_id': self.id
+                        })
+                        continue
                     if not paths:
                         self.env['geojson.data'].create({
                             'name': 'Polygon number %s' % str(count_polygon),
@@ -240,17 +254,22 @@ class ImportGeoJson(models.Model):
                         'import_id': self.id
                     })
                     self.count_point += 1
-            if duplicate_count > 0:
-                mess += "We have %s Polygon that have the same data that already stored in database, in your file, please check again!<br/>" % duplicate_count
-            if duplicate_point_count > 0:
-                mess += "We have %s Point that have the same data that already stored in database, in your file, please check again!<br/>" % duplicate_point_count
-            if partial_duplicate_count > 0:
-                mess += "We have %s Polygon that contains points already stored in the database. Please check again!<br/>" % partial_duplicate_count
-                for i, percentage in enumerate(partial_duplicate_percentage_list, 1):
-                    mess += "Polygon %s contains %.2f%% points already stored in the database.<br/>" % (i, percentage)
-            if mess:
-                self.message_post(body=mess)
-            if any(self.line_ids.mapped('is_duplicate_partial')) or any(self.line_ids.mapped('is_overlapping')) or any(self.line_ids.mapped('is_unclose')) or any(self.line_ids.mapped('missing_geometry')) or any(self.line_ids.mapped('decimal_precision')):
+            # if duplicate_count > 0:
+            #     mess += "We have %s Polygon that have the same data that already stored in database, in your file, please check again!<br/>" % duplicate_count
+            # if duplicate_point_count > 0:
+            #     mess += "We have %s Point that have the same data that already stored in database, in your file, please check again!<br/>" % duplicate_point_count
+            # if partial_duplicate_count > 0:
+            #     mess += "We have %s Polygon that contains points already stored in the database. Please check again!<br/>" % partial_duplicate_count
+            #     for i, percentage in enumerate(partial_duplicate_percentage_list, 1):
+            #         mess += "Polygon %s contains %.2f%% points already stored in the database.<br/>" % (i, percentage)
+            # if mess:
+            #     self.message_post(body=mess)
+            if (any(self.line_ids.mapped('is_duplicate_partial'))
+                    or any(self.line_ids.mapped('is_overlapping'))
+                    or any(self.line_ids.mapped('is_unclose'))
+                    or any(self.line_ids.mapped('missing_geometry'))
+                    or any(self.line_ids.mapped('decimal_precision'))
+                    or any(self.line_ids.mapped('points_check'))):
                 self.status_check = 'red'
             else:
                 self.status_check = 'green'
@@ -321,6 +340,7 @@ class GeoJSonData(models.Model):
     is_unclose = fields.Boolean(string='UnClosed Polygon')
     missing_geometry = fields.Boolean(string='Missing Geometry')
     decimal_precision = fields.Boolean(string='Decimal Precision')
+    points_check = fields.Boolean(string='Less than 4 points')
     state_check = fields.Selection([
         ('red', 'Red'),
         ('green', 'Green')
