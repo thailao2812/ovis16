@@ -305,6 +305,8 @@ class ImportGeoJson(models.Model):
     def check_angle(self, geom, minimum_angle_degree):
         try:
             # Geometry in Polygon type
+            if geom.geom_type == "MultiPolygon":
+                geom = geom.convex_hull
             vertices_geometry = list(geom.exterior.coords)
             vertices_geometry = vertices_geometry[:-1]
             number_of_points = len(vertices_geometry)
