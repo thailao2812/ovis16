@@ -14,6 +14,8 @@ class NedCertificateLicense(models.Model):
     def _compute_allocated_purchase_contract_ids(self):
         for license in self:
             allocated_purchase_contract_ids = license.purchase_contract_ids.filtered(
-                lambda contract: contract.type in ['purchase', 'ptbf', 'consign'] and contract.state != 'cancel' and contract.qty_unfixed > 0
+                lambda contract: contract.type == 'purchase'
+                                 or (contract.type == 'ptbf')
+                                 or (contract.type == 'consign' and contract.qty_unfixed > 0) and contract.state != 'cancel'
             )
             license.allocated_purchase_contract_ids = allocated_purchase_contract_ids
