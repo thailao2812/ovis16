@@ -241,7 +241,7 @@ class PurchaseContract(models.Model):
 
     def approve_commercial(self):
         partner = self.partner_id
-        license_checking = self.env['ned.ned.certificate.license'].search([
+        license_checking = self.env['ned.certificate.license'].search([
             ('partner_id', '=', partner.id),
             ('state', '=', 'active')
         ])
