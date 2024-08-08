@@ -16,6 +16,6 @@ class NedCertificateLicense(models.Model):
             allocated_purchase_contract_ids = license.purchase_contract_ids.filtered(
                 lambda contract: contract.type == 'purchase'
                                  or (contract.type == 'ptbf')
-                                 or (contract.type == 'consign') and contract.qty_unfixed > 0
+                                 or (contract.type == 'consign') and contract.state != 'cancel' and contract.qty_unfixed > 0
             )
             license.allocated_purchase_contract_ids = allocated_purchase_contract_ids
