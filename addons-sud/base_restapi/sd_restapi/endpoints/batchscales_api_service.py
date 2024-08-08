@@ -760,7 +760,7 @@ class BatchscalesApiService(Component):
                     'date_result': dtime.now(),
                     'production_id': production_id,
                     'warehouse_id': warehouse_id}
-            result_id = request.env['mrp.operation.result'].with_user(182).create(vals)
+            result_id = request.env['mrp.operation.result'].with_user(2).create(vals)
 
             if result_id:
                 scale_line = {'product_id': product_id.id,
@@ -780,7 +780,7 @@ class BatchscalesApiService(Component):
                             'lining_bag': lining_bag,
                             'scale_no': scale_no,
                             }
-                odoo_scale_id = request.env['mrp.operation.result.scale'].with_user(182).create(scale_line)
+                odoo_scale_id = request.env['mrp.operation.result.scale'].with_user(2).create(scale_line)
 
                 tmp = { 'product_id': product_id.id,
                         'zone_id': zone_id,
@@ -798,7 +798,7 @@ class BatchscalesApiService(Component):
                         'scale_grp_id': scale_grp_id,
                         'create_uid': user_import_id,
                         }
-                result_produced_product_id = request.env['mrp.operation.result.produced.product'].with_user(182).create(tmp)
+                result_produced_product_id = request.env['mrp.operation.result.produced.product'].with_user(2).create(tmp)
 
                 result_produced_product_id.create_update_stack_wip()
 
@@ -959,7 +959,7 @@ class BatchscalesApiService(Component):
             return mess
         else:
             mess = {
-                    'status_code': "SUD23-200",
+                    'status_code': "SUD23-204",
                     'message': 'Total line of weight scale different Odoo scale line!',
                     }
             return mess
@@ -1214,13 +1214,20 @@ class BatchscalesApiService(Component):
         product_id = request.env['product.product'].sudo().browse(product_id)
 
         stock_picking_obj = request.env['stock.picking'].sudo().search([('id','=',picking_id)])
+        result_obj = request.env['request.materials.line'].sudo().browse(request_materials_line_id)
         if not stock_picking_obj:
-            result_obj = request.env['request.materials.line'].sudo().browse(request_materials_line_id)
             # Check MRP state before get weight_scale
             if result_obj.request_id.production_id.state == 'done':
                 mess = {
                     'status_code': 'SUD23-204',
                     'message': '''%s has been Done, can't create!''' %(result_obj.request_id.production_id.name),
+                    }
+                return mess
+            
+            if result_obj.state == 'cancel':
+                mess = {
+                    'status_code': 'SUD23-204',
+                    'message': '''%s has been cancelled, can't create!''' %(result_obj.stack_id.name),
                     }
                 return mess
 
@@ -1314,6 +1321,13 @@ class BatchscalesApiService(Component):
                 mess = {
                     'status_code': 'SUD23-204',
                     'message': '''%s has been Done, can't add new scale_line!''' %(stock_picking_obj.production_id.name),
+                    }
+                return mess
+            
+            if result_obj.state == 'cancel':
+                mess = {
+                    'status_code': 'SUD23-204',
+                    'message': '''%s has been cancelled, can't create!''' %(result_obj.stack_id.name),
                     }
                 return mess
 
