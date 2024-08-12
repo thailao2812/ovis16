@@ -18,7 +18,7 @@ class PurchaseContract(models.Model):
     finished_qty = fields.Float(string='Finished Qty/PC', compute='_compute_finished_qty', store=True)
     finished_receive_qty = fields.Float(string='Finished Qty/Actual Qty', compute='_compute_finished_qty', store=True)
     total_allocated_qty = fields.Float(string='Total Allocated', compute='_compute_allocated_qty', store=True)
-    open_qty_check = fields.Boolean(string='Hide Allocation')
+    open_qty_check = fields.Boolean(string='Hide Allocation', default=False)
     remark_contract = fields.Char(string='Remarks')
 
     @api.depends('psc_to_pc_linked_ids', 'psc_to_pc_linked_ids.current_allocated', 'psc_to_pc_linked_ids.state')
