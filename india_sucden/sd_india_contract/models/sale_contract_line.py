@@ -10,7 +10,7 @@ class SaleContractLine(models.Model):
     _inherit = "sale.contract.line"
 
     no_of_bags = fields.Float(string='No of bag',digits=(12, 0), readonly=False, compute='_compute_bags', store=True)
-    price_unit = fields.Float(compute='_final_price', digits=(16, 2),store=True,string="Price")
+    price_unit = fields.Float(compute='_final_price', digits=(16, 4),store=True,string="Price")
 
     @api.depends('final_g2_price', 'premium', 'final_g2_diff', 'premium_adjustment')
     def _final_price(self):

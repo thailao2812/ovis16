@@ -101,7 +101,7 @@ class SaleContractIndia(models.Model):
                 street += self.partner_id.state_id.name
             self.partner_address = street
 
-    @api.depends('line_purchase_ids', 'line_purchase_ids.current_allocated', 'total_quantity')
+    @api.depends('line_purchase_ids', 'line_purchase_ids.current_allocated', 'total_quantity', 'state', 'line_purchase_ids.state')
     def _compute_transaction_qty(self):
         for record in self:
             record.allocated_quantity = sum(i.current_allocated for i in record.line_purchase_ids.filtered(
