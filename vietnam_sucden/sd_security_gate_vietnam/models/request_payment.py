@@ -90,7 +90,7 @@ class RequestPayment(models.Model):
     total_advance_payment_usd = fields.Float(string='Total Advance Payment (USD)', compute='compute_price', store=True, digits=(12, 2))
     fx_rate = fields.Integer(string='FX')
     advance_price_vnd = fields.Integer(string='Advance Price (VND)', compute='compute_price', store=True)
-    remain_qty_advance = fields.Integer(string='Remain Qty Advance', compute='compute_remain_qty_advance', store=True)
+    remain_qty_advance = fields.Integer(string='Remain Qty Advance')
 
     # PTBF Field for fixation for advance
     # khong dung
