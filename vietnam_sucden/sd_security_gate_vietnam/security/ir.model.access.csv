@@ -11,3 +11,5 @@ access_converted_line,access_converted_line,model_converted_line,base.group_user
 
 access_user_process_state,access_user_process_state,model_user_process_state,base.group_user,1,1,1,0
 access_wizard_reason_refuse,access_wizard_reason_refuse,model_wizard_refuse_request,base.group_user,1,1,1,1
+
+access_advance_line,access_advance_line,model_advance_line,base.group_user,1,1,1,1
