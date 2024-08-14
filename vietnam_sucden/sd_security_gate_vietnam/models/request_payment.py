@@ -128,9 +128,9 @@ class RequestPayment(models.Model):
                 rec.quantity_advance = rec.payment_quantity
                 rec.differencial_price = rec.liffe_price + rec.price_diff
                 rec.advance_price_usd = rec.differencial_price * rec.purchase_contract_id.percent_advance_price
-                rec.total_advance_payment_usd = round((rec.advance_price_usd * rec.quantity_advance) / 1000, 2)
-                if rec.quantity_advance > 0:
-                    rec.advance_price_vnd = self.custom_round(rec.request_amount / rec.quantity_advance)
+                rec.total_advance_payment_usd = round((rec.advance_price_usd * rec.payment_quantity) / 1000, 2)
+                if rec.payment_quantity > 0:
+                    rec.advance_price_vnd = self.custom_round(rec.request_amount / rec.payment_quantity)
                 else:
                     rec.advance_price_vnd = 0
             if rec.type_of_ptbf_payment == 'fixation_advance':

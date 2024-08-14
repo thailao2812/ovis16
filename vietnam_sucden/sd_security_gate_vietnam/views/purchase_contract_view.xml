@@ -534,13 +534,12 @@
                             <field name="final_price_usd"/>
                             <field name="rate"/>
                             <field name="final_price_vnd"/>
-                            <field name="request_amount"/>
                         </group>
                     </group>
                     <separator string="Advance Information" attrs="{'invisible': [('type_of_ptbf_payment', '!=', 'advance')]}"/>
                     <group attrs="{'invisible': [('type_of_ptbf_payment', '!=', 'advance')]}">
                         <group>
-                            <field name="quantity_advance"/>
+                            <field name="payment_quantity" string="Advance quantity"/>
                             <field name="liffe_price"/>
                             <field name="price_diff"/>
                             <field name="differencial_price"/>
