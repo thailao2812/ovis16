@@ -63,7 +63,10 @@ class Parser(models.AbstractModel):
         
     def get_buyer(self,o):
         if o.type == 'Sale':
-            return u'NEDCOFFEE BV'
+            if 'svns' in o.contract_id.name.lower():
+                return u'SUCDEN COFFEE NETHERLANDS BV'
+            else:
+                return '            '
         else:
             return '            '
     
