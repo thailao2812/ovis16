@@ -572,7 +572,6 @@ class WeighbridgeApiService(Component):
                     pick.with_user(weight_user_id).update({
                                     'vehicle_no': vehicle_no,
                                 })
-                    i = 0
                     allocation_obj = request.env['lot.stack.allocation'].sudo().search([('delivery_id','=',do_id.id)], order="id asc")
                     # print(allocation_obj)
                     if not allocation_obj:
