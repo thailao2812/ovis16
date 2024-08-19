@@ -72,7 +72,7 @@
 			                    				<field name="product_id" required="1"/>
 			                    				<field name="product_uom" required="1"/>
 			                    				
-			                    				<field name="stack_id" domain="[('product_id', '=',product_id),('init_qty', '!=',0), ('stack_wip', '!=', True), ('warehouse_id', '=', parent.warehouse_id)]"/>
+			                    				<field name="stack_id" readonly="1" domain="[('product_id', '=',product_id),('init_qty', '!=',0), ('stack_wip', '!=', True), ('warehouse_id', '=', parent.warehouse_id)]"/>
 			                    				
 			                    				<field name="bag_no" sum="bag_qty"/>
 			                    				
@@ -85,7 +85,7 @@
 			                    				<button name="%(action_view_wizard_stock_picking)d" string="GIP" type ="action"
 	                    							groups="stock.group_stock_user"/>
 	                    							
-		              							<button name="btt_cancel" string="Cancel" type="object" invisible="1"/>
+		              							<button name="btt_cancel" string="Cancel" type="object"  attrs="{'invisible': [('basis_qty', '!=', 0)]}"/>
 		              							<field name="state"/>
 			                    			</tree>
 			                    			<form>

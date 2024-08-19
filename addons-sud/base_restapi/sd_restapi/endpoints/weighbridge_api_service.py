@@ -416,10 +416,16 @@ class WeighbridgeApiService(Component):
                             'message': 'This GRN has been done at QC step. Can not update!',
                             }
 
-### UPDATE GDN ###
+    def _output_gdn_picking_schema(self):
+        return {
+                'status_code': {"type": "string"},
+                'message': {"type": "string"},
+               }
+### CREATE UPDATE GDN ###
     @restapi.method(
         [(["/stock_picking/create_update_gdn"], "POST")],
         input_param=restapi.CerberusValidator("_input_picking_schema"),
+        output_param=restapi.CerberusValidator("_output_gdn_picking_schema"),
         auth="api_key",
     )
     def update_gdn(self, **params):
@@ -554,8 +560,9 @@ class WeighbridgeApiService(Component):
             lot_allocations.append(p.id)
         lot_allocate = request.env['lot.stack.allocation'].sudo().search([('delivery_id','in',lot_allocations)])
         sum_lot_allocation = sum(lot_allocate.mapped('quantity')) or 0
-        # print(sum_lot_allocation)
+        print(sum_lot_allocation)
         
+        allocation_dict = {}
         if gate_id.picking_ids and second_weight > 0 and net_weight > 0: 
             for do_id in gate_id.delivery_id:
                 do_id.with_user(weight_user_id).update({
@@ -565,7 +572,6 @@ class WeighbridgeApiService(Component):
                     pick.with_user(weight_user_id).update({
                                     'vehicle_no': vehicle_no,
                                 })
-                    i = 0
                     allocation_obj = request.env['lot.stack.allocation'].sudo().search([('delivery_id','=',do_id.id)], order="id asc")
                     # print(allocation_obj)
                     if not allocation_obj:
@@ -582,14 +588,13 @@ class WeighbridgeApiService(Component):
                         return mess
                     else:
                         for line in pick.move_line_ids_without_package:
-                            percen = allocation_obj[i].quantity/sum_lot_allocation
-                            # print(percen)
-                            i += 1
-                            line.with_user(weight_user_id).update({
-                                'init_qty': net_weight * percen,
-                                'tare_weight': tare_weight * percen or 0,
-                                'description_picking': reweighing_reason,
-                            })
+                            for item in allocation_obj.filtered(lambda x: x.stack_id.id == line.lot_id.id):
+                                # print(item)
+                                line.with_user(weight_user_id).update({
+                                    'init_qty': net_weight * (item.quantity/sum_lot_allocation),
+                                    'tare_weight': tare_weight * (item.quantity/sum_lot_allocation) or 0,
+                                    'description_picking': reweighing_reason,
+                                })
                     pick.with_user(weight_user_id).update({
                                                             'date_done': dtime.now().strftime(DATETIME_FORMAT)
                                                             })
