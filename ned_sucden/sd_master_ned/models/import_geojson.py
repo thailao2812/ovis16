@@ -1,6 +1,8 @@
 # -*- encoding: utf-8 -*-
 from odoo import fields, models, api, _
 import base64
+import numpy as np
+
 import xlrd
 from odoo.exceptions import ValidationError, UserError
 from math import radians, sin, cos, sqrt, atan2
@@ -91,11 +93,19 @@ class ImportGeoJson(models.Model):
                 geometry = feature.get('geometry', {})
                 if geometry.get('type') in ['Polygon', 'MultiPolygon']:
                     coordinates = False
+                    less_4_point = False
+                    un_close = False
+                    inside = False
+                    check_decimal = False
                     if geometry.get('type') == 'Polygon':
                         coordinates = geometry.get('coordinates', [])[0]
                     if geometry.get('type') == 'MultiPolygon':
                         coordinates = geometry.get('coordinates', [])[0][0]
                     count_polygon += 1
+                    check_spike = self.check_angle(Polygon(coordinates), 20)
+
+                    if len(coordinates) < 4:
+                        less_4_point = True
 
                     # Chuyển đổi tọa độ thành polygon shapely
                     new_polygon = Polygon([(coord[0], coord[1]) for coord in coordinates])
@@ -118,60 +128,31 @@ class ImportGeoJson(models.Model):
 
                     paths = []
                     lines = {}
-                    check_decimal = False
                     for coord in coordinates:
                         lat, lng = coord[1], coord[0]
                         lat_decimal = self.count_decimal_places(lat)
                         lng_decimal = self.count_decimal_places(lng)
                         if lat_decimal < 6 or lng_decimal < 6:
-                            print(lat, lng)
-                            print(lat_decimal, 'vao')
-                            print(lng_decimal, 'day')
                             check_decimal = True
                             continue
                         paths.append({"lat": lat, "lng": lng})
                     if not paths:
-                        self.env['geojson.data'].create({
-                            'name': 'Polygon number %s' % str(count_polygon),
-                            'type': 'polygon',
-                            'missing_geometry': True,
-                            'state_check': 'red',
-                            'import_id': self.id
-                        })
-                        continue
+                        coordinates = True
                     if coordinates[0] != coordinates[-1]:
-                        self.env['geojson.data'].create({
-                            'name': 'Polygon number %s' % str(count_polygon),
-                            'type': 'polygon',
-                            'is_unclose': True,
-                            'state_check': 'red',
-                            'import_id': self.id
-                        })
-                        continue
-                    if is_duplicate:
-                        duplicate_count += 1
-                        self.env['geojson.data'].create({
-                            'name': 'Polygon number %s' % str(count_polygon),
-                            'type': 'polygon',
-                            'is_overlapping': True,
-                            'state_check': 'red',
-                            'import_id': self.id
-                        })
-                        continue
+                        un_close = True
                     if points_inside_existing_polygons > 0:
+                        inside = True
+                    if not coordinates or less_4_point or check_spike or un_close or is_duplicate or inside or check_decimal:
                         self.env['geojson.data'].create({
                             'name': 'Polygon number %s' % str(count_polygon),
                             'type': 'polygon',
-                            'is_duplicate_partial': True,
-                            'state_check': 'red',
-                            'import_id': self.id
-                        })
-                        continue  # Skip creating this polygon
-                    if check_decimal:
-                        self.env['geojson.data'].create({
-                            'name': 'Polygon number %s' % str(count_polygon),
-                            'type': 'polygon',
-                            'decimal_precision': True,
+                            'missing_geometry': True if not coordinates else False,
+                            'spike': check_spike,
+                            'points_check': less_4_point,
+                            'is_unclose': un_close,
+                            'decimal_precision': check_decimal,
+                            'is_duplicate_partial': inside,
+                            'is_overlapping': is_duplicate,
                             'state_check': 'red',
                             'import_id': self.id
                         })
@@ -240,17 +221,23 @@ class ImportGeoJson(models.Model):
                         'import_id': self.id
                     })
                     self.count_point += 1
-            if duplicate_count > 0:
-                mess += "We have %s Polygon that have the same data that already stored in database, in your file, please check again!<br/>" % duplicate_count
-            if duplicate_point_count > 0:
-                mess += "We have %s Point that have the same data that already stored in database, in your file, please check again!<br/>" % duplicate_point_count
-            if partial_duplicate_count > 0:
-                mess += "We have %s Polygon that contains points already stored in the database. Please check again!<br/>" % partial_duplicate_count
-                for i, percentage in enumerate(partial_duplicate_percentage_list, 1):
-                    mess += "Polygon %s contains %.2f%% points already stored in the database.<br/>" % (i, percentage)
-            if mess:
-                self.message_post(body=mess)
-            if any(self.line_ids.mapped('is_duplicate_partial')) or any(self.line_ids.mapped('is_overlapping')) or any(self.line_ids.mapped('is_unclose')) or any(self.line_ids.mapped('missing_geometry')) or any(self.line_ids.mapped('decimal_precision')):
+            # if duplicate_count > 0:
+            #     mess += "We have %s Polygon that have the same data that already stored in database, in your file, please check again!<br/>" % duplicate_count
+            # if duplicate_point_count > 0:
+            #     mess += "We have %s Point that have the same data that already stored in database, in your file, please check again!<br/>" % duplicate_point_count
+            # if partial_duplicate_count > 0:
+            #     mess += "We have %s Polygon that contains points already stored in the database. Please check again!<br/>" % partial_duplicate_count
+            #     for i, percentage in enumerate(partial_duplicate_percentage_list, 1):
+            #         mess += "Polygon %s contains %.2f%% points already stored in the database.<br/>" % (i, percentage)
+            # if mess:
+            #     self.message_post(body=mess)
+            if (any(self.line_ids.mapped('is_duplicate_partial'))
+                    or any(self.line_ids.mapped('is_overlapping'))
+                    or any(self.line_ids.mapped('is_unclose'))
+                    or any(self.line_ids.mapped('spike'))
+                    or any(self.line_ids.mapped('missing_geometry'))
+                    or any(self.line_ids.mapped('decimal_precision'))
+                    or any(self.line_ids.mapped('points_check'))):
                 self.status_check = 'red'
             else:
                 self.status_check = 'green'
@@ -306,6 +293,39 @@ class ImportGeoJson(models.Model):
             res['supplier_id'] = partner.id
         return res
 
+    def calculate_angle(self, cordinate_1, cordinate_2, cordinate_3):
+        """Calculate the angle at p2 given points p1, p2, and p3."""
+        distance_between_1_and_2 = np.array(cordinate_1) - np.array(cordinate_2)
+        distance_between_2_and_3 = np.array(cordinate_3) - np.array(cordinate_2)
+        cosine_angle = np.dot(distance_between_1_and_2, distance_between_2_and_3) / (
+                    np.linalg.norm(distance_between_1_and_2) * np.linalg.norm(distance_between_2_and_3))
+        angle = np.arccos(np.clip(cosine_angle, -1.0, 1.0))  # Clip to handle floating-point errors
+        return np.degrees(angle)
+
+    def check_angle(self, geom, minimum_angle_degree):
+        try:
+            # Geometry in Polygon type
+            if geom.geom_type == "MultiPolygon":
+                geom = geom.convex_hull
+            vertices_geometry = list(geom.exterior.coords)
+            vertices_geometry = vertices_geometry[:-1]
+            number_of_points = len(vertices_geometry)
+            angles = []
+            for i in range(number_of_points):
+                point_1 = vertices_geometry[i - 1]
+                point_2 = vertices_geometry[i]
+                point_3 = vertices_geometry[(i + 1) % number_of_points]
+                angle = self.calculate_angle(point_1, point_2, point_3)
+                angles.append(angle)
+            return np.any(np.array(angles) < minimum_angle_degree)
+        except:
+            # Geometry in other type like LinearString, etc...
+            return True
+
+    # Assuming 'gdf' is your GeoPandas DataFrame
+    # gdf['has_angle_less_than_20'] = gdf.geometry.apply(lambda x: self.check_angle(x, 20))
+    # print(gdf[gdf["has_angle_less_than_20"] == True])
+
 
 class GeoJSonData(models.Model):
     _name = 'geojson.data'
@@ -321,6 +341,8 @@ class GeoJSonData(models.Model):
     is_unclose = fields.Boolean(string='UnClosed Polygon')
     missing_geometry = fields.Boolean(string='Missing Geometry')
     decimal_precision = fields.Boolean(string='Decimal Precision')
+    spike = fields.Boolean(string='Spikes')
+    points_check = fields.Boolean(string='Less than 4 points')
     state_check = fields.Selection([
         ('red', 'Red'),
         ('green', 'Green')

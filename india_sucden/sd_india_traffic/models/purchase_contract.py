@@ -18,7 +18,7 @@ class PurchaseContract(models.Model):
     finished_qty = fields.Float(string='Finished Qty/PC', compute='_compute_finished_qty', store=True)
     finished_receive_qty = fields.Float(string='Finished Qty/Actual Qty', compute='_compute_finished_qty', store=True)
     total_allocated_qty = fields.Float(string='Total Allocated', compute='_compute_allocated_qty', store=True)
-    open_qty_check = fields.Boolean(string='Hide Allocation')
+    open_qty_check = fields.Boolean(string='Hide Allocation', default=False)
     remark_contract = fields.Char(string='Remarks')
 
     @api.depends('psc_to_pc_linked_ids', 'psc_to_pc_linked_ids.current_allocated', 'psc_to_pc_linked_ids.state')
@@ -45,6 +45,10 @@ class PurchaseContract(models.Model):
             if not record.fob_management_id:
                 raise UserError(_("You have to select FOB Number!"))
             record.state_fob = 'submit'
+
+    def button_reset_submit_fob_link(self):
+        for record in self:
+            record.state_fob = 'draft'
 
     @api.onchange('certificate_id')
     def onchange_certificate_id(self):

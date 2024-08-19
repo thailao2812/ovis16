@@ -28,6 +28,7 @@ class FOBManagement(models.Model):
         ('close', 'Close')
     ], string='State', default='draft', tracking=True)
     market_id = fields.Many2one('market.india', string='Market', compute='_compute_market', store=True)
+    market_month = fields.Many2one('s.period', string='Market Month')
 
     def close_fob(self):
         for record in self:

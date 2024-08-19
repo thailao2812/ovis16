@@ -1,10 +1,11 @@
-
+DATE_FORMAT = "%Y-%m-%d"
+DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S"
 # -*- coding: utf-8 -*-
 from odoo import api, fields, models, tools, _, SUPERUSER_ID
 from odoo.exceptions import ValidationError, UserError
 from odoo.osv import expression
 import math
-from datetime import datetime, date, timedelta
+from datetime import datetime, date, timedelta, time
 import math
 
 
@@ -82,7 +83,7 @@ class RequestPayment(models.Model):
 
     # PTBF Field for advance
     quantity_advance = fields.Integer(string='Advance Quantity')
-    quantity_fix_advance = fields.Integer(string='Quantity Fix')
+    quantity_fix_advance = fields.Integer(string='Quantity Fix') # khong dung
     liffe_price = fields.Float(string='Liffe Price', digits=(12, 0))
     differencial_price = fields.Float(string='Differencial Price', compute='compute_price', store=True, digits=(12, 0))
     advance_price_usd = fields.Float(string='Advance Price (USD)', compute='compute_price', store=True, digits=(12, 2))
@@ -92,28 +93,44 @@ class RequestPayment(models.Model):
     remain_qty_advance = fields.Integer(string='Remain Qty Advance')
 
     # PTBF Field for fixation for advance
+    # khong dung
     fixation_advance_ids = fields.Many2many('request.payment', 'request_payment_advance_payment_rel', 'request_main_id', 'request_second_id', string='Fixation For Advance No.')
+
+    fixation_advance_line_ids = fields.One2many('advance.line', 'request_id', string='Advance Line')
     qty_advance_fix = fields.Integer(string='Fix Quantity', compute='compute_total_qty', store=True)
     total_amount_usd = fields.Float(string='Total Amount USD', compute='compute_price', store=True, digits=(12, 0))
 
-    @api.depends('fixation_advance_ids', 'fixation_advance_ids.quantity_fix_advance')
+    def get_date(self, date):
+        if not date:
+            date = time.strftime(DATE_FORMAT)
+        date = datetime.strptime(date, DATE_FORMAT)
+        return date.strftime('%d/%m/%Y')
+
+    def name_get(self):
+        result = []
+        for rec in self:
+            result.append((rec.id, 'Payment ' + str(rec.name) + ' at ' + str(self.get_date(str(rec.date)))))
+        return result
+
+    @api.depends('fixation_advance_line_ids', 'fixation_advance_line_ids.quantity_fix')
     def compute_total_qty(self):
         for rec in self:
-            rec.qty_advance_fix = sum(rec.fixation_advance_ids.mapped('quantity_fix_advance'))
+            rec.qty_advance_fix = sum(rec.fixation_advance_line_ids.mapped('quantity_fix'))
 
-    @api.depends('price_usd', 'price_diff', 'rate', 'type_of_ptbf_payment', 'liffe_price', 'quantity_advance', 'request_amount',
-                 'qty_advance_fix', 'rate')
+    @api.depends('price_usd', 'price_diff', 'rate', 'type_of_ptbf_payment', 'liffe_price', 'quantity_advance',
+                 'request_amount', 'payment_quantity', 'qty_advance_fix', 'rate')
     def compute_price(self):
         for rec in self:
             if rec.type_of_ptbf_payment == 'fixation':
                 rec.final_price_usd = rec.price_usd + rec.price_diff
                 rec.final_price_vnd = self.custom_round(rec.final_price_usd * rec.rate)
             if rec.type_of_ptbf_payment == 'advance':
+                rec.quantity_advance = rec.payment_quantity
                 rec.differencial_price = rec.liffe_price + rec.price_diff
                 rec.advance_price_usd = rec.differencial_price * rec.purchase_contract_id.percent_advance_price
-                rec.total_advance_payment_usd = round((rec.advance_price_usd * rec.quantity_advance) / 1000, 2)
-                if rec.quantity_advance > 0:
-                    rec.advance_price_vnd = self.custom_round(rec.request_amount / rec.quantity_advance)
+                rec.total_advance_payment_usd = round((rec.advance_price_usd * rec.payment_quantity) / 1000, 2)
+                if rec.payment_quantity > 0:
+                    rec.advance_price_vnd = self.custom_round(rec.request_amount / rec.payment_quantity)
                 else:
                     rec.advance_price_vnd = 0
             if rec.type_of_ptbf_payment == 'fixation_advance':

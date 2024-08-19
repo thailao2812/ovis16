@@ -44,6 +44,8 @@
                                      <field name="type"/>
                                      <field name="missing_geometry"/>
                                      <field name="decimal_precision"/>
+                                     <field name="points_check"/>
+                                     <field name="spike"/>
                                      <field name="is_unclose"/>
                                      <field name="is_duplicate_partial"/>
                                      <field name="is_overlapping"/>

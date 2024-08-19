@@ -32,7 +32,7 @@ class WizardSearchPurchaseContract(models.TransientModel):
             purchase_contract = self.env['purchase.contract'].search([
                 ('date_order', '>=', self.date_from),
                 ('date_order', '<=', self.date_to),
-                ('type', 'in', ['purchase', 'consign']),
+                ('type', 'in', ['purchase']),
                 ('state_fob', '=', 'draft')
             ])
             return {

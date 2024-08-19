@@ -7,3 +7,4 @@ from . import converted_line
 from . import user_process_state
 from . import purchase_contract
 from . import account_payment
+from . import advance_line

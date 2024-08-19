@@ -101,12 +101,14 @@ class SaleContractIndia(models.Model):
                 street += self.partner_id.state_id.name
             self.partner_address = street
 
-    @api.depends('line_purchase_ids', 'line_purchase_ids.current_allocated', 'total_quantity')
+    @api.depends('line_purchase_ids', 'line_purchase_ids.current_allocated', 'total_quantity', 'state', 'line_purchase_ids.state')
     def _compute_transaction_qty(self):
         for record in self:
             record.allocated_quantity = sum(i.current_allocated for i in record.line_purchase_ids.filtered(
                 lambda x: x.state == 'approve_allocation'))
             record.balance_quantity = record.total_quantity - record.allocated_quantity
+            if record.balance_quantity < 0:
+                raise UserError(_("You cannot allocate more than PSC Qty, check again!"))
 
     @api.depends('sale_contract_factory_ids', 'sale_contract_factory_ids.state_allocate',
                  'sale_contract_factory_ids.current_allocated')
@@ -138,11 +140,11 @@ class SaleContractIndia(models.Model):
             raise UserError(_("You have to input P Number and P Date!! Not leave it empty!!"))
         return res
 
-    @api.model
-    def create(self, vals):
-        vals['name'] = self.env['ir.sequence'].next_by_code('sale.contract.india')
-        result = super(SaleContractIndia, self).create(vals)
-        return result
+    # @api.model
+    # def create(self, vals):
+    #     vals['name'] = self.env['ir.sequence'].next_by_code('sale.contract.india')
+    #     result = super(SaleContractIndia, self).create(vals)
+    #     return result
 
     @api.model
     def name_search(self, name, args=None, operator='ilike', limit=100):

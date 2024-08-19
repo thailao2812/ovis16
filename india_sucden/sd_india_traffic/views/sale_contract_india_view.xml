@@ -18,7 +18,7 @@
                         <div class="oe_title">
                             <label for="name"/>
                             <h1>
-                                <field name="name" placeholder="SN No." readonly="1"/>
+                                <field name="name" placeholder="SN No."/>
                             </h1>
                             <widget name="web_ribbon" title="Approve" bg_color="bg-danger" attrs="{'invisible': [('state_p', '!=', 'approve')]}"/>
                         </div>
@@ -44,8 +44,10 @@
                         </group>
                         <group string="P Information">
                             <group>
-                                <field name="p_number" attrs="{'readonly': ['|', ('state', '!=', 'submit'), ('state_p', 'in', ['approve'])]}"/>
-                                <field name="p_date" attrs="{'readonly': ['|',  ('state', '!=', 'submit'), ('state_p', 'in', ['approve'])]}"/>
+<!--                                <field name="p_number" attrs="{'readonly': ['|', ('state', '!=', 'submit'), ('state_p', 'in', ['approve'])]}"/>-->
+<!--                                <field name="p_date" attrs="{'readonly': ['|',  ('state', '!=', 'submit'), ('state_p', 'in', ['approve'])]}"/>-->
+                                <field name="p_number"/>
+                                <field name="p_date"/>
                             </group>
                             <group>
                             </group>
@@ -151,14 +153,14 @@
                                         <field name="date_contract" readonly="1" force_save="1"/>
                                         <field name="partner_id" readonly="1" force_save="1"/>
                                         <field name="product_id" readonly="1" force_save="1"/>
-                                        <field name="quantity" readonly="1" force_save="1"/>
-                                        <field name="receive_qty" readonly="1" force_save="1"/>
+                                        <field name="quantity" readonly="1" force_save="1" sum="quantity"/>
+                                        <field name="receive_qty" readonly="1" force_save="1" sum="receive_qty"/>
                                         <field name="outturn" readonly="1" force_save="1"/>
-                                        <field name="finished_qty" readonly="1" force_save="1"/>
-                                        <field name="finished_actual_qty" readonly="1" force_save="1"/>
-                                        <field name="total_allocated" readonly="1" force_save="1"/>
-                                        <field name="balance_qty" readonly="1"/>
-                                        <field name="current_allocated" attrs="{'readonly': [('parent.state', '=', 'approve_allocation')]}"/>
+                                        <field name="finished_qty" readonly="1" force_save="1" sum="finished_qty"/>
+                                        <field name="finished_actual_qty" readonly="1" force_save="1" sum="finished_actual_qty"/>
+                                        <field name="total_allocated" readonly="1" force_save="1" sum="total_allocated"/>
+                                        <field name="balance_qty" readonly="1" sum="balance_qty"/>
+                                        <field name="current_allocated" attrs="{'readonly': [('parent.state', '=', 'approve_allocation')]}" sum="current_allocated"/>
                                         <field name="state" readonly="1" invisible="1"/>
                                     </tree>
                                 </field>
