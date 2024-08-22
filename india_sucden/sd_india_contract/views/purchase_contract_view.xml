@@ -137,7 +137,7 @@
                 <attribute name="invisible">1</attribute>
             </xpath>
             <xpath expr="//field[@name='trader_id']" position="replace">
-                <field name="agent_id" domain="[('agent', '=', True)]" options="{'no_create': True}" attrs="{'readonly': [('state', 'in', ['director', 'approved', 'done', 'cancel'])]}"/>
+                <field name="agent_id" domain="[('agent', '=', True)]" options="{'no_create': True}" attrs="{'readonly': [('state', 'in', ['director', 'done', 'cancel'])]}"/>
             </xpath>
             <xpath expr="//field[@name='premium']" position="attributes">
                 <attribute name="string">Premium Certificate Price/Kg</attribute>
@@ -530,7 +530,7 @@
                 <button name="print_cs_detail" string="Print Invoice" type="object" class="oe_highlight" attrs="{'invisible': [('state', '!=', 'approved')]}"/>
             </xpath>
             <xpath expr="//field[@name='songay']" position="after">
-                <field name="agent_id" domain="[('agent', '=', True)]" options="{'no_create': True}" attrs="{'readonly': [('state', 'in', ['director', 'approved', 'done', 'cancel'])]}"/>
+                <field name="agent_id" domain="[('agent', '=', True)]" options="{'no_create': True}" attrs="{'readonly': [('state', 'in', ['director', 'done', 'cancel'])]}"/>
             </xpath>
             <xpath expr="//field[@name='request_payment_ids']/form/group/group[2]/field[@name='purchase_contract_id']" position="after">
                 <field name="financial_year_id" required="1" options="{'no_create': True}"/>
