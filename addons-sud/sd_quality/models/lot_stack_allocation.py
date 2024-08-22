@@ -229,8 +229,12 @@ class LotStackAllocation(models.Model):
                                                          #('qty_done', '=', this.quantity),
                                                          ('lot_id', '=', this.stack_id.id),
                                                          ('picking_id', '=', this.gdn_id.id)])
-                if move_id.picking_id.state == 'done':
-                    a = move_id.picking_id.name + u' was Done'
+                if move_id.picking_id.state in ['done', 'assigned']:
+                    a = move_id.picking_id.name + u' was Done/Ready, can not set to Draft.'
+                    raise UserError(_(a))
+                # Sơn Xét TH GDN đã cân lần 2 thì ko cho Cancel/Set to Draft
+                if move_id.init_qty != this.quantity:
+                    a = move_id.picking_id.name + u' had been weighed for the 2nd time.\n' + '(' + move_id.picking_id.name + u' đã cân lần 2)'
                     raise UserError(_(a))
                 if move_id:
                     move_id.unlink()
@@ -267,7 +271,7 @@ class LotStackAllocation(models.Model):
                     raise UserError(_(a))
                 # Xét TH GDN đã cân lần 2 thì ko cho Cancel/Set to Draft
                 if move_id.init_qty != this.quantity:
-                    a = move_id.picking_id.name + u' had been weighed for the 2nd time.\n\t (GDN đã cân lần 2)'
+                    a = move_id.picking_id.name + u' had been weighed for the 2nd time.\n' + '(' + move_id.picking_id.name + u' đã cân lần 2)'
                     raise UserError(_(a))
                 if move_id:
                     move_id.state = 'cancel'
