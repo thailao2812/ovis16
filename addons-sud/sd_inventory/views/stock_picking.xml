@@ -319,6 +319,7 @@
 		                	decoration-danger="state not in ('cancel', 'done') and date_done &lt; current_date" string="Picking list">
                     <field name="name"/>
                     <field name="origin"/>
+                    <field name="vehicle_no"/>
                     <field name="date_done"/>
                     <field name="zone_id"/>
                     <field name="lot_id"/>

@@ -288,6 +288,12 @@ class WeighbridgeApiService(Component):
                         'message': 'Picking does not exist.',
                         }
             else:
+                if picking_id.state not in ['draft', 'waiting']:
+                    return {
+                        'status_code': 'SUD23-404',
+                        'message': picking_id.name + ' state had been Done/Ready',
+                        }
+
                 if warehouse_id != picking_id.warehouse_id:
                     picking_id.with_user(weight_user_id).update({
                                         'warehouse_id': warehouse_id.id
@@ -520,6 +526,13 @@ class WeighbridgeApiService(Component):
                                         'vehicle_no': _do.trucking_no or '',
                                         'trucking_id': gate_id.trucking_id.id or False,
                                     })
+        
+        if gate_id.picking_ids.state not in ['draft', 'waiting']:
+            mess = {
+                'status_code': 'SUD23-404',
+                'message': gate_id.picking_ids.name + ' state had been Done/Ready',
+                }
+            return mess
 
         gate_id.license_plate = vehicle_no
         gate_id.first_weight = first_weight
@@ -547,7 +560,7 @@ class WeighbridgeApiService(Component):
                     for pick in do_item.picking_id:
                         pick.vehicle_no = vehicle_no
                         # print(pick.vehicle_no,do_item.trucking_no)
-            
+
         if second_weight > 0:
             gate_id.estimated_bags = bag_no
             gate_id.tare_weight = tare_weight
@@ -583,7 +596,7 @@ class WeighbridgeApiService(Component):
                     elif len(pick.move_line_ids_without_package) != len(allocation_obj):
                         mess = {
                                 'status_code': 'SUD23-204',
-                                'message': 'Please check Product line of ' + pick.name + ' and Lot Allocation line of ' + allocation_obj[i].delivery_id.name,
+                                'message': 'Please check Product line of ' + pick.name + ' and Lot Allocation line of ' + allocation_obj.delivery_id.name,
                                 }
                         return mess
                     else:
@@ -598,7 +611,8 @@ class WeighbridgeApiService(Component):
                     pick.with_user(weight_user_id).update({
                                                             'date_done': dtime.now().strftime(DATETIME_FORMAT)
                                                             })
-
+                        
+                    pick.button_qc_assigned()
             gate_id.state ='closed'
 
             mess = {

@@ -80,7 +80,9 @@ class Parser(models.AbstractModel):
         return date_user_tz.strftime('%d/%m/%Y')
     
     def get_capacity(self,o):
-        if o.delivery_order_ids[0].packing_id and o.delivery_order_ids[0].packing_id.capacity:
+        if o.delivery_order_ids[0].bags_input > 0:
+            return o.delivery_order_ids[0].bags_input
+        elif o.delivery_order_ids[0].packing_id and o.delivery_order_ids[0].packing_id.capacity:
             return round(o.total_qty / o.delivery_order_ids[0].packing_id.capacity,0)
         else:
             return o.total_qty

@@ -58,7 +58,7 @@ class StockMoveLine(models.Model):
     second_weight = fields.Float(string="Second Weight",digits=(12, 0), tracking=True)
     packing_id = fields.Many2one('ned.packing', string='Packing', tracking=True)
     bag_no = fields.Float(string="Bag nos.",digits=(12, 0), tracking=True)
-    tare_weight = fields.Float(string="Tare Weight",digits=(12, 0), tracking=True)
+    tare_weight = fields.Float(string="Tare Weight",digits=(12, 2), tracking=True)
     weight_scale_id = fields.Char(string='Weight Scale No.')
     
     @api.onchange('first_weight','second_weight','packing_id','bag_no','tare_weight')

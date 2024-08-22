@@ -20,7 +20,7 @@ class LotStackAllocation(models.Model):
     rel_lot_kcs_approved = fields.Selection(string="rel_lot_kcs_approved",related='lot_id.state',)
     quantity = fields.Float(string="Quantity")
     delivery_id = fields.Many2one('delivery.order',string="Do no.")
-    state = fields.Selection([('draft', 'Draft'), ('approve', 'Approve')], string="State", required=True, default="draft")
+    state = fields.Selection([('draft', 'Draft'), ('approve', 'Approve'), ('cancel', 'Cancel')], string="State", required=True, default="draft")
     grp_id = fields.Many2one('stock.picking',string="GRP", domain="[('state', '=', 'done'),('picking_type_id.code', 'in', ('production_in','incoming'))]")
     stack_id = fields.Many2one('stock.lot', string="Stack", readonly=False)
     contract_id = fields.Many2one(related='lot_id.contract_id',  string='S Contract',store = True)
@@ -229,12 +229,53 @@ class LotStackAllocation(models.Model):
                                                          #('qty_done', '=', this.quantity),
                                                          ('lot_id', '=', this.stack_id.id),
                                                          ('picking_id', '=', this.gdn_id.id)])
-                if move_id.picking_id.state == 'done':
-                    a = move_id.picking_id.name + u' was Done'
+                if move_id.picking_id.state in ['done', 'assigned']:
+                    a = move_id.picking_id.name + u' was Done/Ready, can not set to Draft.'
+                    raise UserError(_(a))
+                # Sơn Xét TH GDN đã cân lần 2 thì ko cho Cancel/Set to Draft
+                if move_id.init_qty != this.quantity:
+                    a = move_id.picking_id.name + u' had been weighed for the 2nd time.\n' + '(' + move_id.picking_id.name + u' đã cân lần 2)'
                     raise UserError(_(a))
                 if move_id:
                     move_id.unlink()
                 this.state = 'draft'
             if not this.gdn_id and not this.grp_id:
                 this.state = 'draft'
-        
+                
+    # Sơn khóa chức năng xóa phiếu
+    def unlink(self):
+        for record in self:
+            raise UserError(_('You cannot delete data, just cancel action.'))
+
+    def btt_cancel(self):
+        for this in self:
+            if this.grp_id:
+                move_id = self.env['stock.move.line'].search([('product_id', '=', this.product_id.id),
+                                                         ('qty_done', '=', this.quantity),
+                                                         ('stack_id', '=', this.stack_id.id),
+                                                         ('picking_id', '=', this.grp_id.id)])
+                if move_id.picking_id.state == 'done':
+                    a = move_id.picking_id.name + u' was Done'
+                    raise UserError(_(a))
+                if move_id:
+                    move_id.state = 'cancel'
+                    move_id.picking_id.state = 'cancel'
+                this.state = 'cancel'
+            if this.gdn_id:
+                move_id = self.env['stock.move.line'].search([('product_id', '=', this.product_id.id),
+                                                         #('qty_done', '=', this.quantity),
+                                                         ('lot_id', '=', this.stack_id.id),
+                                                         ('picking_id', '=', this.gdn_id.id)])
+                if move_id.picking_id.state in ['done', 'assigned']:
+                    a = move_id.picking_id.name + u' was Done/Ready, can not cancel.'
+                    raise UserError(_(a))
+                # Xét TH GDN đã cân lần 2 thì ko cho Cancel/Set to Draft
+                if move_id.init_qty != this.quantity:
+                    a = move_id.picking_id.name + u' had been weighed for the 2nd time.\n' + '(' + move_id.picking_id.name + u' đã cân lần 2)'
+                    raise UserError(_(a))
+                if move_id:
+                    move_id.state = 'cancel'
+                    move_id.picking_id.state = 'cancel'
+                this.state = 'cancel'
+            if not this.gdn_id and not this.grp_id:
+                this.state = 'cancel'
