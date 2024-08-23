@@ -256,18 +256,18 @@ class ImportGeoJson(models.Model):
             #         mess += "Polygon %s contains %.2f%% points already stored in the database.<br/>" % (i, percentage)
             # if mess:
             #     self.message_post(body=mess)
-            # if (any(self.line_ids.mapped('is_duplicate_partial'))
-            #         or any(self.line_ids.mapped('is_overlapping'))
-            #         or any(self.line_ids.mapped('is_unclose'))
-            #         or any(self.line_ids.mapped('spike'))
-            #         or any(self.line_ids.mapped('missing_geometry'))
-            #         or any(self.line_ids.mapped('decimal_precision'))
-            #         or any(self.line_ids.mapped('points_check'))):
-            #     self.status_check = 'red'
-            # else:
-            #     self.status_check = 'green'
-            # self.state = 'imported'
-            # self.import_date = datetime.now()
+            if (any(self.line_ids.mapped('is_duplicate_partial'))
+                    or any(self.line_ids.mapped('is_overlapping'))
+                    or any(self.line_ids.mapped('is_unclose'))
+                    or any(self.line_ids.mapped('spike'))
+                    or any(self.line_ids.mapped('missing_geometry'))
+                    or any(self.line_ids.mapped('decimal_precision'))
+                    or any(self.line_ids.mapped('points_check'))):
+                self.status_check = 'red'
+            else:
+                self.status_check = 'green'
+            self.state = 'imported'
+            self.import_date = datetime.now()
 
     def _get_action_view_polygon(self):
         '''
