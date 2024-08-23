@@ -16,6 +16,10 @@
         'views/partner_multiple_point_view.xml',
         'views/supplier_master_data.xml',
         'views/menu.xml',
+
+        'report/report.xml',
+
+        'wizard/wizard_export_error_view.xml',
     ],
     'installable': True,
     'auto_install': False,

@@ -4,3 +4,6 @@ access_line_geojson,access_line_geojson,model_geojson_data,base.group_user,1,1,1
 access_partner_multiple_point,access_partner_multiple_point,model_partner_multiple_point,base.group_user,1,1,1,1
 
 access_supplier_master,access_supplier_master,model_supplier_master_data,base.group_user,1,1,1,1
+
+access_properties_polygon,access_properties_polygon,model_properties_polygon,base.group_user,1,1,1,1
+access_wizard_export_error,access_wizard_export_error,model_wizard_export_error,base.group_user,1,1,1,1

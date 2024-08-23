@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+        <record id="wizard_export_error" model="ir.ui.view">
+            <field name="name">wizard_export_error</field>
+            <field name="model">wizard.export.error</field>
+            <field name="arch" type="xml">
+                <form string="Export Error">
+                    <sheet>
+			            <group>
+                            <field name="properties_ids" widget="many2many_tags" readonly="1" invisible="1"/>
+                            <field name="properties_id" required="1" domain="[('id', 'in', properties_ids)]" options="{'no_create': True}"/>
+		                </group>
+		                <group>
+
+		                </group>
+		                <footer>
+		                	<button string="Generate" name="generate_report" type="object" class="oe_highlight"/>
+		                    <button string="Cancel" class="btn-default" special="cancel"/>
+		                </footer>
+	                </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_wizard_export_error" model="ir.actions.act_window">
+            <field name="name">Export Error</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">wizard.export.error</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+</odoo>

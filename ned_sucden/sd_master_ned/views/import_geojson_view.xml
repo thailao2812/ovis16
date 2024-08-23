@@ -7,6 +7,7 @@
              <form string="Import Farmer">
                  <header>
                      <button name="import_file" string="Import" states="new" type="object" class="btn-primary"/>
+                     <button name="open_wizard_export_error" string="Export Error Data" type="object" class="btn-primary"/>
                       <field name="state" widget="statusbar" nolabel="1" statusbar_visible="new,imported"/>
                  </header>
                  <sheet>
@@ -35,6 +36,7 @@
                         <field name="filename" invisible="1"/>
                         <field name="count_polygon" readonly="1"/>
                         <field name="count_point" readonly="1"/>
+                        <field name="properties_ids" readonly="1" widget="many2many_tags" invisible="1"/>
                     </group>
                      <notebook>
                          <page string="Import Data" name="import_data">

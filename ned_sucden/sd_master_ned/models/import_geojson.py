@@ -43,6 +43,17 @@ class ImportGeoJson(models.Model):
         ('red', 'Red'),
         ('green', 'Green'),
     ], string='Status Check')
+    properties_ids = fields.Many2many('properties.polygon')
+
+    def open_wizard_export_error(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Export Error',
+            'res_model': 'wizard.export.error',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': self.env.context,
+        }
 
     @api.depends('count_polygon', 'count_point')
     def compute_total_date(self):
@@ -91,6 +102,18 @@ class ImportGeoJson(models.Model):
             for feature in geojson_data['features']:
                 # Giả sử mỗi feature là một bản ghi bạn muốn tạo
                 geometry = feature.get('geometry', {})
+                properties = feature.get('properties', {})
+                for line in properties:
+                    check_properties = self.env['properties.polygon'].search([
+                        ('name', '=', line.strip())
+                    ], limit=1)
+                    if check_properties:
+                        self.properties_ids = [(4, check_properties.id)]
+                    else:
+                        properties_id = self.env['properties.polygon'].create({
+                            'name': line.strip()
+                        })
+                        self.properties_ids = [(4, properties_id.id)]
                 if geometry.get('type') in ['Polygon', 'MultiPolygon']:
                     coordinates = False
                     less_4_point = False
@@ -154,7 +177,8 @@ class ImportGeoJson(models.Model):
                             'is_duplicate_partial': inside,
                             'is_overlapping': is_duplicate,
                             'state_check': 'red',
-                            'import_id': self.id
+                            'import_id': self.id,
+                            'properties_data': json.dumps(properties)
                         })
                         continue
                     for i, coord_pair in enumerate(zip(coordinates, coordinates[1:] + [coordinates[0]]), start=1):
@@ -191,6 +215,7 @@ class ImportGeoJson(models.Model):
                         'import_id': self.id,
                         'state_check': 'green'
                     })
+
                 if geometry.get('type') == 'Point':
                     count_point += 1
                     multiple_point = self.env['partner.multiple.point']
@@ -231,18 +256,18 @@ class ImportGeoJson(models.Model):
             #         mess += "Polygon %s contains %.2f%% points already stored in the database.<br/>" % (i, percentage)
             # if mess:
             #     self.message_post(body=mess)
-            if (any(self.line_ids.mapped('is_duplicate_partial'))
-                    or any(self.line_ids.mapped('is_overlapping'))
-                    or any(self.line_ids.mapped('is_unclose'))
-                    or any(self.line_ids.mapped('spike'))
-                    or any(self.line_ids.mapped('missing_geometry'))
-                    or any(self.line_ids.mapped('decimal_precision'))
-                    or any(self.line_ids.mapped('points_check'))):
-                self.status_check = 'red'
-            else:
-                self.status_check = 'green'
-            self.state = 'imported'
-            self.import_date = datetime.now()
+            # if (any(self.line_ids.mapped('is_duplicate_partial'))
+            #         or any(self.line_ids.mapped('is_overlapping'))
+            #         or any(self.line_ids.mapped('is_unclose'))
+            #         or any(self.line_ids.mapped('spike'))
+            #         or any(self.line_ids.mapped('missing_geometry'))
+            #         or any(self.line_ids.mapped('decimal_precision'))
+            #         or any(self.line_ids.mapped('points_check'))):
+            #     self.status_check = 'red'
+            # else:
+            #     self.status_check = 'green'
+            # self.state = 'imported'
+            # self.import_date = datetime.now()
 
     def _get_action_view_polygon(self):
         '''
@@ -347,3 +372,4 @@ class GeoJSonData(models.Model):
         ('red', 'Red'),
         ('green', 'Green')
     ], string='Status Check')
+    properties_data = fields.Char(string='Properties Data')

@@ -4,3 +4,4 @@ from . import import_geojson
 from . import res_partner_area
 from . import partner_multiple_point
 from . import supplier_master
+from . import properties_polygon
