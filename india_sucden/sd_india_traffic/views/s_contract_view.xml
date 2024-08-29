@@ -78,10 +78,10 @@
             <xpath expr="//field[@name='contract_line']/tree/field[@name='tax_id']" position="replace">
             </xpath>
             <xpath expr="//field[@name='contract_line']/tree/field[@name='number_of_bags']" position="after">
-                <field name="differential"/>
+                <field name="differential" invisible="1"/>
                 <field name="type" invisible="1"/>
-                <field name="premium_cert" readonly="1" force_save="1"/>
-                <field name="packing_cost" force_save="1" attrs="{'readonly': ['|', ('type', '=', 'export'), ('parent.state', '!=', 'draft')]}"/>
+                <field name="premium_cert" readonly="1" force_save="1" invisible="1"/>
+                <field name="packing_cost" force_save="1" attrs="{'readonly': ['|', ('type', '=', 'export'), ('parent.state', '!=', 'draft')]}" invisible="1"/>
                 <field name="tax_id" readonly="1" force_save="1" widget="many2many_tags"/>
             </xpath>
             <xpath expr="//field[@name='warehouse_id']" position="after">
@@ -153,6 +153,12 @@
             </xpath>
             <xpath expr="//field[@name='name']" position="after">
                 <field name="crop_id"/>
+            </xpath>
+            <xpath expr="//field[@name='start_of_ship_period']" position="replace">
+                <field name="date_from"/>
+            </xpath>
+            <xpath expr="//field[@name='end_of_ship_period']" position="replace">
+                <field name="date_to"/>
             </xpath>
         </field>
     </record>

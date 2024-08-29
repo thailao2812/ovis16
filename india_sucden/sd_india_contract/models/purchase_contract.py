@@ -57,6 +57,8 @@ class PurchaseContract(models.Model):
     gross_price = fields.Float(string='Gross Price', compute='compute_gross_price', store=True)
     remark_note_done = fields.Text(string='Remark')
 
+    remark = fields.Text(string='Remark')
+
     @api.onchange('date_order')
     def onchange_date_order(self):
         deal_line = False
