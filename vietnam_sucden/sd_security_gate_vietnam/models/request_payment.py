@@ -76,9 +76,9 @@ class RequestPayment(models.Model):
         ('fixation_advance', 'Fixation For Advance')
     ], string='Type Of PTBF Payment', default='fixation')
     price_tobe_fix = fields.Many2one('ptbf.fixprice', string='PTBF Fix Price No.')
-    price_usd = fields.Float(string='Price USD', related='price_tobe_fix.price_fix', store=True, digits=(12, 0))
+    price_usd = fields.Float(string='Price USD', related='price_tobe_fix.price_fix', store=True, digits=(12, 2))
     price_diff = fields.Float(string='DIFF', related='purchase_contract_id.diff_price', store=True, digits=(12, 0))
-    final_price_usd = fields.Float(string='Final Price USD', compute='compute_price', store=True, digits=(12, 0))
+    final_price_usd = fields.Float(string='Final Price USD', compute='compute_price', store=True, digits=(12, 2))
     final_price_vnd = fields.Float(string='Final Price VND', compute='compute_price', store=True, digits=(12, 0))
 
     # PTBF Field for advance
@@ -97,8 +97,73 @@ class RequestPayment(models.Model):
     fixation_advance_ids = fields.Many2many('request.payment', 'request_payment_advance_payment_rel', 'request_main_id', 'request_second_id', string='Fixation For Advance No.')
 
     fixation_advance_line_ids = fields.One2many('advance.line', 'request_id', string='Advance Line')
+    reference_information_line_ids = fields.One2many('reference.information',  'request_id', string='Reference Information')
     qty_advance_fix = fields.Integer(string='Fix Quantity', compute='compute_total_qty', store=True)
-    total_amount_usd = fields.Float(string='Total Amount USD', compute='compute_price', store=True, digits=(12, 0))
+    total_amount_usd = fields.Float(string='Total Amount USD', compute='compute_price', store=True, digits=(12, 2))
+    average_rate = fields.Float(string='Average Rate', digits=(12, 0), compute='compute_price', store=True)
+    rate = fields.Float(string='Rate', digits=(12, 0))
+
+    def generate_advance_line(self):
+        for rec in self:
+            if not self.env.context.get('total'):
+                if rec.qty_advance_fix == 0:
+                    raise UserError(_("Hãy nhập số lượng muốn fix cho từng Advance mà bạn chọn!"))
+                if not any(rec.fixation_advance_line_ids.filtered(lambda x: x.name)):
+                    # Remain
+                    value = {
+                        'name': 'Phần còn lại/ Remain Payment:',
+                        'request_id': rec.id,
+                        'request_date': rec.date,
+                        'total_advance_payment_usd': rec.total_amount_usd - sum(
+                            rec.fixation_advance_line_ids.filtered(lambda x: not x.name).mapped('total_advance_payment_usd')),
+                    }
+                    self.env['advance.line'].create(value)
+            if self.env.context.get('total'):
+                advance_remain_line = self.fixation_advance_line_ids.filtered(lambda x: x.name == 'Phần còn lại/ Remain Payment:')
+                advance_remain_line.write({
+                    'request_amount': rec.request_amount - sum(self.fixation_advance_line_ids.filtered(lambda x: x.id != advance_remain_line.id).mapped('request_amount'))
+                })
+                # Total
+                value = {
+                    'name': 'Total:',
+                    'request_id': rec.id,
+                    'total_advance_payment_usd': sum(rec.fixation_advance_line_ids.mapped('total_advance_payment_usd')),
+                    'request_amount': sum(rec.fixation_advance_line_ids.mapped('request_amount')),
+                    'rate': sum(rec.fixation_advance_line_ids.mapped('request_amount')) / sum(rec.fixation_advance_line_ids.mapped('total_advance_payment_usd'))
+                }
+                self.env['advance.line'].create(value)
+
+    def generate_reference_information(self):
+        for rec in self:
+            rec.reference_information_line_ids = [(5, 0)]
+            check_advance_line = rec.fixation_advance_line_ids.filtered(lambda x: x.name and x.rate > 0)
+            if not check_advance_line:
+                raise UserError(_("Hãy nhập rate cho phần còn lại cần thanh toán!"))
+            for line in rec.fixation_advance_line_ids:
+                if not line.name:
+                    value = {
+                        'request_id': line.request_id.id,
+                        'request_payment_id': line.request_payment_id.id
+                    }
+                    self.env['reference.information'].create(value)
+                else:
+                    value = {
+                        'name': 'Phần còn lại/ Remain Payment:',
+                        'request_id': line.request_id.id,
+                        'total_advance_payment_usd': line.total_advance_payment_usd,
+                        'rate': line.rate,
+                        'request_amount': line.total_advance_payment_usd * line.rate
+                    }
+                    self.env['reference.information'].create(value)
+            value = {
+                'name': 'Total:',
+                'request_id': rec.id,
+                'total_advance_payment_usd': sum(rec.reference_information_line_ids.mapped('total_advance_payment_usd')),
+                'rate': sum(rec.reference_information_line_ids.mapped('request_amount')) / sum(rec.reference_information_line_ids.mapped('total_advance_payment_usd')),
+                'request_amount': sum(rec.reference_information_line_ids.mapped('request_amount'))
+            }
+            self.env['reference.information'].create(value)
+            self.with_context(total=True).generate_advance_line()
 
     def get_date(self, date):
         if not date:
@@ -117,8 +182,9 @@ class RequestPayment(models.Model):
         for rec in self:
             rec.qty_advance_fix = sum(rec.fixation_advance_line_ids.mapped('quantity_fix'))
 
-    @api.depends('price_usd', 'price_diff', 'rate', 'type_of_ptbf_payment', 'liffe_price', 'quantity_advance',
-                 'request_amount', 'payment_quantity', 'qty_advance_fix', 'rate')
+    @api.depends('price_usd', 'price_diff', 'rate', 'type_of_ptbf_payment', 'liffe_price', 'quantity_advance', 'fixation_advance_line_ids',
+                 'fixation_advance_line_ids.rate', 'fixation_advance_line_ids.request_amount', 'request_amount', 'payment_quantity',
+                 'qty_advance_fix', 'rate', 'reference_information_line_ids', 'reference_information_line_ids.request_amount')
     def compute_price(self):
         for rec in self:
             if rec.type_of_ptbf_payment == 'fixation':
@@ -134,7 +200,13 @@ class RequestPayment(models.Model):
                 else:
                     rec.advance_price_vnd = 0
             if rec.type_of_ptbf_payment == 'fixation_advance':
+                rec.final_price_usd = rec.price_usd + rec.price_diff
                 rec.total_amount_usd = self.custom_round(rec.final_price_usd * rec.qty_advance_fix)
+                rec.average_rate = rec.fixation_advance_line_ids.filtered(lambda x: x.name == 'Total:').rate
+                if rec.qty_advance_fix > 0:
+                    rec.final_price_vnd = round(rec.reference_information_line_ids.filtered(lambda x: x.name == 'Total:').request_amount / rec.qty_advance_fix)
+                else:
+                    rec.final_price_vnd = 0
 
     @api.depends('delivery_70_ktn_ids', 'delivery_70_ids', 'grn_90_ids', 'grn_100_factory_ids', 'grn_100_fot_ids')
     def compute_data_invisible(self):
@@ -284,7 +356,7 @@ class RequestPayment(models.Model):
 
     @api.depends('payment_quantity', 'fix_price', 'liquidation_amount', 'deposit_amount', 'advance_payment_converted',
                  'total_interest', 'is_converted', 'type', 'type_of_ptbf_payment', 'final_price_vnd', 'total_advance_payment_usd',
-                 'rate')
+                 'rate', 'qty_advance_fix')
     def _compute_request_amount(self):
         for rec in self:
             if rec.type == 'purchase':
@@ -299,6 +371,8 @@ class RequestPayment(models.Model):
                     rec.request_amount = rec.payment_quantity * rec.final_price_vnd
                 if rec.type_of_ptbf_payment == 'advance':
                     rec.request_amount = self.custom_round(rec.total_advance_payment_usd * rec.rate)
+                if rec.type_of_ptbf_payment == 'fixation_advance':
+                    rec.request_amount = rec.final_price_vnd * rec.qty_advance_fix
 
     @api.depends('converted_line_ids', 'converted_line_ids.advance_payment', 'converted_line_ids.interest')
     def compute_advance_payment_converted(self):

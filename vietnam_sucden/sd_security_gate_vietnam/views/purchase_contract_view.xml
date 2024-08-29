@@ -502,7 +502,7 @@
                     <group>
                         <group>
                             <field name="type_of_ptbf_payment"/>
-                            <field name="price_tobe_fix" options="{'no_create': True}''" domain="[('contract_id', '=', parent_id_purchase_contract)]" attrs="{'required': [('type_of_ptbf_payment', 'in', ['fixation', 'fixation_advance'])], 'invisible': [('type_of_ptbf_payment', 'not in', ['fixation', 'fixation_advance'])]}"/>
+                            <field name="price_tobe_fix" options="{'no_create': True}" domain="[('contract_id', '=', parent_id_purchase_contract)]" attrs="{'required': [('type_of_ptbf_payment', 'in', ['fixation', 'fixation_advance'])], 'invisible': [('type_of_ptbf_payment', 'not in', ['fixation', 'fixation_advance'])]}"/>
 <!--                            <field name="price_tobe_fix" invisible="1"/>-->
 
                             <field name="partner_id" readonly="1"/>
@@ -555,17 +555,37 @@
                                    attrs="{'required': [('type_of_ptbf_payment', 'in', ['fixation_advance'])], 'invisible': [('type_of_ptbf_payment', '!=', 'fixation_advance')]}">
                             <tree editable="top">
                                 <field name="request_payment_id" context="{'seq': parent.name, 'purchase_contract_id': parent.parent_id_purchase_contract}" options="{'no_create': True}" domain="[('purchase_contract_id', '=', parent.parent_id_purchase_contract), ('type_of_ptbf_payment', '=', 'advance')]"/>
+                                <field name="name" readonly="1"/>
+                                <field name="request_date"/>
+                                <field name="total_advance_payment_usd"/>
+                                <field name="rate"/>
+                                <field name="request_amount"/>
                                 <field name="advance_qty"/>
                                 <field name="remain_qty"/>
                                 <field name="quantity_fix" context="{'seq': parent.name, 'purchase_contract_id': parent.parent_id_purchase_contract}"/>
                             </tree>
                         </field>
+                    <button name="generate_advance_line" class="btn-primary" string="Generate Advance Line" attrs="{'invisible': [('type_of_ptbf_payment', '!=', 'fixation_advance')]}" type="object"/>
+                    <field name="reference_information_line_ids">
+                            <tree editable="top">
+                                <field name="request_payment_id"/>
+                                <field name="name" readonly="1"/>
+                                <field name="total_advance_payment_usd"/>
+                                <field name="rate"/>
+                                <field name="request_amount"/>
+                            </tree>
+                        </field>
+                    <button name="generate_reference_information" class="btn-primary" string="Generate" attrs="{'invisible': [('type_of_ptbf_payment', '!=', 'fixation_advance')]}" type="object"/>
                     <group attrs="{'invisible': [('type_of_ptbf_payment', '!=', 'fixation_advance')]}">
                         <field name="qty_advance_fix" readonly="1"/>
                         <field name="price_usd"/>
                         <field name="price_diff"/>
                         <field name="final_price_usd"/>
+                        <field name="total_amount_usd"/>
                         <field name="rate"/>
+                        <field name="average_rate"/>
+                        <field name="final_price_vnd"/>
+                        <field name="request_amount"/>
                     </group>
 
                     <separator string="Payment Information"/>
