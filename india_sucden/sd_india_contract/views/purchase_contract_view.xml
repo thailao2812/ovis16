@@ -223,6 +223,9 @@
                 <button name="print_cr" string="Print CR" type="object" class="oe_highlight"/>
                 <button name="print_cr_detail" string="Print Invoice" type="object" class="oe_highlight" attrs="{'invisible': [('state', '!=', 'approved')]}"/>
             </xpath>
+            <xpath expr="//field[@name='date_fix']" position="after">
+                <field name="remark"/>
+            </xpath>
         </field>
     </record>
 
@@ -531,6 +534,7 @@
             </xpath>
             <xpath expr="//field[@name='songay']" position="after">
                 <field name="agent_id" domain="[('agent', '=', True)]" options="{'no_create': True}" attrs="{'readonly': [('state', 'in', ['director', 'done', 'cancel'])]}"/>
+                <field name="remark"/>
             </xpath>
             <xpath expr="//field[@name='request_payment_ids']/form/group/group[2]/field[@name='purchase_contract_id']" position="after">
                 <field name="financial_year_id" required="1" options="{'no_create': True}"/>
