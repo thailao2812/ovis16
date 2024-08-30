@@ -24,7 +24,7 @@
                             <field name="shipper" attrs="{'readonly':[('state','=','done')]}"/>
                             <field name="shipping_line_id" attrs="{'readonly':[('state','=','done')]}"/>
                             <field name="shipment_from" attrs="{'readonly':[('state','=','done')]}"/>
-                            <field name="forwarding_agent" attrs="{'readonly':[('state','=','done')]}"/>
+                            <field name="forwarding_agent_id" attrs="{'readonly':[('state','=','done')]}"/>
                         </group>
                     </group>
                 </page>

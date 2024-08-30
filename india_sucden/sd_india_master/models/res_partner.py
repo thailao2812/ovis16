@@ -9,7 +9,7 @@ class ResPartner(models.Model):
     ifsc_code = fields.Char(string='IFSC Code')
     agent = fields.Boolean(string='Agent')
     shipping_customer = fields.Boolean(string='Shipping Customer')
-    forwarding_agent = fields.Boolean(string='Forwarding Agent')
+    forwarding_agent_check = fields.Boolean(string='Forwarding Agent')
     estate_name = fields.Char(string='Estate Name')
     # accounting_type = fields.Selection([
     #     ('coffee_export', 'Coffee Export'),
