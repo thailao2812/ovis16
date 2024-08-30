@@ -660,6 +660,7 @@
             <xpath expr="//field[@name='qty_unreceived']" position="after">
                 <field name="qty_received_net"/>
                 <field name="qty_unreceived_net"/>
+                <field name="unreceive_gross_value"/>
             </xpath>
             <xpath expr="//field[@name='amount_deposit']" position="after">
                 <field name="total_deduction_quantity"/>
