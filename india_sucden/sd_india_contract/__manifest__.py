@@ -12,6 +12,7 @@
         'security/ir.model.access.csv',
         'wizard/wizard_reject_view.xml',
         'wizard/wizard_ptbf_contract_view.xml',
+        'wizard/wizard_invoice_form_view.xml',
         'views/purchase_contract_view.xml',
         'views/s_contract_view.xml',
         'views/request_payment_view.xml',
