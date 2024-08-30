@@ -9,6 +9,9 @@
             	<attribute name="domain">[('state', 'not in', ['done', 'cancel'])]</attribute>
             	<attribute name="options">{'no_create': True}</attribute>
             </xpath>
+            <xpath expr="//field[@name='request_line']/tree/field[@name='stack_id']" position="attributes">
+                <attribute name="readonly">0</attribute>
+            </xpath>
 
         </field>
     </record>
