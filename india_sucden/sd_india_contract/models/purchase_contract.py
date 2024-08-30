@@ -56,6 +56,7 @@ class PurchaseContract(models.Model):
     unfixed_gross_qty = fields.Float(string='Unfixed Gross Qty', compute='compute_data_fix', store=True)
     gross_price = fields.Float(string='Gross Price', compute='compute_gross_price', store=True)
     remark_note_done = fields.Text(string='Remark')
+    unreceive_gross_value = fields.Float(string='Unreceive Gross Value', compute='compute_gross_price', store=True)
 
     remark = fields.Text(string='Remark')
 
@@ -106,10 +107,11 @@ class PurchaseContract(models.Model):
             contract.write({'state': 'done'})
         return 1
 
-    @api.depends('premium', 'relation_price_unit')
+    @api.depends('premium', 'relation_price_unit', 'qty_unreceived_net')
     def compute_gross_price(self):
         for rec in self:
             rec.gross_price = rec.relation_price_unit + rec.premium
+            rec.unreceive_gross_value = rec.gross_price * rec.qty_unreceived_net
 
     @api.depends('qty_received_net', 'qty_received', 'total_qty_fixed')
     def compute_data_fix(self):
