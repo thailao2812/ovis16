@@ -51,7 +51,7 @@ class ShippingInstruction(models.Model):
     ], string='Freight', default=None)
     sample_approve_date = fields.Date(string='Sample Approve Date')
     shipment_from = fields.Many2one('stock.warehouse', string='Shipment From')
-    forwarding_agent_id = fields.Many2one('res.partner', string='Forwarding Agent', domain=[('forwarding_agent', '=', True)])
+    forwarding_agent_id = fields.Many2one('res.partner', string='Forwarding Agent', domain=[('forwarding_agent_check', '=', True)])
     no_of_bag = fields.Float(string='No of bags', digits=(16, 0), related='shipping_ids.bags', store=True)
     packing_place = fields.Selection(selection='_get_new_packing_type', string='Stuffing place')
     status = fields.Selection(selection='_get_new_selection_type', string='Ship by')
