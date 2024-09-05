@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+            <menuitem id="sd_certificate_license_detail_purchase_contract_menu" 
+               action="action_sd_certificate_license_detail" 
+               sequence="26"
+               parent="sd_purchase_contract.purchase_contract_root_master_data_menu" 
+               name="Certificate License Detail"
+               groups="sd_purchase_contract.group_purchase_contract_user,base.group_user"/>
+</odoo>

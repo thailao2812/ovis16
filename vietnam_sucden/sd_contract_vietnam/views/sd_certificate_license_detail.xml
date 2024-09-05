@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_sd_certificate_license_detail_tree" model="ir.ui.view">
+        <field name="name">view.v.sd.certificate.license.detail.tree</field>
+        <field name="model">v.sd.certificate.license.detail</field>
+        <field name="arch" type="xml">
+            <tree decoration-danger="state == 'expired'">
+                <field name = 'cert_name' readonly = '1'/>
+                <field name = 'license_number' readonly = '1'/>
+                <field name = 'type' readonly = '1'/>
+                <field name = 'partner_name' readonly = '1'/>
+                <field name = 'expired_date' readonly = '1'/>
+                <field name = 'state' readonly = '1'/>
+                <field name = 'warehouse_name' readonly = '1'/>
+
+                <field name = 'faq_tobe_received' sum = 'Sum FAQ Tobe Receive' readonly = '1'/>
+                <field name = 'g1_s18_tobe_received' sum = 'Sum G1-S18 Tobe Receive' readonly = '1'/>
+                <field name = 'g1_s16_tobe_received' sum = 'Sum G1-S16 Tobe Receive' readonly = '1'/>
+                <field name = 'g2_tobe_received' sum = 'Sum G2 Tobe Receive' readonly = '1'/>
+
+                <field name = 'faq_purchase' sum = 'Sum FAQ Purchase' readonly = '1'/>
+                <field name = 'g1_s18_purchase' sum = 'Sum G1-S18 Purchase' readonly = '1'/>
+                <field name = 'g1_s16_purchase' sum = 'Sum G1-S16 Purchase' readonly = '1'/>
+                <field name = 'g2_purchase' sum = 'Sum G2 Purchase' readonly = '1'/>
+
+                <field name = 'faq_derivable' sum = 'Sum FAQ Derivable' readonly = '1'/>
+                <field name = 'g1_s18_derivable' sum = 'Sum G1-S18 Derivable' readonly = '1'/>
+                <field name = 'g1_s16_derivable' sum = 'Sum G1-S16 Derivable' readonly = '1'/>
+                <field name = 'g2_derivable' sum = 'Sum G2 Derivable' readonly = '1'/>
+                <field name = 'g3_derivable' sum = 'Sum G3 Derivable' readonly = '1'/>
+
+                <field name = 'faq_allocated' sum = 'Sum FAQ Allocated' readonly = '1'/>
+                <field name = 'g1_s18_allocated' sum = 'Sum G1-S18 Allocated' readonly = '1'/>
+                <field name = 'g1_s16_allocated' sum = 'Sum G1-S16 Allocated' readonly = '1'/>
+                <field name = 'g2_allocated' sum = 'Sum G2 Allocated' readonly = '1'/>
+                <field name = 'g3_allocated' sum = 'Sum G3 Allocated' readonly = '1'/>
+
+                <field name = 'faq_allocated_not_out' sum = 'Sum FAQ Tobe Ship' readonly = '1'/>
+                <field name = 'g1_s18_allocated_not_out' sum = 'Sum G1-S18 Tobe Ship' readonly = '1'/>
+                <field name = 'g1_s16_allocated_not_out' sum = 'Sum G1-S16 Tobe Ship' readonly = '1'/>
+                <field name = 'g2_allocated_not_out' sum = 'Sum G2 Tobe Ship' readonly = '1'/>
+                <field name = 'g3_allocated_not_out' sum = 'Sum G3 Tobe Ship' readonly = '1'/>
+
+                <field name = 'faq_allocated_out' sum = 'Sum FAQ Shipped' readonly = '1'/>
+                <field name = 'g1_s18_allocated_out' sum = 'Sum G1-S18 Shipped' readonly = '1'/>
+                <field name = 'g1_s16_allocated_out' sum = 'Sum G1-S16 Shipped' readonly = '1'/>
+                <field name = 'g2_allocated_out' sum = 'Sum G2 Shipped' readonly = '1'/>
+                <field name = 'g3_allocated_out' sum = 'Sum G3 Shipped' readonly = '1'/>
+
+                <field name = 'faq_unallocated' sum = 'Sum FAQ Un Allocate' readonly = '1'/>
+                <field name = 'g1_s18_unallocated' sum = 'Sum G1-S18 Un Allocate' readonly = '1'/>
+                <field name = 'g1_s16_unallocated' sum = 'Sum G1-S16 Un Allocate' readonly = '1'/>
+                <field name = 'g2_unallocated' sum = 'Sum G2 Un Allocate' readonly = '1'/>
+                <field name = 'g3_unallocated' sum = 'Sum G3 Un Allocate' readonly = '1'/>
+
+                <field name = 'faq_balance' sum = 'Sum FAQ Balance' readonly = '1'/>
+                <field name = 'g1_s18_balance' sum = 'Sum G1-S18 Balance' readonly = '1'/>
+                <field name = 'g1_s16_balance' sum = 'Sum G1-S16 Balance' readonly = '1'/>
+                <field name = 'g2_balance' sum = 'Sum G2 Balance' readonly = '1'/>
+                <field name = 'g3_balance' sum = 'Sum G3 Balance' readonly = '1'/>
+
+                <field name = 'final_balance' sum = 'Sum Final Balance' readonly = '1'/>
+
+                <field name = 'faq_position' sum = 'Sum FAQ Position' readonly = '1'/>
+                <field name = 'g1_s18_position' sum = 'Sum G1-S18 Position' readonly = '1'/>
+                <field name = 'g1_s16_position' sum = 'Sum G1-S16 Position' readonly = '1'/>
+                <field name = 'g2_position' sum = 'Sum G2 Position' readonly = '1'/>
+                <field name = 'g3_position' sum = 'Sum G3 Position' readonly = '1'/>
+
+                <field name = 'total_position' sum = 'Sum Total Position' readonly = '1'/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="search_sd_certificate_license_detail" model="ir.ui.view">
+        <field name="name">search.certificate.license.detail</field>
+        <field name="model">v.sd.certificate.license.detail</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name = "cert_name"/>
+                <field name = "license_number"/>
+                <field name = "type"/>
+                <field name = "partner_name"/>
+                <field name = "state"/>
+                <field name = "warehouse_name"/>
+                
+                <group expand="1" string="Group By">
+                    <filter string="Warehouse" domain="[]" name="filter_warehouse_name" context="{'group_by':'warehouse_name'}"/>
+                    <filter string="License Number" domain="[]" name="filter_license_number" context="{'group_by':'license_number'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+                    
+    <record id="action_sd_certificate_license_detail" model="ir.actions.act_window">
+        <field name="name">Certificate License Detail</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">v.sd.certificate.license.detail</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_sd_certificate_license_detail_tree"/>
+        <!-- <field name="view_id" ref="view_sd_certificate_license_detail_tree"/> -->
+        <!-- <field name="context">{'search_by_field_date': ['fob_date']}</field> -->
+        <field name="context">{}</field>
+    </record>
+</odoo>

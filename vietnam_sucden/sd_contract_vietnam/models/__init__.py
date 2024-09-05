@@ -10,4 +10,4 @@ from . import ptbf_fixprice
 from . import average_price_contract
 from . import request_payment
 from . import npe_nvp_relation
-# from . import delivery_registration
+from . import sd_certificate_license_detail
