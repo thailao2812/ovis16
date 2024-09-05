@@ -10,3 +10,5 @@ access_average_price_contract,access_average_price_contract,model_average_price_
 access_delivery_ktn,access_delivery_ktn,model_delivery_katoen,base.group_user,1,1,1,1
 
 access_open_qty_npe,access_open_qty_npe,model_open_qty_npe,base.group_user,1,1,1,1
+
+access_v_sd_certificate_license_detail_user,access_v_sd_certificate_license_detail_user,model_v_sd_certificate_license_detail,sd_report.group_report_user,1,1,1,1

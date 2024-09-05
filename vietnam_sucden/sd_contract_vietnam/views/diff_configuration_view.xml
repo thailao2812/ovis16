@@ -25,5 +25,5 @@
             name="Diff Configuration for Contract"
             action="action_diff_configuration_contract_tree"
             parent="sd_purchase_contract.purchase_contract_root_master_data_menu"
-            sequence="25"/>
+            sequence="27"/>
 </odoo>
