@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="inherit_view_lot_stack_allocation_tree" model="ir.ui.view">
+        <field name="name">inherit_view_lot_stack_allocation_tree</field>
+        <field name="model">lot.stack.allocation</field>
+        <field name="inherit_id" ref="sd_quality.view_lot_stack_allocation_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='no_of_bag']" position="after">
+                <field name="license_id"/>
+                <field name="certificate_id"/>
+                <field name="license_type"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="inherit_view_lot_stack_allocation_search" model="ir.ui.view">
+        <field name="name">inherit_view_lot_stack_allocation_search</field>
+        <field name="model">lot.stack.allocation</field>
+        <field name="inherit_id" ref="sd_quality.view_lot_stack_allocation_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='delivery_id']" position="after">
+                <field name="license_id"/>
+                <field name="certificate_id"/>
+                    <group expand="1" string="Group By">
+                        <filter string="License Number" name="filter_license_id" domain="[]" context="{'group_by':'lot_id'}"/>
+                        <filter string="Certificate" name="filter_certificate_id" domain="[]" context="{'group_by':'contract_id'}"/>
+                    </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

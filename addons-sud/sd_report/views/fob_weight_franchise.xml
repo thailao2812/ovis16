@@ -8,6 +8,7 @@
             <field name="arch" type="xml">
                 <tree decoration-info="franchise_out !=''" default_order="id desc">
                     <field name = 'factory_etd' string="Factory ETD" readonly = '1'/>
+                    <field name = 'warehouse' string="Warehouse" readonly = '1'/>
                     <field name = 'si_name' string="SI" readonly = '1'/>
                     <!-- <field name = 'do_date' string="DO Date" readonly = '1'/> -->
                     <field name = 'customer' string="Customer" readonly = '1'/>
