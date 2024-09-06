@@ -86,7 +86,7 @@ class CertificateLicenseDetail(models.Model):
         self.env.cr.execute("""
             CREATE OR REPLACE VIEW public.v_sd_certificate_license_detail AS
             SELECT row_number() OVER (ORDER BY ncl.expired_date DESC) AS id, cert.name cert_name, ncl.name license_number, ncl.type, ncl.expired_date, ncl.state,
-                    swh.name warehouse_name, rp.display_name partner_name,
+                    swh.code warehouse_name, rp.display_name partner_name,
                     license.*, license.faq_balance + license.g1_s18_balance + license.g1_s16_balance + license.g2_balance + license.g3_balance AS final_balance,
                     license.faq_balance + license.faq_tobe_received AS faq_position,
                     license.g1_s18_balance + license.g1_s18_tobe_received AS g1_s18_position,
