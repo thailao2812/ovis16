@@ -14,6 +14,8 @@ class DeliveryOrder(models.Model):
     packing_place = fields.Selection(selection='_get_new_packing_type', string='Stuffing place')
     from_warehouse_id = fields.Many2one('stock.warehouse', string="From Warehouse", default=False, required=True)
 
+    trucking_no = fields.Char(string="Trucking No.", readonly=False, states={})
+
     @api.model
     def _get_new_packing_type(self):
         return [('kushalnagar', 'Kushalnagar'), ('mangalore', 'Managalore')]
