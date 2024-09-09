@@ -98,7 +98,7 @@ class CertificateLicenseDetail(models.Model):
                     license.g3_balance AS total_position
                 FROM (SELECT *,
                         -- Derivable
-                        COALESCE(lsa.faq_purchase, 0::numeric) - COALESCE(s_license_alc.faq_allocated, 0::numeric) AS faq_derivable,
+                        0 AS faq_derivable,
                         COALESCE(COALESCE(lsa.g1_s18_purchase, 0::int) + ((COALESCE(lsa.faq_purchase, 0::numeric) - COALESCE(s_license_alc.faq_allocated, 0::numeric)) * 25 / 100), 0::int) AS g1_s18_derivable,
                         COALESCE(COALESCE(lsa.g1_s16_purchase, 0::int) + ((COALESCE(lsa.faq_purchase, 0::numeric) - COALESCE(s_license_alc.faq_allocated, 0::numeric)) * 33 / 100), 0::int) AS g1_s16_derivable,
                         COALESCE(COALESCE(lsa.g2_purchase, 0::int) + ((COALESCE(lsa.faq_purchase, 0::numeric) - COALESCE(s_license_alc.faq_allocated, 0::numeric)) * 40 / 100), 0::int) AS g2_derivable,
