@@ -86,7 +86,7 @@ class CertificateLicenseDetail(models.Model):
         self.env.cr.execute("""
             CREATE OR REPLACE VIEW public.v_sd_certificate_license_detail AS
             SELECT row_number() OVER (ORDER BY ncl.expired_date DESC) AS id, cert.name cert_name, ncl.name license_number, ncl.type, ncl.expired_date, ncl.state,
-                    swh.name warehouse_name, rp.display_name partner_name,
+                    swh.code warehouse_name, rp.display_name partner_name,
                     license.*, license.faq_balance + license.g1_s18_balance + license.g1_s16_balance + license.g2_balance + license.g3_balance AS final_balance,
                     license.faq_balance + license.faq_tobe_received AS faq_position,
                     license.g1_s18_balance + license.g1_s18_tobe_received AS g1_s18_position,
@@ -121,7 +121,7 @@ class CertificateLicenseDetail(models.Model):
                         COALESCE(s_license_alc.g1_s16_allocated, 0::int) - COALESCE(s_license_alc.g1_s16_allocated_out, 0::int) AS g1_s16_allocated_not_out,
                         COALESCE(s_license_alc.g2_allocated, 0::int) - COALESCE(s_license_alc.g2_allocated_out, 0::int) AS g2_allocated_not_out,
                         COALESCE(s_license_alc.g3_allocated, 0::int) - COALESCE(s_license_alc.g3_allocated_out, 0::int) AS g3_allocated_not_out
-                        FROM (SELECT sal.license_id, sal.warehouse_id, sal.partner_id, sal.grade_id,
+                        FROM (SELECT sal.license_id, sal.warehouse_id, sal.partner_id,
                                 sum(CASE WHEN pc.name = 'FAQ' THEN sal.qty_allocation ELSE 0 END) AS faq_purchase,
                                 sum(CASE WHEN pc.name = 'G1-S18' THEN sal.qty_allocation ELSE 0 END) AS g1_s18_purchase,
                                 sum(CASE WHEN pc.name = 'G1-S16' THEN sal.qty_allocation ELSE 0 END) AS g1_s16_purchase,
@@ -130,9 +130,9 @@ class CertificateLicenseDetail(models.Model):
                             JOIN product_category pc ON pc.id=sal.grade_id
                             WHERE sal.state='approved'
                             -- and sal.license_id in (185,136,123)
-                            GROUP BY sal.license_id, sal.warehouse_id, sal.partner_id, sal.grade_id) lsa
+                            GROUP BY sal.license_id, sal.warehouse_id, sal.partner_id) lsa
                         
-                        LEFT JOIN (SELECT pur_c.license_id, pur_c.warehouse_id, pur_c.grade_id,
+                        LEFT JOIN (SELECT pur_c.license_id, pur_c.warehouse_id,
                                 sum(CASE WHEN pc.name = 'FAQ' THEN pur_c.qty_unreceived ELSE 0 END) AS faq_tobe_received,
                                 sum(CASE WHEN pc.name = 'G1-S18' THEN pur_c.qty_unreceived ELSE 0 END) AS g1_s18_tobe_received,
                                 sum(CASE WHEN pc.name = 'G1-S16' THEN pur_c.qty_unreceived ELSE 0 END) AS g1_s16_tobe_received,
@@ -140,9 +140,9 @@ class CertificateLicenseDetail(models.Model):
                             FROM purchase_contract pur_c
                             JOIN product_category pc ON pc.id=pur_c.grade_id
                             -- WHERE pur_c.license_id in (185,136,123)
-                            GROUP BY pur_c.license_id, pur_c.warehouse_id, pur_c.grade_id) lpc USING (license_id, grade_id, warehouse_id)
+                            GROUP BY pur_c.license_id, pur_c.warehouse_id) lpc USING (license_id, warehouse_id)
                         
-                        LEFT JOIN (SELECT sila1.license_id, sila1.grade_id, sila1.warehouse_id, 
+                        LEFT JOIN (SELECT sila1.license_id, sila1.warehouse_id, 
                                 COALESCE(sila1.faq_allocated, 0::numeric) + COALESCE((scla1.s_faq_allocated), 0::numeric) AS faq_allocated,
                                 COALESCE(sila1.g1_s18_allocated, 0::numeric) + COALESCE((scla1.s_g1_s18_allocated), 0::numeric) AS g1_s18_allocated,
                                 COALESCE(sila1.g1_s16_allocated, 0::numeric) + COALESCE((scla1.s_g1_s16_allocated), 0::numeric) AS g1_s16_allocated,
@@ -152,7 +152,7 @@ class CertificateLicenseDetail(models.Model):
                                 COALESCE(sila1.g1_s16_allocated_out, 0::numeric) + COALESCE((scla1.s_g1_s16_allocated), 0::numeric) AS g1_s16_allocated_out,
                                 COALESCE(sila1.g2_allocated_out, 0::numeric) + COALESCE((scla1.s_g2_allocated), 0::numeric) AS g2_allocated_out,
                                 COALESCE(sila1.g3_allocated_out, 0::numeric) + COALESCE((scla1.s_g3_allocated), 0::numeric) AS g3_allocated_out
-                                FROM (SELECT sila.license_id, sila.grade_id, sila.warehouse_id,
+                                FROM (SELECT sila.license_id, sila.warehouse_id,
                                         sum(CASE WHEN pc.name = 'FAQ' THEN sila.allocation_qty ELSE 0 END) AS faq_allocated,
                                         sum(CASE WHEN pc.name = 'G1-S18' THEN sila.allocation_qty ELSE 0 END) AS g1_s18_allocated,
                                         sum(CASE WHEN pc.name = 'G1-S16' THEN sila.allocation_qty ELSE 0 END) AS g1_s16_allocated,
@@ -167,9 +167,9 @@ class CertificateLicenseDetail(models.Model):
                                     JOIN product_category pc ON pc.id=sila.grade_id
                                     WHERE sila.warehouse_id>0
                                     -- and sila.license_id in (185,136,123)
-                                    GROUP BY sila.license_id, sila.grade_id, sila.warehouse_id) sila1
+                                    GROUP BY sila.license_id, sila.warehouse_id) sila1
                             
-                                    LEFT JOIN (SELECT scla.license_id, scla.grade_id,
+                                    LEFT JOIN (SELECT scla.license_id,
                                         sum(CASE WHEN pc.name = 'FAQ' THEN scla.allocation_qty ELSE 0 END) AS s_faq_allocated,
                                         sum(CASE WHEN pc.name = 'G1-S18' THEN scla.allocation_qty ELSE 0 END) AS s_g1_s18_allocated,
                                         sum(CASE WHEN pc.name = 'G1-S16' THEN scla.allocation_qty ELSE 0 END) AS s_g1_s16_allocated,
@@ -178,8 +178,8 @@ class CertificateLicenseDetail(models.Model):
                                     FROM s_contract_license_allocation scla
                                     JOIN product_category pc ON pc.id=scla.grade_id
                                     -- WHERE scla.license_id in (185,136,123)
-                                    GROUP BY scla.license_id, scla.grade_id) scla1 USING (license_id, grade_id)) s_license_alc
-                        USING (license_id, grade_id, warehouse_id)) AS license
+                                    GROUP BY scla.license_id) scla1 USING (license_id)) s_license_alc
+                        USING (license_id, warehouse_id)) AS license
 
                 JOIN stock_warehouse swh ON swh.id=license.warehouse_id
                 JOIN res_partner rp ON rp.id=license.partner_id
