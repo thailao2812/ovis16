@@ -341,7 +341,7 @@ class RequestPayment(models.Model):
                     'qty_receive': self.payment_quantity,
                     'qty_price': self.payment_quantity,
                     'final_price_en': self.final_price_usd,
-                    'rate': self.rate,
+                    'rate': self.average_rate,
                     'final_price_vn': self.final_price_vnd,
                     'total_amount_en': self.final_price_usd * self.payment_quantity,
                     'total_amount_vn': self.final_price_vnd * self.payment_quantity,

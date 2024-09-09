@@ -557,7 +557,7 @@
                                 <field name="name" readonly="1"/>
                                 <field name="request_date"/>
                                 <field name="total_advance_payment_usd"/>
-                                <field name="rate"/>
+<!--                                <field name="rate"/>-->
                                 <field name="request_amount"/>
                                 <field name="advance_qty"/>
                                 <field name="remain_qty"/>

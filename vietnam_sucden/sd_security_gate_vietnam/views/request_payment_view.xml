@@ -104,7 +104,7 @@
                                 <field name="name" readonly="1"/>
                                 <field name="request_date"/>
                                 <field name="total_advance_payment_usd"/>
-                                <field name="rate"/>
+<!--                                <field name="rate"/>-->
                                 <field name="request_amount" decoration-danger="request_amount > 0" groups="sd_security_gate_vietnam.group_request_payment_seeing_money_value"/>
                                 <field name="advance_qty"/>
                                 <field name="remain_qty"/>
