@@ -272,8 +272,7 @@ class PtbfFixPrice(models.Model):
                 diff = line.contract_id._get_diff_price()
                 line.diff = diff
                 line.final_price = line.price_fix + diff
-    
-    
+
     final_price = fields.Float(string="Final Price",compute='_compute_final_price',store = True)
     price_fix = fields.Float(string="Price Fix")
     diff = fields.Float(string="Diff", compute='_compute_final_price',store = True)

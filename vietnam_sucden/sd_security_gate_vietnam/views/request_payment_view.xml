@@ -47,7 +47,7 @@
                         <group>
                             <field name="is_dr_request" invisible="1"/>
                             <field name="type_of_ptbf_payment" readonly="1" attrs="{'invisible': [('type', '!=', 'ptbf')]}"/>
-                            <field name="price_tobe_fix" readonly="1" options="{'no_create': True}" domain="[('contract_id', '=', parent_id_purchase_contract)]" attrs="{'required': [('type_of_ptbf_payment', 'in', ['fixation', 'fixation_advance'])], 'invisible': [('type_of_ptbf_payment', 'not in', ['fixation', 'fixation_advance'])]}"/>
+                            <field name="price_tobe_fix" readonly="1" options="{'no_create': True}" domain="[('contract_id', '=', parent_id_purchase_contract)]" attrs="{'required': [('type_of_ptbf_payment', 'in', ['fixation', 'fixation_advance'])], 'invisible': ['|', ('type_of_ptbf_payment', 'not in', ['fixation', 'fixation_advance']), ('type', '!=', 'ptbf')]}"/>
                             <field name="partner_id" readonly="1"/>
                             <field name="product_id" invisible="1"/>
                             <field name="purchase_contract_id" readonly="1"/>
@@ -98,7 +98,7 @@
                         </group>
                     </group>
                     <separator string="Fixation For Advance" attrs="{'invisible': [('type_of_ptbf_payment', '!=', 'fixation_advance')]}"/>
-                    <field name="fixation_advance_line_ids" readonly="1">
+                    <field name="fixation_advance_line_ids" readonly="1" attrs="{'invisible': [('type_of_ptbf_payment', '!=', 'fixation_advance')]}">
                             <tree editable="top">
                                 <field name="request_payment_id" context="{'seq': parent.name, 'purchase_contract_id': parent.parent_id_purchase_contract}" options="{'no_create': True}" domain="[('purchase_contract_id', '=', parent.parent_id_purchase_contract), ('type_of_ptbf_payment', '=', 'advance')]"/>
                                 <field name="name" readonly="1"/>
@@ -111,7 +111,7 @@
                                 <field name="quantity_fix" context="{'seq': parent.name, 'purchase_contract_id': parent.parent_id_purchase_contract}"/>
                             </tree>
                         </field>
-                    <field name="reference_information_line_ids" readonly="1">
+                    <field name="reference_information_line_ids" readonly="1" attrs="{'invisible': [('type_of_ptbf_payment', '!=', 'fixation_advance')]}">
                             <tree editable="top">
                                 <field name="request_payment_id"/>
                                 <field name="name" readonly="1"/>

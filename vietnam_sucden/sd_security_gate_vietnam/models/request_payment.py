@@ -76,6 +76,7 @@ class RequestPayment(models.Model):
         ('fixation_advance', 'Fixation For Advance')
     ], string='Type Of PTBF Payment', default='fixation')
     price_tobe_fix = fields.Many2one('ptbf.fixprice', string='PTBF Fix Price No.')
+    quantity_of_price_tobe_fix = fields.Float(string='Quantity Price To Be Fix', related='price_tobe_fix.quantity', store=True)
     price_usd = fields.Float(string='Price USD', related='price_tobe_fix.price_fix', store=True, digits=(12, 2))
     price_diff = fields.Float(string='DIFF', related='purchase_contract_id.diff_price', store=True, digits=(12, 0))
     final_price_usd = fields.Float(string='Final Price USD', compute='compute_price', store=True, digits=(12, 2))
@@ -275,20 +276,53 @@ class RequestPayment(models.Model):
                 if total_payment != 0:
                     if request.state != 'paid':
                         request.state = 'paid'
-                        # check_state = self.env['user.process.state'].search([
-                        #     ('request_payment_id', '=', request.id),
-                        #     ('state', 'like', '%Paid by%')
-                        # ])
-                        # if not check_state:
-                        #     self.env['user.process.state'].create({
-                        #         'request_payment_id': request.id,
-                        #         'user_id': self.env.user.id,
-                        #         'date': datetime.today(),
-                        #         'state': 'Paid by %s' % self.env.user.name
-                        #     })
-                        # else:
-                        #     check_state.date = datetime.today()
-                        #     check_state.state = 'Paid by %s' % self.env.user.name
+
+    def _create_stock_moves(self, picking, picking_type):
+        moves = self.env['stock.move.line']
+        price_unit = self.price_tobe_fix.final_price / 1000
+        vals = {
+            'warehouse_id': picking_type.warehouse_id.id,
+            'picking_id': picking.id,
+            'product_id': self.product_id.id,
+            'product_uom_id': self.product_id.uom_id.id,
+            'init_qty': self.payment_quantity,
+            'qty_done': self.payment_quantity or 0.0,
+            'price_unit': price_unit,
+            'picking_type_id': picking_type.id,
+            'location_id': picking_type.default_location_src_id.id,
+            'location_dest_id': picking_type.default_location_dest_id.id,
+            'date': self.date,
+            'currency_id': self.purchase_contract_id.currency_id.id or False,
+            'state': 'draft',
+        }
+        move_id = moves.sudo().create(vals)
+        return move_id
+
+    def create_picking(self, history_rate_id):
+        contract_id = self.purchase_contract_id
+
+        picking_type = self.env['stock.picking.type'].sudo().search([('name', '=', 'NPE -> NVP')])
+
+        purchase_contract_id = contract_id
+
+        var = {
+            'warehouse_id': picking_type.warehouse_id.id,
+            'picking_type_id': picking_type.id,
+            'partner_id': purchase_contract_id.partner_id.id,
+            'date': self.date,
+            'date_done': self.date,
+            'origin': purchase_contract_id.name,
+            'location_dest_id': picking_type.default_location_dest_id.id,
+            'location_id': picking_type.default_location_src_id.id,
+            'purchase_contract_id': purchase_contract_id.id,
+            'rate_ptbf': self.rate
+        }
+        picking = self.env['stock.picking'].sudo().create(var)
+        history_rate_id.grn_id = picking.id
+
+        self._create_stock_moves(picking, picking_type)
+
+        picking.button_sd_validate()
 
     def approve_by_director(self):
         for record in self:
@@ -298,6 +332,38 @@ class RequestPayment(models.Model):
                 'date': datetime.today(),
                 'state': 'Approve by Director: %s' % self.env.user.name
             })
+            value = False
+            if self.type == 'ptbf' and self.type_of_ptbf_payment == 'fixation_advance':
+                ptpf_fix_price = self.price_tobe_fix
+                value = {
+                    'date_receive': self.date,
+                    'product_id': self.product_id.id,
+                    'qty_receive': self.payment_quantity,
+                    'qty_price': self.payment_quantity,
+                    'final_price_en': self.final_price_usd,
+                    'rate': self.rate,
+                    'final_price_vn': self.final_price_vnd,
+                    'total_amount_en': self.final_price_usd * self.payment_quantity,
+                    'total_amount_vn': self.final_price_vnd * self.payment_quantity,
+                    'history_id': ptpf_fix_price.id
+                }
+            if self.type == 'ptbf' and self.type_of_ptbf_payment == 'fixation':
+                ptpf_fix_price = self.price_tobe_fix
+                value = {
+                    'date_receive': self.date,
+                    'product_id': self.product_id.id,
+                    'qty_receive': self.payment_quantity,
+                    'qty_price': self.payment_quantity,
+                    'final_price_en': self.final_price_usd,
+                    'rate': self.rate,
+                    'final_price_vn': self.final_price_vnd,
+                    'total_amount_en': self.final_price_usd * self.payment_quantity,
+                    'total_amount_vn': self.final_price_vnd * self.payment_quantity,
+                    'history_id': ptpf_fix_price.id
+                }
+            if value:
+                history = self.env['history.rate'].create(value)
+                self.create_picking(history)
             record.write({
                 'state': 'approved_director'
             })
@@ -514,12 +580,14 @@ class RequestPayment(models.Model):
                 }
                 self.env['history.payment.quantity'].create(value)
 
-    @api.depends('status_goods_ids', 'status_goods_ids.request_quantity', 'is_converted', 'quantity_contract')
+    @api.depends('status_goods_ids', 'status_goods_ids.request_quantity', 'is_converted', 'quantity_contract', 'quantity_of_price_tobe_fix')
     def compute_payment_quantity(self):
         for rec in self:
             rec.payment_quantity = 0
             rec.mirror_request_amount = 0
             if rec.status_goods_ids:
+                if rec.quantity_of_price_tobe_fix < sum(rec.status_goods_ids.mapped('request_quantity')):
+                    raise UserError(_("Bạn không thể fix lớn hơn số lượng trong PTBF Price Fix: %s") % rec.quantity_of_price_tobe_fix)
                 rec.payment_quantity = sum(rec.status_goods_ids.mapped('request_quantity'))
                 rec.mirror_request_amount = rec.payment_quantity
             if rec.is_converted:

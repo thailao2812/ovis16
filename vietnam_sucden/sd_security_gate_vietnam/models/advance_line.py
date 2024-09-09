@@ -7,7 +7,7 @@ from odoo.osv import expression
 class AdvanceLine(models.Model):
     _name = 'advance.line'
 
-    request_id = fields.Many2one('request.payment')
+    request_id = fields.Many2one('request.payment', ondelete='cascade')
     request_payment_id = fields.Many2one('request.payment', string='Request Payment')
     name = fields.Char(string='Description')
     request_date = fields.Date(string='Date', related='request_payment_id.date', store=True, readonly=False)

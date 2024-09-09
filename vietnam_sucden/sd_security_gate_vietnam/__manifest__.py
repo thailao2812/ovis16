@@ -17,11 +17,11 @@
         'report/report_view.xml',
         'wizard/wizard_reason_refuse_view.xml',
     ],
-    # 'assets': {
-    #     'web.assets_backend': [
-    #         'sd_security_gate_vietnam/static/src/css/customize.css',
-    #     ],
-    # },
+    'assets': {
+        'web.assets_backend': [
+            '/sd_security_gate_vietnam/static/src/css/customize.css',
+        ],
+    },
     'installable': True,
     'auto_install': False,
     'application': False,
