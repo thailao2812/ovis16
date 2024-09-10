@@ -35,6 +35,10 @@ class SaleContractLine(models.Model):
 class SaleContract(models.Model):
     _inherit = 'sale.contract'
 
+    weights = fields.Selection([('DW', 'Net Delivered Weights'), ('NLW', 'Net Landed Weights'),
+                                ('NSW', 'Net Shipped Weights'), ('RW', 'Re Weights'), ('net_shipping', 'Net Shipping Weight with 0.50% franchise')], string='Weights', readonly=True,
+                               states={'draft': [('readonly', False)]}, index=True)
+
     @api.model
     def create(self, vals):
         res = super(SaleContract, self).create(vals)
