@@ -20,6 +20,11 @@
             <xpath expr="//field[@name='warehouse_id']" position="replace">
 <!--                <attribute name="required">1</attribute>-->
             </xpath>
+            <xpath expr="//field[@name='certificate_id_list']" position="replace">
+                <field name="certificate_id"/>
+            </xpath>
+            <xpath expr="//field[@name='license_certificate_ids']" position="replace">
+            </xpath>
             <xpath expr="//field[@name='crop_id']" position="after">
                 <field name="warehouse_id" required="1"/>
             </xpath>
@@ -59,6 +64,8 @@
             <xpath expr="//field[@name='si']" position="replace">
             </xpath>
             <xpath expr="//field[@name='sd']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='certificate_id_list']" position="replace">
             </xpath>
             <xpath expr="//field[@name='loss_qty']" position="replace">
             </xpath>
