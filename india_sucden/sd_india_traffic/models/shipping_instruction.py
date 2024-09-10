@@ -28,7 +28,8 @@ class ShippingInstruction(models.Model):
         ('delivery_weight', 'Net Weight Delivery'),
         ('shipped_weight', 'Net Shipped Weight'),
         ('at_time', 'Net Weight at the time of receipt at the Curing Works'),
-        ('re_weight', 'Re Weights')
+        ('re_weight', 'Re Weights'),
+        ('net_shipping', 'Net Shipping Weight with 0.50% franchise')
     ], string='Weights', default=None)
     shipper = fields.Char(string='Shipper', default='SUCDEN COFFEE INDIA PRIVATE LIMITED')
     ship_to = fields.Many2one('res.partner', string='Ship To')
