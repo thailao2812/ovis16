@@ -53,6 +53,12 @@
             <xpath expr="//field[@name='name']" position="after">
                 <field name="crop_id"/>
             </xpath>
+            <xpath expr="//field[@name='scertificate_id']" position="replace">
+                <field name="certificate_id"/>
+            </xpath>
+            <xpath expr="//field[@name='scertificate_id']" position="replace">
+                <field name="certificate_id_list"/>
+            </xpath>
         </field>
     </record>
 
