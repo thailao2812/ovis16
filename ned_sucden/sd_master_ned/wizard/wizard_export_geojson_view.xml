@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+        <record id="wizard_export_geojson" model="ir.ui.view">
+            <field name="name">wizard_export_geojson</field>
+            <field name="model">wizard.export.geojson</field>
+            <field name="arch" type="xml">
+                <form string="Export GeoJson">
+                    <sheet>
+			            <group>
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                            <field name="partner_id"/>
+                            <field name="geojson_file" widget="binary"/>
+		                </group>
+		                <footer>
+		                	<button string="Generate" name="generate_report" type="object" class="oe_highlight"/>
+		                    <button string="Cancel" class="btn-default" special="cancel"/>
+		                </footer>
+	                </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_wizard_export_geojson" model="ir.actions.act_window">
+            <field name="name">Export GeoJson</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">wizard.export.geojson</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+</odoo>

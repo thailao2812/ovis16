@@ -7,3 +7,4 @@ access_supplier_master,access_supplier_master,model_supplier_master_data,base.gr
 
 access_properties_polygon,access_properties_polygon,model_properties_polygon,base.group_user,1,1,1,1
 access_wizard_export_error,access_wizard_export_error,model_wizard_export_error,base.group_user,1,1,1,1
+access_wizard_export_geojson,access_wizard_export_geojson,model_wizard_export_geojson,base.group_user,1,1,1,1

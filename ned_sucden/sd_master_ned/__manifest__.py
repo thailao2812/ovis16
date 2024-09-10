@@ -20,6 +20,7 @@
         'report/report.xml',
 
         'wizard/wizard_export_error_view.xml',
+        'wizard/wizard_export_geojson_view.xml',
     ],
     'installable': True,
     'auto_install': False,
