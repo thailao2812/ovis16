@@ -85,6 +85,9 @@
             <xpath expr="//field[@name='shipping_ids']/tree/field[@name='price_unit']" position="attributes">
                 <attribute name="readonly">1</attribute>
             </xpath>
+            <xpath expr="//field[@name='shipping_ids']/tree/field[@name='certificate_id']" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </xpath>
         </field>
     </record>
 

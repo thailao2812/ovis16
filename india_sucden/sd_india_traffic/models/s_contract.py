@@ -49,6 +49,10 @@ class SContract(models.Model):
                                string='Weigh Condition', readonly=True, states={'draft': [('readonly', False)]},
                                index=True)
 
+    pss_type = fields.Selection(
+        [('SAS', 'SAS'), ('SAN', 'SAN'), ('SAP', 'SAP'), ('PSS', 'PSS'), ('PSS+OTS', 'PSS+OTS'), ('No', 'Non PSS')],
+        string=" Pss type", copy=True)
+
     @api.depends('contract_line', 'contract_line.product_qty')
     def _total_qty(self):
         for order in self:

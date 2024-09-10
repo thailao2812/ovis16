@@ -35,6 +35,9 @@
             <xpath expr="//field[@name='date_approve']" position="after">
                 <field name="note"/>
             </xpath>
+            <xpath expr="//field[@name='delivery_order_ids']/tree/field[@name='certificate_id']" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </xpath>
         </field>
     </record>
 </odoo>
