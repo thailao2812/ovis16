@@ -31,6 +31,9 @@
                 <field name="cert_premium" readonly="1"/>
                 <field name="differential" readonly="1"/>
             </xpath>
+            <xpath expr="//field[@name='contract_line']/tree/field[@name='certificate_id']" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </xpath>
             <xpath expr="//field[@name='date']" position="attributes">
                  <attribute name="string">Date Contract</attribute>
             </xpath>

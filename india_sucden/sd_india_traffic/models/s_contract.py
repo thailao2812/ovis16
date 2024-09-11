@@ -44,6 +44,15 @@ class SContract(models.Model):
     qty_tobe_allocated_so = fields.Float(string='To Be Allocated SO Qty (Kgs)', compute='_compute_allocated_qty_india', store=True)
     bag_tobe_allocated_so = fields.Float(string='To Be Allocated SO Bag (Nos)', digits=(16, 0), compute='_compute_allocated_qty_india', store=True)
 
+    weights = fields.Selection([('DW', 'Delivered Weights'), ('NLW', 'Net Landed Weights'),
+                                ('NSW', 'Net Shipped Weights'), ('RW', 'Re Weights'), ('net_shipping', 'Net Shipping Weight with 0.50% franchise')],
+                               string='Weigh Condition', readonly=True, states={'draft': [('readonly', False)]},
+                               index=True)
+
+    pss_type = fields.Selection(
+        [('SAS', 'SAS'), ('SAN', 'SAN'), ('SAP', 'SAP'), ('PSS', 'PSS'), ('PSS+OTS', 'PSS+OTS'), ('No', 'Non PSS')],
+        string=" Pss type", copy=True)
+
     @api.depends('contract_line', 'contract_line.product_qty')
     def _total_qty(self):
         for order in self:
