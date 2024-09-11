@@ -36,50 +36,42 @@ class WizardExportGeojson(models.TransientModel):
             raise UserError(_("You have to fulfillment date to and date from before generate data"))
         if self.date_from and not self.date_to:
             raise UserError(_("You have to fulfillment date to and date from before generate data"))
-        area = self.env['res.partner.area'].search([])
-        for row in area:
-            print(row.gshape_paths)
-            print(type(row.gshape_paths))
+        areas = self.env['res.partner.area'].search([
+            ('partner_id', '=', self.partner_id.id)
+        ])
+        # Initialize an empty list to store GeoJSON features
+        features = []
+
+        # Loop through each area to extract polygon data
+        for row in areas:
             data = json.loads(row.gshape_paths)
-            geojson_data = {
-                "type": "FeatureCollection",
-                "features": [
-                    {
-                        "type": "Feature",
-                        "geometry": {
-                            "type": "Polygon",
-                            "coordinates": [[
-                                [point["lng"], point["lat"]] for point in data["options"]["paths"]
-                            ]]
-                        },
-                        "properties": {
-                            "description": "Polygon from paths"
-                        }
-                    }
-                ]
+            # Create a GeoJSON feature for each polygon
+            feature = {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Polygon",
+                    "coordinates": [[
+                        [point["lng"], point["lat"]] for point in data["options"]["paths"]
+                    ]]
+                },
+                "properties": {
+                    "description": f"Polygon from area {row.id}"
+                }
             }
-            geojson_str = json.dumps(geojson_data, indent=4)
-            self.geojson_file = base64.b64encode(geojson_str.encode('utf-8'))
-            return {
-                'type': 'ir.actions.act_url',
-                'url': f'/web/content/?model=wizard.export.geojson&id={self.id}&field=geojson_file&download=true&filename=output.geojson',
-                'target': 'self',
-            }
+            # Append each feature to the features list
+            features.append(feature)
+        # Create the final GeoJSON structure with all features
+        geojson_data = {
+            "type": "FeatureCollection",
+            "features": features
+        }
 
-            # lat = 'latitude'
-            # lon = 'longitude'
-            # feature = {'type': 'Feature',
-            #            'properties': {},
-            #            'geometry': {'type': 'Polygon',
-            #                         'coordinates': []}}
-            # feature['geometry']['coordinates'] = [row[lon], row[lat]]
-            # for point in row.gshape_paths["options"]["paths"]:
-            #     lat = point["lat"]
-            #     lng = point["lng"]
-            #     print(f"Lat: {lat}, Lng: {lng}")
-            # for prop in properties:
-            #     feature['properties'][prop] = row[prop]
-            # geojson['features'].append(feature)
+        # Convert the GeoJSON structure to a string and encode it to base64
+        geojson_str = json.dumps(geojson_data, indent=4)
+        self.geojson_file = base64.b64encode(geojson_str.encode('utf-8'))
 
-
-        return True
+        return {
+            'type': 'ir.actions.act_url',
+            'url': f'/web/content/?model=wizard.export.geojson&id={self.id}&field=geojson_file&download=true&filename=output.geojson',
+            'target': 'self',
+        }

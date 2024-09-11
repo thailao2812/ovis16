@@ -9,8 +9,8 @@
 			            <group>
                             <field name="date_from"/>
                             <field name="date_to"/>
-                            <field name="partner_id"/>
-                            <field name="geojson_file" widget="binary"/>
+                            <field name="partner_id" required="1"/>
+                            <field name="geojson_file" widget="binary" invisible="1"/>
 		                </group>
 		                <footer>
 		                	<button string="Generate" name="generate_report" type="object" class="oe_highlight"/>
