@@ -10,6 +10,9 @@
     """,
     'data': [
         'security/ir.model.access.csv',
+        'wizard/wizard_export_error_view.xml',
+        'wizard/wizard_export_geojson_view.xml',
+
         'views/import_geojson_view.xml',
         'views/res_partner_area_view.xml',
         'views/res_partner_view.xml',
@@ -18,9 +21,6 @@
         'views/menu.xml',
 
         'report/report.xml',
-
-        'wizard/wizard_export_error_view.xml',
-        'wizard/wizard_export_geojson_view.xml',
     ],
     'installable': True,
     'auto_install': False,
