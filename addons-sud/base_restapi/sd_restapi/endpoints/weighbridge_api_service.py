@@ -573,7 +573,7 @@ class WeighbridgeApiService(Component):
             lot_allocations.append(p.id)
         lot_allocate = request.env['lot.stack.allocation'].sudo().search([('delivery_id','in',lot_allocations)])
         sum_lot_allocation = sum(lot_allocate.mapped('quantity')) or 0
-        print(sum_lot_allocation)
+        # print(sum_lot_allocation)
         
         allocation_dict = {}
         if gate_id.picking_ids and second_weight > 0 and net_weight > 0: 
@@ -601,8 +601,7 @@ class WeighbridgeApiService(Component):
                         return mess
                     else:
                         for line in pick.move_line_ids_without_package:
-                            for item in allocation_obj.filtered(lambda x: x.stack_id.id == line.lot_id.id):
-                                # print(item)
+                            for item in allocation_obj.filtered(lambda x: x.stack_id.id == line.lot_id.id and x.no_of_bag==line.bag_no):
                                 line.with_user(weight_user_id).update({
                                     'init_qty': net_weight * (item.quantity/sum_lot_allocation),
                                     'tare_weight': tare_weight * (item.quantity/sum_lot_allocation) or 0,
