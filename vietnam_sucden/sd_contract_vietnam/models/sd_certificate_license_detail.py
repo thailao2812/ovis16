@@ -14,8 +14,11 @@ class CertificateLicenseDetail(models.Model):
     
     cert_name = fields.Char('Certificate')
     license_number = fields.Char('License Number')
-    type = fields.Char(string = 'Type')
+    type = fields.Selection([('sucden_coffee_license', 'Sucden Coffee License'),
+                               ('independent_license', '3rd Party License'),
+                               ], string='Type') # Guatemala
     partner_name = fields.Char(string = 'Supplier')
+    state_id = fields.Many2one('res.country.state', string='Province')
     expired_date = fields.Date('Expired Date')
     state = fields.Selection(
         [('draft', 'Draft'),
@@ -86,7 +89,7 @@ class CertificateLicenseDetail(models.Model):
         self.env.cr.execute("""
             CREATE OR REPLACE VIEW public.v_sd_certificate_license_detail AS
             SELECT row_number() OVER (ORDER BY ncl.expired_date DESC) AS id, cert.name cert_name, ncl.name license_number, ncl.type, ncl.expired_date, ncl.state,
-                    swh.code warehouse_name, rp.display_name partner_name,
+                    swh.code warehouse_name, rp.display_name partner_name, rp.state_id,
                     license.*, license.faq_balance + license.g1_s18_balance + license.g1_s16_balance + license.g2_balance + license.g3_balance AS final_balance,
                     license.faq_balance + license.faq_tobe_received AS faq_position,
                     license.g1_s18_balance + license.g1_s18_tobe_received AS g1_s18_position,

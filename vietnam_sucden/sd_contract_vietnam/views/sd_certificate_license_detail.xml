@@ -9,6 +9,7 @@
                 <field name = 'license_number' readonly = '1'/>
                 <field name = 'type' readonly = '1'/>
                 <field name = 'partner_name' readonly = '1'/>
+                <field name = 'state_id' readonly = '1'/>
                 <field name = 'expired_date' readonly = '1'/>
                 <field name = 'state' readonly = '1'/>
                 <field name = 'warehouse_name' readonly = '1'/>
