@@ -159,10 +159,11 @@ class ImportGeoJson(models.Model):
                             check_decimal = True
                             continue
                         paths.append({"lat": lat, "lng": lng})
-                    if not paths:
-                        coordinates = True
-                    if coordinates[0] != coordinates[-1]:
-                        un_close = True
+                    # if not paths:
+                    #     coordinates_real = True
+                    if coordinates:
+                        if coordinates[0] != coordinates[-1]:
+                            un_close = True
                     if points_inside_existing_polygons > 0:
                         inside = True
                     if not coordinates or less_4_point or check_spike or un_close or is_duplicate or inside or check_decimal:
