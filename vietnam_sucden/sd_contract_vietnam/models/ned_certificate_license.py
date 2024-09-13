@@ -38,6 +38,8 @@ class NedCertificateLicense(models.Model):
          ('transfered', 'Transfered')],
         string="Status", default='draft')
 
+    edur_compliant = fields.Char(string='EUDR Compliant')
+
     def button_approve(self):
         for rec in self:
             rec.state ='approve'

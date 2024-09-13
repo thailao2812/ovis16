@@ -11,6 +11,39 @@ class SaleContractLine(models.Model):
     differential = fields.Float(string='Additional Cost')
     type = fields.Selection(related='contract_id.type', store=True)
 
+    price_unit = fields.Float(compute='_final_price', digits=(16, 4), store=True, string="Price")
+
+    @api.depends('differential', 'packing_cost', 'cert_premium', 'contract_id.scontract_id', 'contract_id.type')
+    def _final_price(self):
+        for sale in self:
+            if sale.contract_id.type == 'export':
+                mapped_p_number = 0
+                psc_to_sc_link = self.env['psc.to.sc.linked'].search([
+                    ('state_allocate', '=', 'submit'),
+                    ('s_contract', '=', sale.contract_id.scontract_id.id)
+                ])
+                if psc_to_sc_link:
+                    mapped_p_number = sum(psc_to_sc_link.mapped('sale_contract_id.price_unit'))
+                sale.price_unit = (sale.packing_cost + sale.cert_premium +
+                                                 sale.differential + mapped_p_number)
+            else:
+                sale.price_unit = 0
+
+    @api.depends('product_qty', 'price_unit', 'tax_id', 'contract_id.type', 'conversion')
+    def _compute_amount(self):
+        for line in self:
+            conversion = line.conversion
+            if line.contract_id.type == 'local':
+                conversion = 1
+            price = line.price_unit / conversion
+            taxes = line.tax_id.compute_all(price, line.contract_id.currency_id, line.product_qty,
+                                            product=line.product_id, partner=line.contract_id.partner_id)
+            line.update({
+                'price_tax': taxes['total_included'] - taxes['total_excluded'],
+                'price_total': taxes['total_included'],
+                'price_subtotal': taxes['total_excluded'],
+            })
+
     @api.onchange('packing_id', 'product_qty', 'type')
     def onchange_packing_id(self):
         if self.packing_id:
