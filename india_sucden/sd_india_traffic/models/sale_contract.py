@@ -170,7 +170,10 @@ class SaleContractIndia(models.Model):
             if self.env.context.get('search_sale_contract'):
                 res.append((record.id, record.name))
             else:
-                res.append((record.id, record.p_number))
+                if record.p_number:
+                    res.append((record.id, record.p_number))
+                else:
+                    res.append((record.id, record.name))
         return res
 
 

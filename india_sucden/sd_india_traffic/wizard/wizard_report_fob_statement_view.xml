@@ -12,9 +12,9 @@
                             <field name="item_group_ids" widget="many2many_tags" options="{'no_create': true}"/>
 		            		<label for="date_from" string="Date from"/>
 							<div>
-								<field name="date_from" class="oe_inline" required="1"/>
+								<field name="date_from" class="oe_inline" required="0"/>
 								<span>       </span><span>   Date to</span>
-								<field name="date_to" class="oe_inline ms-3" required="1"/>
+								<field name="date_to" class="oe_inline ms-3" required="0"/>
 							</div>
 							<field name="sale_contract_ids" widget="many2many_tags" options="{'no_create': true}" context="{'fob_report':True, 'date_from': date_from, 'date_to': date_to, 'item_group_ids': item_group_ids}"/>
 		                </group>
