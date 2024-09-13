@@ -197,9 +197,9 @@ class NedCertificateLicense(models.Model):
             'lock_purchase': True
         })
 
-        zero_balance_expired_licenses = self.search(
-            [('state', 'in', ['active', 'expired']), ('expired_date', '<', today), ('balance', '<=', 0)])
-        zero_balance_expired_licenses.write({'state': 'deactive'})
+        # zero_balance_expired_licenses = self.search(
+        #     [('state', 'in', ['active', 'expired']), ('expired_date', '<', today), ('balance', '<=', 0)])
+        # zero_balance_expired_licenses.write({'state': 'deactive'})
     
     
     
