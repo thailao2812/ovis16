@@ -580,14 +580,15 @@ class RequestPayment(models.Model):
                 }
                 self.env['history.payment.quantity'].create(value)
 
-    @api.depends('status_goods_ids', 'status_goods_ids.request_quantity', 'is_converted', 'quantity_contract', 'quantity_of_price_tobe_fix')
+    @api.depends('status_goods_ids', 'status_goods_ids.request_quantity', 'is_converted', 'quantity_contract', 'quantity_of_price_tobe_fix', 'type_of_ptbf_payment')
     def compute_payment_quantity(self):
         for rec in self:
             rec.payment_quantity = 0
             rec.mirror_request_amount = 0
             if rec.status_goods_ids:
-                if rec.quantity_of_price_tobe_fix < sum(rec.status_goods_ids.mapped('request_quantity')):
-                    raise UserError(_("Bạn không thể fix lớn hơn số lượng trong PTBF Price Fix: %s") % rec.quantity_of_price_tobe_fix)
+                if rec.type_of_ptbf_payment == 'fixation':
+                    if rec.quantity_of_price_tobe_fix < sum(rec.status_goods_ids.mapped('request_quantity')):
+                        raise UserError(_("Bạn không thể fix lớn hơn số lượng trong PTBF Price Fix: %s") % rec.quantity_of_price_tobe_fix)
                 rec.payment_quantity = sum(rec.status_goods_ids.mapped('request_quantity'))
                 rec.mirror_request_amount = rec.payment_quantity
             if rec.is_converted:
