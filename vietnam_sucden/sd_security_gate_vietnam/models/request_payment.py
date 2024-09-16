@@ -190,7 +190,7 @@ class RequestPayment(models.Model):
         for rec in self:
             if rec.type_of_ptbf_payment == 'fixation':
                 rec.final_price_usd = rec.price_usd + rec.price_diff
-                rec.final_price_vnd = self.custom_round(rec.final_price_usd * rec.rate)
+                rec.final_price_vnd = self.custom_round((rec.final_price_usd * rec.rate)/ 1000)
             if rec.type_of_ptbf_payment == 'advance':
                 rec.quantity_advance = rec.payment_quantity
                 rec.differencial_price = rec.liffe_price + rec.price_diff
