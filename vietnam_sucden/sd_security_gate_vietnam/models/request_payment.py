@@ -185,7 +185,7 @@ class RequestPayment(models.Model):
 
     @api.depends('price_usd', 'price_diff', 'rate', 'type_of_ptbf_payment', 'liffe_price', 'quantity_advance', 'fixation_advance_line_ids',
                  'fixation_advance_line_ids.rate', 'fixation_advance_line_ids.request_amount', 'request_amount', 'payment_quantity',
-                 'qty_advance_fix', 'rate', 'reference_information_line_ids', 'reference_information_line_ids.request_amount')
+                 'qty_advance_fix', 'rate', 'reference_information_line_ids', 'reference_information_line_ids.request_amount', 'purchase_contract_id.stop_loss_price')
     def compute_price(self):
         for rec in self:
             if rec.type_of_ptbf_payment == 'fixation':
@@ -194,7 +194,7 @@ class RequestPayment(models.Model):
             if rec.type_of_ptbf_payment == 'advance':
                 rec.quantity_advance = rec.payment_quantity
                 rec.differencial_price = rec.liffe_price + rec.price_diff
-                rec.advance_price_usd = rec.differencial_price * rec.purchase_contract_id.percent_advance_price
+                rec.advance_price_usd = (rec.differencial_price * rec.purchase_contract_id.percent_advance_price) * (rec.purchase_contract_id.stop_loss_price / 100)
                 rec.total_advance_payment_usd = round((rec.advance_price_usd * rec.payment_quantity) / 1000, 2)
                 if rec.payment_quantity > 0:
                     rec.advance_price_vnd = self.custom_round(rec.request_amount / rec.payment_quantity)
