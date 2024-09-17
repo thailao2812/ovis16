@@ -556,12 +556,13 @@
                             <tree editable="top">
                                 <field name="request_payment_id" context="{'seq': parent.name, 'purchase_contract_id': parent.parent_id_purchase_contract}" options="{'no_create': True}" domain="[('purchase_contract_id', '=', parent.parent_id_purchase_contract), ('type_of_ptbf_payment', '=', 'advance')]"/>
                                 <field name="name" readonly="1" decoration-bf="1"/>
-                                <field name="request_date"/>
-                                <field name="total_advance_payment_usd"/>
-                                <field name="rate"/>
-                                <field name="request_amount"/>
+                                <field name="request_date" decoration-bf="check == True"/>
+                                <field name="total_advance_payment_usd" decoration-bf="check == True"/>
+                                <field name="rate" decoration-bf="check == True"/>
+                                <field name="request_amount" decoration-bf="check == True"/>
                                 <field name="advance_qty"/>
                                 <field name="remain_qty"/>
+                                <field name="check" invisible="1"/>
                                 <field name="quantity_fix" context="{'seq': parent.name, 'purchase_contract_id': parent.parent_id_purchase_contract}"/>
                             </tree>
                         </field>
@@ -570,9 +571,10 @@
                         <tree editable="top">
                             <field name="request_payment_id"/>
                             <field name="name" readonly="1" decoration-bf="1"/>
-                            <field name="total_advance_payment_usd"/>
-                            <field name="rate"/>
-                            <field name="request_amount"/>
+                            <field name="total_advance_payment_usd" decoration-bf="check == True"/>
+                            <field name="rate" decoration-bf="check == True"/>
+                            <field name="check" invisible="1"/>
+                            <field name="request_amount" decoration-bf="check == True"/>
                         </tree>
                     </field>
                     <button name="generate_reference_information" class="btn-primary" string="Generate" attrs="{'invisible': [('type_of_ptbf_payment', '!=', 'fixation_advance')]}" type="object"/>

@@ -18,6 +18,7 @@ class AdvanceLine(models.Model):
     fixed_quantity = fields.Integer(string='Fixed Quantity', compute='compute_fixed_qty', store=True)
     remain_qty = fields.Integer(string='Remain Qty Advance', compute='compute_remain_qty', store=True)
     quantity_fix = fields.Integer(string='Quantity Fix')
+    check = fields.Boolean(string='Check')
 
     @api.depends('request_payment_id')
     def compute_fixed_qty(self):

@@ -14,3 +14,4 @@ class ReferenceInformation(models.Model):
     total_advance_payment_usd = fields.Float(string='Total Advance Payment (USD)', digits=(12, 2), related='request_payment_id.total_advance_payment_usd', store=True, readonly=False)
     rate = fields.Float(string='Exchange Rate', digits=(12, 0), related='request_payment_id.rate', store=True, readonly=False)
     request_amount = fields.Float(string='Request Amount VND', digits=(12, 0), related='request_payment_id.request_amount', store=True, readonly=False)
+    check = fields.Boolean(string='Check')

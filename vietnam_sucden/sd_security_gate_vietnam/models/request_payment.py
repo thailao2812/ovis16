@@ -114,6 +114,7 @@ class RequestPayment(models.Model):
                     value = {
                         'name': 'PHẦN CÒN LẠI/ REMAIN PAYMENT:',
                         'request_id': rec.id,
+                        'check': True,
                         'request_date': rec.date,
                         'total_advance_payment_usd': rec.total_amount_usd - sum(
                             rec.fixation_advance_line_ids.filtered(lambda x: not x.name).mapped('total_advance_payment_usd')),
@@ -128,6 +129,7 @@ class RequestPayment(models.Model):
                 value = {
                     'name': 'Total:',
                     'request_id': rec.id,
+                    'check': True,
                     'total_advance_payment_usd': sum(rec.fixation_advance_line_ids.mapped('total_advance_payment_usd')),
                     'request_amount': sum(rec.fixation_advance_line_ids.mapped('request_amount')),
                     'rate': sum(rec.fixation_advance_line_ids.mapped('request_amount')) / sum(rec.fixation_advance_line_ids.mapped('total_advance_payment_usd'))
@@ -153,12 +155,14 @@ class RequestPayment(models.Model):
                         'request_id': line.request_id.id,
                         'total_advance_payment_usd': line.total_advance_payment_usd,
                         'rate': line.rate,
+                        'check': True,
                         'request_amount': line.total_advance_payment_usd * line.rate
                     }
                     self.env['reference.information'].create(value)
             value = {
                 'name': 'Total:',
                 'request_id': rec.id,
+                'check': True,
                 'total_advance_payment_usd': sum(rec.reference_information_line_ids.mapped('total_advance_payment_usd')),
                 'rate': sum(rec.reference_information_line_ids.mapped('request_amount')) / sum(rec.reference_information_line_ids.mapped('total_advance_payment_usd')),
                 'request_amount': sum(rec.reference_information_line_ids.mapped('request_amount'))
@@ -418,7 +422,7 @@ class RequestPayment(models.Model):
 
     @api.depends('payment_quantity', 'fix_price', 'liquidation_amount', 'deposit_amount', 'advance_payment_converted', 'payment_quantity',
                  'total_interest', 'is_converted', 'type', 'type_of_ptbf_payment', 'final_price_vnd', 'total_advance_payment_usd',
-                 'rate', 'qty_advance_fix')
+                 'rate', 'qty_advance_fix', 'fixation_advance_line_ids', 'fixation_advance_line_ids.request_amount')
     def _compute_request_amount(self):
         for rec in self:
             if rec.type == 'purchase':
@@ -438,7 +442,11 @@ class RequestPayment(models.Model):
                     else:
                         rec.advance_price_vnd = 0
                 if rec.type_of_ptbf_payment == 'fixation_advance':
-                    rec.request_amount = (rec.final_price_vnd * rec.qty_advance_fix) - rec.liquidation_amount
+                    line_request_remain = rec.fixation_advance_line_ids.filtered(lambda x: x.name == 'PHẦN CÒN LẠI/ REMAIN PAYMENT:')
+                    if line_request_remain:
+                        rec.request_amount = line_request_remain.request_amount - rec.liquidation_amount
+                    else:
+                        rec.request_amount = 0
 
     @api.depends('converted_line_ids', 'converted_line_ids.advance_payment', 'converted_line_ids.interest')
     def compute_advance_payment_converted(self):
