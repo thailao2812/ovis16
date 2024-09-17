@@ -62,7 +62,7 @@
                             <field name="is_converted" invisible="1"/>
                         </group>
                         <group>
-                            <field name="date_contract" string="Date Contract"/>
+                            <field name="date_contract"/>
                             <field name="quantity_contract" string="Contract Quantity"/>
                             <field name="fix_price"/>
                             <field name="amount_untaxed"/>
@@ -297,7 +297,7 @@
                             <field name="type" invisible="1"/>
                         </group>
                         <group>
-                            <field name="date_contract" string="Date Contract"/>
+                            <field name="date_contract"/>
                             <field name="quantity_contract" string="Contract Quantity"/>
                             <field name="price_npe"/>
                             <field name="amount_untaxed"/>
