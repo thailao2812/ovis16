@@ -430,7 +430,7 @@ class RequestPayment(models.Model):
                 rec.request_amount = (rec.payment_quantity * rec.fix_price) - rec.deposit_amount - rec.liquidation_amount
             if rec.type == 'ptbf':
                 if rec.type_of_ptbf_payment == 'fixation':
-                    rec.request_amount = rec.payment_quantity * rec.final_price_vnd
+                    rec.request_amount = (rec.payment_quantity * rec.final_price_vnd) - rec.liquidation_amount
                 if rec.type_of_ptbf_payment == 'advance':
                     rec.request_amount = self.custom_round(rec.total_advance_payment_usd * rec.rate)
                     if rec.payment_quantity > 0:
@@ -438,7 +438,7 @@ class RequestPayment(models.Model):
                     else:
                         rec.advance_price_vnd = 0
                 if rec.type_of_ptbf_payment == 'fixation_advance':
-                    rec.request_amount = rec.final_price_vnd * rec.qty_advance_fix
+                    rec.request_amount = (rec.final_price_vnd * rec.qty_advance_fix) - rec.liquidation_amount
 
     @api.depends('converted_line_ids', 'converted_line_ids.advance_payment', 'converted_line_ids.interest')
     def compute_advance_payment_converted(self):
