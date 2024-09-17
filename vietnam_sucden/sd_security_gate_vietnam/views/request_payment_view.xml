@@ -101,25 +101,26 @@
                     <field name="fixation_advance_line_ids" readonly="1" attrs="{'invisible': [('type_of_ptbf_payment', '!=', 'fixation_advance')]}">
                             <tree editable="top">
                                 <field name="request_payment_id" context="{'seq': parent.name, 'purchase_contract_id': parent.parent_id_purchase_contract}" options="{'no_create': True}" domain="[('purchase_contract_id', '=', parent.parent_id_purchase_contract), ('type_of_ptbf_payment', '=', 'advance')]"/>
-                                <field name="name" readonly="1"/>
+                                <field name="name" readonly="1" decoration-bf="check == True"/>
                                 <field name="request_date"/>
-                                <field name="total_advance_payment_usd"/>
+                                <field name="total_advance_payment_usd" decoration-bf="check == True"/>
+                                <field name="rate" decoration-bf="check == True"/>
+                                <field name="check" invisible="1"/>
+                                <field name="request_amount" decoration-danger="request_amount > 0" groups="sd_security_gate_vietnam.group_request_payment_seeing_money_value" decoration-bf="check == True"/>
+<!--                                <field name="advance_qty"/>-->
+<!--                                <field name="remain_qty"/>-->
+                                <field name="quantity_fix" decoration-bf="check == True" context="{'seq': parent.name, 'purchase_contract_id': parent.parent_id_purchase_contract}"/>
+                            </tree>
+                        </field>
+<!--                    <field name="reference_information_line_ids" readonly="1" attrs="{'invisible': [('type_of_ptbf_payment', '!=', 'fixation_advance')]}">-->
+<!--                            <tree editable="top">-->
+<!--                                <field name="request_payment_id"/>-->
+<!--                                <field name="name" readonly="1"/>-->
+<!--                                <field name="total_advance_payment_usd"/>-->
 <!--                                <field name="rate"/>-->
-                                <field name="request_amount" decoration-danger="request_amount > 0" groups="sd_security_gate_vietnam.group_request_payment_seeing_money_value"/>
-                                <field name="advance_qty"/>
-                                <field name="remain_qty"/>
-                                <field name="quantity_fix" context="{'seq': parent.name, 'purchase_contract_id': parent.parent_id_purchase_contract}"/>
-                            </tree>
-                        </field>
-                    <field name="reference_information_line_ids" readonly="1" attrs="{'invisible': [('type_of_ptbf_payment', '!=', 'fixation_advance')]}">
-                            <tree editable="top">
-                                <field name="request_payment_id"/>
-                                <field name="name" readonly="1"/>
-                                <field name="total_advance_payment_usd"/>
-                                <field name="rate"/>
-                                <field name="request_amount" decoration-danger="request_amount > 0" groups="sd_security_gate_vietnam.group_request_payment_seeing_money_value"/>
-                            </tree>
-                        </field>
+<!--                                <field name="request_amount" decoration-danger="request_amount > 0" groups="sd_security_gate_vietnam.group_request_payment_seeing_money_value"/>-->
+<!--                            </tree>-->
+<!--                        </field>-->
                     <group attrs="{'invisible': [('type_of_ptbf_payment', '!=', 'fixation_advance')]}">
                         <field name="qty_advance_fix" readonly="1"/>
                         <field name="price_usd" readonly="1"/>

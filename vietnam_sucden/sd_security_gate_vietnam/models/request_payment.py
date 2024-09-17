@@ -134,7 +134,8 @@ class RequestPayment(models.Model):
                     'check': True,
                     'total_advance_payment_usd': sum(rec.fixation_advance_line_ids.mapped('total_advance_payment_usd')),
                     'request_amount': sum(rec.fixation_advance_line_ids.mapped('request_amount')),
-                    'rate': sum(rec.fixation_advance_line_ids.mapped('request_amount')) / sum(rec.fixation_advance_line_ids.mapped('total_advance_payment_usd'))
+                    'rate': sum(rec.fixation_advance_line_ids.mapped('request_amount')) / sum(rec.fixation_advance_line_ids.mapped('total_advance_payment_usd')),
+                    'quantity_fix': sum(rec.fixation_advance_line_ids.mapped('quantity_fix'))
                 }
                 self.env['advance.line'].create(value)
 
