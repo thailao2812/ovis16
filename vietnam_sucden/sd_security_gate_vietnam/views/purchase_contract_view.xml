@@ -563,7 +563,7 @@
                                 <field name="advance_qty"/>
                                 <field name="remain_qty"/>
                                 <field name="check" invisible="1"/>
-                                <field name="quantity_fix" context="{'seq': parent.name, 'purchase_contract_id': parent.parent_id_purchase_contract}"/>
+                                <field name="quantity_fix" decoration-bf="check == True" context="{'seq': parent.name, 'purchase_contract_id': parent.parent_id_purchase_contract}"/>
                             </tree>
                         </field>
                     <button name="generate_advance_line" class="btn-primary" string="Generate Advance Line" attrs="{'invisible': [('type_of_ptbf_payment', '!=', 'fixation_advance')]}" type="object"/>

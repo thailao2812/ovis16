@@ -76,9 +76,10 @@ class AdvanceLine(models.Model):
                             fixed_quantity = sum(advance_line_other.mapped('quantity_fix'))
                 rec.fixed_quantity = fixed_quantity
 
-    @api.depends('quantity_fix', 'fixed_quantity', 'advance_qty')
+    @api.depends('quantity_fix', 'fixed_quantity', 'advance_qty', 'name')
     def compute_remain_qty(self):
         for rec in self:
-            rec.remain_qty = rec.advance_qty - rec.fixed_quantity - rec.quantity_fix
-            if rec.remain_qty < 0:
-                raise UserError(_("Remain Quantity cannot < 0!!!"))
+            if not rec.name:
+                rec.remain_qty = rec.advance_qty - rec.fixed_quantity - rec.quantity_fix
+                if rec.remain_qty < 0:
+                    raise UserError(_("Remain Quantity cannot < 0!!!"))

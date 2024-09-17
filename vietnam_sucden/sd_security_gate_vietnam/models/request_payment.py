@@ -128,6 +128,7 @@ class RequestPayment(models.Model):
                     'request_amount': rec.total_contract_value - sum(self.fixation_advance_line_ids.filtered(lambda x: x.id != advance_remain_line.id).mapped('request_amount'))
                 })
                 # Total
+                print(sum(rec.fixation_advance_line_ids.mapped('quantity_fix')))
                 value = {
                     'name': 'Total:',
                     'request_id': rec.id,
