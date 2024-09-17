@@ -555,7 +555,7 @@
                                    attrs="{'required': [('type_of_ptbf_payment', 'in', ['fixation_advance'])], 'invisible': [('type_of_ptbf_payment', '!=', 'fixation_advance')]}">
                             <tree editable="top">
                                 <field name="request_payment_id" context="{'seq': parent.name, 'purchase_contract_id': parent.parent_id_purchase_contract}" options="{'no_create': True}" domain="[('purchase_contract_id', '=', parent.parent_id_purchase_contract), ('type_of_ptbf_payment', '=', 'advance')]"/>
-                                <field name="name" readonly="1"/>
+                                <field name="name" readonly="1" decoration-bf="1"/>
                                 <field name="request_date"/>
                                 <field name="total_advance_payment_usd"/>
                                 <field name="rate"/>
@@ -569,7 +569,7 @@
                     <field name="reference_information_line_ids" attrs="{'invisible': [('type_of_ptbf_payment', '!=', 'fixation_advance')]}" >
                         <tree editable="top">
                             <field name="request_payment_id"/>
-                            <field name="name" readonly="1"/>
+                            <field name="name" readonly="1" decoration-bf="1"/>
                             <field name="total_advance_payment_usd"/>
                             <field name="rate"/>
                             <field name="request_amount"/>
@@ -701,7 +701,7 @@
                         </tree>
                     </field>
                     </div>
-                    <div>
+                    <div attrs="{'invisible': [('type_of_ptbf_payment', '=', 'fixation_advance')]}">
                     <separator string="Status of Goods" attrs="{'invisible': [('is_converted', '=', True)]}"/>
                     <field name="status_goods_ids" widget="section_and_note_one2many" no_label="1" attrs="{'invisible': [('is_converted', '=', True)]}">
                         <tree editable="top">

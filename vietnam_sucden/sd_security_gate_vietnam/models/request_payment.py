@@ -112,7 +112,7 @@ class RequestPayment(models.Model):
                 if not any(rec.fixation_advance_line_ids.filtered(lambda x: x.name)):
                     # Remain
                     value = {
-                        'name': 'Phần còn lại/ Remain Payment:',
+                        'name': 'PHẦN CÒN LẠI/ REMAIN PAYMENT:',
                         'request_id': rec.id,
                         'request_date': rec.date,
                         'total_advance_payment_usd': rec.total_amount_usd - sum(
@@ -198,7 +198,7 @@ class RequestPayment(models.Model):
                 rec.total_advance_payment_usd = round((rec.advance_price_usd * rec.payment_quantity) / 1000, 2)
             if rec.type_of_ptbf_payment == 'fixation_advance':
                 rec.final_price_usd = rec.price_usd + rec.price_diff
-                rec.total_amount_usd = self.custom_round(rec.final_price_usd * rec.qty_advance_fix)
+                rec.total_amount_usd = self.custom_round((rec.final_price_usd * rec.qty_advance_fix) / 1000)
                 rec.average_rate = rec.fixation_advance_line_ids.filtered(lambda x: x.name == 'Total:').rate
                 if rec.qty_advance_fix > 0:
                     rec.final_price_vnd = round(rec.reference_information_line_ids.filtered(lambda x: x.name == 'Total:').request_amount / rec.qty_advance_fix)
