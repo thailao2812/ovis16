@@ -120,7 +120,7 @@ class RequestPayment(models.Model):
                     }
                     self.env['advance.line'].create(value)
             if self.env.context.get('total'):
-                advance_remain_line = self.fixation_advance_line_ids.filtered(lambda x: x.name == 'Phần còn lại/ Remain Payment:')
+                advance_remain_line = self.fixation_advance_line_ids.filtered(lambda x: x.name == 'PHẦN CÒN LẠI/ REMAIN PAYMENT:')
                 advance_remain_line.write({
                     'request_amount': rec.request_amount - sum(self.fixation_advance_line_ids.filtered(lambda x: x.id != advance_remain_line.id).mapped('request_amount'))
                 })
@@ -149,7 +149,7 @@ class RequestPayment(models.Model):
                     self.env['reference.information'].create(value)
                 else:
                     value = {
-                        'name': 'Phần còn lại/ Remain Payment:',
+                        'name': 'PHẦN CÒN LẠI/ REMAIN PAYMENT:',
                         'request_id': line.request_id.id,
                         'total_advance_payment_usd': line.total_advance_payment_usd,
                         'rate': line.rate,
