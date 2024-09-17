@@ -62,7 +62,7 @@
                             <field name="is_converted" invisible="1"/>
                         </group>
                         <group>
-                            <field name="date_contract"/>
+                            <field name="date_contract" string="Date Contract"/>
                             <field name="quantity_contract" string="Contract Quantity"/>
                             <field name="fix_price"/>
                             <field name="amount_untaxed"/>
@@ -297,7 +297,7 @@
                             <field name="type" invisible="1"/>
                         </group>
                         <group>
-                            <field name="date_contract"/>
+                            <field name="date_contract" string="Date Contract"/>
                             <field name="quantity_contract" string="Contract Quantity"/>
                             <field name="price_npe"/>
                             <field name="amount_untaxed"/>
@@ -516,7 +516,7 @@
                             <field name="is_converted" invisible="1"/>
                         </group>
                         <group>
-                            <field name="date_contract"/>
+                            <field name="date_contract" string="Date Contract"/>
                             <field name="quantity_contract" string="Contract Quantity"/>
                             <field name="fix_price"/>
                             <field name="amount_untaxed"/>
@@ -558,7 +558,7 @@
                                 <field name="name" readonly="1"/>
                                 <field name="request_date"/>
                                 <field name="total_advance_payment_usd"/>
-<!--                                <field name="rate"/>-->
+                                <field name="rate"/>
                                 <field name="request_amount"/>
                                 <field name="advance_qty"/>
                                 <field name="remain_qty"/>
@@ -582,7 +582,7 @@
                         <field name="price_diff"/>
                         <field name="final_price_usd"/>
                         <field name="total_amount_usd"/>
-                        <field name="rate"/>
+<!--                        <field name="rate"/>-->
                         <field name="average_rate"/>
                         <field name="final_price_vnd"/>
                         <field name="request_amount"/>

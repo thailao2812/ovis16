@@ -437,8 +437,6 @@ class RequestPayment(models.Model):
                         rec.advance_price_vnd = self.custom_round(rec.request_amount / rec.payment_quantity)
                     else:
                         rec.advance_price_vnd = 0
-                    print(rec.advance_price_vnd, 3333)
-                    print(rec.request_amount, 14555)
                 if rec.type_of_ptbf_payment == 'fixation_advance':
                     rec.request_amount = rec.final_price_vnd * rec.qty_advance_fix
 

@@ -62,7 +62,7 @@
                         </group>
                         <group>
                             <field name="type"/>
-                            <field name="date_contract"/>
+                            <field name="date_contract" string="Date Contract"/>
                             <field name="quantity_contract" string="Quantity Contract"/>
                             <field name="fix_price" attrs="{'invisible': [('type', '=', 'consign')]}" readonly="1" groups="sd_security_gate_vietnam.group_request_payment_seeing_money_value"/>
                             <field name="price_npe" attrs="{'invisible': [('type', '=', 'purchase')]}" readonly="1" groups="sd_security_gate_vietnam.group_request_payment_seeing_money_value"/>
