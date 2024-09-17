@@ -587,7 +587,7 @@
 <!--                        <field name="rate"/>-->
                         <field name="average_rate"/>
                         <field name="final_price_vnd"/>
-                        <field name="request_amount"/>
+                        <field name="request_amount" decoration-danger="request_amount > 0"/>
                     </group>
 
                     <separator string="Payment Information"/>
