@@ -567,14 +567,15 @@
                             </tree>
                         </field>
                     <button name="generate_advance_line" class="btn-primary" string="Generate Advance Line" attrs="{'invisible': [('type_of_ptbf_payment', '!=', 'fixation_advance')]}" type="object"/>
+                    <separator string="Reference Information" attrs="{'invisible': [('type_of_ptbf_payment', '!=', 'fixation_advance')]}"/>
                     <field name="reference_information_line_ids" attrs="{'invisible': [('type_of_ptbf_payment', '!=', 'fixation_advance')]}" >
                         <tree editable="top">
-                            <field name="request_payment_id"/>
-                            <field name="name" readonly="1" decoration-bf="1"/>
-                            <field name="total_advance_payment_usd" decoration-bf="check == True"/>
-                            <field name="rate" decoration-bf="check == True"/>
+                            <field name="request_payment_id" decoration-muted="1"/>
+                            <field name="name" readonly="1" decoration-muted="1"/>
+                            <field name="total_advance_payment_usd" decoration-muted="1"/>
+                            <field name="rate" decoration-muted="1"/>
                             <field name="check" invisible="1"/>
-                            <field name="request_amount" decoration-bf="check == True"/>
+                            <field name="request_amount" decoration-muted="1"/>
                         </tree>
                     </field>
                     <button name="generate_reference_information" class="btn-primary" string="Generate" attrs="{'invisible': [('type_of_ptbf_payment', '!=', 'fixation_advance')]}" type="object"/>
