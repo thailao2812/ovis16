@@ -600,6 +600,7 @@
                             <field name="total_interest" attrs="{'invisible': [('is_converted', '!=', True)]}"/>
                             <field name="deposit_amount" attrs="{'invisible': [('is_converted', '=', True)]}"/>
                             <field name="liquidation_amount"/>
+                            <field name="total_contract_value" attrs="{'invisible': [('type_of_ptbf_payment', '!=', 'fixation_advance')]}"/>
                             <field name="request_amount" decoration-danger="request_amount > 0"/>
                             <field name="amount_in_text"/>
                             <field name="partner_bank_id" domain="[('partner_id','=',partner_id)]" required="1"/>

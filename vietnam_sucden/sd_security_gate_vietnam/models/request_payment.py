@@ -104,6 +104,8 @@ class RequestPayment(models.Model):
     average_rate = fields.Float(string='Average Rate', digits=(12, 0), compute='compute_price', store=True)
     rate = fields.Float(string='Rate', digits=(12, 0))
 
+    total_contract_value = fields.Float(string='Total Value Contract', digits=(12, 0), compute='_compute_request_amount', store=True)
+
     def generate_advance_line(self):
         for rec in self:
             if not self.env.context.get('total'):
@@ -123,7 +125,7 @@ class RequestPayment(models.Model):
             if self.env.context.get('total'):
                 advance_remain_line = self.fixation_advance_line_ids.filtered(lambda x: x.name == 'PHẦN CÒN LẠI/ REMAIN PAYMENT:')
                 advance_remain_line.write({
-                    'request_amount': rec.request_amount - sum(self.fixation_advance_line_ids.filtered(lambda x: x.id != advance_remain_line.id).mapped('request_amount'))
+                    'request_amount': rec.total_contract_value - sum(self.fixation_advance_line_ids.filtered(lambda x: x.id != advance_remain_line.id).mapped('request_amount'))
                 })
                 # Total
                 value = {
@@ -442,9 +444,10 @@ class RequestPayment(models.Model):
                     else:
                         rec.advance_price_vnd = 0
                 if rec.type_of_ptbf_payment == 'fixation_advance':
-                    line_request_remain = rec.fixation_advance_line_ids.filtered(lambda x: x.name == 'PHẦN CÒN LẠI/ REMAIN PAYMENT:')
-                    if line_request_remain:
-                        rec.request_amount = line_request_remain.request_amount - rec.liquidation_amount
+                    rec.total_contract_value = (rec.final_price_vnd * rec.qty_advance_fix)
+                    advance_remain_line = rec.fixation_advance_line_ids.filtered(lambda x: x.name == 'PHẦN CÒN LẠI/ REMAIN PAYMENT:')
+                    if advance_remain_line:
+                        rec.request_amount = rec.total_contract_value - sum(rec.fixation_advance_line_ids.filtered(lambda x: x.id != advance_remain_line.id and x.name != 'Total:').mapped('request_amount')) - rec.liquidation_amount
                     else:
                         rec.request_amount = 0
 
