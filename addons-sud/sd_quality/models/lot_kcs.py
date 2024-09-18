@@ -153,12 +153,12 @@ class LotKcs(models.Model):
     partner_id = fields.Many2one('res.partner',related='nvs_id.partner_id', string="Customer", store=True)
     lot_ned = fields.Char(string="Lot Ned")
     
-    @api.depends('los_ids','los_ids.mc_on_despatch','los_ids.defects')
+    @api.depends('los_ids','los_ids.mc_on_despatch','los_ids.defects','los_ids.state')
     def _compute_mc_on_despatch(self):
         for order in self:
             defects = mc_on_despatch = 0
             count =0
-            for line in order.los_ids:
+            for line in order.los_ids.filtered(lambda x: x.state != 'cancel'):
                 mc_on_despatch += line.mc_on_despatch
                 defects += line.defects
                 count +=1
@@ -172,11 +172,11 @@ class LotKcs(models.Model):
     mc_on_despatch = fields.Float(compute='_compute_mc_on_despatch',string="Mc On Despatch",  digits=(12, 2),store=True)
     defects = fields.Float(compute='_compute_mc_on_despatch', digits=(12, 2),store=True, string="Defects") 
     
-    @api.depends('los_ids','los_ids.quantity')
+    @api.depends('los_ids','los_ids.quantity','los_ids.state')
     def _total_qty(self):
         for order in self:
             total_qty = 0
-            for line in order.los_ids:
+            for line in order.los_ids.filtered(lambda x: x.state != 'cancel'):
                 total_qty += line.quantity
             order.lot_quantity = total_qty
             
