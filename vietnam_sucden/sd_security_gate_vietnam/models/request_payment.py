@@ -128,7 +128,6 @@ class RequestPayment(models.Model):
                     'request_amount': rec.total_contract_value - sum(self.fixation_advance_line_ids.filtered(lambda x: x.id != advance_remain_line.id).mapped('request_amount'))
                 })
                 # Total
-                print(sum(rec.fixation_advance_line_ids.mapped('quantity_fix')))
                 value = {
                     'name': 'Total:',
                     'request_id': rec.id,
@@ -189,7 +188,7 @@ class RequestPayment(models.Model):
     @api.depends('fixation_advance_line_ids', 'fixation_advance_line_ids.quantity_fix')
     def compute_total_qty(self):
         for rec in self:
-            rec.qty_advance_fix = sum(rec.fixation_advance_line_ids.mapped('quantity_fix'))
+            rec.qty_advance_fix = sum(rec.fixation_advance_line_ids.filtered(lambda x: not x.name).mapped('quantity_fix'))
 
     @api.depends('price_usd', 'price_diff', 'rate', 'type_of_ptbf_payment', 'liffe_price', 'quantity_advance', 'fixation_advance_line_ids',
                  'fixation_advance_line_ids.rate', 'fixation_advance_line_ids.request_amount', 'request_amount', 'payment_quantity',
