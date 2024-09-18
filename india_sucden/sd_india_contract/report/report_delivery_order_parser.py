@@ -31,7 +31,8 @@ class Parser(models.AbstractModel):
             'get_price': self.get_price,
             'get_address': self.get_address,
             'get_certificate': self.get_certificate,
-            'get_symbol_currency': self.get_symbol_currency
+            'get_symbol_currency': self.get_symbol_currency,
+            'get_stack_packing': self.get_stack_packing
         })
         return localcontext
 
@@ -62,6 +63,13 @@ class Parser(models.AbstractModel):
                 total_amount += i.quantity * (self.get_price(delivery_order) / 1000)
 
             return '{:,}'.format(int(total_qty)), "{:,.2f}".format(self.custom_round(total_amount))
+
+    def get_stack_packing(self, delivery_order):
+        stock_allocation = self.get_allocate(delivery_order)
+        if stock_allocation:
+            return "/".join(i.stack_id.name for i in stock_allocation), "/".join(i.packing_id.name for i in stock_allocation), sum(stock_allocation.mapped('no_of_bag'))
+        else:
+            return '', '', 0
 
     def custom_round(self, number: float) -> int:
         if number - round(number) == 0.5:
