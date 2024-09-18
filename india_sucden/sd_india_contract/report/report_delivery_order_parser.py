@@ -67,9 +67,9 @@ class Parser(models.AbstractModel):
     def get_stack_packing(self, delivery_order):
         stock_allocation = self.get_allocate(delivery_order)
         if stock_allocation:
-            return "/".join(i.stack_id.name for i in stock_allocation), "/".join(i.packing_id.name for i in stock_allocation), sum(stock_allocation.mapped('no_of_bag'))
+            return "/".join(i.stack_id.name for i in stock_allocation), "/".join(i.packing_id.name for i in stock_allocation), sum(stock_allocation.mapped('no_of_bag')), "/".join(i.zone_id.name for i in stock_allocation)
         else:
-            return '', '', 0
+            return '', '', 0, ''
 
     def custom_round(self, number: float) -> int:
         if number - round(number) == 0.5:
