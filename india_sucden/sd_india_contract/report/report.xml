@@ -95,7 +95,7 @@
 		<field name="report_name">report_delivery_order_india</field>
 		<field name="report_type">aeroo</field>
 		<field name="in_format">oo-odt</field>
-		<field name="out_format" model="report.mimetypes" search="[('code','=','oo-doc'),('compatible_types','=','oo-odt')]"/>
+		<field name="out_format" model="report.mimetypes" search="[('code','=','oo-pdf'),('compatible_types','=','oo-odt')]"/>
 		<field name="preview">True</field>
 		<field name="parser_state">loc</field>
 		<field name="parser_loc">sd_india_contract/report/report_delivery_order_parser.py</field>
