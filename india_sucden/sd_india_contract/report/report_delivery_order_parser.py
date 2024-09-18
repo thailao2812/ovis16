@@ -71,7 +71,7 @@ class Parser(models.AbstractModel):
 
     def get_price(self, deliver_order):
         if deliver_order:
-            return round((deliver_order.contract_id.amount_total / deliver_order.total_qty) * 1000, 3)
+            return round((deliver_order.contract_id.amount_total / deliver_order.contract_id.total_qty) * 1000, 3)
 
     def get_address(self, partner_id):
         street = ''
