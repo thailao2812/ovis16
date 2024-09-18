@@ -78,16 +78,16 @@
         <field name="model">v.sd.certificate.license.detail</field>
         <field name="arch" type="xml">
             <search>
-                <field name = "cert_name"/>
                 <field name = "license_number"/>
+                <field name = "warehouse_name"/>
+                <field name = "cert_name"/>
                 <field name = "type"/>
                 <field name = "partner_name"/>
                 <field name = "state"/>
-                <field name = "warehouse_name"/>
                 
                 <group expand="1" string="Group By">
-                    <filter string="Warehouse" domain="[]" name="filter_warehouse_name" context="{'group_by':'warehouse_name'}"/>
                     <filter string="License Number" domain="[]" name="filter_license_number" context="{'group_by':'license_number'}"/>
+                    <filter string="Warehouse" domain="[]" name="filter_warehouse_name" context="{'group_by':'warehouse_name'}"/>
                 </group>
             </search>
         </field>
