@@ -13,13 +13,27 @@ class PscToScLinked(models.Model):
     product_id = fields.Many2one('product.product', string='Item name - Item code')
     sc_qty = fields.Float(string='SC Qty')
     balance_qty = fields.Float(string='Balance Qty')
-    value = fields.Float(string='Value (USD/MT)', related='sale_contract_id.price_unit', store=True)
+    value = fields.Float(string='Value (USD/MT)', compute='compute_value', store=True)
     current_allocated = fields.Float(string='Current Allocation')
     state = fields.Selection(related='sale_contract_id.state', string='State')
     state_allocate = fields.Selection([
         ('draft', 'Draft'),
         ('submit', 'Submit')
     ], string='State', default='draft')
+
+    @api.depends('s_contract')
+    def compute_value(self):
+        for rec in self:
+            if rec.s_contract:
+                sale_contract = self.env['sale.contract'].search([
+                    ('scontract_id', '=', rec.s_contract.id)
+                ], limit=1)
+                if sale_contract:
+                    rec.value = sale_contract.price_unit
+                else:
+                    rec.value = 0
+            else:
+                rec.value = 0
 
     @api.onchange('s_contract')
     def onchange_s_contract(self):
