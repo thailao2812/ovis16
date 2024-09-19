@@ -98,4 +98,9 @@ class SaleContract(models.Model):
                         record.onchange_packing_id()
                         record.price_unit = (record.packing_cost + record.cert_premium +
                                              record.differential + mapped_p_number)
+            if rec.type == 'local':
+                if rec.scontract_id:
+                    price_unit = rec.scontract_id.contract_line[0].price_unit
+                    for record in rec.contract_line:
+                        record.price_unit = price_unit
         return res

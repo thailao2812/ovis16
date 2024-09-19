@@ -18,6 +18,9 @@ class SContract(models.Model):
     warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse', required=False, readonly=True,
                                    states={'draft': [('readonly', False)]}, default=False)
 
+    contract_line = fields.One2many('s.contract.line', 'contract_id', string='Contract Lines', readonly=False,
+                                    states={}, copy=True)
+
     @api.model
     def _default_document_contract(self):
         document_contract = self.env['document.contract'].search([

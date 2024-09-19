@@ -37,6 +37,9 @@
             <xpath expr="//field[@name='warehouse_id']" position="attributes">
                 <attribute name="required">1</attribute>
             </xpath>
+            <xpath expr="//field[@name='contract_line']/tree/field[@name='price_unit']" position="replace">
+                <field name="price_unit" attrs="{'readonly': [('type', '=', 'export')]}" optional="show"/>
+            </xpath>
         </field>
     </record>
 </odoo>
