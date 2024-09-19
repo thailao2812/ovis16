@@ -23,7 +23,7 @@ class ContractPricePurchase(models.Model):
     price = fields.Float(string='Price', digits=(12, 2), related='contract_id.relation_price_unit', store=True)
     premium = fields.Float(string='Premium Amount', digits=(12, 2), related='contract_id.premium', store=True)
     currency_id = fields.Many2one('res.currency', related='contract_id.currency_id', store=True)
-    total = fields.Monetary(string='Total Contract Price', digits=(12, 2), related='contract_id.amount_sub_total', store=True)
+    total = fields.Float(string='Total Contract Price', digits=(12, 2), compute='compute_total', store=True)
     quantity = fields.Float(string='Quantity', related='contract_id.total_qty', store=True)
     certificate_id = fields.Many2one('ned.certificate', string='Certificate', related='contract_id.certificate_id', store=True)
     market_price = fields.Float(string='Market Price')
