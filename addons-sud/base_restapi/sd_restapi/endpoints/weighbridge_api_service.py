@@ -611,7 +611,7 @@ class WeighbridgeApiService(Component):
                                                             'date_done': dtime.now().strftime(DATETIME_FORMAT)
                                                             })
                         
-                    pick.button_qc_assigned()
+                    # pick.button_qc_assigned()
             gate_id.state ='closed'
 
             mess = {

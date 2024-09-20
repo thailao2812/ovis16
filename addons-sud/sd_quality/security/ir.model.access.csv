@@ -128,3 +128,8 @@ access_x_iburned_deduct_kcs_manager,access_x_iburned_deduct_kcs_manager,sd_quali
 ,,,,,,,
 access_ligh_burnded_bean_kcs_user,access_ligh_burnded_bean_kcs_user,sd_quality.model_ligh_burnded_bean,sd_quality.group_kcs_user,1,1,1,0
 access_ligh_burnded_bean_kcs_manager,access_ligh_burnded_bean_kcs_manager,sd_quality.model_ligh_burnded_bean,sd_quality.group_kcs_manager,1,1,1,1
+,,,,,,,
+,,,,,,,
+access_w_cancel_confirmation_user,access_w_cancel_confirmation_user,model_w_cancel_confirmation,sd_quality.group_kcs_user,1,1,1,0
+access_w_cancel_confirmation_manager,access_w_cancel_confirmation_manager,model_w_cancel_confirmation,sd_quality.group_kcs_manager,1,1,1,1
+
