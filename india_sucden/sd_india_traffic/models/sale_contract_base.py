@@ -13,7 +13,7 @@ class SaleContractLine(models.Model):
 
     price_unit = fields.Float(compute='_final_price', digits=(16, 4), store=True, string="Price")
 
-    @api.depends('differential', 'packing_cost', 'cert_premium', 'contract_id.scontract_id', 'contract_id.type')
+    @api.depends('differential', 'packing_cost', 'cert_premium', 'contract_id.scontract_id', 'contract_id.type', 'contract_id.scontract_id.price_unit')
     def _final_price(self):
         for sale in self:
             if sale.contract_id.type == 'export':
@@ -27,7 +27,7 @@ class SaleContractLine(models.Model):
                 sale.price_unit = (sale.packing_cost + sale.cert_premium +
                                                  sale.differential + mapped_p_number)
             else:
-                sale.price_unit = 0
+                sale.price_unit = sale.contract_id.scontract_id.price_unit
 
     @api.depends('product_qty', 'price_unit', 'tax_id', 'contract_id.type', 'conversion')
     def _compute_amount(self):
