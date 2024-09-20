@@ -83,14 +83,21 @@ class DeliveyOrder(models.Model):
               "VATRateName": "KCT"
             }
             data_invoice_detail.append(values)
-
+        currency_code = ''
+        rate = 0
+        if self.currency_id.name == 'VND':
+            currency_code = 'VND'
+            rate = 1
+        if self.currency_id.name == 'USD':
+            currency_code = 'USD'
+            rate = self.currency_id.rate_ids[0].rate
         data_invoice = {
             "RefID": str(uuid.uuid4()),
             "InvSeries": "1K24TSV",
             "InvoiceName": "Hoa Don Gia Tri Gia Tang",
             "InvDate":  str(self.date or null),
-            "CurrencyCode": self.currency_id.name or null,
-            "ExchangeRate": self.currency_id and self.currency_id.rate or 1,
+            "CurrencyCode": currency_code,
+            "ExchangeRate": rate,
             "PaymentMethodName": "TM/CK",
             "BuyerLegalName": self.partner_id.name or null,
             "BuyerTaxCode": self.partner_id.vat or null,
@@ -202,7 +209,14 @@ class DeliveyOrder(models.Model):
                     "UnitPrice": self.contract_id.contract_line[0].price_unit or 0
                     }
             data_invoice_detail.append(values)
-
+        currency_code = ''
+        rate = 0
+        if self.currency_id.name == 'VND':
+            currency_code = 'VND'
+            rate = 1
+        if self.currency_id.name == 'USD':
+            currency_code = 'USD'
+            rate = self.currency_id.rate_ids[0].rate
         data_invoice = [{
             "RefID": ref_id,
             "OriginalInvoiceData":
@@ -222,8 +236,8 @@ class DeliveyOrder(models.Model):
                 "TotalAmountWithoutVATOC": self.contract_id.amount_total or 0,
                 "PaymentMethodName": "TM/CK",
                 "OrgInvDate": null,
-                "CurrencyCode": self.currency_id and self.currency_id.name or "VND",
-                "ExchangeRate": self.currency_id and self.currency_id.rate or 1,
+                "CurrencyCode": currency_code,
+                "ExchangeRate": rate,
                 "OrgInvTemplateNo": null,
                 "OrgInvoiceType": null,
                 "OrgInvNo": null,
@@ -242,8 +256,8 @@ class DeliveyOrder(models.Model):
                 },
                 "InvSeries": "6K24NDO",
                 "OriginalInvoiceDetail": data_invoice_detail,
-                "CurrencyCode": self.currency_id.name or null,
-                "ExchangeRate": self.currency_id and self.currency_id.rate or 1,
+                "CurrencyCode": currency_code,
+                "ExchangeRate": rate,
                 "PaymentMethodName": "TM/CK",
                 "BuyerLegalName": self.partner_id.name or null,
                 "BuyerTaxCode": self.partner_id.vat or null,
