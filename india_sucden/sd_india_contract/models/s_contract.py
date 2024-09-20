@@ -20,6 +20,7 @@ class SContract(models.Model):
 
     contract_line = fields.One2many('s.contract.line', 'contract_id', string='Contract Lines', readonly=False,
                                     states={}, copy=True)
+    price_unit = fields.Float(string='Price Unit', related='contract_line.price_unit', store=True)
 
     @api.model
     def _default_document_contract(self):
