@@ -42,4 +42,15 @@
             </xpath>
         </field>
     </record>
+
+    <record id="view_s_contract_tree_inherit_india" model="ir.ui.view">
+        <field name="name">view_s_contract_tree_inherit_india</field>
+        <field name="model">s.contract</field>
+        <field name="inherit_id" ref="sd_sale_contract.view_s_contract_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='total_qty']" position="before">
+                <field name="price_unit"/>
+            </xpath>
+        </field>
+    </record>
 </odoo>
