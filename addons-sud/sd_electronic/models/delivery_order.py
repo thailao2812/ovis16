@@ -90,7 +90,7 @@ class DeliveyOrder(models.Model):
             rate = 1
         if self.currency_id.name == 'USD':
             currency_code = 'USD'
-            rate = self.currency_id.rate_ids[0].rate
+            rate = 0 # self.currency_id.rate_ids[0].rate
         data_invoice = {
             "RefID": str(uuid.uuid4()),
             "InvSeries": "1K24TSV",
