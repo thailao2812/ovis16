@@ -216,7 +216,7 @@ class DeliveyOrder(models.Model):
             rate = 1
         if self.currency_id.name == 'USD':
             currency_code = 'USD'
-            rate = self.currency_id.rate_ids[0].rate
+            rate = 0 #self.currency_id.rate_ids[0].rate
         data_invoice = [{
             "RefID": ref_id,
             "OriginalInvoiceData":
@@ -237,7 +237,7 @@ class DeliveyOrder(models.Model):
                 "PaymentMethodName": "TM/CK",
                 "OrgInvDate": null,
                 "CurrencyCode": currency_code,
-                "ExchangeRate": rate,
+                "ExchangeRate": 0,
                 "OrgInvTemplateNo": null,
                 "OrgInvoiceType": null,
                 "OrgInvNo": null,
@@ -257,7 +257,7 @@ class DeliveyOrder(models.Model):
                 "InvSeries": "6K24NDO",
                 "OriginalInvoiceDetail": data_invoice_detail,
                 "CurrencyCode": currency_code,
-                "ExchangeRate": rate,
+                "ExchangeRate": 0,
                 "PaymentMethodName": "TM/CK",
                 "BuyerLegalName": self.partner_id.name or null,
                 "BuyerTaxCode": self.partner_id.vat or null,
