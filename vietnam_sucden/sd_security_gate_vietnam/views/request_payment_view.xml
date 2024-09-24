@@ -106,21 +106,10 @@
                                 <field name="total_advance_payment_usd" decoration-bf="check == True"/>
                                 <field name="rate" decoration-bf="check == True"/>
                                 <field name="check" invisible="1"/>
-                                <field name="request_amount" decoration-danger="request_amount > 0" groups="sd_security_gate_vietnam.group_request_payment_seeing_money_value" decoration-bf="check == True"/>
-<!--                                <field name="advance_qty"/>-->
-<!--                                <field name="remain_qty"/>-->
-                                <field name="quantity_fix" decoration-bf="check == True" context="{'seq': parent.name, 'purchase_contract_id': parent.parent_id_purchase_contract}"/>
+                                <field name="request_amount" class="bold-text" decoration-danger="request_amount > 0" groups="sd_security_gate_vietnam.group_request_payment_seeing_money_value" decoration-bf="check == True"/>
+                                <field name="quantity_fix" class="bold-text" decoration-bf="check == True" context="{'seq': parent.name, 'purchase_contract_id': parent.parent_id_purchase_contract}"/>
                             </tree>
                         </field>
-<!--                    <field name="reference_information_line_ids" readonly="1" attrs="{'invisible': [('type_of_ptbf_payment', '!=', 'fixation_advance')]}">-->
-<!--                            <tree editable="top">-->
-<!--                                <field name="request_payment_id"/>-->
-<!--                                <field name="name" readonly="1"/>-->
-<!--                                <field name="total_advance_payment_usd"/>-->
-<!--                                <field name="rate"/>-->
-<!--                                <field name="request_amount" decoration-danger="request_amount > 0" groups="sd_security_gate_vietnam.group_request_payment_seeing_money_value"/>-->
-<!--                            </tree>-->
-<!--                        </field>-->
                     <group attrs="{'invisible': [('type_of_ptbf_payment', '!=', 'fixation_advance')]}">
                         <field name="qty_advance_fix" readonly="1"/>
                         <field name="price_usd" readonly="1"/>
@@ -130,7 +119,7 @@
                         <field name="rate" readonly="1"/>
                         <field name="average_rate" readonly="1"/>
                         <field name="final_price_vnd" readonly="1"/>
-                        <field name="request_amount" readonly="1" decoration-danger="request_amount > 0" groups="sd_security_gate_vietnam.group_request_payment_seeing_money_value"/>
+                        <field name="request_amount" class="bold-text" readonly="1" decoration-danger="request_amount > 0" groups="sd_security_gate_vietnam.group_request_payment_seeing_money_value"/>
                     </group>
                     <separator string="Payment Information"/>
                     <group>
@@ -142,7 +131,7 @@
                             <field name="total_interest" attrs="{'invisible': [('is_converted', '!=', True)]}" groups="sd_security_gate_vietnam.group_request_payment_seeing_money_value"/>
                             <field name="deposit_amount" attrs="{'invisible': [('is_converted', '=', True)]}" groups="sd_security_gate_vietnam.group_request_payment_seeing_money_value"/>
                             <field name="liquidation_amount" groups="sd_security_gate_vietnam.group_request_payment_seeing_money_value"/>
-                            <field name="request_amount" decoration-danger="request_amount > 0" groups="sd_security_gate_vietnam.group_request_payment_seeing_money_value"/>
+                            <field name="request_amount" class="bold-text" decoration-danger="request_amount > 0" groups="sd_security_gate_vietnam.group_request_payment_seeing_money_value"/>
                             <field name="amount_in_text" class="bold-text" groups="sd_security_gate_vietnam.group_request_payment_seeing_money_value"/>
                             <field name="partner_bank_id" domain="[('partner_id','=',partner_id)]" required="1"/>
                             <field name="account_no"/>
@@ -232,6 +221,7 @@
                             <field name="request_qty" context="{'seq': parent.name}" sum="request_qty"/>
                         </tree>
                     </field>
+                    <div attrs="{'invisible': [('type_of_ptbf_payment', '=', 'fixation_advance')]}">
                     <separator string="Status of Goods" attrs="{'invisible': [('is_converted', '=', True)]}"/>
                     <field name="status_goods_ids" widget="section_and_note_one2many" no_label="1"  attrs="{'invisible': [('is_converted', '=', True)]}">
                         <tree editable="top">
@@ -253,6 +243,7 @@
                             <field name="request_quantity" string="Payment Quantity" sum="request_quantity"/>
                         </tree>
                     </field>
+                    </div>
                     <separator string="History Payment Quantity" attrs="{'invisible': [('is_converted', '=', True)]}" groups="sd_security_gate_vietnam.group_request_payment_seeing_money_value"/>
                     <field name="history_quantity_payment" widget="x2many_2d_matrix"  field_x_axis="name" field_y_axis="quantity_char"
                            field_value="quantity" show_row_totals="False" show_column_totals="False" attrs="{'invisible': [('is_converted', '=', True)]}" groups="sd_security_gate_vietnam.group_request_payment_seeing_money_value">
