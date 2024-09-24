@@ -16,7 +16,13 @@ class WizardExportGeojson(models.TransientModel):
     date_from = fields.Date(string='From')
     date_to = fields.Date(string='To')
     partner_id = fields.Many2one('res.partner')
+    country_id = fields.Many2one('res.country', string='Country')
+    contract_number = fields.Char(string='Contract Number')
     geojson_file = fields.Binary(string="GeoJSON File")
+
+    def truncate_to_six_digits(self, value):
+        """Helper method to truncate value to 6 decimal places without rounding."""
+        return float(str(value)[:str(value).find('.') + 7])
 
     def df_to_geojson(self, properties, lat='latitude', lon='longitude'):
         geojson = {'type': 'FeatureCollection', 'features': []}
@@ -25,7 +31,9 @@ class WizardExportGeojson(models.TransientModel):
                        'properties': {},
                        'geometry': {'type': 'Point',
                                     'coordinates': []}}
-            feature['geometry']['coordinates'] = [row[lon], row[lat]]
+            lng = self.truncate_to_six_digits(row[lon])
+            lat = self.truncate_to_six_digits(row[lat])
+            feature['geometry']['coordinates'] = [lng, lat]
             for prop in properties:
                 feature['properties'][prop] = row[prop]
             geojson['features'].append(feature)
@@ -36,9 +44,16 @@ class WizardExportGeojson(models.TransientModel):
             raise UserError(_("You have to fulfillment date to and date from before generate data"))
         if self.date_from and not self.date_to:
             raise UserError(_("You have to fulfillment date to and date from before generate data"))
-        areas = self.env['res.partner.area'].search([
-            ('partner_id', '=', self.partner_id.id)
-        ])
+        domain = []
+        if self.date_from and self.date_to:
+            domain += [('create_date', '>=', self.date_from), ('create_date', '<=', self.date_to)]
+        if self.partner_id:
+            domain += [('partner_id', '=', self.partner_id.id)]
+        if self.country_id:
+            domain += [('import_id.country_id', '=', self.country_id.id)]
+        if self.contract_number:
+            domain += [('import_id.purchase_no', '=', self.contract_number.strip())]
+        areas = self.env['res.partner.area'].search(domain)
         # Initialize an empty list to store GeoJSON features
         features = []
 
@@ -51,7 +66,8 @@ class WizardExportGeojson(models.TransientModel):
                 "geometry": {
                     "type": "Polygon",
                     "coordinates": [[
-                        [point["lng"], point["lat"]] for point in data["options"]["paths"]
+                        [self.truncate_to_six_digits(point["lng"]), self.truncate_to_six_digits(point["lat"])] for point
+                        in data["options"]["paths"]
                     ]]
                 },
                 "properties": {

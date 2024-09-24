@@ -9,3 +9,9 @@ class ResPartnerArea(models.Model):
 
     import_id = fields.Many2one('import.geojson', string='From Import')
     import_date = fields.Date(related='import_id.import_date', store=True)
+    latitude = fields.Float(string='Latitude', digits=(10, 6))
+    longitude = fields.Float(string='Longitude', digits=(10, 6))
+    type_geometry = fields.Selection([
+        ('polygon', 'Polygon'),
+        ('point', 'Point')
+    ], string='Type Geometry', default=None)

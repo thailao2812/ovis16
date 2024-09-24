@@ -92,7 +92,6 @@ class ImportGeoJson(models.Model):
             duplicate_point_count = 0
             partial_duplicate_count = 0
             partial_duplicate_percentage_list = []
-            mess = ''
 
             existing_points = self.env['partner.multiple.point'].search([])
             existing_points_shapes = [Point(record.partner_longitude, record.partner_latitude) for record in
@@ -202,7 +201,8 @@ class ImportGeoJson(models.Model):
                     create_new_polygon = self.env['res.partner.area'].create({
                         'gshape_name': 'Farm of %s' % self.vendor_id.name,
                         'partner_id': self.vendor_id.id,
-                        'gshape_paths': new_data_format
+                        'gshape_paths': new_data_format,
+                        'type_geometry': 'polygon'
                     })
                     create_new_polygon._compute_gshape_polygon_lines()
                     dict_obj = ast.literal_eval(create_new_polygon.gshape_paths)
@@ -219,17 +219,24 @@ class ImportGeoJson(models.Model):
 
                 if geometry.get('type') == 'Point':
                     count_point += 1
-                    multiple_point = self.env['partner.multiple.point']
+                    check_decimal = False
+                    partner_area_point = self.env['res.partner.area']
+                    buffer_distance = 195.44
                     coordinates = geometry.get('coordinates', [])
                     lat, lng = coordinates[1], coordinates[0]
+                    lat_decimal = self.count_decimal_places(lat)
+                    lng_decimal = self.count_decimal_places(lng)
                     new_point = Point(lng, lat)
+                    if lat_decimal < 6 or lng_decimal < 6:
+                        check_decimal = True
                     is_duplicate = any(new_point.equals(existing_point) for existing_point in existing_points_shapes)
-                    if is_duplicate:
+                    if is_duplicate or check_decimal:
                         duplicate_point_count += 1
                         self.env['geojson.data'].create({
                             'name': 'Point number %s' % str(count_point),
                             'type': 'point',
-                            'is_overlapping': True,
+                            'is_overlapping': True if is_duplicate else False,
+                            'decimal_precision': True if check_decimal else False,
                             'state_check': 'red',
                             'import_id': self.id
                         })
@@ -240,23 +247,32 @@ class ImportGeoJson(models.Model):
                         'import_id': self.id,
                         'state_check': 'green'
                     })
-                    multiple_point.create({
+                    new_data_format = {
+                        "type": "circle",
+                        "options": {
+                            "radius": buffer_distance,
+                            "center": {
+                                "lat": lat,
+                                "lng": lng
+                            }
+                        }
+                    }
+                    create_new_point = partner_area_point.create({
+                        'gshape_name': 'Farm of %s' % self.vendor_id.name,
                         'partner_id': self.vendor_id.id,
-                        'partner_latitude': lat,
-                        'partner_longitude': lng,
-                        'import_id': self.id
+                        'gshape_paths': new_data_format,
+                        'gshape_type': 'circle',
+                        'import_id': self.id,
+                        'latitude': lat,
+                        'longitude': lng,
+                        'gshape_radius': buffer_distance,
+                        'type_geometry': 'point'
                     })
+                    create_new_point._compute_gshape_polygon_lines()
+                    dict_obj = ast.literal_eval(create_new_point.gshape_paths)
+                    create_new_point.gshape_paths = json.dumps(dict_obj)
+                    create_new_point._compute_gshape_polygon_lines()
                     self.count_point += 1
-            # if duplicate_count > 0:
-            #     mess += "We have %s Polygon that have the same data that already stored in database, in your file, please check again!<br/>" % duplicate_count
-            # if duplicate_point_count > 0:
-            #     mess += "We have %s Point that have the same data that already stored in database, in your file, please check again!<br/>" % duplicate_point_count
-            # if partial_duplicate_count > 0:
-            #     mess += "We have %s Polygon that contains points already stored in the database. Please check again!<br/>" % partial_duplicate_count
-            #     for i, percentage in enumerate(partial_duplicate_percentage_list, 1):
-            #         mess += "Polygon %s contains %.2f%% points already stored in the database.<br/>" % (i, percentage)
-            # if mess:
-            #     self.message_post(body=mess)
             if (any(self.line_ids.mapped('is_duplicate_partial'))
                     or any(self.line_ids.mapped('is_overlapping'))
                     or any(self.line_ids.mapped('is_unclose'))

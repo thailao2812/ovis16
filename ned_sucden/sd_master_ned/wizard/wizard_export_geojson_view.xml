@@ -9,7 +9,9 @@
 			            <group>
                             <field name="date_from"/>
                             <field name="date_to"/>
-                            <field name="partner_id" required="1"/>
+                            <field name="country_id"/>
+                            <field name="contract_number"/>
+                            <field name="partner_id"/>
                             <field name="geojson_file" widget="binary" invisible="1"/>
 		                </group>
 		                <footer>
