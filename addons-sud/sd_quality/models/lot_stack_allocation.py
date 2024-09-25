@@ -38,13 +38,14 @@ class LotStackAllocation(models.Model):
     no_of_bag = fields.Float(string="No of Bags")
     packing_id = fields.Many2one('ned.packing', related='stack_id.packing_id', store=True)
     shipping_id = fields.Many2one('shipping.instruction', related='delivery_id.shipping_id', store=True)
+    vehicle_no = fields.Char(string='Vehicle No', related='delivery_id.trucking_no', readonly=True, store=True)
 
     @api.onchange("delivery_id", 'lot_id')
     def onchange_delivery_id(self):
         for this in self:
             if this.lot_id:
                 this.lot_id.nvs_id = this.delivery_id.contract_id.id
-
+                this.vehicle_no = this.delivery_id.trucking_no
 
     def btt_confirm(self):
         #self.update_gdn()
