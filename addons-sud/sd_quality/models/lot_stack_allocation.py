@@ -229,16 +229,17 @@ class LotStackAllocation(models.Model):
                                                          #('qty_done', '=', this.quantity),
                                                          ('lot_id', '=', this.stack_id.id),
                                                          ('picking_id', '=', this.gdn_id.id)])
-                if move_id.picking_id.state in ['done', 'assigned']:
+                if move_id and move_id.picking_id.state in ['done', 'assigned']:
                     a = move_id.picking_id.name + u' was Done/Ready, can not set to Draft.'
                     raise UserError(_(a))
                 # Sơn Xét TH GDN đã cân lần 2 thì ko cho Cancel/Set to Draft
-                if move_id.init_qty != this.quantity:
+                if move_id and move_id.init_qty != this.quantity:
                     a = move_id.picking_id.name + u' had been weighed for the 2nd time.\n' + '(' + move_id.picking_id.name + u' đã cân lần 2)'
                     raise UserError(_(a))
                 if move_id:
                     move_id.unlink()
                 this.state = 'draft'
+                this.gdn_id = None
             if not this.gdn_id and not this.grp_id:
                 this.state = 'draft'
                 
@@ -247,35 +248,52 @@ class LotStackAllocation(models.Model):
         for record in self:
             raise UserError(_('You cannot delete data, just cancel action.'))
 
-    def btt_cancel(self):
-        for this in self:
-            if this.grp_id:
-                move_id = self.env['stock.move.line'].search([('product_id', '=', this.product_id.id),
-                                                         ('qty_done', '=', this.quantity),
-                                                         ('stack_id', '=', this.stack_id.id),
-                                                         ('picking_id', '=', this.grp_id.id)])
-                if move_id.picking_id.state == 'done':
-                    a = move_id.picking_id.name + u' was Done'
-                    raise UserError(_(a))
-                if move_id:
-                    move_id.state = 'cancel'
-                    move_id.picking_id.state = 'cancel'
-                this.state = 'cancel'
-            if this.gdn_id:
-                move_id = self.env['stock.move.line'].search([('product_id', '=', this.product_id.id),
-                                                         #('qty_done', '=', this.quantity),
-                                                         ('lot_id', '=', this.stack_id.id),
-                                                         ('picking_id', '=', this.gdn_id.id)])
-                if move_id.picking_id.state in ['done', 'assigned']:
-                    a = move_id.picking_id.name + u' was Done/Ready, can not cancel.'
-                    raise UserError(_(a))
-                # Xét TH GDN đã cân lần 2 thì ko cho Cancel/Set to Draft
-                if move_id.init_qty != this.quantity:
-                    a = move_id.picking_id.name + u' had been weighed for the 2nd time.\n' + '(' + move_id.picking_id.name + u' đã cân lần 2)'
-                    raise UserError(_(a))
-                if move_id:
-                    move_id.state = 'cancel'
-                    move_id.picking_id.state = 'cancel'
-                this.state = 'cancel'
-            if not this.gdn_id and not this.grp_id:
-                this.state = 'cancel'
+    # def btt_cancel(self):
+    #     for this in self:
+    #         if this.grp_id:
+    #             move_id = self.env['stock.move.line'].search([('product_id', '=', this.product_id.id),
+    #                                                      ('qty_done', '=', this.quantity),
+    #                                                      ('stack_id', '=', this.stack_id.id),
+    #                                                      ('picking_id', '=', this.grp_id.id)])
+    #             if move_id.picking_id.state == 'done':
+    #                 a = move_id.picking_id.name + u' was Done'
+    #                 raise UserError(_(a))
+    #             if move_id:
+    #                 move_id.picking_id.state = 'cancel'
+    #                 move_id.state = 'cancel'
+    #                 move_id.unlink()
+    #             this.state = 'cancel'
+    #         if this.gdn_id:
+    #             move_id = self.env['stock.move.line'].search([('product_id', '=', this.product_id.id),
+    #                                                      #('qty_done', '=', this.quantity),
+    #                                                      ('lot_id', '=', this.stack_id.id),
+    #                                                      ('picking_id', '=', this.gdn_id.id)])
+    #             if move_id and move_id.picking_id.state in ['done', 'assigned']:
+    #                 a = move_id.picking_id.name + u' was Done/Ready, can not cancel.'
+    #                 raise UserError(_(a))
+    #             # Xét TH GDN đã cân lần 2 thì ko cho Cancel/Set to Draft
+    #             if move_id and move_id.init_qty != this.quantity:
+    #                 a = move_id.picking_id.name + u' had been weighed for the 2nd time.\n' + '(' + move_id.picking_id.name + u' đã cân lần 2)'
+    #                 raise UserError(_(a))
+    #             if move_id:
+    #                 move_id.picking_id.state = 'cancel'
+    #                 move_id.state = 'cancel'
+    #                 move_id.unlink()
+    #             this.state = 'cancel'
+    #             this.gdn_id = None
+    #         if not this.gdn_id and not this.grp_id:
+    #             this.state = 'cancel'
+
+    def action_cancel_confirm(self):
+        for rc in self:
+            return{
+                "name": "Cancel Action",
+                "type": "ir.actions.act_window",
+                'view_mode': 'form',
+                'view_type': 'form',
+                "res_model": "w.cancel.confirmation",
+                # 'view_id': self.env.ref('wizard_cancel_confirmation_form').id,
+                'target': 'new',
+                'context': {'default_lot_allocation_id': rc.id}
+                }
+            

@@ -26,9 +26,12 @@
                     <field name="defects_tcvn"/>
                     <field name="cuptaste"/>
                     <field name="gdn_id"/>
-                    <button name="btt_confirm" string="Confirm" type="object" states="draft"/>
-                    <button name="btt_settodraft" string="Set to Draft" type="object" states="approve"/>
-                    <button name="btt_cancel" string="Cancel" type="object"  class="oe_highlight"/>
+                    <button name="btt_confirm" string="Confirm" type="object" states="draft" class="oe_highlight"/>
+                    <button name="btt_settodraft" string="Set to Draft" type="object" states="approve,cancel" class="oe_highlight"/>
+                    <button name="action_cancel_confirm" string="Cancel" type="object" states="draft" class="oe_highlight"/>
+                    <!-- <button name="btt_cancel" states="approve,draft" string="Cancel"
+                            confirm="Are you sure that you need to cancel?"
+                            type="object" class="oe_highlight"/> -->
                     <field name="state" readonly="1"/>
                 </tree>
             </field>
