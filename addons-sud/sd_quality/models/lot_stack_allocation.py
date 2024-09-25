@@ -46,8 +46,6 @@ class LotStackAllocation(models.Model):
             if this.lot_id:
                 this.lot_id.nvs_id = this.delivery_id.contract_id.id
                 this.vehicle_no = this.delivery_id.trucking_no
-                print(this.delivery_id.trucking_no)
-                print(this.vehicle_no)
 
     def btt_confirm(self):
         #self.update_gdn()
