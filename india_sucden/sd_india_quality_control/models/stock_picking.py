@@ -130,22 +130,22 @@ class StockPicking(models.Model):
                         line.move_id.write({'qty_done': line.product_qty or 0.0})
                         # line.move_id.write({'reserved_uom_qty':line.product_qty or 0.0,'qty_done': line.product_qty or 0.0})
                     # Minh update QC transfer in and transfer out
-                    if line.stack_id:
-                        for pick_in in line.stack_id.move_line_ids.filtered(
-                                lambda x: x.picking_id.picking_type_id.code == 'transfer_in').mapped('picking_id'):
-                            pick_in.kcs_line.write({'state': 'draft'})
-                            pick_in.kcs_line.unlink()
-                            for move_in in pick_in.move_lines:
-                                pick.kcs_line.filtered(lambda x: x.product_id == move_in.product_id).copy(
-                                    {'picking_id': pick_in.id,
-                                     'move_id': move_in.id})
-                            if pick_in.backorder_id:
-                                pick_in.backorder_id.kcs_line.write({'state': 'draft'})
-                                pick_in.backorder_id.kcs_line.unlink()
-                                for move_out in pick_in.backorder_id.move_lines:
-                                    pick.kcs_line.filtered(lambda x: x.product_id == move_out.product_id).copy(
-                                        {'picking_id': pick_in.backorder_id.id,
-                                         'move_id': move_out.id})
+                    # if line.stack_id:
+                    #     for pick_in in line.stack_id.move_line_ids.filtered(
+                    #             lambda x: x.picking_id.picking_type_id.code == 'transfer_in').mapped('picking_id'):
+                    #         pick_in.kcs_line.write({'state': 'draft'})
+                    #         pick_in.kcs_line.unlink()
+                    #         for move_in in pick_in.move_lines:
+                    #             pick.kcs_line.filtered(lambda x: x.product_id == move_in.product_id).copy(
+                    #                 {'picking_id': pick_in.id,
+                    #                  'move_id': move_in.id})
+                    #         if pick_in.backorder_id:
+                    #             pick_in.backorder_id.kcs_line.write({'state': 'draft'})
+                    #             pick_in.backorder_id.kcs_line.unlink()
+                    #             for move_out in pick_in.backorder_id.move_lines:
+                    #                 pick.kcs_line.filtered(lambda x: x.product_id == move_out.product_id).copy(
+                    #                     {'picking_id': pick_in.backorder_id.id,
+                    #                      'move_id': move_out.id})
             #                     line.move_id.write({'product_uom_qty': line.product_qty or 0.0})
             return True
 

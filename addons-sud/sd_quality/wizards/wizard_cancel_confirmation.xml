@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+		<record id="wizard_cancel_confirmation_form" model="ir.ui.view">
+	        <field name="name">wizard.cancel.confirmation.form.</field>
+	        <field name="model">w.cancel.confirmation</field>
+	        <field name="arch" type="xml">
+            <form string="Cancel Confirmation">
+                <group>
+                    <field name="message"/>
+                    <!-- <label string='Are you sure that you need to cancel Lot No.? ' for ='message'/>
+                    <div class='o_row'>
+                        <field name="message"/>
+                    </div> -->
+                </group>
+                <footer>
+                    <button name="btt_cancel" string="Yes" class="oe_highlight" type="object"/>
+                    <button string="No" class="btn-default" special="cancel"/>
+                </footer>
+            </form>
+			</field>
+		</record>
+
+		<record id="action_wizard_cancel_confirmation_form" model="ir.actions.act_window">
+            <field name="name">Cancel Confirmation</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">w.cancel.confirmation</field>
+            <field name="view_mode">form</field>
+			<field name="target">new</field>
+        </record>
+        
+      </data>
+</odoo>

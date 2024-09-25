@@ -20,9 +20,9 @@
             <xpath expr="//field[@name='trucking_id']" position="attributes">
                 <attribute name="domain">[('transfer','=',True),('is_company','=', True)]</attribute>
             </xpath>
-            <xpath expr="//field[@name='transrate']" position="attributes">
-                <attribute name="attrs">{'readonly': [('state', '!=', 'draft')]}</attribute>
-            </xpath>
+<!--            <xpath expr="//field[@name='transrate']" position="attributes">-->
+<!--                <attribute name="attrs">{'readonly': [('state', '!=', 'draft')]}</attribute>-->
+<!--            </xpath>-->
         </field>
     </record>
 
