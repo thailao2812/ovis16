@@ -52,49 +52,49 @@
                             <field name="product_id" invisible="1"/>
                             <field name="purchase_contract_id" readonly="1"/>
                             <field name="parent_id_purchase_contract" readonly="1" force_save="1"  invisible="1"/>
-                            <field name="product_id"/>
-                            <field name="certificate_id"/>
-                            <field name="paid_quantity" groups="sd_security_gate_vietnam.group_request_payment_seeing_money_value"/>
-                            <field name="balance_quantity" groups="sd_security_gate_vietnam.group_request_payment_seeing_money_value"/>
+                            <field name="product_id" readonly="1"/>
+                            <field name="certificate_id" readonly="1"/>
+                            <field name="paid_quantity" readonly="1" groups="sd_security_gate_vietnam.group_request_payment_seeing_money_value"/>
+                            <field name="balance_quantity" readonly="1" groups="sd_security_gate_vietnam.group_request_payment_seeing_money_value"/>
                             <field name="type" invisible="1"/>
                             <field name="attachment_ids" widget="many2many_binary" string="Attach a file"/>
                             <field name="is_converted" invisible="1"/>
                         </group>
                         <group>
-                            <field name="type"/>
-                            <field name="date_contract" string="Date Contract"/>
-                            <field name="quantity_contract" string="Quantity Contract"/>
+                            <field name="type" readonly="1"/>
+                            <field name="date_contract" readonly="1" string="Date Contract"/>
+                            <field name="quantity_contract" readonly="1" string="Quantity Contract"/>
                             <field name="fix_price" attrs="{'invisible': [('type', '=', 'consign')]}" readonly="1" groups="sd_security_gate_vietnam.group_request_payment_seeing_money_value"/>
                             <field name="price_npe" attrs="{'invisible': [('type', '=', 'purchase')]}" readonly="1" groups="sd_security_gate_vietnam.group_request_payment_seeing_money_value"/>
                             <field name="amount_untaxed" groups="sd_security_gate_vietnam.group_request_payment_seeing_money_value" options="{'currency_field': 'currency_id'}"/>
                             <field name="name" readonly="1"/>
                             <field name="currency_id" readonly="1"/>
-                            <field name="date"/>
+                            <field name="date" readonly="1"/>
                         </group>
                     </group>
                     <separator string="Fixation Information" attrs="{'invisible': ['|', ('type_of_ptbf_payment', '!=', 'fixation'), ('type', '!=', 'ptbf')]}"/>
                     <group attrs="{'invisible': ['|', ('type_of_ptbf_payment', '!=', 'fixation'), ('type', '!=', 'ptbf')]}">
                         <group>
-                            <field name="payment_quantity"/>
-                            <field name="price_usd"/>
-                            <field name="price_diff"/>
-                            <field name="final_price_usd"/>
-                            <field name="rate"/>
-                            <field name="final_price_vnd"/>
-                            <field name="request_amount" decoration-danger="request_amount > 0" groups="sd_security_gate_vietnam.group_request_payment_seeing_money_value"/>
+                            <field name="payment_quantity" readonly="1"/>
+                            <field name="price_usd" readonly="1"/>
+                            <field name="price_diff" readonly="1"/>
+                            <field name="final_price_usd" readonly="1"/>
+                            <field name="rate" readonly="1"/>
+                            <field name="final_price_vnd" readonly="1"/>
+                            <field name="request_amount" readonly="1" decoration-danger="request_amount > 0" groups="sd_security_gate_vietnam.group_request_payment_seeing_money_value"/>
                         </group>
                     </group>
                     <separator string="Advance Information" attrs="{'invisible': ['|', ('type_of_ptbf_payment', '!=', 'advance'), ('type', '!=', 'ptbf')]}"/>
                     <group attrs="{'invisible': ['|', ('type_of_ptbf_payment', '!=', 'advance'), ('type', '!=', 'ptbf')]}">
                         <group>
-                            <field name="quantity_advance"/>
-                            <field name="liffe_price"/>
-                            <field name="price_diff"/>
-                            <field name="differencial_price"/>
-                            <field name="advance_price_usd"/>
-                            <field name="total_advance_payment_usd"/>
-                            <field name="rate"/>
-                            <field name="advance_price_vnd"/>
+                            <field name="quantity_advance" readonly="1"/>
+                            <field name="liffe_price" readonly="1"/>
+                            <field name="price_diff" readonly="1"/>
+                            <field name="differencial_price" readonly="1"/>
+                            <field name="advance_price_usd" readonly="1"/>
+                            <field name="total_advance_payment_usd" readonly="1"/>
+                            <field name="rate" readonly="1"/>
+                            <field name="advance_price_vnd" readonly="1"/>
                         </group>
                     </group>
                     <separator string="Fixation For Advance" attrs="{'invisible': [('type_of_ptbf_payment', '!=', 'fixation_advance')]}"/>
@@ -123,18 +123,18 @@
                     <separator string="Payment Information"/>
                     <group>
                         <group>
-                            <field name="payment_quantity"/>
-                            <field name="fix_price" string="Payment Price" groups="sd_security_gate_vietnam.group_request_payment_seeing_money_value"/>
-                            <field name="total_value" groups="sd_security_gate_vietnam.group_request_payment_seeing_money_value"/>
-                            <field name="advance_payment_converted" attrs="{'invisible': [('is_converted', '!=', True)]}" groups="sd_security_gate_vietnam.group_request_payment_seeing_money_value"/>
-                            <field name="total_interest" attrs="{'invisible': [('is_converted', '!=', True)]}" groups="sd_security_gate_vietnam.group_request_payment_seeing_money_value"/>
-                            <field name="deposit_amount" attrs="{'invisible': [('is_converted', '=', True)]}" groups="sd_security_gate_vietnam.group_request_payment_seeing_money_value"/>
-                            <field name="liquidation_amount" groups="sd_security_gate_vietnam.group_request_payment_seeing_money_value"/>
-                            <field name="request_amount" class="bold-text" decoration-danger="request_amount > 0" groups="sd_security_gate_vietnam.group_request_payment_seeing_money_value"/>
-                            <field name="amount_in_text" class="bold-text" groups="sd_security_gate_vietnam.group_request_payment_seeing_money_value"/>
-                            <field name="partner_bank_id" domain="[('partner_id','=',partner_id)]" required="1"/>
-                            <field name="account_no"/>
-                            <field name="chinhanh"/>
+                            <field name="payment_quantity" readonly="1"/>
+                            <field name="fix_price" readonly="1" string="Payment Price" groups="sd_security_gate_vietnam.group_request_payment_seeing_money_value"/>
+                            <field name="total_value" readonly="1" groups="sd_security_gate_vietnam.group_request_payment_seeing_money_value"/>
+                            <field name="advance_payment_converted" readonly="1" attrs="{'invisible': [('is_converted', '!=', True)]}" groups="sd_security_gate_vietnam.group_request_payment_seeing_money_value"/>
+                            <field name="total_interest" readonly="1" attrs="{'invisible': [('is_converted', '!=', True)]}" groups="sd_security_gate_vietnam.group_request_payment_seeing_money_value"/>
+                            <field name="deposit_amount" readonly="1" attrs="{'invisible': [('is_converted', '=', True)]}" groups="sd_security_gate_vietnam.group_request_payment_seeing_money_value"/>
+                            <field name="liquidation_amount" readonly="1" groups="sd_security_gate_vietnam.group_request_payment_seeing_money_value"/>
+                            <field name="request_amount" readonly="1" class="bold-text" decoration-danger="request_amount > 0" groups="sd_security_gate_vietnam.group_request_payment_seeing_money_value"/>
+                            <field name="amount_in_text" readonly="1" class="bold-text" groups="sd_security_gate_vietnam.group_request_payment_seeing_money_value"/>
+                            <field name="partner_bank_id" readonly="1" domain="[('partner_id','=',partner_id)]" required="1"/>
+                            <field name="account_no" readonly="1"/>
+                            <field name="chinhanh" readonly="1"/>
                             <field name="delivery_array" invisible="1"/>
                             <field name="grn_90_array" invisible="1"/>
                             <field name="grn_100_factory_array" invisible="1"/>
@@ -222,7 +222,7 @@
                     </field>
                     <div attrs="{'invisible': [('type_of_ptbf_payment', '=', 'fixation_advance')]}">
                     <separator string="Status of Goods" attrs="{'invisible': [('is_converted', '=', True)]}"/>
-                    <field name="status_goods_ids" widget="section_and_note_one2many" no_label="1"  attrs="{'invisible': [('is_converted', '=', True)]}">
+                    <field name="status_goods_ids" readonly="1" widget="section_and_note_one2many" no_label="1"  attrs="{'invisible': [('is_converted', '=', True)]}">
                         <tree editable="top">
                             <field name="display_type" invisible="1"/>
                             <field name="name" readonly="1" options="{'no_open': True, 'no_create': True}" force_save="1"/>
