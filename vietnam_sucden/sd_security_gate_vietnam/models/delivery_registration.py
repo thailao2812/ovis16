@@ -54,6 +54,7 @@ class DeliveryRegistration(models.Model):
                         ('state', 'not in', ['approved', 'cancel', 'closed', 'reject']),
                         ('supplier_id', '=', self._context.get('partner_id')),
                         ('id', 'not in', deliver_array),
+                        ('arrivial_time', '>=', self._cotext.get('date')),
                         ('id', 'not in', arr_done), ('product_ids', 'in', product.id)]
                     delivery_registration = self.search(domain+args, limit=limit)
 
@@ -81,6 +82,7 @@ class DeliveryRegistration(models.Model):
                     args += [('type_transfer', '=', 'other'),
                         ('supplier_id', '=', self._context.get('partner_id')),
                         ('id', 'not in', deliver_array),
+                        ('arrivial_time', '>=', self._cotext.get('date')),
                         ('id', 'not in', arr_done), ('product_ids', 'in', product.id)]
                     delivery_registration = self.search(domain+args, limit=limit)
             except ValidationError as e:
@@ -119,6 +121,7 @@ class DeliveryRegistration(models.Model):
                     ('state', 'not in', ['approved', 'cancel', 'closed', 'reject']),
                     ('supplier_id', '=', self._context.get('partner_id')),
                     ('id', 'not in', deliver_array),
+                    ('arrivial_time', '>=', self._cotext.get('date')),
                     ('id', 'not in', arr_done), ('product_ids', 'in', product.id)]
 
             if self._context.get('delivery_ktn'):
@@ -147,6 +150,7 @@ class DeliveryRegistration(models.Model):
                     ('type_transfer', '=', 'other'),
                     ('supplier_id', '=', self._context.get('partner_id')),
                     ('id', 'not in', deliver_array),
+                    ('arrivial_time', '>=', self._cotext.get('date')),
                     ('id', 'not in', arr_done), ('product_ids', 'in', product.id)]
         return super(DeliveryRegistration, self).search_read(domain=domain, fields=fields, offset=offset, limit=limit,
                                                      order=order)
