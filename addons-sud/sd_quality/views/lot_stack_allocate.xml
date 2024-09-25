@@ -12,6 +12,7 @@
                 	<field name="contract_id" readonly="1" attrs="{'readonly': [('state', '=', 'approve')]}"/>
                 	<field name="nvs_id"/>
                 	<field name="delivery_id" required="0" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                	<field name="vehicle_no" readonly="1"/>
                 	<field name="packing_id" required="0" attrs="{'readonly': [('state', '=', 'approve')]}"/>
                 	<field name="shipping_id" required="0" attrs="{'readonly': [('state', '=', 'approve')]}"/>
                 	<field name="grp_id" invisible="1" required="0" attrs="{'readonly': [('state', '=', 'approve')]}"/>
