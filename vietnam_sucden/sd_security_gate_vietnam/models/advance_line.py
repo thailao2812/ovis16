@@ -41,11 +41,12 @@ class AdvanceLine(models.Model):
                     ('type_of_ptbf_payment', '=', 'fixation_advance'),
                     ('purchase_contract_id.type', '=', 'ptbf')
                 ])
-                if request_fixation_advance_other_contract:
-                    advance_line_other = request_fixation_advance_other_contract.mapped('fixation_advance_line_ids').filtered(
-                        lambda x: x.request_payment_id.id == rec.request_payment_id.id)
-                    if advance_line_other:
-                        fixed_quantity = sum(advance_line_other.mapped('quantity_fix'))
+                if rec.request_payment_id:
+                    if request_fixation_advance_other_contract:
+                        advance_line_other = request_fixation_advance_other_contract.mapped('fixation_advance_line_ids').filtered(
+                            lambda x: x.request_payment_id.id == rec.request_payment_id.id)
+                        if advance_line_other:
+                            fixed_quantity = sum(advance_line_other.mapped('quantity_fix'))
                 rec.fixed_quantity = fixed_quantity
             else:
                 if isinstance(rec.request_id.id, int):
@@ -83,3 +84,5 @@ class AdvanceLine(models.Model):
                 rec.remain_qty = rec.advance_qty - rec.fixed_quantity - rec.quantity_fix
                 if rec.remain_qty < 0:
                     raise UserError(_("Remain Quantity cannot < 0!!!"))
+            if rec.name:
+                rec.remain_qty = 0

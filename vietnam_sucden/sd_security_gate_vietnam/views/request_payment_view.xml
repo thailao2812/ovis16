@@ -108,6 +108,7 @@
                                 <field name="check" invisible="1"/>
                                 <field name="request_amount" decoration-danger="check == True" groups="sd_security_gate_vietnam.group_request_payment_seeing_money_value" decoration-bf="check == True"/>
                                 <field name="quantity_fix" decoration-danger="check == True" decoration-bf="check == True" context="{'seq': parent.name, 'purchase_contract_id': parent.parent_id_purchase_contract}"/>
+                                <field name="remain_qty" decoration-danger="check == True" decoration-bf="check == True" context="{'seq': parent.name, 'purchase_contract_id': parent.parent_id_purchase_contract}"/>
                             </tree>
                         </field>
                     <group attrs="{'invisible': [('type_of_ptbf_payment', '!=', 'fixation_advance')]}">
