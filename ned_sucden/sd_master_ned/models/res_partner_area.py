@@ -14,4 +14,12 @@ class ResPartnerArea(models.Model):
     type_geometry = fields.Selection([
         ('polygon', 'Polygon'),
         ('point', 'Point')
-    ], string='Type Geometry', default=None)
+    ], string='Type Geometry', default=None, compute='compute_type_geometry', store=True)
+
+    @api.depends('gshape_type')
+    def compute_type_geometry(self):
+        for rec in self:
+            if rec.gshape_type == 'polygon':
+                rec.type_geometry = 'polygon'
+            if rec.gshape_type == 'circle':
+                rec.type_geometry = 'point'

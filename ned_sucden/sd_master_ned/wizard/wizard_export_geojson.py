@@ -59,22 +59,26 @@ class WizardExportGeojson(models.TransientModel):
 
         # Loop through each area to extract polygon data
         for row in areas:
-            data = json.loads(row.gshape_paths)
-            # Create a GeoJSON feature for each polygon
             feature = {
                 "type": "Feature",
                 "geometry": {
-                    "type": "Polygon",
-                    "coordinates": [[
-                        [self.truncate_to_six_digits(point["lng"]), self.truncate_to_six_digits(point["lat"])] for point
-                        in data["options"]["paths"]
-                    ]]
+                    "type": "Polygon" if row.type_geometry == 'polygon' else 'Point',
                 },
                 "properties": {
-                    "description": f"Polygon from area {row.id}"
+                    "description": f"ID: {row.id}"
                 }
             }
             # Append each feature to the features list
+            data = json.loads(row.gshape_paths)
+            if row.type_geometry == 'polygon':
+                # Create a GeoJSON feature for each polygon
+                feature["geometry"]["coordinates"] = [[
+                            [self.truncate_to_six_digits(point["lng"]), self.truncate_to_six_digits(point["lat"])] for point
+                            in data["options"]["paths"]
+                        ]]
+            if row.type_geometry == 'point':
+                point = data["options"]["center"]
+                feature["geometry"]["coordinates"] = [self.truncate_to_six_digits(point["lng"]), self.truncate_to_six_digits(point["lat"])]
             features.append(feature)
         # Create the final GeoJSON structure with all features
         geojson_data = {
