@@ -218,7 +218,7 @@ class ImportGeoJson(models.Model):
                     count_point += 1
                     check_decimal = False
                     partner_area_point = self.env['res.partner.area']
-                    buffer_distance = 195.44
+                    buffer_distance = 225.68
                     coordinates = geometry.get('coordinates', [])
                     lat, lng = coordinates[1], coordinates[0]
                     lat_decimal = self.count_decimal_places(lat)
