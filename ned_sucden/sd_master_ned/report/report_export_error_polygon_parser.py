@@ -27,6 +27,7 @@ class Parser(models.AbstractModel):
         if report:
             import_geojson = report.import_geojson_id
             error_line = import_geojson.line_ids.filtered(lambda x: x.state_check == 'red')
+            print(error_line)
             return error_line
         else:
             return False

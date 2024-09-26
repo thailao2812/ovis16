@@ -15,6 +15,7 @@ from geopy.distance import geodesic
 from geopy import distance
 import re
 
+from odoo.odoo.odoo.api import ondelete
 
 
 class ImportGeoJson(models.Model):
@@ -238,7 +239,8 @@ class ImportGeoJson(models.Model):
                             'is_overlapping': True if is_duplicate else False,
                             'decimal_precision': True if check_decimal else False,
                             'state_check': 'red',
-                            'import_id': self.id
+                            'import_id': self.id,
+                            'properties_data': json.dumps(properties)
                         })
                         continue
                     self.env['geojson.data'].create({
@@ -372,7 +374,7 @@ class ImportGeoJson(models.Model):
 class GeoJSonData(models.Model):
     _name = 'geojson.data'
 
-    import_id = fields.Many2one('import.geojson')
+    import_id = fields.Many2one('import.geojson', ondelete='cascade')
     name = fields.Char(string='Name')
     type = fields.Selection([
         ('point', 'Point'),
