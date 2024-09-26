@@ -5,7 +5,7 @@
     'version' : '16.0.1.0',
     'author': 'Sucden Viet Nam',
     'website': 'https://www.sucden.com',
-    'depends': ['base', 'sd_pur_sales', 'sd_india_inventory', 'sd_india_master'],
+    'depends': ['base', 'sd_pur_sales', 'sd_india_quality_control'],
     'description': """
     """,
     'data': [
