@@ -3,19 +3,12 @@ from odoo import fields, models, api, _
 import base64
 import numpy as np
 
-import xlrd
-from odoo.exceptions import ValidationError, UserError
-from math import radians, sin, cos, sqrt, atan2
 from shapely.geometry import shape, Polygon, Point
 from shapely.errors import GEOSException
 from shapely.wkt import loads
 import json,ast
 from datetime import datetime,date, timedelta
 from geopy.distance import geodesic
-from geopy import distance
-import re
-
-from odoo.odoo.odoo.api import ondelete
 
 
 class ImportGeoJson(models.Model):
