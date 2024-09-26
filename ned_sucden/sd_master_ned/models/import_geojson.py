@@ -92,6 +92,8 @@ class ImportGeoJson(models.Model):
                                       existing_points]
             count_point = 0
             count_polygon = 0
+
+            is_valid = True
             for feature in geojson_data['features']:
                 # Giả sử mỗi feature là một bản ghi bạn muốn tạo
                 geometry = feature.get('geometry', {})
@@ -160,6 +162,7 @@ class ImportGeoJson(models.Model):
                     if points_inside_existing_polygons > 0:
                         inside = True
                     if not coordinates or less_4_point or check_spike or un_close or is_duplicate or inside or check_decimal:
+                        is_valid = False
                         self.env['geojson.data'].create({
                             'name': 'Polygon number %s' % str(count_polygon),
                             'type': 'polygon',
@@ -191,18 +194,18 @@ class ImportGeoJson(models.Model):
                         },
                         "lines": lines
                     }
-
-                    create_new_polygon = self.env['res.partner.area'].create({
-                        'gshape_name': 'Farm of %s' % self.vendor_id.name,
-                        'partner_id': self.vendor_id.id,
-                        'gshape_paths': new_data_format,
-                        'type_geometry': 'polygon'
-                    })
-                    create_new_polygon._compute_gshape_polygon_lines()
-                    dict_obj = ast.literal_eval(create_new_polygon.gshape_paths)
-                    create_new_polygon.gshape_paths = json.dumps(dict_obj)
-                    create_new_polygon._compute_gshape_polygon_lines()
-                    create_new_polygon.import_id = self.id
+                    if is_valid:
+                        create_new_polygon = self.env['res.partner.area'].create({
+                            'gshape_name': 'Farm of %s' % self.vendor_id.name,
+                            'partner_id': self.vendor_id.id,
+                            'gshape_paths': new_data_format,
+                            'type_geometry': 'polygon'
+                        })
+                        create_new_polygon._compute_gshape_polygon_lines()
+                        dict_obj = ast.literal_eval(create_new_polygon.gshape_paths)
+                        create_new_polygon.gshape_paths = json.dumps(dict_obj)
+                        create_new_polygon._compute_gshape_polygon_lines()
+                        create_new_polygon.import_id = self.id
                     self.count_polygon += 1
                     self.env['geojson.data'].create({
                         'name': 'Polygon number %s' % str(count_polygon),
@@ -225,6 +228,7 @@ class ImportGeoJson(models.Model):
                         check_decimal = True
                     is_duplicate = any(new_point.equals(existing_point) for existing_point in existing_points_shapes)
                     if is_duplicate or check_decimal:
+                        is_valid = False
                         duplicate_point_count += 1
                         self.env['geojson.data'].create({
                             'name': 'Point number %s' % str(count_point),
@@ -252,21 +256,22 @@ class ImportGeoJson(models.Model):
                             }
                         }
                     }
-                    create_new_point = partner_area_point.create({
-                        'gshape_name': 'Farm of %s' % self.vendor_id.name,
-                        'partner_id': self.vendor_id.id,
-                        'gshape_paths': new_data_format,
-                        'gshape_type': 'circle',
-                        'import_id': self.id,
-                        'latitude': lat,
-                        'longitude': lng,
-                        'gshape_radius': buffer_distance,
-                        'type_geometry': 'point'
-                    })
-                    create_new_point._compute_gshape_polygon_lines()
-                    dict_obj = ast.literal_eval(create_new_point.gshape_paths)
-                    create_new_point.gshape_paths = json.dumps(dict_obj)
-                    create_new_point._compute_gshape_polygon_lines()
+                    if is_valid:
+                        create_new_point = partner_area_point.create({
+                            'gshape_name': 'Farm of %s' % self.vendor_id.name,
+                            'partner_id': self.vendor_id.id,
+                            'gshape_paths': new_data_format,
+                            'gshape_type': 'circle',
+                            'import_id': self.id,
+                            'latitude': lat,
+                            'longitude': lng,
+                            'gshape_radius': buffer_distance,
+                            'type_geometry': 'point'
+                        })
+                        create_new_point._compute_gshape_polygon_lines()
+                        dict_obj = ast.literal_eval(create_new_point.gshape_paths)
+                        create_new_point.gshape_paths = json.dumps(dict_obj)
+                        create_new_point._compute_gshape_polygon_lines()
                     self.count_point += 1
             if (any(self.line_ids.mapped('is_duplicate_partial'))
                     or any(self.line_ids.mapped('is_overlapping'))

@@ -65,7 +65,8 @@ class WizardExportGeojson(models.TransientModel):
                     "type": "Polygon" if row.type_geometry == 'polygon' else 'Point',
                 },
                 "properties": {
-                    "description": f"ID: {row.id}"
+                    "description": f"ID: {row.id}",
+                    "ProducerCountry": self.country_id.code
                 }
             }
             # Append each feature to the features list
@@ -92,6 +93,6 @@ class WizardExportGeojson(models.TransientModel):
 
         return {
             'type': 'ir.actions.act_url',
-            'url': f'/web/content/?model=wizard.export.geojson&id={self.id}&field=geojson_file&download=true&filename=output.geojson',
+            'url': f'/web/content/?model=wizard.export.geojson&id={self.id}&field=geojson_file&download=true&filename=Polygon_%s' % self.country_id.code,
             'target': 'self',
         }
