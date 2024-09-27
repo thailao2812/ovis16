@@ -27,9 +27,11 @@
                 <button name="button_submit" string="Submit" type="object" states="draft" class="oe_highlight" groups="sd_india_master.group_sale_logistic_india"/>
                 <button name="button_approve" string="Approve" type="object" states="submit" class="oe_highlight" groups="sd_india_master.group_accounting_india"/>
                 <button name="set_to_draft" string="Set To Draft" type="object" class="oe_highlight" attrs="{'invisible': [('state', '=', 'draft')]}" confirm="Do you want to Set To Draft this contract?" groups="sd_india_master.group_admin_india"/>
+                <button name="action_cancel" string="Cancel" type="object" class="oe_highlight" attrs="{'invisible': [('state', '=', 'cancel')]}" confirm="Do you want to Cancel this contract?" groups="sd_india_master.group_admin_india"/>
+                <button name="action_done" string="Close" type="object" class="oe_highlight" attrs="{'invisible': [('state', '=', 'done')]}" confirm="Do you want to Close this contract?" groups="sd_india_master.group_admin_india"/>
                 <button name="button_print_s_contract" string="Print S-Contract"  states="approved"
                     type="object" class="oe_highlight" />
-                <field name="state" widget="statusbar" statusbar_visible="draft,submit,approved"/>
+                <field name="state" widget="statusbar" statusbar_visible="draft,submit,approved,done,cancel"/>
             </xpath>
             <xpath expr="//field[@name='contract_count']" position="attributes">
                 <attribute name="string">Contract Relevant</attribute>

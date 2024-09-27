@@ -13,7 +13,7 @@
 								<span>       </span><span>   Date to</span>
 								<field name="date_to" class="oe_inline ms-3"/>
 							</div>
-							<field name="purchase_contract_ids" widget="many2many_tags" domain="['|', '|', ('fob_management_id', '=', False), ('state_fob', '=', 'draft'), ('type', '=', 'purchase')]" options="{'no_create': true}"/>
+							<field name="purchase_contract_ids" context="{'purchase_contract_fob_link': True}" widget="many2many_tags" options="{'no_create': true}"/>
 		                </group>
 		                <group>
 

@@ -31,8 +31,20 @@ class ContractPricePurchase(models.Model):
     # new field
     contract_id = fields.Many2one('purchase.contract', string='Contract')
     trade_month = fields.Many2one('s.period', string='Trade Month')
+    state = fields.Selection([
+        ('draft', 'Draft'),
+        ('approve', 'Approved'),
+    ], string='State', default='draft')
 
     @api.depends('price', 'premium')
     def compute_total(self):
         for rec in self:
             rec.total = rec.price + rec.premium
+
+    def action_approve(self):
+        for rec in self:
+            rec.state = 'approve'
+
+    def action_set_to_draft(self):
+        for rec in self:
+            rec.state = 'draft'

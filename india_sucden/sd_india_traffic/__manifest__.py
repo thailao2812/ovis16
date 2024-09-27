@@ -33,6 +33,7 @@
         'views/report_fob_statement_view.xml',
         'views/sale_contract_india_view.xml',
         'views/ned_certificate_view.xml',
+        'views/post_shipment_view.xml',
         'views/menu.xml'
 
     ],

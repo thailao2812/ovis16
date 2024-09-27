@@ -10,7 +10,7 @@ class SContract(models.Model):
     _inherit = "s.contract"
 
     state = fields.Selection(
-        [('draft', 'New'), ('submit', 'Submit'), ('approved', 'Approved'), ('done', 'Done'), ('cancel', 'Cancelled')],
+        [('draft', 'New'), ('submit', 'Submit'), ('approved', 'Approved'), ('done', 'Close'), ('cancel', 'Cancelled')],
         string='Status', readonly=True, copy=False, index=True, default='draft')
 
     status = fields.Selection(selection='_get_new_status_type', string='Shipped From')
@@ -52,6 +52,14 @@ class SContract(models.Model):
     def set_to_draft(self):
         for record in self:
             record.state = 'draft'
+
+    def action_cancel(self):
+        for record in self:
+            record.state = 'cancel'
+
+    def action_done(self):
+        for record in self:
+            record.state = 'done'
 
     @api.constrains('name')
     def _check_constraint_name(self):

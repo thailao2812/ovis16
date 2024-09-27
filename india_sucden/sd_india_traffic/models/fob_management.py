@@ -64,6 +64,10 @@ class FOBManagement(models.Model):
         for record in self:
             record.state = 'approve'
 
+    def button_set_to_draft(self):
+        for rec in self:
+            rec.state = 'draft'
+
     @api.onchange('crop_id')
     def onchange_crop_id(self):
         if self.crop_id:
