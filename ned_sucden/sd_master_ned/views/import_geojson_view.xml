@@ -6,7 +6,7 @@
         <field name="arch" type="xml">
              <form string="Import Farmer">
                  <header>
-                     <button name="import_file" string="Import" states="new" type="object" class="btn-primary"/>
+                     <button name="import_file" string="Import" type="object" class="btn-primary" attrs="{'invisible': [('status_check', '=', 'green')]}"/>
                      <button name="open_wizard_export_error" string="Export Error Data" type="object" class="btn-primary"/>
                       <field name="state" widget="statusbar" nolabel="1" statusbar_visible="new,imported"/>
                  </header>
@@ -32,11 +32,12 @@
                         <field name="country_id" required="1" options="{'no_create': True}" attrs="{'readonly': [('state', '=', 'imported')]}"/>
                         <field name="create_uid" string="Import User"/>
                         <field name="import_date" readonly="1"/>
-                        <field name="file" filename="filename" attrs="{'readonly': [('state', '=', 'imported')]}"/>
+                        <field name="file" filename="filename" attrs="{'readonly': [('status_check', '=', 'green')]}"/>
                         <field name="filename" invisible="1"/>
                         <field name="count_polygon" readonly="1"/>
                         <field name="count_point" readonly="1"/>
                         <field name="properties_ids" readonly="1" widget="many2many_tags" invisible="1"/>
+                        <field name="status_check" readonly="1" widget="color"/>
                     </group>
                      <notebook>
                          <page string="Import Data" name="import_data">
