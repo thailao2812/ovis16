@@ -22,6 +22,9 @@
                 	<field name="price"/>
                 	<field name="premium"/>
                 	<field name="total"/>
+                	<field name="state" widget="badge" readonly="1"/>
+                	<button name="action_approve" string="Approve" type="object" states="draft"/>
+                	<button name="action_set_to_draft" string="Set To Draft" type="object" states="approve"/>
                 </tree>
             </field>
         </record>
