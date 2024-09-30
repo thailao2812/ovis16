@@ -35,7 +35,7 @@ class WizardSearchPurchaseContract(models.TransientModel):
                 ('type', 'in', ['purchase']),
                 ('state_fob', '=', 'draft'),
                 ('fob_management_id', '=', False),
-                ('state', 'not in', ['cancel', 'done'])
+                ('state', 'not in', ['cancel'])
             ])
             return {
                 'name': _('Purchase Contract - FOB Link'),
