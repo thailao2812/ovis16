@@ -95,7 +95,7 @@
             <field name="name">Purchase Contract - FOB (Linked)</field>
             <field name="res_model">purchase.contract</field>
             <field name="view_mode">tree</field>
-            <field name="domain">[('fob_management_id', '!=', False)]</field>
+            <field name="domain">[('fob_management_id', '!=', False), ('type', '=', 'purchase'), ('state', '!=', 'cancel')]</field>
             <field name="context">{}</field>
         	<field name="search_view_id" ref="sd_india_traffic.purchase_contract_fob_link_search"/>
             <field name="help" type="html">
