@@ -78,7 +78,7 @@ class PurchaseContract(models.Model):
                 args += [('type', '=', 'purchase'),
                       ('fob_management_id', '=', False),
                       ('state_fob', '=', 'draft'),
-                      ('state', 'not in', ['cancel', 'done'])]
+                      ('state', 'not in', ['cancel'])]
         purchase_contract = self.with_context(from_name_search=True).search(args, limit=limit)
         return purchase_contract.name_get()
 
@@ -88,7 +88,7 @@ class PurchaseContract(models.Model):
             domain = [('type', '=', 'purchase'),
                       ('fob_management_id', '=', False),
                       ('state_fob', '=', 'draft'),
-                      ('state', 'not in', ['cancel', 'done'])]
+                      ('state', 'not in', ['cancel'])]
             return super(PurchaseContract, self).search_read(domain=domain, fields=fields, offset=offset,
                                                                  limit=limit,
                                                                  order=order)
