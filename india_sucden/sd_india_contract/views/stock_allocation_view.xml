@@ -38,39 +38,39 @@
         </field>
     </record>
 
-    <record id="view_stock_allocation_tree_tree_india_contract" model="ir.ui.view">
-        <field name="name">view_stock_allocation_tree_tree_india_contract</field>
-        <field name="model">stock.allocation</field>
-        <field name="inherit_id" ref="sd_inventory.view_stock_allocation_tree_tree_inherit_inventory"/>
-        <field name="arch" type="xml">
-            <xpath expr="//tree" position="replace">
-                <tree editable="top">
-                    <field name="contract_id"/>
-                    <field name="purchase_date"/>
-                    <field name="consignment_id"/>
-                    <field name="consignment_date"/>
-                    <field name="picking_id" readonly="1"/>
-                    <field name="date_picking"/>
-                    <field name="partner_code"/>
-                    <field name="partner_id"/>
-                    <field name="estate_name"/>
-                    <field name="product_code"/>
-                    <field name="product_id"/>
-                    <field name="certificate_id"/>
-                    <field name="crop_id"/>
-                    <field name="bag_no"/>
-                    <field name="gross_qty"/>
-                    <field name="quality_deduction"/>
-                    <field name="net_qty"/>
-                    <field name="net_price"/>
-                    <field name="premium"/>
-                    <field name="gross_price"/>
-                    <field name="gross_value"/>
-                    <field name="deduction_value"/>
-                    <field name="net_value"/>
-                    <field name="inv_no_date"/>
-                </tree>
-            </xpath>
-        </field>
-    </record>
+<!--    <record id="view_stock_allocation_tree_tree_india_contract" model="ir.ui.view">-->
+<!--        <field name="name">view_stock_allocation_tree_tree_india_contract</field>-->
+<!--        <field name="model">stock.allocation</field>-->
+<!--        <field name="inherit_id" ref="sd_inventory.view_stock_allocation_tree_tree_inherit_inventory"/>-->
+<!--        <field name="arch" type="xml">-->
+<!--            <xpath expr="//tree" position="replace">-->
+<!--                <tree editable="top">-->
+<!--                    <field name="contract_id"/>-->
+<!--                    <field name="purchase_date"/>-->
+<!--                    <field name="consignment_id"/>-->
+<!--                    <field name="consignment_date"/>-->
+<!--                    <field name="picking_id" readonly="1"/>-->
+<!--                    <field name="date_picking"/>-->
+<!--                    <field name="partner_code"/>-->
+<!--                    <field name="partner_id"/>-->
+<!--                    <field name="estate_name"/>-->
+<!--                    <field name="product_code"/>-->
+<!--                    <field name="product_id"/>-->
+<!--                    <field name="certificate_id"/>-->
+<!--                    <field name="crop_id"/>-->
+<!--                    <field name="bag_no"/>-->
+<!--                    <field name="gross_qty"/>-->
+<!--                    <field name="quality_deduction"/>-->
+<!--                    <field name="net_qty"/>-->
+<!--                    <field name="net_price"/>-->
+<!--                    <field name="premium"/>-->
+<!--                    <field name="gross_price"/>-->
+<!--                    <field name="gross_value"/>-->
+<!--                    <field name="deduction_value"/>-->
+<!--                    <field name="net_value"/>-->
+<!--                    <field name="inv_no_date"/>-->
+<!--                </tree>-->
+<!--            </xpath>-->
+<!--        </field>-->
+<!--    </record>-->
 </odoo>
