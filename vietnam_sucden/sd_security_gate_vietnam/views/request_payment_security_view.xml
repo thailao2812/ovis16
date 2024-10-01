@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_request_payment_tree_security" model="ir.ui.view">
+            <field name="name">view_request_payment_tree_security</field>
+            <field name="model">request.payment</field>
+            <field name="arch" type="xml">
+                <tree string="Request Payment" create="false" delete="false">
+                	<field name="purchase_contract_id" optional="show"/>
+                	<field name="partner_id" optional="show"/>
+                    <field name="name" optional="show"/>
+                    <field name="date" optional="show"/>
+                    <field name="users_request_id" optional="show"/>
+                     <field name="payment_quantity" sum="payment_quantity" optional="show"/>
+                    <field name="state" optional="show"/>
+                </tree>
+            </field>
+        </record>
+
+    <record id="view_request_payment_form_security" model="ir.ui.view">
+            <field name="name">view_request_payment_form_security</field>
+            <field name="model">request.payment</field>
+            <field name="arch" type="xml">
+                <form string="Request Payment">
+	                <header>
+	                	<button name="security_approve" string="Security" type="object"
+                            attrs="{'invisible': ['|', ('is_dr_request', '!=', True), ('state', '!=', 'request')]}"
+                            class="oe_highlight" groups="sd_security_gate_vietnam.group_security_request_payment"/>
+	                	<field name="state" widget="statusbar" statusbar_visible="request,approved,paid"/>
+	                </header>
+	                <sheet>
+	                	<group>
+	                        <group>
+	                            <field name="name"/>
+	                            <field name="purchase_contract_id"/>
+	                            <field name="is_dr_request" invisible="1"/>
+		                    </group>
+		                    <group>
+			                     <field name="date"/>
+	                        </group>
+	                        </group>
+
+	                        <newline/>
+	                        <separator string="Delivery Registration 70%"/>
+                            <field name="delivery_70_ids" readonly="1">
+                                <tree editable="bottom">
+                                    <field name="delivery_id"/>
+                                    <field name="license_plate"/>
+                                    <field name="arrivial_time"/>
+                                    <field name="supplier_id"/>
+                                    <field name="approx_quantity"/>
+                                    <field name="quantity" sum="quantity"/>
+                                    <field name="percent" readonly="1"/>
+                                    <field name="total_qty" sum="total_qty"/>
+                                    <field name="remain_qty" sum="remain_qty"/>
+                                    <field name="paid_quantity" sum="paid_qty"/>
+                                    <field name="request_qty" context="{'seq': parent.name}" sum="request_qty"/>
+                                </tree>
+                            </field>
+                	</sheet>
+                </form>
+            </field>
+        </record>
+
+    <record id="action_request_payment_security" model="ir.actions.act_window">
+        <field name="name">Request Payment</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">request.payment</field>
+        <field name="view_mode">tree,form</field>
+
+        <!-- Gắn view chỉ định -->
+        <field name="view_id" ref="sd_security_gate_vietnam.view_request_payment_tree_security"/>  <!-- View mặc định (ví dụ tree) -->
+        <field name="view_ids" eval="[(5, 0, 0), (0, 0, {'view_mode': 'tree', 'view_id': ref('sd_security_gate_vietnam.view_request_payment_tree_security')}), (0, 0, {'view_mode': 'form', 'view_id': ref('sd_security_gate_vietnam.view_request_payment_form_security')})]"/>
+        <field name="domain">[('is_dr_request', '=', True), ('state', '=', 'request')]</field>
+        <field name="context" eval="{}"/>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Create a Request Payment, the first step of a new Request.
+            </p>
+        </field>
+    </record>
+
+    <menuitem name="Request Payment Security"
+            id="menu_request_payment_security_root"
+            web_icon="sd_security_gate_vietnam,static/description/icon1_contract.jpg"
+              groups="sd_security_gate_vietnam.group_security_request_payment"
+            sequence="20"/>
+
+		       <menuitem id="menu_master_request_payment_security"
+		            name="Request Payment"
+		            parent="menu_request_payment_security_root"
+                         action="action_request_payment_security"
+                         groups="sd_security_gate_vietnam.group_security_request_payment"
+		            sequence="1"/>
+</odoo>

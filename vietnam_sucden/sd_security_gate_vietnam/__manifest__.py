@@ -14,6 +14,7 @@
         'views/request_payment_view.xml',
         'views/delivery_registration_contract.xml',
         'views/stock_allocation_view.xml',
+        'views/request_payment_security_view.xml',
         'views/data.xml',
         'report/report_view.xml',
         'wizard/wizard_reason_refuse_view.xml',
