@@ -33,6 +33,7 @@
                         <button name="button_submit" string='Submit' type="object" class="oe_highlight" states="draft"/>
                         <button name="button_approve" string='Approve' type="object" class="oe_highlight" states="submit"/>
                         <button name="close_fob" string='Close' type="object" class="oe_highlight" states="approve"/>
+                        <button name="button_set_to_draft" string='Set To Draft' type="object" class="oe_highlight" attrs="{'invisible': [('state', '=', 'draft')]}"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,submit,approve,close"/>
                     </header>
                 	<sheet>

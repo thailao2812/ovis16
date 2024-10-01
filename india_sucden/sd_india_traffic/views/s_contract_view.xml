@@ -150,6 +150,10 @@
                 <field name="bag_allocated_so"/>
                 <field name="qty_tobe_allocated_so"/>
                 <field name="bag_tobe_allocated_so"/>
+                <field name="qty_allocated_do"/>
+                <field name="bag_allocated_do"/>
+                <field name="qty_tobe_allocated_do"/>
+                <field name="bag_tobe_allocated_do"/>
             </xpath>
             <xpath expr="//field[@name='name']" position="after">
                 <field name="crop_id"/>

@@ -68,3 +68,30 @@ class PurchaseContract(models.Model):
         for rec in self:
             if not rec.product_id:
                 rec.certificate_id = False
+
+    @api.model
+    def name_search(self, name, args=None, operator='ilike', limit=100):
+        args = args or []
+        if name:
+            args = [('name', operator, name)]
+        if self._context.get('purchase_contract_fob_link'):
+                args += [('type', '=', 'purchase'),
+                      ('fob_management_id', '=', False),
+                      ('state_fob', '=', 'draft'),
+                      ('state', 'not in', ['cancel'])]
+        purchase_contract = self.with_context(from_name_search=True).search(args, limit=limit)
+        return purchase_contract.name_get()
+
+    @api.model
+    def search_read(self, domain=None, fields=None, offset=0, limit=None, order=None):
+        if self._context.get('purchase_contract_fob_link'):
+            domain = [('type', '=', 'purchase'),
+                      ('fob_management_id', '=', False),
+                      ('state_fob', '=', 'draft'),
+                      ('state', 'not in', ['cancel'])]
+            return super(PurchaseContract, self).search_read(domain=domain, fields=fields, offset=offset,
+                                                                 limit=limit,
+                                                                 order=order)
+        return super(PurchaseContract, self).search_read(domain=domain, fields=fields, offset=offset,
+                                                         limit=limit,
+                                                         order=order)

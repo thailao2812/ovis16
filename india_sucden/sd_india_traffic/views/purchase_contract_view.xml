@@ -14,7 +14,7 @@
                 <field name="differential_india" attrs="{'readonly': [('state_fob', '=', 'submit')]}"/>
                 <field name="state_fob" readonly="1" widget="badge"/>
                 <button name="button_submit_fob_link" string="Submit" type="object" class="oe_highlight" attrs="{'invisible': [('state_fob', '=', 'submit')]}"/>
-                <button name="button_reset_submit_fob_link" string="Submit" type="object" class="oe_highlight" attrs="{'invisible': [('state_fob', '=', 'draft')]}"/>
+                <button name="button_reset_submit_fob_link" string="Reset to draft" type="object" class="oe_highlight" attrs="{'invisible': [('state_fob', '=', 'draft')]}"/>
             </tree>
         </field>
     </record>
@@ -95,7 +95,7 @@
             <field name="name">Purchase Contract - FOB (Linked)</field>
             <field name="res_model">purchase.contract</field>
             <field name="view_mode">tree</field>
-            <field name="domain">[('fob_management_id', '!=', False)]</field>
+            <field name="domain">[('fob_management_id', '!=', False), ('type', '=', 'purchase'), ('state', '!=', 'cancel')]</field>
             <field name="context">{}</field>
         	<field name="search_view_id" ref="sd_india_traffic.purchase_contract_fob_link_search"/>
             <field name="help" type="html">
