@@ -16,6 +16,7 @@
                 	<field name="fob"/>
                 	<field name="a_differential"/>
                 	<field name="ab_differential"/>
+                	<field name="outturn"/>
                 	<field name="partner_id" required="1"/>
                 	<field name="quantity"/>
                 	<field name="certificate_id"/>
