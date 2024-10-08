@@ -35,6 +35,7 @@ class ContractPricePurchase(models.Model):
         ('draft', 'Draft'),
         ('approve', 'Approved'),
     ], string='State', default='draft')
+    outturn = fields.Float(string='Outturn %')
 
     @api.depends('price', 'premium')
     def compute_total(self):
