@@ -72,3 +72,6 @@ class NedCertificateLicense(models.Model):
 
         return res
 
+    def action_export(self):
+        return self.env.ref('sd_contract_vietnam.report_certificate_license').report_action(self)
+
