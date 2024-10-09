@@ -60,6 +60,9 @@ class PurchaseContract(models.Model):
 
     remark = fields.Text(string='Remark')
 
+    gross_qty = fields.Float(string='Gross Quantity', digits=(12,0))
+    quality_deduction = fields.Float(string='Quality Deduction', digits=(12,0))
+
     @api.onchange('date_order')
     def onchange_date_order(self):
         deal_line = False

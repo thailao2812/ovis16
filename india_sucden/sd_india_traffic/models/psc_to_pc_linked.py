@@ -27,7 +27,7 @@ class PscToPcLinked(models.Model):
             self.date_contract = self.purchase_contract_id.date_order
             self.partner_id = self.purchase_contract_id.partner_id.id
             self.product_id = self.purchase_contract_id.product_id.id
-            self.quantity = self.purchase_contract_id.total_qty
+            self.quantity = self.purchase_contract_id.gross_qty if self.purchase_contract_id.origin else self.purchase_contract_id.total_qty
             self.receive_qty = self.purchase_contract_id.qty_received
             self.outturn = self.purchase_contract_id.outturn
             self.finished_qty = self.purchase_contract_id.finished_qty
