@@ -11,7 +11,7 @@ class PscToPcLinked(models.Model):
     date_contract = fields.Date(string='PC Date')
     partner_id = fields.Many2one('res.partner', string='Vendor/Supplier Name')
     product_id = fields.Many2one('product.product', string='Item Name - Item Code')
-    quantity = fields.Float(string='PC Qty.')
+    quantity = fields.Float(string='PC Qty.', compute='compute_pc_qty', store=True)
     receive_qty = fields.Float(string='Receive Qty.')
     outturn = fields.Float(string='Outturn %')
     finished_qty = fields.Float(string='Finished Qty/PC')
@@ -21,13 +21,21 @@ class PscToPcLinked(models.Model):
     current_allocated = fields.Float(string='Current Allocation')
     state = fields.Selection(related='sale_contract_id.state', store=True)
 
+    @api.depends('purchase_contract_id', 'purchase_contract_id.origin', 'purchase_contract_id.gross_qty', 'purchase_contract_id.total_qty')
+    def compute_pc_qty(self):
+        for rec in self:
+            if rec.purchase_contract_id.origin:
+                rec.quantity = rec.purchase_contract_id.gross_qty
+            else:
+                rec.quantity = rec.purchase_contract_id.total_qty
+
     @api.onchange('purchase_contract_id')
     def onchange_purchase_contract_id(self):
         if self.purchase_contract_id:
             self.date_contract = self.purchase_contract_id.date_order
             self.partner_id = self.purchase_contract_id.partner_id.id
             self.product_id = self.purchase_contract_id.product_id.id
-            self.quantity = self.purchase_contract_id.gross_qty if self.purchase_contract_id.origin else self.purchase_contract_id.total_qty
+            # self.quantity = self.purchase_contract_id.gross_qty if self.purchase_contract_id.origin else self.purchase_contract_id.total_qty
             self.receive_qty = self.purchase_contract_id.qty_received
             self.outturn = self.purchase_contract_id.outturn
             self.finished_qty = self.purchase_contract_id.finished_qty
