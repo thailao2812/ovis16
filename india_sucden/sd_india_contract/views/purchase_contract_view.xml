@@ -224,6 +224,8 @@
                 <button name="print_cr_detail" string="Print Invoice" type="object" class="oe_highlight" attrs="{'invisible': [('state', '!=', 'approved')]}"/>
             </xpath>
             <xpath expr="//field[@name='date_fix']" position="after">
+                <field name="gross_qty" attrs="{'invisible': [('origin', '=', False)], 'required': [('origin', '!=', False)]}"/>
+                <field name="quality_deduction" attrs="{'invisible': [('origin', '=', False)], 'required': [('origin', '!=', False)]}"/>
                 <field name="remark"/>
             </xpath>
         </field>
