@@ -60,7 +60,7 @@ class PurchaseContract(models.Model):
 
     remark = fields.Text(string='Remark')
 
-    gross_qty = fields.Float(string='Gross Quantity', digits=(12,0))
+    gross_qty = fields.Float(string='Gross Quantity (SN)', digits=(12,0))
     quality_deduction = fields.Float(string='Quality Deduction', digits=(12,0), compute='compute_quality_deduction', store=True)
 
     @api.depends('gross_qty', 'total_qty')
