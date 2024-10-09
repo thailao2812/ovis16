@@ -669,10 +669,12 @@
                 <field name="total_deduction_amount"/>
             </xpath>
             <xpath expr="//field[@name='product_id']" position="after">
-                <field name="gross_qty"/>
-                <field name="quality_deduction"/>
                 <field name="packing_id"/>
                 <field name="number_of_bags"/>
+            </xpath>
+            <xpath expr="//field[@name='origin']" position="after">
+                <field name="gross_qty"/>
+                <field name="quality_deduction"/>
             </xpath>
         </field>
     </record>
