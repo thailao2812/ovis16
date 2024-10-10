@@ -90,7 +90,7 @@ class ImportGeoJson(models.Model):
             overlap_percentage = round((sum_overlap_pixels - total_pixels) * 100 / total_pixels, 1)
         else:
             overlap_percentage = 0
-        return overlap_percentage
+        return overlap_percentage, total_pixels, sum_overlap_pixels
 
     def import_file(self):
         if self.file:
@@ -153,7 +153,7 @@ class ImportGeoJson(models.Model):
                         coordinates = geometry.get('coordinates', [])[0][0]
                     count_polygon += 1
                     check_spike = self.check_angle(Polygon(coordinates), 20)
-                    deforestation_percent = self.checking_deforestation(Polygon(coordinates))
+                    deforestation_percent, total_pixels, sum_overlap_pixels = self.checking_deforestation(Polygon(coordinates))
 
                     if len(coordinates) < 4:
                         less_4_point = True
@@ -210,6 +210,7 @@ class ImportGeoJson(models.Model):
                             'deforestation_percentage': deforestation_percent,
                             'state_check': 'red',
                             'import_id': self.id,
+                            'data': '%s - %s' % (total_pixels, sum_overlap_pixels),
                             'properties_data': json.dumps(properties)
                         })
                         continue
@@ -434,3 +435,4 @@ class GeoJSonData(models.Model):
     ], string='Status Check')
     properties_data = fields.Char(string='Properties Data')
     deforestation_percentage = fields.Float(string='Deforestation Percentage', digits=(16, 1))
+    data = fields.Char(string='Data')

@@ -51,6 +51,7 @@
                                      <field name="is_unclose"/>
                                      <field name="is_duplicate_partial"/>
                                      <field name="is_overlapping"/>
+                                     <field name="data"/>
                                      <field name="deforestation_percentage"/>
                                      <field name="state_check" widget="color" readonly="1"/>
                                  </tree>
