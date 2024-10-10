@@ -84,6 +84,8 @@ class ImportGeoJson(models.Model):
         total_pixels = zonal_stats_results["count"]
         sum_overlap_pixels = zonal_stats_results["sum"]
 
+        print(total_pixels, sum_overlap_pixels)
+
         if sum_overlap_pixels is not None:
             overlap_percentage = round((sum_overlap_pixels - total_pixels) * 100 / total_pixels, 1)
         else:
