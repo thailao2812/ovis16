@@ -15,8 +15,8 @@ import pandas as pd
 from rasterstats import zonal_stats
 
 
-merge_layer_tif_filepath = "/Users/laoquocthai/VNM_SD20/VN_SD20.tif"
-# merge_layer_tif_filepath = "/opt/VN_SD20.tif"
+# merge_layer_tif_filepath = "/Users/laoquocthai/VNM_SD20/VN_SD20.tif"
+merge_layer_tif_filepath = "/opt/VN_SD20.tif"
 
 
 class ImportGeoJson(models.Model):
