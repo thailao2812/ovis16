@@ -4,7 +4,7 @@
         <field name="name">Import GeoJSON File</field>
         <field name="model">import.geojson</field>
         <field name="arch" type="xml">
-             <form string="Import Farmer">
+             <form string="Import Farmer" create="false" delete="false">
                  <header>
                      <button name="import_file" string="Import" type="object" class="btn-primary" attrs="{'invisible': [('status_check', '=', 'green')]}"/>
                      <button name="open_wizard_export_error" string="Export Error Data" type="object" class="btn-primary"/>
@@ -24,13 +24,12 @@
                         </button>
                      </div>
                     <group>
-                        <field name="vendor_id" required="1" options="{'no_create': True}" attrs="{'readonly': [('state', '=', 'imported')]}"/>
+                        <field name="create_uid" string="Responsibility Person" options="{'no_create': True}"/>
                         <field name="purchase_no" required="1" attrs="{'readonly': [('state', '=', 'imported')]}"/>
                         <field name="contact_number" required="1" attrs="{'readonly': [('state', '=', 'imported')]}"/>
                         <field name="supplier_id" required="1" options="{'no_create': True}" attrs="{'readonly': [('state', '=', 'imported')]}"/>
                         <field name="supplier_number" required="1" attrs="{'readonly': [('state', '=', 'imported')]}"/>
                         <field name="country_id" required="1" options="{'no_create': True}" attrs="{'readonly': [('state', '=', 'imported')]}"/>
-                        <field name="create_uid" string="Import User"/>
                         <field name="import_date" readonly="1"/>
                         <field name="file" filename="filename" attrs="{'readonly': [('status_check', '=', 'green')]}"/>
                         <field name="filename" invisible="1"/>
@@ -72,11 +71,11 @@
         <field name="name">Import GeoJSON File</field>
         <field name="model">import.geojson</field>
         <field name="arch" type="xml">
-             <tree string="Import Farmer">
-                 <field name="vendor_id"/>
+             <tree string="Import Farmer" create="false" delete="false">
+                 <field name="supplier_id"/>
                  <field name="country_id"/>
                  <field name="purchase_no"/>
-                 <field name="create_uid" string="Import User"/>
+                 <field name="create_uid" string="Responsibility Person"/>
                  <field name="import_date"/>
                  <field name="status_check" widget="color"/>
                  <field name="file" filename="filename" widget="binary"/>

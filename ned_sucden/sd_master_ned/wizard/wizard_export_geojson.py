@@ -60,13 +60,12 @@ class WizardExportGeojson(models.TransientModel):
         # Loop through each area to extract polygon data
         for row in areas:
             feature = {
-                "type": "Feature",
+                "type": "Feature",    "properties": {
+                    "ID": f"{row.id}",
+                    "ProducerCountry": self.country_id.code
+                },
                 "geometry": {
                     "type": "Polygon" if row.type_geometry == 'polygon' else 'Point',
-                },
-                "properties": {
-                    "description": f"ID: {row.id}",
-                    "ProducerCountry": self.country_id.code
                 }
             }
             # Append each feature to the features list
@@ -93,6 +92,6 @@ class WizardExportGeojson(models.TransientModel):
 
         return {
             'type': 'ir.actions.act_url',
-            'url': f'/web/content/?model=wizard.export.geojson&id={self.id}&field=geojson_file&download=true&filename=Polygon_%s' % self.country_id.code,
+            'url': f'/web/content/?model=wizard.export.geojson&id={self.id}&field=geojson_file&download=true&filename=Polygon_%s.geojson' % self.country_id.code,
             'target': 'self',
         }

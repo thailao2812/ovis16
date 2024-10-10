@@ -15,8 +15,8 @@ import pandas as pd
 from rasterstats import zonal_stats
 
 
-# merge_layer_tif_filepath = "/Users/laoquocthai/VNM_SD20/VN_SD20.tif"
-merge_layer_tif_filepath = "/opt/VN_SD20.tif"
+merge_layer_tif_filepath = "/Users/laoquocthai/VNM_SD20/VN_SD20.tif"
+# merge_layer_tif_filepath = "/opt/VN_SD20.tif"
 
 
 class ImportGeoJson(models.Model):
@@ -193,7 +193,7 @@ class ImportGeoJson(models.Model):
                     if points_inside_existing_polygons > 0:
                         inside = True
                     if (not coordinates or less_4_point or check_spike or un_close or is_duplicate or inside
-                            or check_decimal or deforestation_percent > 0):
+                            or check_decimal or deforestation_percent > 5):
                         is_valid = False
                         self.env['geojson.data'].create({
                             'name': 'Polygon number %s' % str(count_polygon),
@@ -287,8 +287,8 @@ class ImportGeoJson(models.Model):
             if is_valid:
                 for val_pol in value_valid_polygon:
                     create_new_polygon = self.env['res.partner.area'].create({
-                        'gshape_name': 'Farm of %s' % self.vendor_id.name,
-                        'partner_id': self.vendor_id.id,
+                        'gshape_name': 'Farm of %s' % self.supplier_id.name,
+                        'partner_id': self.supplier_id.id,
                         'gshape_paths': val_pol,
                         'type_geometry': 'polygon'
                     })
@@ -299,8 +299,8 @@ class ImportGeoJson(models.Model):
                     create_new_polygon.import_id = self.id
                 for val_point in value_valid_point:
                     create_new_point = self.env['res.partner.area'].create({
-                        'gshape_name': 'Farm of %s' % self.vendor_id.name,
-                        'partner_id': self.vendor_id.id,
+                        'gshape_name': 'Farm of %s' % self.supplier_id.name,
+                        'partner_id': self.supplier_id.id,
                         'gshape_paths': val_point,
                         'gshape_type': 'circle',
                         'import_id': self.id,
