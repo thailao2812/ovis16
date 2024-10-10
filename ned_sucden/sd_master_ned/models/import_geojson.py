@@ -10,6 +10,14 @@ import json,ast
 from datetime import datetime,date, timedelta
 from geopy.distance import geodesic
 
+import json
+import pandas as pd
+from rasterstats import zonal_stats
+
+
+merge_layer_tif_filepath = "/Users/laoquocthai/VNM_SD20/VN_SD20.tif"
+# merge_layer_tif_filepath = "/opt/VN_SD20.tif"
+
 
 class ImportGeoJson(models.Model):
     _name = 'import.geojson'
@@ -64,6 +72,23 @@ class ImportGeoJson(models.Model):
             return len(number_str.split('.')[1])
         else:
             return 0
+
+    def checking_deforestation(self, geometry):
+        stats = zonal_stats(
+            geometry,
+            merge_layer_tif_filepath,
+            stats=["max", "sum", "count"],
+        )
+        zonal_stats_results = stats[0]
+
+        total_pixels = zonal_stats_results["count"]
+        sum_overlap_pixels = zonal_stats_results["sum"]
+
+        if sum_overlap_pixels is not None:
+            overlap_percentage = round((sum_overlap_pixels - total_pixels) * 100 / total_pixels, 1)
+        else:
+            overlap_percentage = 0
+        return overlap_percentage
 
     def import_file(self):
         if self.file:
@@ -126,6 +151,7 @@ class ImportGeoJson(models.Model):
                         coordinates = geometry.get('coordinates', [])[0][0]
                     count_polygon += 1
                     check_spike = self.check_angle(Polygon(coordinates), 20)
+                    deforestation_percent = self.checking_deforestation(Polygon(coordinates))
 
                     if len(coordinates) < 4:
                         less_4_point = True
@@ -166,7 +192,8 @@ class ImportGeoJson(models.Model):
                             un_close = True
                     if points_inside_existing_polygons > 0:
                         inside = True
-                    if not coordinates or less_4_point or check_spike or un_close or is_duplicate or inside or check_decimal:
+                    if (not coordinates or less_4_point or check_spike or un_close or is_duplicate or inside
+                            or check_decimal or deforestation_percent > 0):
                         is_valid = False
                         self.env['geojson.data'].create({
                             'name': 'Polygon number %s' % str(count_polygon),
@@ -178,6 +205,7 @@ class ImportGeoJson(models.Model):
                             'decimal_precision': check_decimal,
                             'is_duplicate_partial': inside,
                             'is_overlapping': is_duplicate,
+                            'deforestation_percentage': deforestation_percent,
                             'state_check': 'red',
                             'import_id': self.id,
                             'properties_data': json.dumps(properties)
@@ -403,3 +431,4 @@ class GeoJSonData(models.Model):
         ('green', 'Green')
     ], string='Status Check')
     properties_data = fields.Char(string='Properties Data')
+    deforestation_percentage = fields.Float(string='Deforestation Percentage', digits=(16, 1))
