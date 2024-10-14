@@ -317,13 +317,7 @@ class ImportGeoJson(models.Model):
                     create_new_point.gshape_paths = json.dumps(dict_obj)
                     create_new_point._compute_gshape_polygon_lines()
 
-            if (any(self.line_ids.mapped('is_duplicate_partial'))
-                    or any(self.line_ids.mapped('is_overlapping'))
-                    or any(self.line_ids.mapped('is_unclose'))
-                    or any(self.line_ids.mapped('spike'))
-                    or any(self.line_ids.mapped('missing_geometry'))
-                    or any(self.line_ids.mapped('decimal_precision'))
-                    or any(self.line_ids.mapped('points_check'))):
+            if any(self.line_ids.filtered(lambda x: x.state_check=='red')):
                 self.status_check = 'red'
             else:
                 self.status_check = 'green'
