@@ -660,9 +660,9 @@
 
             </xpath>
             <xpath expr="//field[@name='qty_unreceived']" position="after">
-                <field name="qty_received_net"/>
-                <field name="qty_unreceived_net"/>
-                <field name="unreceive_gross_value"/>
+                <field name="qty_received_net" sum="qty_received_net"/>
+                <field name="qty_unreceived_net" sum="qty_unreceived_net"/>
+                <field name="unreceive_gross_value" sum="unreceive_gross_value"/>
             </xpath>
             <xpath expr="//field[@name='amount_deposit']" position="after">
                 <field name="total_deduction_quantity"/>
@@ -673,8 +673,8 @@
                 <field name="number_of_bags"/>
             </xpath>
             <xpath expr="//field[@name='origin']" position="before">
-                <field name="gross_qty"/>
-                <field name="quality_deduction"/>
+                <field name="gross_qty" sum="gross_qty"/>
+                <field name="quality_deduction" sum="quality_deduction"/>
             </xpath>
         </field>
     </record>
