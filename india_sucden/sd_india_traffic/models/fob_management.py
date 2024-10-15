@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo import api, fields, models, tools, _, SUPERUSER_ID
-from odoo.odoo.exceptions import UserError
+from odoo.exceptions import UserError
 
 
 class FOBManagement(models.Model):
