@@ -32,6 +32,8 @@
                 <field name="outturn" readonly="1"/>
                 <field name="differential_india" readonly="1"/>
                 <field name="state_fob" readonly="1"/>
+                <button name="button_submit_fob_link" string="Submit" type="object" class="oe_highlight" attrs="{'invisible': [('state_fob', '=', 'submit')]}"/>
+                <button name="button_reset_submit_fob_link" string="Reset to draft" type="object" class="oe_highlight" attrs="{'invisible': [('state_fob', '=', 'draft')]}"/>
             </tree>
         </field>
     </record>
