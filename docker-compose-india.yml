@@ -1,0 +1,30 @@
+version: '3'
+services:
+  db:
+    image: postgres:14
+    container_name: db
+    environment:
+      POSTGRES_DB: odoo
+      POSTGRES_USER: odoo
+      POSTGRES_PASSWORD: odoo
+    volumes:
+      - /opt/filestore/india16_pro:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  odoo:
+    image: odoo:16
+    container_name: ovis16
+    depends_on:
+      - db
+    environment:
+      - HOST=db
+      - USER=odoo
+      - PASSWORD=odoo
+    volumes:
+      - /opt/ovis16:/opt/ovis16
+      - /opt/filestore/india16_pro:/var/lib/odoo/filestore/india16_pro
+    ports:
+      - "8069:8069"
+    links:
+      - db
