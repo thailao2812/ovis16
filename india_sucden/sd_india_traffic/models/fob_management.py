@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo import api, fields, models, tools, _, SUPERUSER_ID
+from odoo.exceptions import UserError
 
 
 class FOBManagement(models.Model):
@@ -11,14 +12,14 @@ class FOBManagement(models.Model):
     fob_date = fields.Date(string='FOB Date', tracking=True)
     currency_id = fields.Many2one('res.currency', string='Currency')
     exchange = fields.Many2one('exchange.india', string='Exchange', tracking=True)
-    forex_rate_inr = fields.Float(string='Forex Rate INR')
+    forex_rate_inr = fields.Float(string='Forex Rate INR', digits=(16, 2))
     market_price = fields.Float(string='Market Price')
     total_cost = fields.Float(string='Total Cost')
     yield_loss = fields.Float(string='Yield Loss')
     farm_gate_price_1st = fields.Float(string='Farm Gate Price (INR/MT)', compute='compute_farm_gate_price', store=True)
     farm_gate_price_2nd = fields.Float(string='Farm Gate Price (INR/Kg)', compute='compute_farm_gate_price', store=True)
     price = fields.Float(string='Farm Gate Price (INR/50Kg)', compute='compute_farm_gate_price', store=True)
-    fob = fields.Float(string='FOB')
+    fob = fields.Float(string='FOB', digits=(16, 2))
     fob_usd = fields.Float(string='FOB (USD/MT)', compute='_compute_fob_usd', store=True)
     crop_id = fields.Many2one('ned.crop', string='Season', tracking=True)
     state = fields.Selection([
@@ -29,6 +30,37 @@ class FOBManagement(models.Model):
     ], string='State', default='draft', tracking=True)
     market_id = fields.Many2one('market.india', string='Market', compute='_compute_market', store=True)
     market_month = fields.Many2one('s.period', string='Market Month')
+
+    # New field
+    purchase_contract_id = fields.Many2one('purchase.contract', string='CR No.', domain=[('type', '=', 'purchase'), ('state', '!=', 'cancel')])
+
+    def load_contract(self):
+        for rec in self:
+            fob_check = self.env['fob.management.india'].search([
+                ('purchase_contract_id', '=', rec.purchase_contract_id.id),
+                ('id', '!=', rec.id)
+            ], limit=1)
+            purchase_contract_check = self.env['purchase.contract'].search([
+                ('fob_management_id', '=', rec.id),
+                ('id', '=', rec.purchase_contract_id.id)
+            ], limit=1)
+            if fob_check or purchase_contract_check:
+                raise UserError(_("You cannot setting 1 Contract for multiple FOB, please check again"))
+            contract_price_purchase = self.env['contract.price.purchase'].search([
+                ('contract_id', '=', rec.purchase_contract_id.id)
+            ])
+            rec.crop_id = rec.purchase_contract_id.crop_id.id or False
+            rec.fob_date = contract_price_purchase.date_price if contract_price_purchase else False
+            rec.exchange = rec.purchase_contract_id.product_id.exchange_id.id if rec.purchase_contract_id.product_id.exchange_id else False
+            rec.forex_rate_inr = contract_price_purchase.exchange_rate if contract_price_purchase else 0
+            rec.fob = contract_price_purchase.fob if contract_price_purchase else 0
+            rec.market_price = contract_price_purchase.market_price if contract_price_purchase else 0
+            rec.market_month = contract_price_purchase.trade_month.id if contract_price_purchase.trade_month else False
+            rec.onchange_crop_id()
+            rec.onchange_exchange()
+            rec.purchase_contract_id.fob_management_id = rec.id
+            rec.purchase_contract_id.outturn = contract_price_purchase.outturn if contract_price_purchase else 0
+            rec.purchase_contract_id.differential_india = contract_price_purchase.a_differential if contract_price_purchase.a_differential > 0 else contract_price_purchase.ab_differential
 
     def close_fob(self):
         for record in self:
