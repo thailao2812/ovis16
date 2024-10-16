@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_s_contract_form_inherit_vietnam" model="ir.ui.view">
+        <field name="name">view_s_contract_form_inherit_vietnam</field>
+        <field name="model">s.contract</field>
+        <field name="inherit_id" ref="sd_sale_contract.view_s_contract_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='status']" position="before">
+                <field name="eudr_check"/>
+                <label for="combine_check"/>
+                <div name="combine_check" class="o_row">
+                    <field name="combine_check" attrs="{'readonly': [('eudr_check','=', False)]}"/>
+                    <field name="cert_combine" widget="many2many_tags"  options="{'no_create': True, 'no_open': True}" class="oe_inline"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- <record id="view_shipping_instruction_add_page_certificate_allocation_form" model="ir.ui.view">
+        <field name="name">view.shipping.instruction.add.page.certificate.allocation.form</field>
+        <field name="model">shipping.instruction</field>
+        <field name="inherit_id" ref="sd_sale_contract.view_shipping_instruction_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='certificated_ids']" position="after">
+                <field name="cert_combine"/>
+            </xpath>
+            <xpath expr="//field[@name='license_id']" position="replace">
+                <field name="license_id" context="{'certificated_ids': parent.certificated_ids}"/>
+            </xpath>
+        </field>
+    </record> -->
+
+</odoo>

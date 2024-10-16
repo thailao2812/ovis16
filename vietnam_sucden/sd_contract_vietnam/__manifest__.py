@@ -19,6 +19,7 @@
         'views/stock_allocation_view.xml',
         'views/average_price_contract_view.xml',
         'views/sale_contract_view.xml',
+        # 'views/s_contract_view.xml',
         'views/menu.xml',
         'wizard/import_farmer_view.xml',
         'wizard/wizard_report_average_price.xml',

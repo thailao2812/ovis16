@@ -20,6 +20,14 @@ class ShippingInstructionLicenseAllocation(models.Model):
 
     crop_id = fields.Many2one(string='Crop', related="shipping_id.crop_id", store = True)
 
+    @api.onchange("product_id", 'shipping_id.certificate_id')
+    def onchange_list_license(self):
+        res = {}
+        if self.product_id:
+            cer_list = self.env['ned.certificate.license'].search([('cert_combine.id','=',self.shipping_id.certificate_id.id)])
+            res['domain'] = {'license_id': [('id','in',[x.id for x in cer_list])]} 
+            return res
+
     @api.constrains('allocation_qty')
     def _check_allocation_qty(self):
         for i in self:

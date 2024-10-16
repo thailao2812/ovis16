@@ -25,6 +25,10 @@
                 <field name="deposit_amount"/>
                 <field name="print_company"/>
             </xpath>
+			<xpath expr="//field[@name='certificate_id']" position="after">
+                <field name="eudr_check"/>
+            </xpath>
+
 <!--            <xpath expr="//field[@name='request_payment_ids']//form//field[@name='payment_quantity']" position="after">-->
 <!--                <field name="product_id" invisible="1"/>-->
 <!--                <field name="purchase_contract_id" invisible="1"/>-->
@@ -83,6 +87,9 @@
             <xpath expr="//field[@name='premium']" position="before">
                 <field name="percent_advance_price"/>
             </xpath>
+            <xpath expr="//field[@name='certificate_id']" position="after">
+                <field name="eudr_check"/>
+            </xpath>
 
         </field>
     </record>
@@ -111,7 +118,9 @@
             <xpath expr="//field[@name='premium']" position="after">
                 <field name="print_company"/>
             </xpath>
-
+            <xpath expr="//field[@name='certificate_id']" position="after">
+                <field name="eudr_check"/>
+            </xpath>
         </field>
     </record>
 

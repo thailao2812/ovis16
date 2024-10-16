@@ -39,6 +39,28 @@ class NedCertificateLicense(models.Model):
         string="Status", default='draft')
 
     edur_compliant = fields.Char(string='EUDR Compliant')
+    eudr_check = fields.Boolean(string='Is EUDR', default=False)
+    combine_check = fields.Boolean(string='Is Combined', default=False)
+    cert_combine = fields.Many2many('ned.certificate', 'ned_certificate_license_ned_certificate_rel', 'license_number_id', 'certificate_id', string="Cer Combine",) 
+                            # readonly=True)
+                            # readonly=True, states={'draft': [('readonly', False)],'sec_confirm': [('readonly', False)]})
+
+    @api.onchange("eudr_check", "combine_check", 'certificate_id')
+    def onchange_cert_combine(self):
+        if self.certificate_id:
+            cer_arr = []
+            if self.eudr_check:
+                if self.combine_check:
+                    cer_list = self.env['ned.certificate'].search(['|', '|', ('name','=',self.certificate_id.name),('name','=','EUDR'),('name','=like',self.certificate_id.name + '-%')])
+                    self.cert_combine = cer_list
+                else:
+                    cer_list = self.env['ned.certificate'].search(['|', ('name','=',self.certificate_id.name),('name','=','EUDR')])
+                    for cer in cer_list:
+                        cer_arr.append(cer.id)
+                self.cert_combine = cer_arr
+            else:
+                self.combine_check = False
+                self.cert_combine = self.certificate_id
 
     def button_approve(self):
         for rec in self:

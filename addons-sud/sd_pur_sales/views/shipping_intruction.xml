@@ -12,7 +12,7 @@
 		                        <field name="license_allocation_ids">
 		                            <tree editable="top">
 		                                <field name="shipping_id" readonly="1"/>
-		                                <field name="license_id" context="{'certificated_ids': parent.certificated_ids}"/>
+		                                <field name="license_id"/> <!--domain="[('cert_combine.certificate_id', '=', parent.certificate_id)]"/>	 context="{'certificated_ids': parent.certificated_ids}" -->
 		                                <field name="product_id" readonly="1"/>
 		                                <field name="grade_id" readonly="1"/>
 		                                <field name="state" readonly="1"/>

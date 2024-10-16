@@ -87,8 +87,8 @@
 			                    <field name="certificate_id"/>
 			                    <field name="sd_price"/>
 			                    <field name="si_price"/>
-			                    <field name="license_id" attrs="{'required': [('certificate_id','!=',False)]}"
-			                     context="{'default_partner_id': partner_id, 'default_certificate_id': certificate_id}"/>
+			                    <field name="license_id" attrs="{'required': [('certificate_id','!=',False)]}"/>
+			                     <!-- context="{'default_partner_id': partner_id, 'default_certificate_id': certificate_id}" -->
 			                    
 			                    <field name="premium"/>
 			                    <field name="g2diff" invisible="1"/>

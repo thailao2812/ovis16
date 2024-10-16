@@ -22,8 +22,26 @@ class PurchaseContract(models.Model):
     user_approve = fields.Many2one('res.users', string='User Approve', readonly=False, domain=[('trader', '=', True)])
 
     percent_advance_price = fields.Integer(string="Percent Advance Price", default=70)
-
-
+    eudr_check = fields.Boolean(string='Is EUDR', default=False)
+    
+    @api.onchange("certificate_id", "partner_id", 'eudr_check')
+    def onchange_license_id(self):
+        # for this in self:
+        if self.certificate_id and self.partner_id:
+            res = {}
+            icheck = [False]
+            if self.eudr_check == False :
+                icheck = [False]
+            else:
+                icheck = [False, True]
+            res['domain'] = {'license_id': [('partner_id', '=', self.partner_id.id), 
+							('certificate_id', '=', self.certificate_id.id), ('state', '=', 'active'), 
+                            ('lock_purchase', '=', False), ('parent_id', '=', None), 
+                            ('crop_id', '=', self.crop_id.id), ('available_amount','>', 0),
+                            ('eudr_check', 'in', icheck)]} 
+            # print(res)
+            return res
+        
 class OpenQtyNPE(models.Model):
     _name = 'open.qty.npe'
 

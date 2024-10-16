@@ -759,9 +759,28 @@ class SContract(models.Model):
     
     origin_new  = fields.Many2one('res.country', string="Origin")
 
+    eudr_check = fields.Boolean(string='Is EUDR', default=False)
+    combine_check = fields.Boolean(string='Is Combined', default=False)
     certificated_ids = fields.Many2many('ned.certificate', 'certificate_s_contract', 's_contract_id', 'certificate_id',
-                                        compute="_compute_list_certificate", store=True)
+                                        compute="_compute_list_certificate", store=True, string="Cer Combine")
     # char_certificate = fields.Char(string='Char Certificate', default='[]')
+
+    @api.depends("eudr_check", "combine_check", 'certificate_id')
+    def _compute_list_certificate(self):
+        if self.certificate_id:
+            cer_arr = []
+            if self.eudr_check:
+                if self.combine_check:
+                    cer_list = self.env['ned.certificate'].search(['|', '|', ('name','=',self.certificate_id.name),('name','=','EUDR'),('name','=like',self.certificate_id.name + '-%')])
+                    cer_arr = cer_list
+                else:
+                    cer_list = self.env['ned.certificate'].search(['|', ('name','=',self.certificate_id.name),('name','=','EUDR')])
+                    for cer in cer_list:
+                        cer_arr.append(cer.id)
+            else:
+                self.combine_check = False
+                cer_arr = self.certificate_id
+            self.certificated_ids = cer_arr
 
     def copy(self, default=None):
         result = super(SContract, self).copy({
@@ -770,20 +789,21 @@ class SContract(models.Model):
         })
         return result
 
-    @api.depends('contract_line', 'contract_line.certificate_id')
-    def _compute_list_certificate(self):
-        if self.contract_line:
-            for line in self.contract_line:
-                if line.certificate_id:
-                    if line.certificate_id.combine:
-                        another_certificate = self.env['ned.certificate'].search([
-                            ('combine', '=', True)
-                        ])
-                        self.certificated_ids = [(6, 0, another_certificate.ids)]
-                    else:
-                        self.certificated_ids = [(6, 0, line.certificate_id.ids)]
-                else:
-                    self.certificated_ids = [(5, 0)]
+# SON dim: Áp loại License cho S Contract từ đó mới load loại License tương ứng trong Line
+    # @api.depends('contract_line', 'contract_line.certificate_id')
+    # def _compute_list_certificate(self):
+    #     if self.contract_line:
+    #         for line in self.contract_line:
+    #             if line.certificate_id:
+    #                 if line.certificate_id.combine:
+    #                     another_certificate = self.env['ned.certificate'].search([
+    #                         ('combine', '=', True)
+    #                     ])
+    #                     self.certificated_ids = [(6, 0, another_certificate.ids)]
+    #                 else:
+    #                     self.certificated_ids = [(6, 0, line.certificate_id.ids)]
+    #             else:
+    #                 self.certificated_ids = [(5, 0)]
 
     qty_allocated = fields.Float(string='Allocated (Kg)', compute='_compute_allocated')
     bag_allocated = fields.Float(string='Allocated Bag No.', compute='_compute_allocated')

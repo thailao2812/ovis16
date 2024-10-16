@@ -4,6 +4,7 @@ import math
 from odoo import api, fields, models, tools, _, SUPERUSER_ID
 from odoo.exceptions import ValidationError, UserError
 from odoo.osv import expression
+from odoo.tools.safe_eval import safe_eval
     
 class SContractLine(models.Model):
     _name = "s.contract.line"
@@ -145,9 +146,7 @@ class SContractLine(models.Model):
             this.update({
                 'remainning_qty': remaining_qty
             })
-            
-            
-            
+
     packing_id = fields.Many2one('ned.packing', string='Packing')
     certificate_id = fields.Many2one('ned.certificate', string='Certificate')
     license_id = fields.Many2one('ned.certificate.license', string='License')

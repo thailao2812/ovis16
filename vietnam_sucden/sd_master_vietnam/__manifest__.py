@@ -16,6 +16,7 @@
         'views/import_deforestation_view.xml',
         'views/farmer_view.xml',
         'views/res_user_view.xml',
+        'views/ned_certificate_view.xml',
         'views/product_view.xml'
     ],
     'assets': {

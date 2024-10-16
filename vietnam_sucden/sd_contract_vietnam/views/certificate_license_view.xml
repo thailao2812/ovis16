@@ -8,10 +8,7 @@
 					<xpath expr="//field[@name='shipping_instruction_allocation_ids']/tree/field[@name='shipping_id']" position="after">
                         <field name="warehouse_id"/>
                         <field name="date_etd"/>
-					</xpath>
-                    <xpath expr="//field[@name='shipping_instruction_allocation_ids']/tree/field[@name='shipping_id']" position="after">
-                        <field name="warehouse_id"/>
-                        <field name="date_etd"/>
+                        <field name="certificate_id"/>
 					</xpath>
                     <xpath expr="//field[@name='partner_id']" position="after">
                         <field name="state_id"/>
@@ -32,7 +29,12 @@
                     <xpath expr="//button[@name='validate_license']" position="attributes">
                         <attribute name="attrs">{'invisible': [('state','!=','approve')]}</attribute>
                     </xpath>
-
+                    <xpath expr="//field[@name='available_amount']" position="after">
+                        <field name="eudr_check"/>
+                        <field name="combine_check" attrs="{'readonly': [('eudr_check','=', False)]}"/>
+                        <field name="cert_combine" widget="many2many_tags"  options="{'no_create': True, 'no_open': True}" class="oe_inline"/>
+                    </xpath>
+ 
 		        </field>
 		    </record>
 

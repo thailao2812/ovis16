@@ -5,3 +5,4 @@ from . import product_product
 from . import res_partner
 from . import res_partner_area
 from . import import_polygon, import_result_deforestation
+from . import ned_certificate

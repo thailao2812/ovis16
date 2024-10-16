@@ -9,3 +9,4 @@ class ShippingInstructionLicenseAllocation(models.Model):
 
     warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse')
     date_etd = fields.Date(related='shipping_id.factory_etd', string='ETD Date', store=True)
+    certificate_id = fields.Many2one(related='shipping_id.shipping_ids.certificate_id', string='Certificate', store=True)
