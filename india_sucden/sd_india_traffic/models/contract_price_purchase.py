@@ -11,7 +11,7 @@ class ContractPricePurchase(models.Model):
     name = fields.Char(string='Reference')
     product_id = fields.Many2one('product.product', string='Item name', related='contract_id.product_id', store=True)
     date_price = fields.Date(string='Date', related='contract_id.date_order', store=True)
-    exchange = fields.Many2one('exchange.india', string='Exchange')
+    exchange = fields.Many2one('exchange.india', related='product_id.exchange_id', string='Exchange', store=True)
     exchange_rate = fields.Float(string='Exchange Rate', digits=(12, 2))
     fob = fields.Float(string='FOB', digits=(12, 2))
     a_differential = fields.Float(string='A Differential', digits=(12, 2))
