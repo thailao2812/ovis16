@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo import api, fields, models, tools, _, SUPERUSER_ID
+from odoo.odoo.exceptions import UserError
 
 DATE_FORMAT = "%Y-%m-%d"
 DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S"
@@ -49,3 +50,12 @@ class ContractPricePurchase(models.Model):
     def action_set_to_draft(self):
         for rec in self:
             rec.state = 'draft'
+
+    @api.constrains('contract_id')
+    def check_contract_id(self):
+        for rec in self:
+            check_contract = self.env['contract.price.purchase'].search([
+                ('contract_id', '=', rec.contract_id.id)
+            ], limit=1)
+            if check_contract:
+                raise UserError(_("You cannot create multiple contract!!"))
