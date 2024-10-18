@@ -55,7 +55,8 @@ class ContractPricePurchase(models.Model):
     def check_contract_id(self):
         for rec in self:
             check_contract = self.env['contract.price.purchase'].search([
-                ('contract_id', '=', rec.contract_id.id)
+                ('contract_id', '=', rec.contract_id.id),
+                ('id', '!=', rec.id)
             ], limit=1)
             if check_contract:
                 raise UserError(_("You cannot create multiple contract!!"))
