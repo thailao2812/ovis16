@@ -72,18 +72,18 @@ class SContract(models.Model):
                  'total_qty', 'no_of_pack')
     def _compute_allocated_qty_india(self):
         for record in self:
-            qty_allocated_si = record.qty_allocated_si = sum(record.shipping_ids.mapped('total_line_qty'))
-            bag_allocated_si = record.bag_allocated_si = sum(record.shipping_ids.mapped('no_of_bag'))
+            qty_allocated_si = record.qty_allocated_si = sum(record.shipping_ids.filtered(lambda x: x.state != 'cancel').mapped('total_line_qty'))
+            bag_allocated_si = record.bag_allocated_si = sum(record.shipping_ids.filtered(lambda x: x.state != 'cancel').mapped('no_of_bag'))
             record.qty_tobe_allocated_si = record.total_qty - qty_allocated_si
             record.bag_tobe_allocated_si = record.no_of_pack - bag_allocated_si
 
-            qty_allocated_so = record.qty_allocated_so = sum(record.contract_ids.mapped('total_qty'))
-            bag_allocated_so = record.bag_allocated_so = sum(record.contract_ids.mapped('no_of_bags'))
+            qty_allocated_so = record.qty_allocated_so = sum(record.contract_ids.filtered(lambda x: x.state != 'cancel').mapped('total_qty'))
+            bag_allocated_so = record.bag_allocated_so = sum(record.contract_ids.filtered(lambda x: x.state != 'cancel').mapped('no_of_bags'))
             record.qty_tobe_allocated_so = record.total_qty - qty_allocated_so
             record.bag_tobe_allocated_so = record.no_of_pack - bag_allocated_so
 
-            bag_allocated_do = record.bag_allocated_do = sum(record.contract_ids.mapped('delivery_ids.bagsfactory'))
-            qty_allocated_do = record.qty_allocated_do = sum(record.contract_ids.mapped('delivery_ids.total_qty'))
+            bag_allocated_do = record.bag_allocated_do = sum(record.contract_ids.mapped('delivery_ids').filtered(lambda x: x.state != 'cancel').mapped('bagsfactory'))
+            qty_allocated_do = record.qty_allocated_do = sum(record.contract_ids.mapped('delivery_ids').filtered(lambda x: x.state != 'cancel').mapped('total_qty'))
             record.qty_tobe_allocated_do = record.total_qty - qty_allocated_do
             record.bag_tobe_allocated_do = record.no_of_pack - bag_allocated_do
 
