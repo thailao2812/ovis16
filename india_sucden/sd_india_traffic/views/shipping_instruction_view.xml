@@ -57,7 +57,7 @@
                 </page>
             </xpath>
             <xpath expr="//field[@name='partner_id']" position="after">
-                <field name="ship_to" domain="[('customer_rank', '=', True), ('shipping_customer', '=', True)]" options="{'no_create': True}"/>
+                <field name="ship_to" domain="[('shipping_customer', '=', True)]" options="{'no_create': True}"/>
                 <field name="ship_to_address" readonly="1" force_save="1"/>
             </xpath>
             <xpath expr="//field[@name='od_doc_rec_date']" position="replace">
