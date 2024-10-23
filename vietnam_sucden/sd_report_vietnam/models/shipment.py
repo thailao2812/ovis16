@@ -93,7 +93,7 @@ class VShipment(models.Model):
               COALESCE(sum(deli.gdn_quantity), 0::numeric) AS gdn_quantity,
               si.priority_by_month AS priority,
                 CASE
-                  WHEN COALESCE(sum(deli.gdn_quantity), 0::numeric) = COALESCE(sil.product_qty, 0::numeric) OR (((sil.product_qty - sum(deli.gdn_quantity)) / sil.product_qty) * 100) <= 2 THEN 'Done'::text
+                  WHEN COALESCE(sum(deli.gdn_quantity), 0::numeric) = COALESCE(sil.product_qty, 0::numeric) OR (((sil.product_qty - sum(deli.gdn_quantity)) / sil.product_qty) * 100) <= 3 THEN 'Done'::text
                   WHEN COALESCE(sum(nvsl.product_qty), 0::numeric) = 0::numeric THEN 'Unallocated'::text
                   WHEN COALESCE(sum(deli.do_quantity), 0::numeric) > COALESCE(sum(deli.gdn_quantity), 0::numeric) THEN 'Waiting GDN'::text
                   WHEN COALESCE(sum(deli.gdn_quantity), 0::numeric) < sil.product_qty THEN 'In progress'::text
