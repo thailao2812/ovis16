@@ -38,7 +38,7 @@ class ContractPricePurchase(models.Model):
     ], string='State', default='draft')
     outturn = fields.Float(string='Outturn %', compute='compute_outturn', store=True, readonly=False)
 
-    @api.depends('product_id')
+    @api.depends('product_id', 'product_id.outturn')
     def compute_outturn(self):
         for rec in self:
             rec.outturn = rec.product_id.outturn
