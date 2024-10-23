@@ -1,3 +1,5 @@
+from odoo.odoo.http import send_file
+
 DATE_FORMAT = "%Y-%m-%d"
 DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S"
 # -*- coding: utf-8 -*-
@@ -50,7 +52,7 @@ class RequestPayment(models.Model):
     total_interest = fields.Float(string='Interest', compute='compute_advance_payment_converted', store=True)
     request_amount = fields.Float(string='Request Amount', digits=(12, 0), compute='_compute_request_amount',
                                   store=True, readonly=False)
-    mirror_request_amount = fields.Float(string='Request Amount', compute='compute_payment_quantity', store=True)
+    mirror_request_amount = fields.Float(string='Request Amount', compute='compute_payment_quantity', store=True, digits=(12, 0))
     is_dr_request = fields.Boolean(string='Is Dr Request', compute='compute_dr_request', store=True)
 
     state = fields.Selection(selection='_get_new_state', string='State', readonly=False, copy=False, index=True, default='draft')
@@ -592,15 +594,16 @@ class RequestPayment(models.Model):
                 }
                 self.env['history.payment.quantity'].create(value)
 
-    @api.depends('status_goods_ids', 'status_goods_ids.request_quantity', 'is_converted', 'quantity_contract', 'quantity_of_price_tobe_fix', 'type_of_ptbf_payment')
+    @api.depends('status_goods_ids', 'type', 'status_goods_ids.request_quantity', 'is_converted', 'quantity_contract', 'quantity_of_price_tobe_fix', 'type_of_ptbf_payment')
     def compute_payment_quantity(self):
         for rec in self:
             rec.payment_quantity = 0
             rec.mirror_request_amount = 0
             if rec.status_goods_ids:
-                if rec.type_of_ptbf_payment == 'fixation':
-                    if rec.quantity_of_price_tobe_fix < sum(rec.status_goods_ids.mapped('request_quantity')):
-                        raise UserError(_("Bạn không thể fix lớn hơn số lượng trong PTBF Price Fix: %s") % rec.quantity_of_price_tobe_fix)
+                if rec.type == 'ptbf':
+                    if rec.type_of_ptbf_payment == 'fixation':
+                        if rec.quantity_of_price_tobe_fix < sum(rec.status_goods_ids.mapped('request_quantity')):
+                            raise UserError(_("Bạn không thể fix lớn hơn số lượng trong PTBF Price Fix: %s") % rec.quantity_of_price_tobe_fix)
                 rec.payment_quantity = sum(rec.status_goods_ids.mapped('request_quantity'))
                 rec.mirror_request_amount = rec.payment_quantity
             if rec.is_converted:
@@ -726,6 +729,8 @@ class RequestPayment(models.Model):
             res['parent_id_purchase_contract'] = self.env.context.get('default_parent_id', False)
             purchase_contract = self.env['purchase.contract'].browse(self.env.context.get('default_parent_id', False))
             if purchase_contract.type == 'purchase' and purchase_contract.nvp_ids:
+                res['is_converted'] = True
+            if purchase_contract.type == 'ptbf' and purchase_contract.origin:
                 res['is_converted'] = True
         purchase_contract = self.env['purchase.contract'].browse(self.env.context.get('default_parent_id', False))
         if 'status_goods_ids' in fields:

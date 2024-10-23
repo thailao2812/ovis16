@@ -11,6 +11,9 @@ class WizardPurchaseContractLine(models.TransientModel):
     _inherit = 'wizard.purchase.contract.line'
 
     open_qty = fields.Float(string='Open Qty')
+    request_payment_id = fields.Many2one('request.payment', string='Request Payment')
+    remain_request_payment = fields.Float(string='Remain Request Payment', related='request_payment_id.remain_fix_qty',
+                                          store=True)
 
     # @api.depends('purchase_contract_id')
     # def compute_open_qty(self):
@@ -73,7 +76,8 @@ class WizardPurchaseContract(models.TransientModel):
                 'contract_id': new_id.id,
                 'product_qty': line.product_qty + line.open_qty or 0.0,
                 'type': 'fixed',
-                'open_qty': line.open_qty or 0.0
+                'open_qty': line.open_qty or 0.0,
+                'request_payment_id': line.request_payment_id.id or False,
             }
             if line.open_qty > 0:
                 value = {

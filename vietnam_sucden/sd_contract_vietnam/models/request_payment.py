@@ -34,8 +34,17 @@ class RequestPayment(models.Model):
     total_payment = fields.Float(string='Total Payment', compute='compute_total_value', store=True)
     amount_in_text = fields.Char(string='Amount in text', compute='compute_amount_in_text', store=False)
     partner_id = fields.Many2one('res.partner', string='Partner', related='purchase_contract_id.partner_id', store=True)
-    # request_amount = fields.Float(string='Request Amount', digits=(12, 0), compute='_compute_request_amount',
-    #                               store=True, readonly=False)
+
+    # new field for NPE
+    fixation_ids = fields.One2many('npe.nvp.relation', 'request_payment_id')
+    fixed_qty = fields.Float(string='Fixed Qty', compute='compute_total_qty_fix', store=True)
+    remain_fix_qty = fields.Float(string='Remain Fix Qty', compute='compute_total_qty_fix', store=True)
+
+    @api.depends('payment_quantity', 'fixation_ids', 'fixation_ids.product_qty')
+    def compute_total_qty_fix(self):
+        for rec in self:
+            rec.fixed_qty = sum(rec.fixation_ids.mapped('product_qty'))
+            rec.remain_fix_qty = rec.payment_quantity - rec.fixed_qty
 
     @api.depends('purchase_contract_id', 'purchase_contract_id.type', 'purchase_contract_id.relation_price_unit',
                  'price_npe')
