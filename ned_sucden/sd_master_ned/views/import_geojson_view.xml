@@ -98,6 +98,7 @@
                     <filter string="Supplier" name="supplier_id" context="{'group_by':'supplier_id'}"/>
                     <filter string="Country" name="country" context="{'group_by':'country_id'}"/>
                     <filter string="Responsibility Person" name="create_uid" context="{'group_by':'create_uid'}"/>
+                    <filter string="Status" name="status_check" context="{'group_by':'status_check'}"/>
                 </group>
             </search>
         </field>
