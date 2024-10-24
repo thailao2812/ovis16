@@ -108,7 +108,8 @@ RUN pip3 install --no-cache-dir \
     xlrd==1.2.0 \
     XlsxWriter==3.0.3 \
     xlwt==1.3.0 \
-    zeep==4.2.1
+    zeep==4.2.1 \
+    PyPDF2==2.12.1
 
 # Set permissions
 RUN chown -R odoo:odoo /opt/odoo
