@@ -30,12 +30,15 @@ FROM odoo:16
 USER root
 # Cài đặt các dependencies cần thiết và Python 3.11
 RUN apt-get update && \
-    apt-get install -y software-properties-common && \
-    add-apt-repository ppa:deadsnakes/ppa && \
-    apt-get update && \
-    apt-get install -y python3.11 python3.11-venv python3.11-dev && \
-    update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.11 1 && \
-    apt-get clean
+    apt-get install -y software-properties-common wget build-essential && \
+    wget https://www.python.org/ftp/python/3.11.6/Python-3.11.6.tgz && \
+    tar -xvf Python-3.11.6.tgz && \
+    cd Python-3.11.6 && \
+    ./configure --enable-optimizations && \
+    make && make altinstall && \
+    update-alternatives --install /usr/bin/python3 python3 /usr/local/bin/python3.11 1 && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 USER odoo
 # Đảm bảo các thư viện và dependencies của Odoo được cài đặt cho Python 3.11
