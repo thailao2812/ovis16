@@ -47,6 +47,20 @@
         </field>
     </record>
 
+    <record id="view_supplier_master_search" model="ir.ui.view">
+        <field name="name">Supplier Master Search</field>
+        <field name="model">supplier.master.data</field>
+        <field name="arch" type="xml">
+             <search string="Search Supplier Master">
+                    <field name="name" string="Supplier Name"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Supplier" name="supplier_id" context="{'group_by':'supplier_id'}"/>
+                        <filter string="Status" name="status" context="{'group_by':'status'}"/>
+                    </group>
+            </search>
+        </field>
+    </record>
+
 
      <record id="action_supplier_master" model="ir.actions.act_window">
             <field name="name">Supplier Master</field>
