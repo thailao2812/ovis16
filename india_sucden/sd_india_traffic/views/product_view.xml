@@ -8,6 +8,7 @@
 			 <xpath expr="//field[@name='default_code']" position="after">
             	<field name="item_group_id"/>
             	<field name="exchange_id"/>
+            	<field name="outturn"/>
             </xpath>
 
         </field>
@@ -21,6 +22,7 @@
 			 <xpath expr="//field[@name='default_code']" position="after">
             	<field name="item_group_id"/>
             	<field name="exchange_id"/>
+            	<field name="outturn"/>
             </xpath>
 
         </field>
@@ -36,6 +38,7 @@
             	<field name="supplier_taxes_id" widget="many2many_tags"/>
                  <field name="item_group_id"/>
                  <field name="exchange_id"/>
+                 <field name="outturn"/>
                  <field name="l10n_in_hsn_code"/>
             </xpath>
 

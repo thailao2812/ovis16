@@ -93,7 +93,7 @@ class VShipment(models.Model):
               COALESCE(sum(deli.gdn_quantity), 0::numeric) AS gdn_quantity,
               si.priority_by_month AS priority,
                 CASE
-                  WHEN COALESCE(sum(deli.gdn_quantity), 0::numeric) = COALESCE(sil.product_qty, 0::numeric) OR (((sil.product_qty - sum(deli.gdn_quantity)) / sil.product_qty) * 100) <= 2 THEN 'Done'::text
+                  WHEN COALESCE(sum(deli.gdn_quantity), 0::numeric) = COALESCE(sil.product_qty, 0::numeric) OR (((sil.product_qty - sum(deli.gdn_quantity)) / sil.product_qty) * 100) <= 3 THEN 'Done'::text
                   WHEN COALESCE(sum(nvsl.product_qty), 0::numeric) = 0::numeric THEN 'Unallocated'::text
                   WHEN COALESCE(sum(deli.do_quantity), 0::numeric) > COALESCE(sum(deli.gdn_quantity), 0::numeric) THEN 'Waiting GDN'::text
                   WHEN COALESCE(sum(deli.gdn_quantity), 0::numeric) < sil.product_qty THEN 'In progress'::text
@@ -142,7 +142,7 @@ class VShipment(models.Model):
                    JOIN delivery_order_line dol ON dor.id = dol.delivery_id
                    LEFT JOIN stock_picking sp ON dor.picking_id = sp.id
                    LEFT JOIN ( SELECT stock_move_line.picking_id,
-                      sum(stock_move_line.qty_done) AS gdn_quantity
+                      sum(stock_move_line.init_qty) AS gdn_quantity
                      FROM stock_move_line
                     GROUP BY stock_move_line.picking_id) sm ON dor.picking_id = sm.picking_id
                  where sp.state = 'done'
