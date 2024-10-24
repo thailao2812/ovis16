@@ -27,6 +27,7 @@
 # Sử dụng hình ảnh chính thức của Odoo nhưng không cài sẵn Python 3.11
 FROM odoo:16
 
+USER root
 # Cài đặt các dependencies cần thiết và Python 3.11
 RUN apt-get update && \
     apt-get install -y software-properties-common && \
@@ -36,6 +37,7 @@ RUN apt-get update && \
     update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.11 1 && \
     apt-get clean
 
+USER odoo
 # Đảm bảo các thư viện và dependencies của Odoo được cài đặt cho Python 3.11
 RUN python3 -m pip install --upgrade pip && \
     python3 -m pip install -r /requirements.txt
