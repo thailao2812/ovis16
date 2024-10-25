@@ -122,9 +122,9 @@ class RequestPayment(models.Model):
         result['context'] = {'partner_type': 'supplier'}
 
         result['domain'] = "[('id', 'in', " + str(self.request_payment_ids.ids) + ")]"
-        res = self.env.ref('account.account.view_account_payment_register_form', False)
-        result['views'] = [(res and res.id or False, 'tree')]
-        result['res_id'] = self.request_payment_ids.ids 
+        # res = self.env.ref('account.account.view_account_payment_register_form', False)
+        # # result['views'] = [(res and res.id or False, 'tree')]
+        # # result['res_id'] = self.request_payment_ids.ids
         return result
     
     def action_request_register_payment(self):
