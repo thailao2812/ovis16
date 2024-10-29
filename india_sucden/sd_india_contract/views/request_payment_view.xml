@@ -37,6 +37,7 @@
             </xpath>
             <xpath expr="//field[@name='date']" position="after">
                 <field name="date_approve"/>
+                <field name="purchase_date"/>
                 <field name="financial_year_id"/>
             </xpath>
             <xpath expr="//field[@name='invoice_amount']" position="attributes">
