@@ -5,76 +5,146 @@
         <field name="model">pss.management</field>
         <field name="inherit_id" ref="sd_quality.view_pss_management"/>
         <field name="arch" type="xml">
+                <xpath expr="//tree" position="replace">
+                    <tree editable="top" default_order="id desc">
+                        <field name="file" widget="binary" filename="file_name"/>
+                	    <field name="file_name" invisible="1"/>
+                        <field name="warehouse_id"/>
+                        <field name="s_contract_id" domain="[('state', '!=', 'cancel')]" required="1"/>
+                        <field name="s_contract_date"/>
+                        <field name="shipping_id"/>
+                        <field name="shipping_date"/>
+                        <field name="partner_id"/>
+                        <field name="ship_to"/>
+                        <field name="product_id" readonly="1" force_save="1"/>
+                        <field name="certificate_id"/>
+                        <field name="crop_id"/>
+                        <field name="pss_type"/>
+                        <field name="contract_qty"/>
+                        <field name="sample_qty"/>
+                        <field name="sample_sent_date"/>
+                        <field name="sample_ref"/>
+                        <field name="courier"/>
+                        <field name="awb_no"/>
+                        <field name="shipt_month"/>
+                        <field name="pss_delivery_date"/>
+                        <field name="pss_status"/>
+                        <field name="approve_date" attrs="{'required': [('pss_status', '=', 'approved')]}"/>
+                        <field name="reject_date" attrs="{'required': [('pss_status', '=', 'rejected')]}"/>
+                        <field name="reason_reject" attrs="{'required': [('pss_status', '=', 'rejected')]}"/>
+                        <field name="buyer_ref"/>
+                        <field name="note"/>
+                        <field name="buyer_comment"/>
+                        <field name="comment"/>
+                        <field name="inspector"/>
+                        <field name="qc_staff_id"/>
+                        <field name="stack" widget="many2many_tags"/>
+                        <field name="moisture_percent"/>
+                        <field name="outturn_percent"/>
+                        <field name="aaa_percent" />
+                        <field name="aa_percent" />
+                        <field name="a_percent" />
+                        <field name="b_percent" />
+                        <field name="c_percent" />
+                        <field name="pb_percent" />
+                        <field name="bb_percent" />
+                        <field name="bleached_percent" />
+                        <field name="idb_percent" />
+                        <field name="bits_percent" />
+                        <field name="hulks_percent" />
+                        <field name="stone_percent" />
+                        <field name="skin_out_percent" />
+                        <field name="triage_percent" />
+                        <field name="wet_bean_percent" />
+                        <field name="red_beans_percent" />
+                        <field name="stinker_percent" />
+                        <field name="faded_percent" />
+                        <field name="flat_percent" />
+                        <field name="pb1_percent" />
+                        <field name="pb2_percent" />
+                        <field name="sleeve_6_up_percent" />
+                        <field name="sleeve_5_5_up_percent" />
+                        <field name="sleeve_5_5_down_percent" />
+                        <field name="sleeve_5_down_percent" />
 
-            <xpath expr="//field[@name='x_ex_warehouse_id']" position="replace">
-                <field name="warehouse_id"/>
-            </xpath>
+                        <field name="sleeve_5_up_percent" />
+                        <field name="unhulled_percent" />
+                        <field name="remaining_coffee_percent" />
+                        <field name="blacks_percent" />
+                        <field name="half_monsoon_percent" />
+                        <field name="good_beans_percent" />
+                    </tree>
+                </xpath>
 
-            <xpath expr="//field[@name='mc']" position="replace">
-            </xpath>
-            <xpath expr="//field[@name='fm']" position="replace">
-            </xpath>
-            <xpath expr="//field[@name='black']" position="replace">
-            </xpath>
-            <xpath expr="//field[@name='broken']" position="replace">
-            </xpath>
-            <xpath expr="//field[@name='brown']" position="replace">
-            </xpath>
-            <xpath expr="//field[@name='moldy']" position="replace">
-            </xpath>
-            <xpath expr="//field[@name='burned']" position="replace">
-            </xpath>
-            <xpath expr="//field[@name='scr20']" position="replace">
-            </xpath>
-            <xpath expr="//field[@name='scr19']" position="replace">
-            </xpath>
-            <xpath expr="//field[@name='scr18']" position="replace">
-            </xpath>
-            <xpath expr="//field[@name='scr16']" position="replace">
-            </xpath>
-            <xpath expr="//field[@name='scr13']" position="replace">
-            </xpath>
-            <xpath expr="//field[@name='blscr12']" position="replace">
-            </xpath>
-            <xpath expr="//field[@name='x_bulk_density']" position="replace">
-            </xpath>
+<!--            <xpath expr="//field[@name='x_ex_warehouse_id']" position="replace">-->
+<!--                <field name="warehouse_id"/>-->
+<!--            </xpath>-->
 
-            <xpath expr="//field[@name='stack']" position="after">
-                <field name="moisture_percent"/>
-                <field name="outturn_percent"/>
-                <field name="aaa_percent" />
-                <field name="aa_percent" />
-                <field name="a_percent" />
-                <field name="b_percent" />
-                <field name="c_percent" />
-                <field name="pb_percent" />
-                <field name="bb_percent" />
-                <field name="bleached_percent" />
-                <field name="idb_percent" />
-                <field name="bits_percent" />
-                <field name="hulks_percent" />
-                <field name="stone_percent" />
-                <field name="skin_out_percent" />
-                <field name="triage_percent" />
-                <field name="wet_bean_percent" />
-                <field name="red_beans_percent" />
-                <field name="stinker_percent" />
-                <field name="faded_percent" />
-                <field name="flat_percent" />
-                <field name="pb1_percent" />
-                <field name="pb2_percent" />
-                <field name="sleeve_6_up_percent" />
-                <field name="sleeve_5_5_up_percent" />
-                <field name="sleeve_5_5_down_percent" />
-                <field name="sleeve_5_down_percent" />
+<!--            <xpath expr="//field[@name='mc']" position="replace">-->
+<!--            </xpath>-->
+<!--            <xpath expr="//field[@name='fm']" position="replace">-->
+<!--            </xpath>-->
+<!--            <xpath expr="//field[@name='black']" position="replace">-->
+<!--            </xpath>-->
+<!--            <xpath expr="//field[@name='broken']" position="replace">-->
+<!--            </xpath>-->
+<!--            <xpath expr="//field[@name='brown']" position="replace">-->
+<!--            </xpath>-->
+<!--            <xpath expr="//field[@name='moldy']" position="replace">-->
+<!--            </xpath>-->
+<!--            <xpath expr="//field[@name='burned']" position="replace">-->
+<!--            </xpath>-->
+<!--            <xpath expr="//field[@name='scr20']" position="replace">-->
+<!--            </xpath>-->
+<!--            <xpath expr="//field[@name='scr19']" position="replace">-->
+<!--            </xpath>-->
+<!--            <xpath expr="//field[@name='scr18']" position="replace">-->
+<!--            </xpath>-->
+<!--            <xpath expr="//field[@name='scr16']" position="replace">-->
+<!--            </xpath>-->
+<!--            <xpath expr="//field[@name='scr13']" position="replace">-->
+<!--            </xpath>-->
+<!--            <xpath expr="//field[@name='blscr12']" position="replace">-->
+<!--            </xpath>-->
+<!--            <xpath expr="//field[@name='x_bulk_density']" position="replace">-->
+<!--            </xpath>-->
 
-                <field name="sleeve_5_up_percent" />
-                <field name="unhulled_percent" />
-                <field name="remaining_coffee_percent" />
-                <field name="blacks_percent" />
-                <field name="half_monsoon_percent" />
-                <field name="good_beans_percent" />
-            </xpath>
+<!--            <xpath expr="//field[@name='stack']" position="after">-->
+<!--                <field name="moisture_percent"/>-->
+<!--                <field name="outturn_percent"/>-->
+<!--                <field name="aaa_percent" />-->
+<!--                <field name="aa_percent" />-->
+<!--                <field name="a_percent" />-->
+<!--                <field name="b_percent" />-->
+<!--                <field name="c_percent" />-->
+<!--                <field name="pb_percent" />-->
+<!--                <field name="bb_percent" />-->
+<!--                <field name="bleached_percent" />-->
+<!--                <field name="idb_percent" />-->
+<!--                <field name="bits_percent" />-->
+<!--                <field name="hulks_percent" />-->
+<!--                <field name="stone_percent" />-->
+<!--                <field name="skin_out_percent" />-->
+<!--                <field name="triage_percent" />-->
+<!--                <field name="wet_bean_percent" />-->
+<!--                <field name="red_beans_percent" />-->
+<!--                <field name="stinker_percent" />-->
+<!--                <field name="faded_percent" />-->
+<!--                <field name="flat_percent" />-->
+<!--                <field name="pb1_percent" />-->
+<!--                <field name="pb2_percent" />-->
+<!--                <field name="sleeve_6_up_percent" />-->
+<!--                <field name="sleeve_5_5_up_percent" />-->
+<!--                <field name="sleeve_5_5_down_percent" />-->
+<!--                <field name="sleeve_5_down_percent" />-->
+
+<!--                <field name="sleeve_5_up_percent" />-->
+<!--                <field name="unhulled_percent" />-->
+<!--                <field name="remaining_coffee_percent" />-->
+<!--                <field name="blacks_percent" />-->
+<!--                <field name="half_monsoon_percent" />-->
+<!--                <field name="good_beans_percent" />-->
+<!--            </xpath>-->
 
         </field>
     </record>
