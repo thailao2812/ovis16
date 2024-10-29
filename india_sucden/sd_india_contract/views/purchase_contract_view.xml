@@ -207,6 +207,7 @@
                 <field name="use_payment_for" required="1"/>
             </xpath>
             <xpath expr="//field[@name='request_payment_ids']/form/group/group[2]/field[@name='purchase_contract_id']" position="after">
+                <field name="purchase_date" required="1"/>
                 <field name="financial_year_id" required="1" options="{'no_create': True}"/>
                 <field name="tds_assessable_value"/>
                 <field name="tds_amount"/>
@@ -539,6 +540,7 @@
                 <field name="remark"/>
             </xpath>
             <xpath expr="//field[@name='request_payment_ids']/form/group/group[2]/field[@name='purchase_contract_id']" position="after">
+                <field name="purchase_date" required="1"/>
                 <field name="financial_year_id" required="1" options="{'no_create': True}"/>
                 <field name="tds_assessable_value"/>
                 <field name="tds_amount"/>

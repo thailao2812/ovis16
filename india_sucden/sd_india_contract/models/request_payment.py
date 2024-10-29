@@ -43,6 +43,7 @@ class RequestPayment(models.Model):
     final_request_payment = fields.Float(string='Net Payment', compute='compute_net_payment', store=True)
     financial_year_id = fields.Many2one('financial.year', string='Financial year')
     date_approve = fields.Date(string='Date Approve')
+    purchase_date = fields.Date(string='Purchase Date')
 
     @api.depends('request_amount', 'tds_amount', 'tds_assessable_value', 'financial_year_id')
     def compute_net_payment(self):
