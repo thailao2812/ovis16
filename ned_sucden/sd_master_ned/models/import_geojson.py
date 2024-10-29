@@ -152,7 +152,7 @@ class ImportGeoJson(models.Model):
                     if geometry.get('type') == 'MultiPolygon':
                         coordinates = geometry.get('coordinates', [])[0][0]
                     count_polygon += 1
-                    check_spike = self.check_angle(Polygon(coordinates), 20)
+                    check_spike = self.check_angle(Polygon(coordinates), 1)
                     deforestation_percent, total_pixels, sum_overlap_pixels, zonal_stats_results = self.checking_deforestation(Polygon(coordinates))
 
                     if len(coordinates) < 4:
