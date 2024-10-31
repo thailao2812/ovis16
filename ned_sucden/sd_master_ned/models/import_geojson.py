@@ -84,7 +84,7 @@ class ImportGeoJson(models.Model):
         total_pixels = zonal_stats_results["count"]
         sum_overlap_pixels = zonal_stats_results["sum"]
 
-        print(total_pixels, sum_overlap_pixels)
+        # print(total_pixels, sum_overlap_pixels)
 
         if sum_overlap_pixels is not None:
             overlap_percentage = round((sum_overlap_pixels - total_pixels) * 100 / total_pixels, 1)
@@ -128,6 +128,7 @@ class ImportGeoJson(models.Model):
 
             for feature in geojson_data['features']:
                 # Giả sử mỗi feature là một bản ghi bạn muốn tạo
+                print('123')
                 geometry = feature.get('geometry', {})
                 properties = feature.get('properties', {})
                 for line in properties:
