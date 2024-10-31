@@ -182,10 +182,11 @@ class ImportGeoJson(models.Model):
                         coordinates = geometry.get('coordinates', [])[0][0]
                     count_polygon += 1
                     check_spike = self.check_angle(Polygon(coordinates), 1)
-                    if self.country_id.code in ['BR', 'CO', 'VN']:
-                        deforestation_percent = self.checking_deforestation(Polygon(coordinates), self.country_id)
-                    else:
-                        deforestation_percent = 0
+                    deforestation_percent = 0
+                    # if self.country_id.code in ['BR', 'CO', 'VN']:
+                    #     deforestation_percent = self.checking_deforestation(Polygon(coordinates), self.country_id)
+                    # else:
+                    #     deforestation_percent = 0
 
                     if len(coordinates) < 4:
                         less_4_point = True
