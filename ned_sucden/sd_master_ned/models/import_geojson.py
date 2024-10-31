@@ -13,10 +13,17 @@ from geopy.distance import geodesic
 import json
 import pandas as pd
 from rasterstats import zonal_stats
+import os
+import glob
 
+from odoo.odoo.exceptions import UserError
 
-# merge_layer_tif_filepath = "/Users/laoquocthai/VNM_SD20/VN_SD20.tif"
-merge_layer_tif_filepath = "/opt/VN_SD20.tif"
+# merge_layer_tif_filepath_vn = "/Users/laoquocthai/VNM_Regions_Crop"
+# merge_layer_tif_filepath_col = "/Users/laoquocthai/COL_Regions_Crop"
+# merge_layer_tif_filepath_bra = "/Users/laoquocthai/BRA_Regions_Crop"
+merge_layer_tif_filepath_vn = "/opt/VNM_Regions_Crop"
+merge_layer_tif_filepath_col = "/opt/COL_Regions_Crop"
+merge_layer_tif_filepath_bra = "/opt/BRA_Regions_Crop"
 
 
 class ImportGeoJson(models.Model):
@@ -47,6 +54,12 @@ class ImportGeoJson(models.Model):
     ], string='Status Check')
     properties_ids = fields.Many2many('properties.polygon')
 
+    def get_layers_in_folder(self, folder_name):
+        search_criteria = f"*.tif"
+        q = os.path.join(folder_name, search_criteria)
+        dem_fps = glob.glob(q)
+        return dem_fps
+
     def open_wizard_export_error(self):
         return {
             'type': 'ir.actions.act_window',
@@ -73,24 +86,39 @@ class ImportGeoJson(models.Model):
         else:
             return 0
 
-    def checking_deforestation(self, geometry):
-        stats = zonal_stats(
-            geometry,
-            merge_layer_tif_filepath,
-            stats=["max", "sum", "count"],
-        )
-        zonal_stats_results = stats[0]
+    def checking_deforestation(self, geometry, country):
+        all_region_layers_filepath = False
+        if country.code == 'BR':
+            all_region_layers_filepath = self.get_layers_in_folder(merge_layer_tif_filepath_bra)
+        if country.code == 'CO':
+            all_region_layers_filepath = self.get_layers_in_folder(merge_layer_tif_filepath_col)
+        if country.code == 'VN':
+            all_region_layers_filepath = self.get_layers_in_folder(merge_layer_tif_filepath_vn)
+        if not all_region_layers_filepath:
+            raise UserError(_("Please check Layer file of %s, it seem we don't have it in our system") % country.name)
+        for index in range(0, len(all_region_layers_filepath)):
+            region_layer_filepath = all_region_layers_filepath[index]
+            stats = zonal_stats(
+                geometry,
+                region_layer_filepath,
+                stats=["max", "sum", "count"],
+            )
+            zonal_stats_results = None
+            zonal_stats_results = stats[0]
 
-        total_pixels = zonal_stats_results["count"]
-        sum_overlap_pixels = zonal_stats_results["sum"]
+            total_pixels = zonal_stats_results["count"]
+            sum_overlap_pixels = zonal_stats_results["sum"]
 
-        # print(total_pixels, sum_overlap_pixels)
-
-        if sum_overlap_pixels is not None:
-            overlap_percentage = round((sum_overlap_pixels - total_pixels) * 100 / total_pixels, 1)
-        else:
-            overlap_percentage = 0
-        return overlap_percentage, total_pixels, sum_overlap_pixels, zonal_stats_results
+            if sum_overlap_pixels is not None:
+                overlap_percentage = round((sum_overlap_pixels - total_pixels) * 100 / total_pixels, 1)
+                return overlap_percentage
+            else:
+                last_layer_index = -1
+                if index != last_layer_index:
+                    pass
+                else:
+                    overlap_percentage = 0
+                    return overlap_percentage
 
     def import_file(self):
         if self.file:
@@ -154,7 +182,10 @@ class ImportGeoJson(models.Model):
                         coordinates = geometry.get('coordinates', [])[0][0]
                     count_polygon += 1
                     check_spike = self.check_angle(Polygon(coordinates), 1)
-                    deforestation_percent, total_pixels, sum_overlap_pixels, zonal_stats_results = self.checking_deforestation(Polygon(coordinates))
+                    if self.country_id.code in ['BR', 'CO', 'VN']:
+                        deforestation_percent = self.checking_deforestation(Polygon(coordinates), self.country_id)
+                    else:
+                        deforestation_percent = 0
 
                     if len(coordinates) < 4:
                         less_4_point = True
@@ -208,10 +239,9 @@ class ImportGeoJson(models.Model):
                             'decimal_precision': check_decimal,
                             'is_duplicate_partial': inside,
                             'is_overlapping': is_duplicate,
-                            'deforestation_percentage': deforestation_percent,
+                            'deforestation_percentage': deforestation_percent if deforestation_percent > 5 else 0,
                             'state_check': 'red',
                             'import_id': self.id,
-                            'data': '%s - %s - %s' % (total_pixels, sum_overlap_pixels, zonal_stats_results),
                             'properties_data': json.dumps(properties)
                         })
                         continue
