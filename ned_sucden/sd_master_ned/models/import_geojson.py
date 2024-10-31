@@ -16,7 +16,7 @@ from rasterstats import zonal_stats
 import os
 import glob
 
-from odoo.odoo.exceptions import UserError
+from odoo.exceptions import UserError
 
 # merge_layer_tif_filepath_vn = "/Users/laoquocthai/VNM_Regions_Crop"
 # merge_layer_tif_filepath_col = "/Users/laoquocthai/COL_Regions_Crop"
