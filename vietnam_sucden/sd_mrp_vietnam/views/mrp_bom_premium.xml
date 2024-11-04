@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_mrp_bom_premium_form_inherit_vietnam" model="ir.ui.view">
+        <field name="name">view_mrp_bom_premium_form_inherit_vietnam</field>
+        <field name="model">mrp.bom.premium</field>
+        <field name="inherit_id" ref="sd_mrp.view_mrp_bom_premium_form"/>
+        <field name="arch" type="xml">
+			 <xpath expr="//field[@name='prem_ids']/tree/field[@name='brown']" position="after">
+                <field name="black_broken"/>
+                <field name="defect"/>
+             </xpath>
+        </field>
+    </record>
+</odoo>
