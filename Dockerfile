@@ -69,7 +69,7 @@ RUN wget https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6.1-2/w
 RUN useradd -m -d /opt/odoo -U -r -s /bin/bash odoo
 
 # Clone Odoo 16.0
-RUN #git clone --depth=1 -b 16.0 https://github.com/odoo/odoo.git /opt/odoo/odoo
+#RUN git clone --depth=1 -b 16.0 https://github.com/odoo/odoo.git /opt/odoo/odoo
 
 # Install Odoo Python dependencies
 RUN pip3 install --no-cache-dir \
@@ -116,7 +116,7 @@ RUN pip3 install --no-cache-dir \
     html2text
 
 # Set permissions
-RUN #chown -R odoo:odoo /opt/odoo
+# RUN chown -R odoo:odoo /opt/odoo
 
 # Create Odoo data directory
 RUN mkdir -p /var/lib/odoo /etc/odoo && \
