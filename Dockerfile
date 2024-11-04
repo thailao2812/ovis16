@@ -24,7 +24,7 @@
 #
 #ENTRYPOINT ["/opt/odoo/odoo-venv/bin/python3", "/opt/odoo/odoo-server/odoo-bin", "-c" , "/etc/odoo/odoo.conf"]
 
-FROM python:3.11-slim-bullseye
+FROM python:3.10
 
 # Prevent Python from writing pyc files and from buffering stdout/stderr
 ENV PYTHONDONTWRITEBYTECODE=1
@@ -69,7 +69,7 @@ RUN wget https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6.1-2/w
 RUN useradd -m -d /opt/odoo -U -r -s /bin/bash odoo
 
 # Clone Odoo 16.0
-RUN git clone --depth=1 -b 16.0 https://github.com/odoo/odoo.git /opt/odoo/odoo
+RUN #git clone --depth=1 -b 16.0 https://github.com/odoo/odoo.git /opt/odoo/odoo
 
 # Install Odoo Python dependencies
 RUN pip3 install --no-cache-dir \
@@ -109,20 +109,24 @@ RUN pip3 install --no-cache-dir \
     XlsxWriter==3.0.3 \
     xlwt==1.3.0 \
     zeep==4.2.1 \
-    PyPDF2==2.12.1
+    PyPDF2==2.12.1 \
+    rasterstats \
+    pandas \
+    shapely \
+    html2text
 
 # Set permissions
-RUN chown -R odoo:odoo /opt/odoo
+RUN #chown -R odoo:odoo /opt/odoo
 
 # Create Odoo data directory
 RUN mkdir -p /var/lib/odoo /etc/odoo && \
     chown -R odoo:odoo /var/lib/odoo /etc/odoo
 
-# Create default Odoo configuration
-RUN echo '[options]' > /etc/odoo/odoo.conf && \
-    echo 'addons_path = /opt/odoo/odoo/addons,/opt/odoo/odoo/odoo/addons' >> /etc/odoo/odoo.conf && \
-    echo 'data_dir = /var/lib/odoo' >> /etc/odoo/odoo.conf && \
-    chown odoo:odoo /etc/odoo/odoo.conf
+## Create default Odoo configuration
+#RUN echo '[options]' > /etc/odoo/odoo.conf && \
+#    echo 'addons_path = /opt/odoo/odoo/addons,/opt/odoo/odoo/odoo/addons' >> /etc/odoo/odoo.conf && \
+#    echo 'data_dir = /var/lib/odoo' >> /etc/odoo/odoo.conf && \
+#    chown odoo:odoo /etc/odoo/odoo.conf
 
 # Set the default user
 USER odoo
@@ -131,4 +135,4 @@ USER odoo
 EXPOSE 8069 8071 8072
 
 # Set default command
-CMD ["python3", "/opt/odoo/odoo/odoo-bin", "-c", "/etc/odoo/odoo.conf"]
+#CMD ["python3", "/opt/odoo/odoo/odoo-bin", "-c", "/etc/odoo/odoo.conf"]
