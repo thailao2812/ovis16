@@ -15,15 +15,15 @@ import pandas as pd
 from rasterstats import zonal_stats
 import os
 import glob
-
+buffer_distance = 225.68
 from odoo.exceptions import UserError
 
-# merge_layer_tif_filepath_vn = "/Users/laoquocthai/VNM_Regions_Crop"
-# merge_layer_tif_filepath_col = "/Users/laoquocthai/COL_Regions_Crop"
-# merge_layer_tif_filepath_bra = "/Users/laoquocthai/BRA_Regions_Crop"
-merge_layer_tif_filepath_vn = "/opt/VNM_Regions_Crop"
-merge_layer_tif_filepath_col = "/opt/COL_Regions_Crop"
-merge_layer_tif_filepath_bra = "/opt/BRA_Regions_Crop"
+merge_layer_tif_filepath_vn = "/Users/laoquocthai/VNM_Regions_Crop"
+merge_layer_tif_filepath_col = "/Users/laoquocthai/COL_Regions_Crop"
+merge_layer_tif_filepath_bra = "/Users/laoquocthai/BRA_Regions_Crop"
+# merge_layer_tif_filepath_vn = "/opt/VNM_Regions_Crop"
+# merge_layer_tif_filepath_col = "/opt/COL_Regions_Crop"
+# merge_layer_tif_filepath_bra = "/opt/BRA_Regions_Crop"
 
 
 class ImportGeoJson(models.Model):
@@ -148,7 +148,12 @@ class ImportGeoJson(models.Model):
         properties_cache = {prop.name: prop.id for prop in self.env['properties.polygon'].search([])}
 
         line_data = []
+        is_valid = True
+        value_valid_polygon = []
+        value_valid_point = []
         count_point, count_polygon = 0, 0
+        paths = []
+        lines = {}
 
         for feature in geojson_data['features']:
             geometry = feature.get('geometry', {})
@@ -163,8 +168,14 @@ class ImportGeoJson(models.Model):
                 self.properties_ids = [(4, properties_cache[line_name])]
 
             if geometry.get('type') in ['Polygon', 'MultiPolygon']:
+
                 coordinates = geometry.get('coordinates', [])[0] if geometry.get('type') == 'Polygon' else \
                 geometry.get('coordinates', [])[0][0]
+
+                for coord in coordinates:
+                    lat, lng = coord[1], coord[0]
+                    paths.append({"lat": lat, "lng": lng})
+
                 new_polygon = Polygon(coordinates)
 
                 is_duplicate = any(new_polygon.equals(existing_polygon) for existing_polygon in existing_polygons_shapes)
@@ -197,6 +208,26 @@ class ImportGeoJson(models.Model):
                     'properties_data': json.dumps(properties)
                 }
                 line_data.append(line_entry)
+                if not coordinates or check_spike or less_4_point or un_close or check_decimal or is_duplicate or deforestation_percent > 5:
+                    is_valid = False
+                for i, coord_pair in enumerate(zip(coordinates, coordinates[1:] + [coordinates[0]]), start=1):
+                    start, stop = coord_pair
+                    start_lat, start_lng = start[1], start[0]
+                    stop_lat, stop_lng = stop[1], stop[0]
+                    lines[str(i)] = {
+                        "start": {"lat": start_lat, "lng": start_lng},
+                        "stop": {"lat": stop_lat, "lng": stop_lng},
+                        "length": self.calculate_length(start, stop)
+                    }
+                new_data_format = {
+                    "type": "polygon",
+                    "options": {
+                        "paths": paths
+                    },
+                    "lines": lines
+                }
+                if is_valid:
+                    value_valid_polygon.append(new_data_format)
 
             elif geometry.get('type') == 'Point':
                 coordinates = geometry.get('coordinates', [])
@@ -216,14 +247,61 @@ class ImportGeoJson(models.Model):
                     'properties_data': json.dumps(properties)
                 }
                 line_data.append(line_entry)
+                if is_duplicate or check_decimal:
+                    is_valid = False
+                new_data_format = {
+                    "type": "circle",
+                    "options": {
+                        "radius": buffer_distance,
+                        "center": {
+                            "lat": lat,
+                            "lng": lng
+                        }
+                    }
+                }
+                if is_valid:
+                    value_valid_point.append(new_data_format)
 
         # Batch create `geojson.data` entries
         self.env['geojson.data'].create(line_data)
+
+        self.create_valid_data(is_valid, value_valid_polygon, value_valid_point)
 
         # Update status check based on `state_check` values in `line_data`
         self.status_check = 'red' if any(line['state_check'] == 'red' for line in line_data) else 'green'
         self.state = 'imported'
         self.import_date = datetime.now()
+
+    def create_valid_data(self, is_valid, value_valid_polygon, value_valid_point):
+        if is_valid:
+            for val_pol in value_valid_polygon:
+                create_new_polygon = self.env['res.partner.area'].create({
+                    'gshape_name': 'Farm of %s' % self.supplier_id.name,
+                    'partner_id': self.supplier_id.id,
+                    'gshape_paths': val_pol,
+                    'type_geometry': 'polygon'
+                })
+                create_new_polygon._compute_gshape_polygon_lines()
+                dict_obj = ast.literal_eval(create_new_polygon.gshape_paths)
+                create_new_polygon.gshape_paths = json.dumps(dict_obj)
+                create_new_polygon._compute_gshape_polygon_lines()
+                create_new_polygon.import_id = self.id
+            for val_point in value_valid_point:
+                create_new_point = self.env['res.partner.area'].create({
+                    'gshape_name': 'Farm of %s' % self.supplier_id.name,
+                    'partner_id': self.supplier_id.id,
+                    'gshape_paths': val_point,
+                    'gshape_type': 'circle',
+                    'import_id': self.id,
+                    'latitude': val_point['options']['center']['lat'],
+                    'longitude': val_point['options']['center']['lng'],
+                    'gshape_radius': buffer_distance,
+                    'type_geometry': 'point'
+                })
+                create_new_point._compute_gshape_polygon_lines()
+                dict_obj = ast.literal_eval(create_new_point.gshape_paths)
+                create_new_point.gshape_paths = json.dumps(dict_obj)
+                create_new_point._compute_gshape_polygon_lines()
 
     def _get_action_view_polygon(self):
         '''
