@@ -1,0 +1,46 @@
+# Sử dụng image Odoo 16 làm nền tảng
+FROM odoo:16
+
+# Cài đặt các gói cần thiết để xây dựng Python 3.10
+USER root
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    build-essential \
+    libpq-dev \
+    libxml2-dev \
+    libxslt1-dev \
+    libldap2-dev \
+    libsasl2-dev \
+    libffi-dev \
+    libssl-dev \
+    wget \
+    zlib1g-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Tải và cài đặt Python 3.10
+RUN wget https://www.python.org/ftp/python/3.10.0/Python-3.10.0.tgz && \
+    tar xzf Python-3.10.0.tgz && \
+    cd Python-3.10.0 && \
+    ./configure --enable-optimizations && \
+    make altinstall && \
+    cd .. && \
+    rm -rf Python-3.10.0 Python-3.10.0.tgz
+
+# Đặt Python 3.10 làm phiên bản Python mặc định
+RUN update-alternatives --install /usr/bin/python3 python3 /usr/local/bin/python3.10 1 && \
+    update-alternatives --set python3 /usr/local/bin/python3.10
+
+# Cài đặt pip cho Python 3.10
+RUN wget https://bootstrap.pypa.io/get-pip.py && \
+    python3.10 get-pip.py && \
+    rm get-pip.py
+
+# Cài đặt các gói Python cần thiết cho Odoo bằng Python 3.10
+COPY requirements.txt /tmp/requirements.txt
+RUN pip3.10 install -r /tmp/requirements.txt
+
+# Tạo thư mục /opt/ovis nếu cần cho add-ons hoặc cấu hình sau này
+RUN mkdir -p /opt/ovis && chown -R odoo:odoo /opt/ovis
+
+# Chạy với quyền user odoo
+USER odoo
