@@ -14,6 +14,7 @@ services:
       - USER=odoo
       - PASSWORD=odoo
       - DATABASE=odoo
+      - DB_PORT=5433
     volumes:
       - /opt/ovis16:/opt/ovis
     depends_on:
@@ -26,6 +27,8 @@ services:
       POSTGRES_USER: odoo
       POSTGRES_PASSWORD: odoo
       POSTGRES_DB: odoo
+    ports:
+      - "5433:5432"
     volumes:
       - odoo-db-data:/var/lib/postgresql/data
 
