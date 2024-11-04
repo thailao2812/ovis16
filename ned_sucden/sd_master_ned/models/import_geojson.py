@@ -274,6 +274,16 @@ class ImportGeoJson(models.Model):
             res['supplier_id'] = partner.id
         return res
 
+    def open_wizard_export_error(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Export Error',
+            'view_mode': 'form',
+            'res_model': 'wizard.export.error',
+            'view_id': self.env.ref('sd_master_ned.wizard_export_error').id,
+            'target': 'new',  # Mở wizard trong modal pop-up
+        }
+
 
 class GeoJSonData(models.Model):
     _name = 'geojson.data'
