@@ -14,10 +14,10 @@ services:
       - db_data:/var/lib/postgresql/data
 
   odoo:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    image: odoo:16
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+    image: bitnami/odoo:16
     restart: always
     depends_on:
       - db
@@ -32,12 +32,12 @@ services:
     volumes:
       - odoo_data:/var/lib/odoo
       - /opt/ovis16:/opt/avis16
-    deploy:
-      resources:
-        limits:
-          memory: 16g
-          cpus: '16.0'
-    shm_size: '1g'
+#    deploy:
+#      resources:
+#        limits:
+#          memory: 16g
+#          cpus: '16.0'
+#    shm_size: '1g'
 
 volumes:
   db_data:
