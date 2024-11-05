@@ -7,7 +7,7 @@
              <form string="Import Farmer" create="false" delete="false">
                  <header>
                      <button name="import_file" string="Import" type="object" class="btn-primary" attrs="{'invisible': [('status_check', '=', 'green')]}"/>
-                     <button name="open_wizard_export_error" attrs="{'invisible': [('status_check', '=', 'red')]}" string="Export Error Data" type="object" class="btn-primary"/>
+                     <button name="open_wizard_export_error" attrs="{'invisible': [('status_check', '!=', 'red')]}" string="Export Error Data" type="object" class="btn-primary"/>
                       <field name="state" widget="statusbar" nolabel="1" statusbar_visible="new,imported"/>
                  </header>
                  <sheet>
