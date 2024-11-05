@@ -154,8 +154,10 @@ class ImportGeoJson(models.Model):
         count_point, count_polygon = 0, 0
         paths = []
         lines = {}
-
+        seq = 0
         for feature in geojson_data['features']:
+            seq = seq+1
+            print(seq)
             geometry = feature.get('geometry', {})
             properties = feature.get('properties', {})
 
