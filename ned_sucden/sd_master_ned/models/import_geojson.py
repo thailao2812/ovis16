@@ -169,14 +169,12 @@ class ImportGeoJson(models.Model):
 
             if geometry.get('type') in ['Polygon', 'MultiPolygon']:
 
-                coordinates = geometry.get('coordinates', [])[0] if geometry.get('type') == 'Polygon' else \
+                coordinates_path = geometry.get('coordinates', [])[0] if geometry.get('type') == 'Polygon' else \
                 geometry.get('coordinates', [])[0][0]
-
-                for coord in coordinates:
+                for coord in coordinates_path:
                     lat, lng = coord[1], coord[0]
                     paths.append({"lat": lat, "lng": lng})
-
-                new_polygon = Polygon(coordinates)
+                new_polygon = Polygon(coordinates_path)
 
                 is_duplicate = any(new_polygon.equals(existing_polygon) for existing_polygon in existing_polygons_shapes)
                 count_polygon += 1
@@ -185,16 +183,16 @@ class ImportGeoJson(models.Model):
                 else:
                     deforestation_percent = 0
                 check_spike = self.check_angle(new_polygon, 1)
-                less_4_point = len(coordinates) < 4
-                un_close = coordinates and coordinates[0] != coordinates[-1]
+                less_4_point = len(coordinates_path) < 4
+                un_close = coordinates_path and coordinates_path[0] != coordinates_path[-1]
                 check_decimal = any(
                     self.count_decimal_places(coord[0]) < 6 or self.count_decimal_places(coord[1]) < 6 for coord in
-                    coordinates)
+                    coordinates_path)
 
                 line_entry = {
                     'name': f'Polygon number {count_polygon}',
                     'type': 'polygon',
-                    'missing_geometry': not coordinates,
+                    'missing_geometry': not coordinates_path,
                     'spike': check_spike,
                     'points_check': less_4_point,
                     'is_unclose': un_close,
@@ -203,14 +201,14 @@ class ImportGeoJson(models.Model):
                     'is_overlapping': is_duplicate,
                     'deforestation_percentage': deforestation_percent if deforestation_percent > 5 else 0,
                     'state_check': 'red' if (
-                                not coordinates or less_4_point or check_spike or un_close or is_duplicate or check_decimal or deforestation_percent > 5) else 'green',
+                                not coordinates_path or less_4_point or check_spike or un_close or is_duplicate or check_decimal or deforestation_percent > 5) else 'green',
                     'import_id': self.id,
                     'properties_data': json.dumps(properties)
                 }
                 line_data.append(line_entry)
-                if not coordinates or check_spike or less_4_point or un_close or check_decimal or is_duplicate or deforestation_percent > 5:
+                if not coordinates_path or check_spike or less_4_point or un_close or check_decimal or is_duplicate or deforestation_percent > 5:
                     is_valid = False
-                for i, coord_pair in enumerate(zip(coordinates, coordinates[1:] + [coordinates[0]]), start=1):
+                for i, coord_pair in enumerate(zip(coordinates_path, coordinates_path[1:] + [coordinates_path[0]]), start=1):
                     start, stop = coord_pair
                     start_lat, start_lng = start[1], start[0]
                     stop_lat, stop_lng = stop[1], stop[0]
@@ -261,6 +259,8 @@ class ImportGeoJson(models.Model):
                 }
                 if is_valid:
                     value_valid_point.append(new_data_format)
+
+            paths = []
 
         # Batch create `geojson.data` entries
         self.env['geojson.data'].create(line_data)
