@@ -273,35 +273,45 @@ class ImportGeoJson(models.Model):
         self.import_date = datetime.now()
 
     def create_valid_data(self, is_valid, value_valid_polygon, value_valid_point):
-        if is_valid:
-            for val_pol in value_valid_polygon:
-                create_new_polygon = self.env['res.partner.area'].create({
-                    'gshape_name': 'Farm of %s' % self.supplier_id.name,
-                    'partner_id': self.supplier_id.id,
-                    'gshape_paths': val_pol,
-                    'type_geometry': 'polygon'
-                })
-                create_new_polygon._compute_gshape_polygon_lines()
-                dict_obj = ast.literal_eval(create_new_polygon.gshape_paths)
-                create_new_polygon.gshape_paths = json.dumps(dict_obj)
-                create_new_polygon._compute_gshape_polygon_lines()
-                create_new_polygon.import_id = self.id
-            for val_point in value_valid_point:
-                create_new_point = self.env['res.partner.area'].create({
-                    'gshape_name': 'Farm of %s' % self.supplier_id.name,
-                    'partner_id': self.supplier_id.id,
-                    'gshape_paths': val_point,
-                    'gshape_type': 'circle',
-                    'import_id': self.id,
-                    'latitude': val_point['options']['center']['lat'],
-                    'longitude': val_point['options']['center']['lng'],
-                    'gshape_radius': buffer_distance,
-                    'type_geometry': 'point'
-                })
-                create_new_point._compute_gshape_polygon_lines()
-                dict_obj = ast.literal_eval(create_new_point.gshape_paths)
-                create_new_point.gshape_paths = json.dumps(dict_obj)
-                create_new_point._compute_gshape_polygon_lines()
+        if not is_valid:
+            return
+
+        # Danh sách để lưu dữ liệu cần tạo
+        polygon_data = []
+        point_data = []
+
+        # Chuẩn bị dữ liệu cho các đối tượng "polygon"
+        for val_pol in value_valid_polygon:
+            dict_obj = ast.literal_eval(val_pol)
+            polygon_data.append({
+                'gshape_name': 'Farm of %s' % self.supplier_id.name,
+                'partner_id': self.supplier_id.id,
+                'gshape_paths': json.dumps(dict_obj),
+                'type_geometry': 'polygon',
+                'import_id': self.id
+            })
+
+        # Chuẩn bị dữ liệu cho các đối tượng "point"
+        for val_point in value_valid_point:
+            dict_obj = ast.literal_eval(val_point)
+            point_data.append({
+                'gshape_name': 'Farm of %s' % self.supplier_id.name,
+                'partner_id': self.supplier_id.id,
+                'gshape_paths': json.dumps(dict_obj),
+                'gshape_type': 'circle',
+                'import_id': self.id,
+                'latitude': val_point['options']['center']['lat'],
+                'longitude': val_point['options']['center']['lng'],
+                'gshape_radius': buffer_distance,
+                'type_geometry': 'point'
+            })
+
+        # Tạo các bản ghi "polygon" và "point" một lần
+        all_data = polygon_data + point_data
+        created_records = self.env['res.partner.area'].create(all_data)
+
+        # Chỉ gọi _compute_gshape_polygon_lines() một lần cho tất cả các bản ghi mới tạo
+        created_records._compute_gshape_polygon_lines()
 
     def _get_action_view_polygon(self):
         '''
