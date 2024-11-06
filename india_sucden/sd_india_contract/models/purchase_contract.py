@@ -60,7 +60,7 @@ class PurchaseContract(models.Model):
 
     remark = fields.Text(string='Remark')
 
-    gross_qty = fields.Float(string='Gross Quantity (SN)', digits=(12,0))
+    gross_qty = fields.Float(string='Gross Quantity (SN)', digits=(12,0), readonly=False)
     quality_deduction = fields.Float(string='Quality Deduction', digits=(12,0), compute='compute_quality_deduction', store=True)
 
     @api.depends('gross_qty', 'total_qty', 'origin')
@@ -69,6 +69,7 @@ class PurchaseContract(models.Model):
             if rec.origin:
                 rec.quality_deduction = rec.gross_qty - rec.total_qty
             else:
+                rec.gross_qty = rec.total_qty
                 rec.quality_deduction = 0
 
     @api.onchange('date_order')
