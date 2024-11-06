@@ -17,6 +17,9 @@ services:
       - DB_PORT=5432
     volumes:
       - /opt/ovis16:/opt/ovis
+      - /mnt/d/ftp_files/BRA_Regions_Crop:/opt/BRA_Regions_Crop
+      - /mnt/d/ftp_files/COL_Regions_Crop:/opt/COL_Regions_Crop
+      - /opt/VNM_Regions_Crop:/opt/VNM_Regions_Crop
     depends_on:
       - db
 
