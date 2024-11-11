@@ -22,6 +22,9 @@ class SContract(models.Model):
                                     states={}, copy=True)
     price_unit = fields.Float(string='Price Unit', related='contract_line.price_unit', store=True)
 
+    # Field for PSS Management
+    pss_management_ids = fields.One2many('pss.management', 's_contract_id')
+
     @api.model
     def _default_document_contract(self):
         document_contract = self.env['document.contract'].search([
