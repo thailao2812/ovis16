@@ -42,6 +42,31 @@
             <xpath expr="//field[@name='contract_line']/tree/field[@name='price_unit']" position="replace">
                 <field name="price_unit" attrs="{'readonly': [('type', '=', 'export')]}" optional="show"/>
             </xpath>
+
+            <xpath expr="//field[@name='pss_sent_ids']" position="replace">
+                <field name="pss_management_ids" readonly="1">
+                    <tree>
+                        <field name="shipping_id"/>
+                        <field name="shipping_date"/>
+                        <field name="ship_to"/>
+                        <field name="product_id"/>
+                        <field name="certificate_id"/>
+                        <field name="crop_id"/>
+                        <field name="pss_type"/>
+                        <field name="contract_qty"/>
+                        <field name="sample_qty"/>
+                        <field name="sample_sent_date"/>
+                        <field name="courier"/>
+                        <field name="awb_no"/>
+                        <field name="shipt_month"/>
+                        <field name="pss_delivery_date"/>
+                        <field name="pss_status"/>
+                        <field name="approve_date"/>
+                        <field name="reject_date" />
+                        <field name="reason_reject" />
+                    </tree>
+                </field>
+            </xpath>
         </field>
     </record>
 
