@@ -18,4 +18,16 @@
 
 		        </field>
 		    </record>
+
+	<record id="view_shipping_instruction_tree_inherit_sd_vietnam" model="ir.ui.view">
+		        <field name="name">view_shipping_instruction_tree_inherit_sd_vietnam</field>
+		        <field name="model">shipping.instruction</field>
+		        <field name="inherit_id" ref="sd_sale_contract.view_shipping_instruction_tree"/>
+		        <field name="arch" type="xml">
+					<xpath expr="//field[@name='total_line_qty']" position="after">
+                        <field name="invoice_qty"/>
+					</xpath>
+
+		        </field>
+		    </record>
 </odoo>
