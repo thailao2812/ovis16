@@ -166,6 +166,10 @@ class TruckQualityProduction(models.Model):
                                           record.sleeve_5_5_up, 2)
             if record.template_qc == 'pb_grade':
                 record.total_gram = round(record.flat_gram + record.pb1_gram + record.pb2_gram, 2)
+            if record.template_qc == 'lower':
+                record.total_gram = round(record.good_beans + record.hulks_gram + record.unhulled + record.blacks +
+                                          record.sleeve_5_up + record.bits_gram + record.stone_gram + record.idb_gram +
+                                          record.bb_gram + record.triage_gram + record.remaining_coffee,2)
             if record.template_qc == 'bulk':
                 record.total_gram = round(record.aaa_gram + record.aa_gram + record.a_gram + record.b_gram \
                                     + record.c_gram + record.pb_gram + record.bb_gram + record.bleached_gram \
@@ -239,6 +243,10 @@ class TruckQualityProduction(models.Model):
                                        + record.sleeve_5_5_down_percent + record.sleeve_5_down_percent
             if record.template_qc == 'pb_grade':
                 record.total_percent = record.flat_percent + record.pb1_percent + record.pb2_percent
+            if record.template_qc == 'lower':
+                record.total_percent = round(record.good_beans_percent + record.hulks_percent + record.unhulled_percent + record.blacks_percent +
+                                          record.sleeve_5_up_percent + record.bits_percent + record.stone_percent + record.idb_percent +
+                                          record.bb_percent + record.triage_percent + record.remaining_coffee_percent,2)
             if record.total_gram == 300:
                 record.total_percent = 100
 
