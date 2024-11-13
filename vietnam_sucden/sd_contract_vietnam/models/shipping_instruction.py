@@ -15,8 +15,7 @@ class ShippingInstruction(models.Model):
 
     invoice_qty = fields.Float(string="Invoice Qty", compute='_compute_invoice_qty', store=True)
     delivery_order_ids = fields.One2many('delivery.order', 'shipping_id', string="Delivery Orders", readonly=True)
-    warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse', required=True, readonly=True,
-                                   states={'draft': [('readonly', False)]}, default=False, compute='_compute_warehouse_id', store=True)
+    warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse', required=False, readonly=True, default=False, compute='_compute_warehouse_id', store=True)
 
     @api.depends('delivery_order_ids', 'delivery_order_ids.from_warehouse_id', 'delivery_order_ids.state')
     def _compute_warehouse_id(self):
