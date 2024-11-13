@@ -11,7 +11,8 @@
     'data': [
         'security/ir.model.access.csv',
         'views/shipment_view.xml',
-        'views/production_analysis_view.xml'
+        'views/production_analysis_view.xml',
+        'views/fob_weight_franchise_view.xml',
     ],
     'assets': {
 

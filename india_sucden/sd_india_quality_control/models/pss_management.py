@@ -46,6 +46,7 @@ class PSSManagement(models.Model):
 
     # New field for india
     s_contract_id = fields.Many2one('s.contract', string='Sale Contract')
+    product_id = fields.Many2one("product.product", related='s_contract_id.product_id', string="Product", store=True)
     s_contract_date = fields.Date(related='s_contract_id.date', store=True, string='Sale Contract Date')
     shipping_id = fields.Many2one("shipping.instruction", string="SI No.", compute='_compute_data_from_s_contract', store=True)
     shipping_date = fields.Date(string='SI Date', related='shipping_id.date', store=True)

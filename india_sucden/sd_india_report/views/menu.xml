@@ -10,10 +10,10 @@
 		            name="Purchase"
 		            parent="menu_report_control_root"
 		            sequence="40"/>
-					<menuitem id="menu_purchase_contract_detail_line_report_action"
-				            action="sd_purchase_contract.purchase_contract_detail_line_report_action" sequence="1"
+					<menuitem id="menu_purchase_report_india"
+				            action="sd_india_report.action_purchase_report_india" sequence="1"
 				            parent="menu_report_purchase"
-				            name="Purchase Contract Line Detail"/>
+				            name="Purchase Report"/>
 
             
 	            <!-- Configuration Contracts Top 1-->

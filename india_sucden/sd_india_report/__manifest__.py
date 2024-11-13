@@ -8,6 +8,7 @@
             'security/security.xml',
             'security/ir.model.access.csv',
             'views/production_report_view.xml',
+            'views/purchase_report_view.xml',
             'views/sucden_syn_config_view.xml',
             'views/batch_report.xml',
             'views/production_analysis_view.xml',
