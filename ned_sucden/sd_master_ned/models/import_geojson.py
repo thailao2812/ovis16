@@ -9,8 +9,9 @@ from shapely.wkt import loads
 import json,ast
 from datetime import datetime,date, timedelta
 from geopy.distance import geodesic
-
+import pyproj
 import json
+from shapely.ops import transform
 import pandas as pd
 from rasterstats import zonal_stats
 import os
@@ -130,7 +131,10 @@ class ImportGeoJson(models.Model):
         geojson_data = json.loads(file_content)
 
         # Cache for existing polygons and points to avoid duplicate checks
-        existing_polygons = self.env['res.partner.area'].search([])
+        existing_polygons = self.env['res.partner.area'].search([
+            ('latitude', '=', False),
+            ('longitude', '=', False),
+        ])
         existing_polygons_shapes = []
         for record in existing_polygons:
             try:
@@ -140,8 +144,11 @@ class ImportGeoJson(models.Model):
             except (json.JSONDecodeError, GEOSException, KeyError) as e:
                 continue
 
-        existing_points = self.env['partner.multiple.point'].search([])
-        existing_points_shapes = [Point(record.partner_longitude, record.partner_latitude) for record in
+        existing_points = self.env['res.partner.area'].search([
+            ('latitude', '!=', False),
+            ('longitude', '!=', False),
+        ])
+        existing_points_shapes = [Point(record.longitude, record.latitude) for record in
                                   existing_points]
 
         # Cache for properties to reduce database hits
@@ -150,14 +157,11 @@ class ImportGeoJson(models.Model):
         line_data = []
         is_valid = True
         value_valid_polygon = []
-        value_valid_point = []
+        value_valid_polygon_from_point = []
         count_point, count_polygon = 0, 0
         paths = []
         lines = {}
-        seq = 0
         for feature in geojson_data['features']:
-            seq = seq+1
-            print(seq)
             geometry = feature.get('geometry', {})
             properties = feature.get('properties', {})
 
@@ -234,8 +238,55 @@ class ImportGeoJson(models.Model):
                 count_point += 1
                 lat, lng = coordinates[1], coordinates[0]
                 new_point = Point(lng, lat)
+                longitude = new_point.x  # Kinh độ
+                latitude = new_point.y
                 check_decimal = self.count_decimal_places(lat) < 6 or self.count_decimal_places(lng) < 6
                 is_duplicate = any(new_point.equals(existing_point) for existing_point in existing_points_shapes)
+
+                # Thiết lập hệ tọa độ phẳng (metric) tạm thời để tính toán khoảng cách
+                local_proj = pyproj.CRS(proj='aeqd', lat_0=lat, lon_0=lng)  # Hệ tọa độ Azimuthal Equidistant
+
+                # Biến đổi tọa độ từ hệ địa lý sang hệ metric tạm thời
+                project = pyproj.Transformer.from_crs("EPSG:4326", local_proj, always_xy=True).transform
+                projected_point = transform(project, new_point)
+
+                # Tạo buffer (với bán kính bằng một nửa đường kính được cung cấp)
+                buffer_polygon = projected_point.buffer(buffer_distance / 2)
+
+                # Biến đổi lại về hệ địa lý (EPSG:4326)
+                reverse_project = pyproj.Transformer.from_crs(local_proj, "EPSG:4326", always_xy=True).transform
+                final_polygon = transform(reverse_project, buffer_polygon)
+
+                coords = list(final_polygon.exterior.coords)
+
+                # Chuyển đổi danh sách các tọa độ thành dạng lat, lng
+                paths = [{'lat': lat, 'lng': lng} for lng, lat in coords]
+
+                # Tạo object với định dạng yêu cầu
+                obj = {
+                    'type': 'polygon',
+                    'lat': latitude,
+                    'lng': longitude,
+                    'options': {
+                        'paths': paths
+                    },
+                    'lines': {}
+                }
+                # Tính độ dài và các đoạn thẳng (lines) giữa các điểm
+                for i in range(len(paths) - 1):
+                    start = paths[i]
+                    stop = paths[i + 1]
+                    # Sử dụng geodesic để tính khoảng cách theo mét
+                    length = geodesic((start['lat'], start['lng']), (stop['lat'], stop['lng'])).meters
+
+                    obj['lines'][str(i + 1)] = {
+                        'start': start,
+                        'stop': stop,
+                        'length': length
+                    }
+
+
+                # return final_polygon
 
                 line_entry = {
                     'name': f'Point number {count_point}',
@@ -249,67 +300,55 @@ class ImportGeoJson(models.Model):
                 line_data.append(line_entry)
                 if is_duplicate or check_decimal:
                     is_valid = False
-                new_data_format = {
-                    "type": "circle",
-                    "options": {
-                        "radius": buffer_distance,
-                        "center": {
-                            "lat": lat,
-                            "lng": lng
-                        }
-                    }
-                }
                 if is_valid:
-                    value_valid_point.append(new_data_format)
+                    value_valid_polygon_from_point.append(obj)
 
             paths = []
 
         # Batch create `geojson.data` entries
         self.env['geojson.data'].create(line_data)
 
-        self.create_valid_data(is_valid, value_valid_polygon, value_valid_point)
+        self.create_valid_data(is_valid, value_valid_polygon, value_valid_polygon_from_point)
 
         # Update status check based on `state_check` values in `line_data`
         self.status_check = 'red' if any(line['state_check'] == 'red' for line in line_data) else 'green'
         self.state = 'imported'
         self.import_date = datetime.now()
 
-    def create_valid_data(self, is_valid, value_valid_polygon, value_valid_point):
+    def create_valid_data(self, is_valid, value_valid_polygon, value_valid_polygon_from_point):
         if not is_valid:
             return
 
         # Danh sách để lưu dữ liệu cần tạo
         polygon_data = []
-        point_data = []
 
         # Chuẩn bị dữ liệu cho các đối tượng "polygon"
         for val_pol in value_valid_polygon:
-            dict_obj = ast.literal_eval(val_pol)
             polygon_data.append({
                 'gshape_name': 'Farm of %s' % self.supplier_id.name,
                 'partner_id': self.supplier_id.id,
-                'gshape_paths': json.dumps(dict_obj),
+                'gshape_paths': json.dumps(val_pol),
                 'type_geometry': 'polygon',
                 'import_id': self.id
             })
 
-        # Chuẩn bị dữ liệu cho các đối tượng "point"
-        for val_point in value_valid_point:
-            dict_obj = ast.literal_eval(val_point)
-            point_data.append({
+        for val_pol in value_valid_polygon_from_point:
+            lat = val_pol['lat']
+            lng = val_pol['lng']
+            polygon_data.append({
                 'gshape_name': 'Farm of %s' % self.supplier_id.name,
                 'partner_id': self.supplier_id.id,
-                'gshape_paths': json.dumps(dict_obj),
-                'gshape_type': 'circle',
-                'import_id': self.id,
-                'latitude': val_point['options']['center']['lat'],
-                'longitude': val_point['options']['center']['lng'],
-                'gshape_radius': buffer_distance,
-                'type_geometry': 'point'
+                'gshape_paths': json.dumps(val_pol),
+                'latitude': lat,
+                'longitude': lng,
+                'type_geometry': 'polygon',
+                'import_id': self.id
             })
+            del val_pol['lat']
+            del val_pol['lng']
 
         # Tạo các bản ghi "polygon" và "point" một lần
-        all_data = polygon_data + point_data
+        all_data = polygon_data
         created_records = self.env['res.partner.area'].create(all_data)
 
         # Chỉ gọi _compute_gshape_polygon_lines() một lần cho tất cả các bản ghi mới tạo
