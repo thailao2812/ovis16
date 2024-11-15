@@ -99,6 +99,7 @@ class FOB_Franchise(models.Model):
                 product_product pp ON si.product_id = pp.id
             JOIN
                 shipping_instruction_line sil ON si.id = sil.shipping_id
+            WHERE si.gdn_qty > 0 and si.factory_etd is not Null
             GROUP BY
                 si.id, sw.id, rp.id, pp.id, sil.name
                 ''')
