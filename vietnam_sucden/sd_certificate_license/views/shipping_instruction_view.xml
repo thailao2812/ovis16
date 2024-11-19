@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_shipping_instruction_add_page_certificate_allocation_form_inherit_sd_vietnam" model="ir.ui.view">
+		<field name="name">view_shipping_instruction_add_page_certificate_allocation_form_inherit_sd_vietnam</field>
+		<field name="model">shipping.instruction</field>
+		<field name="inherit_id" ref="sd_pur_sales.view_shipping_instruction_add_page_certificate_allocation_form"/>
+		<field name="arch" type="xml">
+			<xpath expr="//field[@name='shipping_ids']/tree/field[@name='certificate_id']" position="attributes">
+					<attribute name="invisible">1</attribute>
+			</xpath>
+			<xpath expr="//field[@name='license_allocation_ids']/tree/field[@name='shipping_id']" position="after">
+				<field name="warehouse_id"/>
+				<field name="date_etd"/>
+				<field name="certificated_ids" widget="many2many_tags" invisible="1"/>
+			</xpath>
+			<xpath expr="//field[@name='license_allocation_ids']/tree/field[@name='license_id']" position="attributes">
+					<attribute name="context"/>
+			</xpath>
+			<xpath expr="//field[@name='license_allocation_ids']/tree/field[@name='license_id']" position="attributes">
+					<attribute name="domain">[('state', '=', 'active')]</attribute>
+			</xpath>
+			<xpath expr="//field[@name='prodcompleted']" position="after">
+				<field name="process_state"/>
+			</xpath>
+			<xpath expr="//field[@name='pss_condition']" position="after">
+				<field name="certificated_ids" position="move"/>
+			</xpath>
+			<xpath expr="//field[@name='certificated_ids']" position="replace">
+				<label for="certificated_ids" string="Cer Compliant" class="o_form_field_label"/>
+                <div name="certificated_ids" class="o_row">
+                    <field name="certificated_ids" widget="many2many_tags" readonly="1"/>
+                </div>
+			</xpath>
+		</field>
+	</record>
+</odoo>

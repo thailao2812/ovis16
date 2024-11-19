@@ -17,6 +17,8 @@ class VShipment(models.Model):
     # production_progress = fields.Float(string='QC Approved', digits=(12, 0))
     rejected_nestle = fields.Float(string='PSS rejected Nestle', digits=(12, 0))
     approved_nestle = fields.Float(string='PSS Approved Nestle', digits=(12, 0))
+    ctract_id = fields.Many2one('s.contract', string='Contract ID',digits=(12, 0))
+    certificated_ids = fields.Many2many(related='ctract_id.certificated_ids', string='Cer Compliant')
 
     def init(self):
         self.fun_week_num_year()
@@ -24,10 +26,9 @@ class VShipment(models.Model):
         self.env.cr.execute('''
             CREATE OR REPLACE VIEW public.v_shipment AS
             SELECT row_number() OVER (
-
                 ORDER BY (
-
                     sc.name,
+                    sc.id,
                     CASE
                       WHEN rp.shortname IS NULL THEN rp.name
                       ELSE rp.shortname
@@ -64,6 +65,7 @@ class VShipment(models.Model):
 
             ) AS id,
               sc.name AS s_contract,
+              sc.id AS ctract_id,
                 CASE
                   WHEN rp.shortname IS NULL THEN rp.name
                   ELSE rp.shortname
@@ -93,7 +95,7 @@ class VShipment(models.Model):
               COALESCE(sum(deli.gdn_quantity), 0::numeric) AS gdn_quantity,
               si.priority_by_month AS priority,
                 CASE
-                  WHEN COALESCE(sum(deli.gdn_quantity), 0::numeric) = COALESCE(sil.product_qty, 0::numeric) OR (((sil.product_qty - sum(deli.gdn_quantity)) / sil.product_qty) * 100) <= 3 THEN 'Done'::text
+                  WHEN COALESCE(sum(deli.gdn_quantity), 0::numeric) = COALESCE(sil.product_qty, 0::numeric) OR (((sil.product_qty - sum(deli.gdn_quantity)) / sil.product_qty) * 100) <= 2 THEN 'Done'::text
                   WHEN COALESCE(sum(nvsl.product_qty), 0::numeric) = 0::numeric THEN 'Unallocated'::text
                   WHEN COALESCE(sum(deli.do_quantity), 0::numeric) > COALESCE(sum(deli.gdn_quantity), 0::numeric) THEN 'Waiting GDN'::text
                   WHEN COALESCE(sum(deli.gdn_quantity), 0::numeric) < sil.product_qty THEN 'In progress'::text
@@ -142,7 +144,7 @@ class VShipment(models.Model):
                    JOIN delivery_order_line dol ON dor.id = dol.delivery_id
                    LEFT JOIN stock_picking sp ON dor.picking_id = sp.id
                    LEFT JOIN ( SELECT stock_move_line.picking_id,
-                      sum(stock_move_line.init_qty) AS gdn_quantity
+                      sum(stock_move_line.qty_done) AS gdn_quantity
                      FROM stock_move_line
                     GROUP BY stock_move_line.picking_id) sm ON dor.picking_id = sm.picking_id
                  where sp.state = 'done'
@@ -160,13 +162,14 @@ class VShipment(models.Model):
                 GROUP BY stock_contract_allocation.shipping_id) stock_allocation ON si.id = stock_allocation.shipping_id
               left join ned_certificate cert on sil.certificate_id = cert.id
             where sc.status = 'Factory' and si.state != 'cancel'
-            GROUP BY scline.name, sc.name, cert.name,pc.id, pt.quality_type,
+            GROUP BY scline.name, sc.name, cert.name,pc.id, sc.id, pt.quality_type,
                 CASE
                   WHEN rp.shortname IS NULL THEN rp.name
                   ELSE rp.shortname
                 END, sc.status, sc.allowed_franchise, si.name, pp.default_code, sil.product_qty, np.name, si.packing_place, si.shipment_date, nf.name, si.fumigation_date, si.pss_condition, si.pss_send_schedule, si.factory_etd, si.materialstatus, si.production_status, pm.shipping_id, pm.pss_count, si.priority_by_month, si.prodcompleted, si.closing_time, stock_allocation.allocated_qty, sc.type, pm.approved, pm.rejected,pm.rejected_nestle,pm.approved_nestle
             ORDER BY 
-                sc.name, 
+                sc.name,
+                sc.id,
                 CASE
                   WHEN rp.shortname IS NULL THEN rp.name
                   ELSE rp.shortname
@@ -189,8 +192,6 @@ class VShipment(models.Model):
                 si.packing_place ,
                 pm.pss_count,
                 sc.type ,
-
-
                 CASE
                   WHEN si.factory_etd IS NULL THEN week_num_year(si.shipment_date)
                   ELSE week_num_year(si.factory_etd)
