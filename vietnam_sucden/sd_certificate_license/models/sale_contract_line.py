@@ -30,14 +30,20 @@ class SaleContract(models.Model):
     @api.depends('certificate_id_list','shipping_id','crop_id','contract_line.product_id')
     def _compute_premium(self):
         for this in self:
-            for line in this.contract_line:
-                premium_id = self.env['mrp.bom.premium'].search([('crop_id','=', this.crop_id.id)], limit=1)
-                product_prem = premium_id.prem_ids.filtered(lambda x: x.product_id.id == line.product_id.id).premium or 0.0
-                packing_prem = this.shipping_id.shipping_ids.filtered(lambda r: r.product_id.id == line.product_id.id).packing_id.Premium or 0.0
-                cert_prem = sum(this.certificate_id_list.mapped('premium')) or 0.0
-                
-                this.product_prem = product_prem
-                this.packing_prem = packing_prem
-                this.cert_prem = cert_prem
-                this.total_prem = cert_prem + product_prem + packing_prem
+            if this.contract_line:
+                for line in this.contract_line:
+                    premium_id = self.env['mrp.bom.premium'].search([('crop_id','=', this.crop_id.id)], limit=1)
+                    product_prem = premium_id.prem_ids.filtered(lambda x: x.product_id.id == line.product_id.id).premium or 0.0
+                    packing_prem = this.shipping_id.shipping_ids.filtered(lambda r: r.product_id.id == line.product_id.id).packing_id.Premium or 0.0
+                    cert_prem = sum(this.certificate_id_list.mapped('premium')) or 0.0
+                    
+                    this.product_prem = product_prem
+                    this.packing_prem = packing_prem
+                    this.cert_prem = cert_prem
+                    this.total_prem = cert_prem + product_prem + packing_prem
+            else:
+                this.product_prem = 0.0
+                this.packing_prem = 0.0
+                this.cert_prem = 0.0
+                this.total_prem = 0.0
             
