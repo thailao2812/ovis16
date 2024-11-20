@@ -40,7 +40,16 @@ class NedCertificateLicense(models.Model):
 
     edur_compliant = fields.Char(string='EUDR Compliant')
     certificate_id = fields.Many2one('ned.certificate', string='Certificate', required=False)
-    certificated_ids = fields.Many2many('ned.certificate', 'ned_certificate_license_ned_certificate_rel', 'license_number_id', 'certificate_id', string="Cer Compliant")
+
+    @api.depends('certificate_id')
+    def _compute_certificated_ids(self):
+        for record in self:
+            if record.certificate_id:
+                record.certificated_ids = [(4, record.certificate_id.id)]
+            else:
+                record.certificated_ids = [(5, 0, 0)]
+    
+    certificated_ids = fields.Many2many('ned.certificate', string="Cer Compliant", compute='_compute_certificated_ids', store=True)
 
     def button_approve(self):
         for rec in self:
@@ -74,3 +83,5 @@ class NedCertificateLicense(models.Model):
 
         return res
 
+    def action_export(self):
+        return self.env.ref('sd_contract_vietnam.report_certificate_license').report_action(self)

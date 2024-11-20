@@ -11,7 +11,6 @@
     'data': [
         'security/ir.model.access.csv',
         'views/stock_contract_allocation_view.xml',
-        'views/lot_stack_allocation_license.xml',
         'views/menu.xml',
     ],
     'assets': {

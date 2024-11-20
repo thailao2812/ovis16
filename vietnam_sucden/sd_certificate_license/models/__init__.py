@@ -7,3 +7,4 @@ from . import shipping_instruction_license_allocation
 from . import sd_certificate_license_detail
 from . import sale_contract_line
 from . import delivery_order
+from . import lot_stack_allocation_license

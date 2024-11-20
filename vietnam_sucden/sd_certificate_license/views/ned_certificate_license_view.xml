@@ -47,6 +47,9 @@
                     </field>
                 </div>
             </xpath>
+            <xpath expr="//button[@name='reset_draft']" position="after">
+                <button name="action_export" string="Export" type="object" class="oe_highlight"/>
+            </xpath>
         </field>
     </record>
 
