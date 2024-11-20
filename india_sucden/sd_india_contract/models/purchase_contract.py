@@ -263,8 +263,8 @@ class PurchaseContract(models.Model):
         ])
         if license_checking and not self.certificate_id:
             raise UserError(_("You have to input Certificate and License before submit"))
-        if self.origin and self.gross_qty <= 0:
-            raise UserError(_("You have to input Gross Qty (SN) before submit"))
+        # if self.origin and self.gross_qty <= 0:
+        #     raise UserError(_("You have to input Gross Qty (SN) before submit"))
 
         if sum(self.contract_line.mapped('bag_no')) <= 0:
             raise UserError(_("You have to input Bag No, please check again"))
