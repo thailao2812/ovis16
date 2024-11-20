@@ -12,8 +12,8 @@ class StockPicking(models.Model):
     @api.depends('name', 'picking_type_id')
     def _compute_display_name(self):
         for sri in self:
-            if self.env.context.get('grn_fot_allocation'):
-                if sri.picking_type_id.operation == 'station':
+            if sri.picking_type_id.operation == 'station':
+                if sri.description_name:
                     sri.display_name = sri.description_name
                 else:
                     sri.display_name = sri.name
@@ -22,14 +22,13 @@ class StockPicking(models.Model):
 
     def name_get(self):
         result = []
-        if self.env.context.get('grn_fot_allocation') or (self.env.context.get('code') and self.env.context.get('code') == 5):
-            for rec in self:
-                if rec.picking_type_id.operation == 'station':
+        for rec in self:
+            if rec.picking_type_id.operation == 'station':
+                if rec.description_name:
                     result.append((rec.id, rec.description_name))
                 else:
                     result.append((rec.id, rec.name))
-        else:
-            for rec in self:
+            else:
                 result.append((rec.id, rec.name))
         return result
 
