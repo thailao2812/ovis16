@@ -34,7 +34,7 @@ class StockPicking(models.Model):
 
     @api.model
     def name_search(self, name='', args=None, operator='ilike', limit=100):
-        args = args or []
+        args = []
         domain = []
         check = []
         args += ['|', ('name', operator, name), ('description_name', operator, name)]
