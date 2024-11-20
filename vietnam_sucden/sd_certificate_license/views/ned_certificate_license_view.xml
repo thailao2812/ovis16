@@ -38,7 +38,7 @@
             <xpath expr="//field[@name='partner_id']" position="before">
                 <label for="certificated_ids"/>
                 <div name="certificated_ids" class="o_row">
-                    <field name="certificated_ids" widget="many2many">
+                    <field name="certificated_ids" widget="many2many" attrs="{'readonly': [('state', '!=', 'draft')]}">
                         <tree>
                             <field name="name"/>
                             <field name="premium"/>
