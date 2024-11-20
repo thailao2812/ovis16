@@ -16,7 +16,7 @@
                 <field name="license_id" position="move"/>
                 <label for="certificated_ids"/>
                 <div name="certificated_ids" class="o_row">
-                    <field name="certificated_ids" widget="many2many" options="{'no_write': True, 'no_create': True, 'no_open': True}">
+                    <field name="certificated_ids" widget="many2many" attrs="{'readonly': [('state', '!=', 'draft')]}" options="{'no_write': True, 'no_create': True, 'no_open': True}">
                         <tree>
                             <field name="name"/>
                             <field name="premium"/>
@@ -61,7 +61,7 @@
                 <field name="license_id" position="move"/>
                 <label for="certificated_ids"/>
                 <div name="certificated_ids" class="o_row">
-                    <field name="certificated_ids" widget="many2many" options="{'no_write': True, 'no_create': True, 'no_open': True}">
+                    <field name="certificated_ids" widget="many2many" attrs="{'readonly': [('state', '!=', 'draft')]}" options="{'no_write': True, 'no_create': True, 'no_open': True}">
                         <tree>
                             <field name="name"/>
                             <field name="premium"/>
@@ -76,10 +76,10 @@
         </field>
     </record>
 
-    <record id="view_nvp_contract_tree_inherit_sd_certificate" model="ir.ui.view">
-        <field name="name">view_nvp_contract_tree_inherit_sd_certificate</field>
+    <record id="view_ptbf_contract_tree_inherit_sd_certificate" model="ir.ui.view">
+        <field name="name">view_ptbf_contract_tree_inherit_sd_certificate</field>
         <field name="model">purchase.contract</field>
-        <field name="inherit_id" ref="sd_purchase_contract.view_nvp_contract_tree"/>
+        <field name="inherit_id" ref="sd_purchase_contract.view_ptbf_contract_tree"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='license_id']" position="before">
                 <field name="certificated_ids" widget="many2many_tags"/>
@@ -90,7 +90,7 @@
         </field>
     </record>
 
-        <record id="view_consignment_agreement_form_inherit_sd_certificate" model="ir.ui.view">
+    <record id="view_consignment_agreement_form_inherit_sd_certificate" model="ir.ui.view">
         <field name="name">view_consignment_agreement_form_inherit_sd_certificate</field>
         <field name="model">purchase.contract</field>
         <field name="inherit_id" ref="sd_purchase_contract.view_consignment_agreement_form"/>
@@ -106,7 +106,7 @@
                 <field name="license_id" position="move"/>
                 <label for="certificated_ids"/>
                 <div name="certificated_ids" class="o_row">
-                    <field name="certificated_ids" widget="many2many" options="{'no_write': True, 'no_create': True, 'no_open': True}">
+                    <field name="certificated_ids" widget="many2many" attrs="{'readonly': [('state', '!=', 'draft')]}" options="{'no_write': True, 'no_create': True, 'no_open': True}">
                         <tree>
                             <field name="name"/>
                             <field name="premium"/>
