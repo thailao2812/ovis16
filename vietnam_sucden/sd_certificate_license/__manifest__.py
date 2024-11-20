@@ -19,6 +19,7 @@
         'views/shipping_instruction_view.xml',
         'views/sale_contract_view.xml',
         'views/delivery_order_view.xml',
+        'views/lot_stack_allocation_license.xml',
         'views/menu.xml',
     ],
     'assets': {

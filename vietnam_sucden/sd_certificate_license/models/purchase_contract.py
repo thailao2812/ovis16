@@ -7,7 +7,7 @@ from odoo.osv import expression
 class PurchaseContract(models.Model):
     _inherit = 'purchase.contract'
 
-    certificated_ids = fields.Many2many('ned.certificate', 'purchase_contract_ned_certificate_rel', 'purchase_contract_id', 'certificate_id', string="Cer Compliant")
+    certificated_ids = fields.Many2many('ned.certificate', string="Cer Compliant", compute='_compute_certificated_ids', store=True)
     
     @api.onchange('partner_id', 'license_id')
     def onchange_license_id(self):
@@ -18,3 +18,10 @@ class PurchaseContract(models.Model):
         else:
             self.certificated_ids = False
             
+    @api.depends('license_id')
+    def _compute_certificated_ids(self):
+        for record in self:
+            if record.license_id:
+                record.certificated_ids = [(4, record.license_id.certificate_id.id)]
+            else:
+                record.certificated_ids = [(5, 0, 0)]

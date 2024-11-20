@@ -25,6 +25,9 @@
             <xpath expr="//field[@name='delivery_order_ids']/tree/field[@name='certificate_id']" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
+            <xpath expr="//field[@name='warehouse_id']" position="attributes">
+                <attribute name="attrs">{'invisible': [('type', '=', 'Sale')]}</attribute>
+            </xpath>
         </field>
     </record>
 
