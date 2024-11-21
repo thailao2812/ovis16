@@ -79,7 +79,7 @@ class StockAllocation(models.Model):
             allocation_qty = 0.0
             if order.picking_id and order.contract_id:
 
-                allocation_obj = self.env['stock.allocation'].search([('picking_id', '=', order.picking_id.id)])
+                allocation_obj = self.env['stock.allocation'].search([('picking_id', '=', order.picking_id.id), ('state', '=', 'approved')])
                 allocation_qty = sum(allocation_obj.mapped('qty_allocation_net'))
                 order.qty_received_net = allocation_qty or 0.0
 
