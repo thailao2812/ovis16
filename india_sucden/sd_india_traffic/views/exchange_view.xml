@@ -11,6 +11,7 @@
                 	<field name="yield_loss"/>
                 	<field name="rate" readonly="1" force_save="1"/>
                 	<field name="default_data"/>
+                	<field name="arabica"/>
                 	<field name="active"/>
                 </tree>
             </field>
