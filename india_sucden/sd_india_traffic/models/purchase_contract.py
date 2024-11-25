@@ -7,8 +7,8 @@ class PurchaseContract(models.Model):
     _inherit = 'purchase.contract'
 
     fob_management_id = fields.Many2one('fob.management.india', string='FOB Number')
-    outturn = fields.Float(string='Outturn %')
-    differential_india = fields.Float(string='Differential')
+    outturn = fields.Float(string='Outturn %', compute='_compute_outturn_differential', store=True)
+    differential_india = fields.Float(string='Differential', compute='_compute_outturn_differential', store=True)
     state_fob = fields.Selection([
         ('draft', 'Draft'),
         ('submit', 'Submit')
@@ -20,6 +20,23 @@ class PurchaseContract(models.Model):
     total_allocated_qty = fields.Float(string='Total Allocated', compute='_compute_allocated_qty', store=True)
     open_qty_check = fields.Boolean(string='Hide Allocation', default=False)
     remark_contract = fields.Char(string='Remarks')
+
+    contract_price_purchase_ids = fields.One2many('contract.price.purchase', 'contract_id')
+
+    @api.depends('contract_price_purchase_ids', 'contract_price_purchase_ids.outturn',
+                 'contract_price_purchase_ids.a_differential', 'contract_price_purchase_ids.ab_differential',
+                 'contract_price_purchase_ids.exchange', 'contract_price_purchase_ids.exchange.arabica')
+    def _compute_outturn_differential(self):
+        for rec in self:
+            if rec.contract_price_purchase_ids:
+                rec.outturn = rec.contract_price_purchase_ids[0].outturn
+                if rec.contract_price_purchase_ids[0].exchange and rec.contract_price_purchase_ids[0].exchange.arabica:
+                    rec.differential_india = rec.contract_price_purchase_ids[0].a_differential
+                if rec.contract_price_purchase_ids[0].exchange and not rec.contract_price_purchase_ids[0].exchange.arabica:
+                    rec.differential_india = rec.contract_price_purchase_ids[0].ab_differential
+            else:
+                rec.outturn = 0
+                rec.differential_india = 0
 
     @api.depends('psc_to_pc_linked_ids', 'psc_to_pc_linked_ids.current_allocated', 'psc_to_pc_linked_ids.state')
     def _compute_allocated_qty(self):

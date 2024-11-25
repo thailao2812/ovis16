@@ -17,6 +17,7 @@ class Exchange(models.Model):
     currency_id = fields.Many2one('res.currency', string='Currency')
     rate = fields.Float(string='Rate', default=1.00000, digits=(12, 5))
     yield_loss = fields.Float(string='Yield Loss')
+    arabica = fields.Boolean(string='Arabica or Not')
 
     @api.onchange('market_id')
     def onchange_market_id(self):
