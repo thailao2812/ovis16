@@ -79,7 +79,7 @@ class StockAllocation(models.Model):
             allocation_qty = 0.0
             if order.picking_id and order.contract_id:
 
-                allocation_obj = self.env['stock.allocation'].search([('picking_id', '=', order.picking_id.id)])
+                allocation_obj = self.env['stock.allocation'].search([('picking_id', '=', order.picking_id.id), ('state', '=', 'approved')])
                 allocation_qty = sum(allocation_obj.mapped('qty_allocation_net'))
                 order.qty_received_net = allocation_qty or 0.0
 
@@ -107,3 +107,28 @@ class StockAllocation(models.Model):
             allocation._compute_qty_net()
             allocation._compute_qty()
         return True
+
+    @api.depends('contract_id', 'picking_id', 'qty_allocation', 'state')
+    def _compute_qty(self):
+        for order in self:
+            allocation_qty = 0.0
+            if order.picking_id and order.contract_id:
+
+                allocation_obj = self.env['stock.allocation'].search([('picking_id', '=', order.picking_id.id), ('state', '=', 'approved')])
+                allocation_qty = sum(allocation_obj.mapped('qty_allocation'))
+                order.qty_received = allocation_qty or 0.0
+
+                move_line = order.picking_id.move_line_ids_without_package.filtered(
+                    lambda r: r.picking_id.state == 'done')
+                qty_grn = sum(move_line.mapped('qty_done'))
+                order.qty_unreceived = qty_grn - allocation_qty
+
+                if not order.qty_unreceived != 0:
+                    order.compare_qty = True
+
+            else:
+                order.qty_received = 0
+                order.qty_unreceived = 0
+
+            if order.qty_unreceived < 0:
+                raise UserError(_('unReceived > 0'))

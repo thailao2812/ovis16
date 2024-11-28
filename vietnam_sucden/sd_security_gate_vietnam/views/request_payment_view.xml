@@ -5,11 +5,32 @@
         <field name="model">request.payment</field>
         <field name="inherit_id" ref="sd_purchase_contract.view_request_payment_form"/>
         <field name="arch" type="xml">
+            <xpath expr="//form" position="attributes">
+                <attribute name="delete">false</attribute>
+            </xpath>
             <xpath expr="//header" position="replace">
                 <header>
                     <button name="request_payment" string="Request" type="object" states="draft" class="oe_highlight"
                             groups="sd_security_gate_vietnam.group_request_payment"/>
-                    <button name="action_refuse" string="Reject" type="object" class="oe_highlight" attrs="{'invisible': [('state', 'in', ['draft', 'paid'])]}" confirm="Are you sure to reject this request?"/>
+
+                    <button name="action_refuse" string="Reject" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('is_dr_request', '!=', True), ('state', '!=', 'request')]}"
+                            confirm="Are you sure to reject this request?" groups="sd_security_gate_vietnam.group_security_request_payment"/>
+
+                    <button name="action_refuse" string="Reject" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('is_dr_request', '=', True), ('state', '!=', 'request')]}"
+                            confirm="Are you sure to reject this request?" groups="sd_security_gate_vietnam.group_confirm_request_payment"/>
+
+                    <button name="action_refuse" string="Reject" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('is_dr_request', '!=', True), ('state', '!=', 'security')]}"
+                            confirm="Are you sure to reject this request?" groups="sd_security_gate_vietnam.group_confirm_request_payment"/>
+
+                    <button name="action_refuse" string="Reject" type="object" class="oe_highlight" states="purchasing"
+                            confirm="Are you sure to reject this request?" groups="sd_security_gate_vietnam.group_approve_1st_accounting_request_payment"/>
+
+                    <button name="action_refuse" string="Reject" type="object" class="oe_highlight" states="approved"
+                            confirm="Are you sure to reject this request?" groups="sd_security_gate_vietnam.group_approve_2st_accounting_request_payment"/>
+
+                    <button name="action_refuse" string="Reject" type="object" class="oe_highlight" states="accounting_2"
+                            confirm="Are you sure to reject this request?" groups="sd_security_gate_vietnam.group_director_request_payment"/>
+
                     <button name="security_approve" string="Security" type="object"
                             attrs="{'invisible': ['|', ('is_dr_request', '!=', True), ('state', '!=', 'request')]}"
                             class="oe_highlight"
@@ -305,6 +326,9 @@
         <field name="model">request.payment</field>
         <field name="inherit_id" ref="sd_purchase_contract.view_request_payment_tree"/>
         <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="delete">false</attribute>
+            </xpath>
             <xpath expr="//field[@name='request_amount']" position="attributes">
                 <attribute name="groups">sd_security_gate_vietnam.group_request_payment_seeing_money_value</attribute>
             </xpath>

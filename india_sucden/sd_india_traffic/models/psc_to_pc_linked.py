@@ -17,8 +17,8 @@ class PscToPcLinked(models.Model):
     finished_qty = fields.Float(string='Finished Qty/PC', compute='compute_pc_qty', store=True)
     finished_actual_qty = fields.Float(string='Finished Qty /Actual Qty')
     total_allocated = fields.Float(string='Allocated Qty', compute='compute_pc_qty', store=True)
-    balance_qty = fields.Float(string='Balance Qty.', compute='_compute_transaction_qty', store=True)
-    current_allocated = fields.Float(string='Current Allocation')
+    balance_qty = fields.Float(string='Balance Qty.', compute='_compute_transaction_qty', store=True, digits=(16, 2))
+    current_allocated = fields.Float(string='Current Allocation', digits=(16, 2))
     state = fields.Selection(related='sale_contract_id.state', store=True)
 
     @api.depends('purchase_contract_id', 'purchase_contract_id.finished_qty', 'purchase_contract_id.total_allocated_qty', 'purchase_contract_id.origin', 'purchase_contract_id.gross_qty', 'purchase_contract_id.total_qty')

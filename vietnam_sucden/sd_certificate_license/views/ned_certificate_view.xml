@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="inherit_view_ned_certificate_tree" model="ir.ui.view">
+        <field name="name">inherit_view_ned_certificate_tree</field>
+        <field name="model">ned.certificate</field>
+        <field name="inherit_id" ref="sd_master.view_ned_certificate_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='code']" position="after">
+                <field name="description"/>
+                <field name="crop_id" string="Crop"/>
+                <field name="premium"/>
+            </xpath>
+        </field>
+    </record>
+    <record id="inherit_view_ned_certificate_form" model="ir.ui.view">
+        <field name="name">inherit_view_ned_certificate_form</field>
+        <field name="model">ned.certificate</field>
+        <field name="inherit_id" ref="sd_master.view_ned_certificate_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='active']" position="before">
+                <field name="crop_id" string="Crop"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
