@@ -28,12 +28,16 @@ class SupplierMasterDate(models.Model):
     def compute_status(self):
         for rec in self:
             if rec.import_ids:
-                print(rec.import_ids, rec.import_ids.mapped('status_check'), len(rec.import_ids.mapped('status_check')))
-                if 'green' in rec.import_ids.mapped('status_check') and len(rec.import_ids.mapped('status_check')) == 1:
-                    rec.status = 'green'
-                if 'red' in rec.import_ids.mapped('status_check') and len(rec.import_ids.mapped('status_check')) == 1:
-                    rec.status = 'red'
-                if 'red' in rec.import_ids.mapped('status_check') and 'green' in rec.import_ids.mapped('status_check'):
+                value = []
+                for i in rec.import_ids.mapped('status_check'):
+                    if i not in value:
+                        value.append(i)
+                if len(value) == 1:
+                    if 'red' in value:
+                        rec.status = 'red'
+                    if 'green' in value:
+                        rec.status = 'green'
+                if len(value) > 1:
                     rec.status = 'yellow'
             else:
                 rec.status = 'yellow'
