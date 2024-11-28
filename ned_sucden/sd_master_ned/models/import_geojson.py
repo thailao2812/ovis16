@@ -19,12 +19,12 @@ import glob
 buffer_distance = 225.68
 from odoo.exceptions import UserError
 
-merge_layer_tif_filepath_vn = "/Users/laoquocthai/VNM_Regions_Crop"
-merge_layer_tif_filepath_col = "/Users/laoquocthai/COL_Regions_Crop"
-merge_layer_tif_filepath_bra = "/Users/laoquocthai/BRA_Regions_Crop"
-# merge_layer_tif_filepath_vn = "/opt/VNM_Regions_Crop"
-# merge_layer_tif_filepath_col = "/opt/COL_Regions_Crop"
-# merge_layer_tif_filepath_bra = "/opt/BRA_Regions_Crop"
+# merge_layer_tif_filepath_vn = "/Users/laoquocthai/VNM_Regions_Crop"
+# merge_layer_tif_filepath_col = "/Users/laoquocthai/COL_Regions_Crop"
+# merge_layer_tif_filepath_bra = "/Users/laoquocthai/BRA_Regions_Crop"
+merge_layer_tif_filepath_vn = "/opt/VNM_Regions_Crop"
+merge_layer_tif_filepath_col = "/opt/COL_Regions_Crop"
+merge_layer_tif_filepath_bra = "/opt/BRA_Regions_Crop"
 
 
 class ImportGeoJson(models.Model):
