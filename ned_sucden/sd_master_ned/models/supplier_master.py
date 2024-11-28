@@ -28,6 +28,7 @@ class SupplierMasterDate(models.Model):
     def compute_status(self):
         for rec in self:
             if rec.import_ids:
+                print(rec.import_ids, rec.import_ids.mapped('status_check'), len(rec.import_ids.mapped('status_check')))
                 if 'green' in rec.import_ids.mapped('status_check') and len(rec.import_ids.mapped('status_check')) == 1:
                     rec.status = 'green'
                 if 'red' in rec.import_ids.mapped('status_check') and len(rec.import_ids.mapped('status_check')) == 1:
