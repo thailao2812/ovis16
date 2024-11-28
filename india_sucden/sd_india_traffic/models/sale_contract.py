@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from string import digits
+
 from odoo import api, fields, models, tools, _, SUPERUSER_ID
 from odoo.exceptions import ValidationError, UserError
 
@@ -36,8 +38,8 @@ class SaleContractIndia(models.Model):
     p_date = fields.Date(string='P Date')
     product_id = fields.Many2one('product.product', related='line_ids.product_id', store=True)
     item_group_id = fields.Many2one('product.group', related='line_ids.item_group_id', store=True)
-    total_quantity = fields.Float(string='PSC Qty(Kg)', compute='_compute_quantity', store=True)
-    allocated_quantity = fields.Float(string='Allocated Qty(Kg)', compute="_compute_transaction_qty", store=True)
+    total_quantity = fields.Float(string='PSC Qty(Kg)', compute='_compute_quantity', store=True, digits=(16, 2))
+    allocated_quantity = fields.Float(string='Allocated Qty(Kg)', compute="_compute_transaction_qty", store=True, digits=(16, 2))
     balance_quantity = fields.Float(string='Balance Qty(Kg)', compute="_compute_transaction_qty", store=True)
     allocated_quantity_sc = fields.Float(string='Allocated Qty(Kg)', compute="_compute_transaction_sc_qty", store=True)
     balance_quantity_sc = fields.Float(string='Balance Qty(Kg)', compute="_compute_transaction_sc_qty", store=True)
