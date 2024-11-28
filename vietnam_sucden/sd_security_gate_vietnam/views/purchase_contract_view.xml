@@ -365,7 +365,7 @@
                     <button name="action_open_grn_ready" type='object' string="Open GRN 90%" attrs="{'invisible': [('hide_grn_ready', '=', False)]}"/>
                     <field name="grn_90_ids" no_label="1" context="{'seq': name}" attrs="{'invisible': [('hide_grn_ready', '=', True)]}">
                         <tree editable="bottom">
-                            <field name="picking_id" required="1" options="{'no_create': True}" context="{'request_payment': True, 'partner_id': parent.partner_id,
+                            <field name="picking_id" required="1" options="{'no_create': True}" context="{'request_payment': True, 'partner_id': parent.partner_id, 'date': parent.date_contract,
                             'product_id': parent.product_id, 'ids': parent.grn_90_array, 'seq': parent.name, 'payment_percent': 90, 'purchase_contract_id': parent.parent_id_purchase_contract}"/>
                             <field name="quantity" sum="quantity"/>
                             <field name="percent" readonly="1"/>
