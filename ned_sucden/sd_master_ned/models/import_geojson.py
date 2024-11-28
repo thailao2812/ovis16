@@ -19,12 +19,12 @@ import glob
 buffer_distance = 225.68
 from odoo.exceptions import UserError
 
-# merge_layer_tif_filepath_vn = "/Users/laoquocthai/VNM_Regions_Crop"
-# merge_layer_tif_filepath_col = "/Users/laoquocthai/COL_Regions_Crop"
-# merge_layer_tif_filepath_bra = "/Users/laoquocthai/BRA_Regions_Crop"
-merge_layer_tif_filepath_vn = "/opt/VNM_Regions_Crop"
-merge_layer_tif_filepath_col = "/opt/COL_Regions_Crop"
-merge_layer_tif_filepath_bra = "/opt/BRA_Regions_Crop"
+merge_layer_tif_filepath_vn = "/Users/laoquocthai/VNM_Regions_Crop"
+merge_layer_tif_filepath_col = "/Users/laoquocthai/COL_Regions_Crop"
+merge_layer_tif_filepath_bra = "/Users/laoquocthai/BRA_Regions_Crop"
+# merge_layer_tif_filepath_vn = "/opt/VNM_Regions_Crop"
+# merge_layer_tif_filepath_col = "/opt/COL_Regions_Crop"
+# merge_layer_tif_filepath_bra = "/opt/BRA_Regions_Crop"
 
 
 class ImportGeoJson(models.Model):
@@ -34,7 +34,7 @@ class ImportGeoJson(models.Model):
     file = fields.Binary(string='File')
     filename = fields.Char(string='Name')
     vendor_id = fields.Many2one('res.partner', string='Responsibility Person')
-    country_id = fields.Many2one('res.country', string='Country')
+    country_id = fields.Many2one('res.country', string='Country', related='supplier_id.country_id', store=True)
     import_date = fields.Date(string='Import Date', default=datetime.now())
     line_ids = fields.One2many('geojson.data', 'import_id')
     state = fields.Selection([
@@ -45,7 +45,7 @@ class ImportGeoJson(models.Model):
     count_point = fields.Integer(string='Count Point')
     contact_number = fields.Char(string='Contact Number')
     supplier_id = fields.Many2one('res.partner', string='Supplier Name')
-    supplier_number = fields.Char(string='Supplier Number')
+    supplier_number = fields.Char(string='Supplier Number', related='supplier_id.partner_code', store=True)
     supplier_master_id = fields.Many2one('supplier.master.data')
     purchase_no = fields.Char(string='Purchase #')
     total_data = fields.Integer(string='# Geometry', compute='compute_total_date', store=True)
@@ -164,6 +164,9 @@ class ImportGeoJson(models.Model):
         for feature in geojson_data['features']:
             geometry = feature.get('geometry', {})
             properties = feature.get('properties', {})
+            json_string = json.dumps(properties)
+
+            # Lưu chuỗi JSON vào field char
 
             # Process properties
             for line in properties:
@@ -171,6 +174,7 @@ class ImportGeoJson(models.Model):
                 if line_name not in properties_cache:
                     new_prop = self.env['properties.polygon'].create({'name': line_name})
                     properties_cache[line_name] = new_prop.id
+
                 self.properties_ids = [(4, properties_cache[line_name])]
 
             if geometry.get('type') in ['Polygon', 'MultiPolygon']:
@@ -209,7 +213,8 @@ class ImportGeoJson(models.Model):
                     'state_check': 'red' if (
                                 not coordinates_path or less_4_point or check_spike or un_close or is_duplicate or check_decimal or deforestation_percent > 5) else 'green',
                     'import_id': self.id,
-                    'properties_data': json.dumps(properties)
+                    'properties_data': json.dumps(properties),
+                    'data': json_string
                 }
                 line_data.append(line_entry)
                 if not coordinates_path or check_spike or less_4_point or un_close or check_decimal or is_duplicate or deforestation_percent > 5:
@@ -295,7 +300,8 @@ class ImportGeoJson(models.Model):
                     'decimal_precision': check_decimal,
                     'state_check': 'red' if is_duplicate or check_decimal else 'green',
                     'import_id': self.id,
-                    'properties_data': json.dumps(properties)
+                    'properties_data': json.dumps(properties),
+                    'data': json_string
                 }
                 line_data.append(line_entry)
                 if is_duplicate or check_decimal:

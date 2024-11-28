@@ -7,7 +7,7 @@
              <form string="Supplier Master">
                  <sheet>
                     <group>
-                        <field name="supplier_id"/>
+                        <field name="supplier_id" required="1"/>
                         <field name="upload_count"/>
                         <field name="last_upload"/>
                         <field name="status"/>
