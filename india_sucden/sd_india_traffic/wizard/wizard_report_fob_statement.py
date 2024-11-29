@@ -21,7 +21,7 @@ class WizardReportFobStatement(models.TransientModel):
         if not self.item_group_ids and not self.date_to and not self.date_from and not self.sale_contract_ids:
             sale_contract_ids = self.env['sale.contract.india'].search([])
             for sale in sale_contract_ids:
-                for line in sale.line_purchase_ids.filtered(lambda x: x.total_allocated > 0):
+                for line in sale.line_purchase_ids.filtered(lambda x: x.total_allocated > 0 and x.current_allocated > 0):
                     fob_value = forex = farm_gate = market_price = 0
                     market_month = False
                     if line.outturn / 100 == 0:
@@ -74,7 +74,7 @@ class WizardReportFobStatement(models.TransientModel):
 
         elif self.sale_contract_ids:
             for sale in self.sale_contract_ids:
-                for line in sale.line_purchase_ids.filtered(lambda x: x.total_allocated > 0):
+                for line in sale.line_purchase_ids.filtered(lambda x: x.total_allocated > 0 and x.current_allocated > 0):
                     fob_value = forex = farm_gate = market_price = 0
                     market_month = False
                     if line.outturn / 100 == 0:
@@ -134,7 +134,7 @@ class WizardReportFobStatement(models.TransientModel):
                 domain += [('p_date', '<=', self.date_to)]
             sale_contract_ids = self.env['sale.contract.india'].search(domain)
             for sale in sale_contract_ids:
-                for line in sale.line_purchase_ids.filtered(lambda x: x.total_allocated > 0):
+                for line in sale.line_purchase_ids.filtered(lambda x: x.total_allocated > 0 and x.current_allocated > 0):
                     fob_value = forex = farm_gate = market_price = 0
                     market_month = False
                     if line.outturn / 100 == 0:
