@@ -62,8 +62,8 @@ class SaleContractIndia(models.Model):
     def _compute_allocate_qty(self):
         for rec in self:
             rec.current_allocate_qty = sum(rec.line_purchase_ids.mapped('current_allocated'))
-            # if rec.current_allocate_qty > rec.total_quantity:
-            #     raise UserError(_("You cannot allocate more Total Qty than you have."))
+            if rec.current_allocate_qty > rec.total_quantity:
+                raise UserError(_("You cannot allocate more Total Qty than you have."))
 
     @api.depends('p_number', 'p_date')
     def compute_check_state_p(self):
