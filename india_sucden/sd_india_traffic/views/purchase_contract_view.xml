@@ -143,4 +143,26 @@
             <field name="view_id" ref="purchase_contract_report_for_allocated"/>
             <field name="act_window_id" ref="action_purchase_contract_report_allocated"/>
         </record>
+
+    <record id="view_consignment_agreement_form_inherit_india_traffic" model="ir.ui.view">
+        <field name="name">view_consignment_agreement_form_inherit_india_traffic</field>
+        <field name="model">purchase.contract</field>
+        <field name="inherit_id" ref="sd_purchase_contract.view_consignment_agreement_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='company_id']" position="after">
+                <field name="fob_management_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_purchase_contract_form_inherit_india_traffic" model="ir.ui.view">
+        <field name="name">view_purchase_contract_form_inherit_india_traffic</field>
+        <field name="model">purchase.contract</field>
+        <field name="inherit_id" ref="sd_purchase_contract.view_purchase_contract_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='company_id']" position="after">
+                <field name="fob_management_id"/>
+            </xpath>
+        </field>
+    </record>
 </odoo>
