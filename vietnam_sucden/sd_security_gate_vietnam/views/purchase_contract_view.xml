@@ -381,7 +381,7 @@
                     <field name="grn_100_factory_ids" no_label="1" context="{'seq': name}" attrs="{'invisible': [('hide_grn_done', '=', True)]}">
                         <tree editable="bottom">
                             <field name="picking_id" required="1" options="{'no_create': True}" context="{'request_payment': True, 'partner_id': parent.partner_id,
-                            'product_id': parent.product_id, 'ids': parent.grn_100_factory_array, 'seq': parent.name,
+                            'product_id': parent.product_id, 'ids': parent.grn_100_factory_array, 'seq': parent.name, 'date': parent.date_contract,
                             'payment_percent': 100, 'factory': True, 'purchase_contract_id': parent.parent_id_purchase_contract}"/>
                             <field name="quantity" sum="quantity"/>
                             <field name="percent" readonly="1"/>
@@ -398,7 +398,7 @@
                         <tree editable="bottom">
                             <field name="picking_id" required="1" options="{'no_create': True}" context="{'request_payment': True, 'partner_id': parent.partner_id,
                             'product_id': parent.product_id, 'ids': parent.grn_100_fot_array, 'seq': parent.name,
-                            'payment_percent': 100, 'factory': False,
+                            'payment_percent': 100, 'factory': False, 'date': parent.date_contract,
                             'purchase_contract_id': parent.parent_id_purchase_contract, 'grn_fot_allocation': True}"/>
 <!--                            <field name="description_name"/>-->
                             <field name="quantity" sum="quantity"/>
