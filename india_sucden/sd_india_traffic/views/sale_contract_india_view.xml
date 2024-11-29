@@ -143,6 +143,7 @@
                                 <field name="total_quantity" readonly="1"/>
                                 <field name="allocated_quantity" readonly="1"/>
                                 <field name="balance_quantity" readonly="1"/>
+                                <field name="current_allocate_qty"/>
                             </group>
                         </group>
                         <notebook>
