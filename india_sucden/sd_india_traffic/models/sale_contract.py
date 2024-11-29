@@ -56,6 +56,14 @@ class SaleContractIndia(models.Model):
     packing_id = fields.Many2one('ned.packing', string='Packing Nature', related='line_ids.packing_id', store=True)
     currency_id = fields.Many2one('res.currency', string='Currency', related='line_ids.currency_id', store=True)
     price_uom = fields.Many2one('uom.uom', string='UOM', related='line_ids.price_uom', store=True)
+    current_allocate_qty = fields.Float(string='Current Allocate', compute='_compute_allocate_qty', store=True, digits=(16, 2))
+
+    @api.depends('line_purchase_ids', 'line_purchase_ids.current_allocated', 'line_purchase_ids.balance_qty', 'line_purchase_ids.total_allocated')
+    def _compute_allocate_qty(self):
+        for rec in self:
+            rec.current_allocate_qty = sum(rec.line_purchase_ids.mapped('current_allocated'))
+            if rec.current_allocate_qty > rec.total_quantity:
+                raise UserError(_("You cannot allocate more Total Qty than you have."))
 
     @api.depends('p_number', 'p_date')
     def compute_check_state_p(self):
