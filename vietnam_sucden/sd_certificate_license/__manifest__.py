@@ -14,6 +14,7 @@
         'views/ned_certificate_view.xml',
         'views/ned_certificate_license_view.xml',
         'views/sd_certificate_license_detail.xml',
+        'views/sd_certificate_license_detail2.xml',
         'views/purchase_contract_view.xml',
         'views/s_contract_view.xml',
         'views/shipping_instruction_view.xml',
