@@ -19,6 +19,7 @@ class StockPicking(models.Model):
         selection=[('draft', 'New'), ('approved', 'Approved'), ('waiting', 'Waiting Another Operation'),
                    ('rejected', 'Rejected'), ('cancel', 'Cancel')], string='KCS Status', readonly=True, copy=False,
         index=True, default='draft', tracking=True, )
+    tare_weight = fields.Float(string='Tare Weight', related='move_line_ids_without_package.tare_weight', store=True)
 
     def button_sd_validate(self):
         for record in self:
