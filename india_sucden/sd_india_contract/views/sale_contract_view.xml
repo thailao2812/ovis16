@@ -31,6 +31,9 @@
             <xpath expr="//button[@name='button_approve']" position="attributes">
                 <attribute name="groups">sd_india_master.group_accounting_india</attribute>
             </xpath>
+            <xpath expr="//button[@name='button_approve']" position="after">
+                <button name="button_cancel" type="object" string="Cancel" attrs="{'invisible': [('state', '=', 'draft')]}"/>
+            </xpath>
         </field>
     </record>
 
