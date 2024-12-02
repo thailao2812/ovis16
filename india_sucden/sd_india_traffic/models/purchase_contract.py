@@ -32,7 +32,7 @@ class PurchaseContract(models.Model):
                 rec.outturn = rec.contract_price_purchase_ids[0].outturn
                 if rec.contract_price_purchase_ids[0].exchange and rec.contract_price_purchase_ids[0].exchange.coffee_type == 'parchment':
                     rec.differential_india = rec.contract_price_purchase_ids[0].a_differential
-                if rec.contract_price_purchase_ids[0].exchange and rec.contract_price_purchase_ids[0].exchange.coffee_type == 'cherry':
+                if rec.contract_price_purchase_ids[0].exchange and rec.contract_price_purchase_ids[0].exchange.coffee_type in ['cherry', 'none']:
                     rec.differential_india = rec.contract_price_purchase_ids[0].ab_differential
             else:
                 rec.outturn = 0
