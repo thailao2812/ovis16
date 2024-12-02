@@ -8,6 +8,7 @@
             <field name="arch" type="xml">
     			<tree >
                     <field name = 'week_name' />
+                    <field name="date_done"/>
                     <field name = "y_num" />
                     <field name = "product" />
                     <field name = 'source_province'  />
