@@ -25,14 +25,14 @@ class PurchaseContract(models.Model):
 
     @api.depends('contract_price_purchase_ids', 'contract_price_purchase_ids.outturn',
                  'contract_price_purchase_ids.a_differential', 'contract_price_purchase_ids.ab_differential',
-                 'contract_price_purchase_ids.exchange', 'contract_price_purchase_ids.exchange.arabica')
+                 'contract_price_purchase_ids.exchange', 'contract_price_purchase_ids.exchange.coffee_type')
     def _compute_outturn_differential(self):
         for rec in self:
             if rec.contract_price_purchase_ids:
                 rec.outturn = rec.contract_price_purchase_ids[0].outturn
-                if rec.contract_price_purchase_ids[0].exchange and rec.contract_price_purchase_ids[0].exchange.arabica:
+                if rec.contract_price_purchase_ids[0].exchange and rec.contract_price_purchase_ids[0].exchange.coffee_type == 'parchment':
                     rec.differential_india = rec.contract_price_purchase_ids[0].a_differential
-                if rec.contract_price_purchase_ids[0].exchange and not rec.contract_price_purchase_ids[0].exchange.arabica:
+                if rec.contract_price_purchase_ids[0].exchange and not rec.contract_price_purchase_ids[0].exchange.coffee_type == 'cherry':
                     rec.differential_india = rec.contract_price_purchase_ids[0].ab_differential
             else:
                 rec.outturn = 0
