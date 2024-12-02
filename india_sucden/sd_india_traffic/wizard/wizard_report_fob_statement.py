@@ -24,10 +24,7 @@ class WizardReportFobStatement(models.TransientModel):
                 for line in sale.line_purchase_ids.filtered(lambda x: x.total_allocated > 0 and x.current_allocated > 0):
                     fob_value = forex = farm_gate = market_price = 0
                     market_month = False
-                    if line.outturn / 100 == 0:
-                        green_coffee = 0
-                    else:
-                        green_coffee = line.quantity * (line.outturn / 100)
+                    green_coffee = line.current_allocated
                     if line.purchase_contract_id.fob_management_id:
                         fob_value = line.purchase_contract_id.fob_management_id.fob_usd
                         forex = line.purchase_contract_id.fob_management_id.forex_rate_inr
@@ -42,7 +39,15 @@ class WizardReportFobStatement(models.TransientModel):
                         margin_per_mt = (margin_value / green_coffee) * 1000
                     else:
                         margin_per_mt = 0
+                    pc_qty = green_coffee / line.outturn * 100 if line.outturn else 0
+                    if line.product_id.exchange_id.arabica:
+                        fob_value_usc = fob_value / line.product_id.exchange_id.rate
+                        currency_uom_usc = 'USC/MT'
+                    else:
+                        fob_value_usc = 0
+                        currency_uom_usc = ''
                     value = {
+                        'product_id': line.product_id.id,
                         'item_id': sale.item_group_id.id,
                         'p_number': sale.id,
                         'p_date': sale.p_date,
@@ -50,12 +55,14 @@ class WizardReportFobStatement(models.TransientModel):
                         'sn_date': sale.sn_date,
                         'purchase_contract': line.purchase_contract_id.id,
                         'pc_date': line.date_contract,
-                        'no_of_bag': line.quantity / sale.line_ids[0].packing_id.capacity or 0,
-                        'pc_qty': line.quantity,
+                        'no_of_bag': round(line.quantity / sale.line_ids[0].packing_id.capacity, 2) or 0,
+                        'pc_qty': pc_qty,
                         'outturn': line.outturn,
                         'green_coffee': green_coffee,
                         'fob_value': fob_value,
                         'currency_uom': 'USD/MT',
+                        'fob_value_usc': fob_value_usc,
+                        'currency_uom_usc': currency_uom_usc,
                         'value_usd': value_usd,
                         'forex': forex,
                         'farm_gate': farm_gate,
@@ -77,10 +84,7 @@ class WizardReportFobStatement(models.TransientModel):
                 for line in sale.line_purchase_ids.filtered(lambda x: x.total_allocated > 0 and x.current_allocated > 0):
                     fob_value = forex = farm_gate = market_price = 0
                     market_month = False
-                    if line.outturn / 100 == 0:
-                        green_coffee = 0
-                    else:
-                        green_coffee = line.quantity * (line.outturn / 100)
+                    green_coffee = line.current_allocated
                     if line.purchase_contract_id.fob_management_id:
                         fob_value = line.purchase_contract_id.fob_management_id.fob_usd
                         forex = line.purchase_contract_id.fob_management_id.forex_rate_inr
@@ -88,14 +92,22 @@ class WizardReportFobStatement(models.TransientModel):
                         market_price = line.purchase_contract_id.fob_management_id.market_price
                         market_month = line.purchase_contract_id.fob_management_id.market_month and line.purchase_contract_id.fob_management_id.market_month.id or False
                     value_usd = (fob_value * green_coffee) / 1000
-                    sale_value = fob_value * (green_coffee/1000) * forex
-                    value_raw_coffee = (farm_gate/50) * green_coffee
+                    sale_value = fob_value * (green_coffee / 1000) * forex
+                    value_raw_coffee = (farm_gate / 50) * green_coffee
                     margin_value = sale_value - value_raw_coffee
                     if green_coffee > 0:
-                        margin_per_mt = (margin_value/green_coffee) * 1000
+                        margin_per_mt = (margin_value / green_coffee) * 1000
                     else:
                         margin_per_mt = 0
+                    pc_qty = green_coffee / line.outturn * 100 if line.outturn else 0
+                    if line.product_id.exchange_id.arabica:
+                        fob_value_usc = fob_value / line.product_id.exchange_id.rate
+                        currency_uom_usc = 'USC/MT'
+                    else:
+                        fob_value_usc = 0
+                        currency_uom_usc = ''
                     value = {
+                        'product_id': line.product_id.id,
                         'item_id': sale.item_group_id.id,
                         'p_number': sale.id,
                         'p_date': sale.p_date,
@@ -103,12 +115,14 @@ class WizardReportFobStatement(models.TransientModel):
                         'sn_date': sale.sn_date,
                         'purchase_contract': line.purchase_contract_id.id,
                         'pc_date': line.date_contract,
-                        'no_of_bag': line.quantity / sale.line_ids[0].packing_id.capacity or 0,
-                        'pc_qty': line.quantity,
+                        'no_of_bag': round(line.quantity / sale.line_ids[0].packing_id.capacity, 2) or 0,
+                        'pc_qty': pc_qty,
                         'outturn': line.outturn,
                         'green_coffee': green_coffee,
                         'fob_value': fob_value,
                         'currency_uom': 'USD/MT',
+                        'fob_value_usc': fob_value_usc,
+                        'currency_uom_usc': currency_uom_usc,
                         'value_usd': value_usd,
                         'forex': forex,
                         'farm_gate': farm_gate,
@@ -137,10 +151,7 @@ class WizardReportFobStatement(models.TransientModel):
                 for line in sale.line_purchase_ids.filtered(lambda x: x.total_allocated > 0 and x.current_allocated > 0):
                     fob_value = forex = farm_gate = market_price = 0
                     market_month = False
-                    if line.outturn / 100 == 0:
-                        green_coffee = 0
-                    else:
-                        green_coffee = line.quantity * (line.outturn / 100)
+                    green_coffee = line.current_allocated
                     if line.purchase_contract_id.fob_management_id:
                         fob_value = line.purchase_contract_id.fob_management_id.fob_usd
                         forex = line.purchase_contract_id.fob_management_id.forex_rate_inr
@@ -155,7 +166,15 @@ class WizardReportFobStatement(models.TransientModel):
                         margin_per_mt = (margin_value / green_coffee) * 1000
                     else:
                         margin_per_mt = 0
+                    pc_qty = green_coffee / line.outturn * 100 if line.outturn else 0
+                    if line.product_id.exchange_id.arabica:
+                        fob_value_usc = fob_value / line.product_id.exchange_id.rate
+                        currency_uom_usc = 'USC/MT'
+                    else:
+                        fob_value_usc = 0
+                        currency_uom_usc = ''
                     value = {
+                        'product_id': line.product_id.id,
                         'item_id': sale.item_group_id.id,
                         'p_number': sale.id,
                         'p_date': sale.p_date,
@@ -163,12 +182,14 @@ class WizardReportFobStatement(models.TransientModel):
                         'sn_date': sale.sn_date,
                         'purchase_contract': line.purchase_contract_id.id,
                         'pc_date': line.date_contract,
-                        'no_of_bag': line.quantity / sale.line_ids[0].packing_id.capacity or 0,
-                        'pc_qty': line.quantity,
+                        'no_of_bag': round(line.quantity / sale.line_ids[0].packing_id.capacity, 2) or 0,
+                        'pc_qty': pc_qty,
                         'outturn': line.outturn,
                         'green_coffee': green_coffee,
                         'fob_value': fob_value,
                         'currency_uom': 'USD/MT',
+                        'fob_value_usc': fob_value_usc,
+                        'currency_uom_usc': currency_uom_usc,
                         'value_usd': value_usd,
                         'forex': forex,
                         'farm_gate': farm_gate,
