@@ -40,7 +40,7 @@ class WizardReportFobStatement(models.TransientModel):
                     else:
                         margin_per_mt = 0
                     pc_qty = green_coffee / line.outturn * 100 if line.outturn else 0
-                    if line.product_id.exchange_id.arabica:
+                    if line.product_id.exchange_id.coffee_type in ['parchment', 'cherry']:
                         fob_value_usc = fob_value / line.product_id.exchange_id.rate
                         currency_uom_usc = 'USC/MT'
                     else:
@@ -100,7 +100,7 @@ class WizardReportFobStatement(models.TransientModel):
                     else:
                         margin_per_mt = 0
                     pc_qty = green_coffee / line.outturn * 100 if line.outturn else 0
-                    if line.product_id.exchange_id.arabica:
+                    if line.product_id.exchange_id.coffee_type in ['parchment', 'cherry']:
                         fob_value_usc = fob_value / line.product_id.exchange_id.rate
                         currency_uom_usc = 'USC/MT'
                     else:
@@ -167,7 +167,7 @@ class WizardReportFobStatement(models.TransientModel):
                     else:
                         margin_per_mt = 0
                     pc_qty = green_coffee / line.outturn * 100 if line.outturn else 0
-                    if line.product_id.exchange_id.arabica:
+                    if line.product_id.exchange_id.coffee_type in ['parchment', 'cherry']:
                         fob_value_usc = fob_value / line.product_id.exchange_id.rate
                         currency_uom_usc = 'USC/MT'
                     else:
