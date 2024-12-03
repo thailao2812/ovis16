@@ -21,10 +21,10 @@
                 <field name = 'col_utz_certified' readonly = '1'/>
                 <field name = 'col_optional_utz_4c' readonly = '1'/>
 
-                <field name = 'faq_tobe_received' sum = 'Sum FAQ Tobe Receive' readonly = '1'/>
-                <field name = 'g1_s18_tobe_received' sum = 'Sum G1-S18 Tobe Receive' readonly = '1'/>
-                <field name = 'g1_s16_tobe_received' sum = 'Sum G1-S16 Tobe Receive' readonly = '1'/>
-                <field name = 'g2_tobe_received' sum = 'Sum G2 Tobe Receive' readonly = '1'/>
+                <field name = 'faq_tobe_received' sum = 'Sum FAQ Tobe Received' readonly = '1'/>
+                <field name = 'g1_s18_tobe_received' sum = 'Sum G1-S18 Tobe Received' readonly = '1'/>
+                <field name = 'g1_s16_tobe_received' sum = 'Sum G1-S16 Tobe Received' readonly = '1'/>
+                <field name = 'g2_tobe_received' sum = 'Sum G2 Tobe Received' readonly = '1'/>
 
                 <field name = 'faq_purchase' sum = 'Sum FAQ Purchase' readonly = '1'/>
                 <field name = 'g1_s18_purchase' sum = 'Sum G1-S18 Purchase' readonly = '1'/>
