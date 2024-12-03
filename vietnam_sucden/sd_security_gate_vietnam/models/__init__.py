@@ -8,3 +8,4 @@ from . import user_process_state
 from . import purchase_contract
 from . import account_payment
 from . import stock_allocation
+from . import ir_attachment
