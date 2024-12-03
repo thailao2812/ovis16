@@ -62,8 +62,8 @@ class SaleContractIndia(models.Model):
     def _compute_allocate_qty(self):
         for rec in self:
             rec.current_allocate_qty = sum(rec.line_purchase_ids.mapped('current_allocated'))
-            if rec.current_allocate_qty > rec.total_quantity:
-                raise UserError(_("You cannot allocate more Total Qty than you have. %s") % rec.p_number)
+            # if rec.current_allocate_qty > rec.total_quantity:
+            #     raise UserError(_("You cannot allocate more Total Qty than you have. %s") % rec.p_number)
 
     @api.depends('p_number', 'p_date')
     def compute_check_state_p(self):
@@ -86,6 +86,8 @@ class SaleContractIndia(models.Model):
 
     def button_approve_allocation(self):
         for record in self:
+            if record.current_allocate_qty > record.total_quantity:
+                raise UserError(_("You cannot allocate more Total Qty than you have. %s") % record.p_number)
             record.state = 'approve_allocation'
             for line in record.line_purchase_ids:
                 line.purchase_contract_id._compute_allocated_qty()
