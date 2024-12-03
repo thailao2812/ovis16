@@ -20,6 +20,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='lot_id']" position="after">
             	<field name="stack_type"/>
+                <field name="tare_weight"/>
             </xpath>
 
         </field>

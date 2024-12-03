@@ -6,4 +6,25 @@
                parent="sd_purchase_contract.purchase_contract_root_master_data_menu" 
                name="Certificate License Detail"
                groups="sd_purchase_contract.group_purchase_contract_user,base.group_user"/>
+
+            <menuitem id="sd_certificate_license_detail2_purchase_contract_menu" 
+               action="action_sd_certificate_license_detail2" 
+               sequence="26"
+               parent="sd_purchase_contract.purchase_contract_root_master_data_menu" 
+               name="Certificate License Detail 2"
+               groups="sd_purchase_contract.group_purchase_contract_user,base.group_user"/>
+
+            <menuitem id="sd_certificate_license_detail_sd_quality_vietnam_menu" 
+                action="sd_certificate_license.action_sd_certificate_license_detail" 
+                sequence="1120"
+                parent="sd_quality.quality_control_report_root_menu" 
+                name="Certificate License Detail"
+                groups="sd_quality.group_kcs_user,sd_quality.group_kcs_manager"/>
+
+            <menuitem id="sd_certificate_license_detail2_sd_quality_vietnam_menu" 
+                action="sd_certificate_license.action_sd_certificate_license_detail2" 
+                sequence="1121"
+                parent="sd_quality.quality_control_report_root_menu" 
+                name="Certificate License Detail 2"
+                groups="sd_quality.group_kcs_user,sd_quality.group_kcs_manager"/>
 </odoo>

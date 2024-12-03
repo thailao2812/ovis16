@@ -30,6 +30,26 @@
             </field>
         </record>
 
+	<record id="view_contract_price_purchase_search" model="ir.ui.view">
+        <field name="name">view_contract_price_purchase_search</field>
+        <field name="model">contract.price.purchase</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="contract_id"/>
+                <field name="product_id"/>
+                <field name="exchange"/>
+                <field name="partner_id"/>
+                <separator/>
+                <group expand="0" string="Group By">
+                   <filter string="Contract" name="contract_id" context="{'group_by': 'contract_id'}"/>
+                   <filter string="Product" name="product_id" context="{'group_by': 'product_id'}"/>
+                   <filter string="Exchange" name="exchange" context="{'group_by': 'exchange'}"/>
+                   <filter string="Partner" name="partner_id" context="{'group_by': 'partner_id'}"/>
+               </group>
+            </search>
+        </field>
+    </record>
+
     <record id="action_contract_price_purchase" model="ir.actions.act_window">
             <field name="name">Contract Price Purchase</field>
             <field name="res_model">contract.price.purchase</field>

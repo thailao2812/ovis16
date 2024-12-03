@@ -19,6 +19,12 @@ class Exchange(models.Model):
     yield_loss = fields.Float(string='Yield Loss')
     arabica = fields.Boolean(string='Arabica or Not')
 
+    coffee_type = fields.Selection([
+        ('parchment', 'Arabica Parchment'),
+        ('cherry', 'Arabica Cherry'),
+        ('none', "None")
+    ], string='Coffee Type', default='none')
+
     @api.onchange('market_id')
     def onchange_market_id(self):
         if self.market_id:

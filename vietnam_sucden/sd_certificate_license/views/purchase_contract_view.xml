@@ -106,7 +106,7 @@
                 <field name="license_id" position="move"/>
                 <label for="certificated_ids"/>
                 <div name="certificated_ids" class="o_row">
-                    <field name="certificated_ids" widget="many2many" attrs="{'readonly': [('state', '!=', 'draft')]}" options="{'no_write': True, 'no_create': True, 'no_open': True}">
+                    <field name="certificated_ids" widget="many2many" options="{'no_write': True, 'no_create': True, 'no_open': True}"> <!-- attrs="{'readonly': [('state', '!=', 'draft')]}" -->
                         <tree>
                             <field name="name"/>
                             <field name="premium"/>
