@@ -19,6 +19,7 @@ class StockPicking(models.Model):
         selection=[('draft', 'New'), ('approved', 'Approved'), ('waiting', 'Waiting Another Operation'),
                    ('rejected', 'Rejected'), ('cancel', 'Cancel')], string='KCS Status', readonly=True, copy=False,
         index=True, default='draft', tracking=True, )
+    tare_weight = fields.Float(string='Tare Weight', related='move_line_ids_without_package.tare_weight', store=True)
 
     def button_sd_validate(self):
         for record in self:
@@ -33,3 +34,12 @@ class StockPicking(models.Model):
                     for ml in record.move_line_ids_without_package:
                         ml.qty_done = basis_qty
         return super(StockPicking, self).button_sd_validate()
+
+    def button_qc_assigned(self):
+        for record in self:
+            if record.picking_type_id.code == 'incoming' and record.picking_type_id.operation == 'station':
+                bag = sum(record.move_line_ids_without_package.mapped('bag_no'))
+                if bag <= 0:
+                    raise UserError(_("You have to input bag number"))
+
+        return super(StockPicking, self).button_qc_assigned()

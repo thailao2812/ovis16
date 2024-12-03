@@ -23,6 +23,8 @@ class PurchaseContract(models.Model):
 
     percent_advance_price = fields.Integer(string="Percent Advance Price", default=70)
 
+    license_2nd_id = fields.Many2one('ned.certificate.license', string='IB License')
+
 
 class OpenQtyNPE(models.Model):
     _name = 'open.qty.npe'
