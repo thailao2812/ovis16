@@ -36,7 +36,7 @@ class DeliveryRegistration(models.Model):
                         deliver_array = [int(x) for x in deliver_array if x.isdigit()]
                     delivery_temp_ids = self.search([
                         ('type_transfer', '=', 'queue'),
-                        ('state', 'not in', ['approved', 'cancel', 'closed', 'reject']),
+                        ('state', 'not in', ['cancel', 'closed', 'reject']),
                         ('supplier_id', '=', self._context.get('partner_id')),
                         ('id', 'not in', deliver_array)
                     ], limit=limit).filtered(
@@ -51,7 +51,7 @@ class DeliveryRegistration(models.Model):
                         if i.remain_qty == 0:
                             arr_done.append(i.delivery_id.id)
                     args += [('type_transfer', '=', 'queue'),
-                        ('state', 'not in', ['approved', 'cancel', 'closed', 'reject']),
+                        ('state', 'not in', ['cancel', 'closed', 'reject']),
                         ('supplier_id', '=', self._context.get('partner_id')),
                         ('id', 'not in', deliver_array),
                         ('id', 'not in', arr_done), ('product_ids', 'in', product.id)]
@@ -99,7 +99,7 @@ class DeliveryRegistration(models.Model):
                     deliver_array = [int(x) for x in deliver_array if x.isdigit()]
                 delivery_temp_ids = self.search([
                     ('type_transfer', '=', 'queue'),
-                    ('state', 'not in', ['approved', 'cancel', 'closed', 'reject']),
+                    ('state', 'not in', ['cancel', 'closed', 'reject']),
                     ('supplier_id', '=', self._context.get('partner_id')),
                     ('id', 'not in', deliver_array)
                 ], limit=limit).filtered(
@@ -116,7 +116,7 @@ class DeliveryRegistration(models.Model):
 
                 domain += [
                     ('type_transfer', '=', 'queue'),
-                    ('state', 'not in', ['approved', 'cancel', 'closed', 'reject']),
+                    ('state', 'not in', ['cancel', 'closed', 'reject']),
                     ('supplier_id', '=', self._context.get('partner_id')),
                     ('id', 'not in', deliver_array),
                     ('id', 'not in', arr_done), ('product_ids', 'in', product.id)]
