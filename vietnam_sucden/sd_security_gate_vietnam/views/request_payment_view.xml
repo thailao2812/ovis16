@@ -342,7 +342,7 @@
             <xpath expr="//field[@name='users_request_id']" position="replace">
                 <field name="state" widget="badge"/>
             </xpath>
-            <xpath expr="//field[@name='state']" position="replace">
+            <xpath expr="//field[@name='provisional_amount']" position="after">
                 <field name="users_request_id"/>
             </xpath>
         </field>
