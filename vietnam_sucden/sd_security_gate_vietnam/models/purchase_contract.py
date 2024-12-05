@@ -14,3 +14,5 @@ class PurchaseContract(models.Model):
     code_partner = fields.Char(string='Partner Code', related='partner_id.partner_code', store=True)
     stop_loss_price = fields.Float(string='Stop Loss %')
     date_fix_for_advance = fields.Integer(string='Time Fix')
+
+    note_by_security_gate = fields.Text(string='Note Security Gate')
