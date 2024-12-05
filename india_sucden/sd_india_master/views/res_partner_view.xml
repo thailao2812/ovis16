@@ -17,6 +17,9 @@
             <xpath expr="//span[@name='address_name']" position="before">
                 <field name="estate_name"/>
             </xpath>
+            <xpath expr="//span[@name='category_id']" position="after">
+                <field name="farm_id"/>
+            </xpath>
 
         </field>
     </record>

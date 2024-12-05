@@ -16,6 +16,7 @@ class ResPartner(models.Model):
     #     ('coffee_local', 'Coffee Local'),
     #     ('expense', 'Expense')
     # ], string='Accounting Type', required=False)
+    farm_id = fields.Text(string='Farm ID')
 
     @api.model
     def create(self, vals):
