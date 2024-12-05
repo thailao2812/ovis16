@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
-    <record id="grou_request_final_payment" model="res.groups">
+    <record id="group_request_final_payment" model="res.groups">
             <field name="name">Request Final Payment</field>
         </record>
 
