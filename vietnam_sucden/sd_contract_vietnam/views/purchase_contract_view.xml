@@ -34,9 +34,13 @@
             </xpath>
             <xpath expr="//button[@name='button_approve']" position="after">
                 <button name="print_final_payment" string="Print Final Payment" type="object" attrs="{'invisible': ['|', ('state', '!=', 'approved'), ('state_final_payment', '!=', 'draft')]}"/>
-                <button name="button_request_final_payment" string="Request Final Payment" type="object" attrs="{'invisible': [('state_final_payment', '!=', 'draft')]}" groups="sd_contract_vietnam.group_request_final_payment"/>
-                <button name="button_approve_final_payment" string="Approve Final Payment" type="object" attrs="{'invisible': [('state_final_payment', '!=', 'request')]}" groups="sd_contract_vietnam.group_approve_final_payment"/>
-                <button name="button_approve_director_final_payment" string="Director Approve Final Payment" type="object" attrs="{'invisible': [('state_final_payment', '!=', 'approve')]}" groups="sd_contract_vietnam.group_director_approve_final_payment"/>
+                <button name="button_request_final_payment" string="Request Final Payment" type="object"
+                        attrs="{'invisible': ['|', ('state', '!=', 'approved'), ('state_final_payment', '!=', 'draft')]}" groups="sd_contract_vietnam.group_request_final_payment"
+                confirm="Are you sure want to request Final Payment?"/>
+                <button name="button_approve_final_payment" string="Approve Final Payment" type="object" attrs="{'invisible': [('state_final_payment', '!=', 'request')]}" groups="sd_contract_vietnam.group_approve_final_payment"
+                        confirm="Are you sure that you want to approve Final Payment?"/>
+                <button name="button_approve_director_final_payment" string="Director Approve Final Payment" type="object" attrs="{'invisible': [('state_final_payment', '!=', 'approve')]}"
+                        groups="sd_contract_vietnam.group_director_approve_final_payment" confirm="So, are we really ready to say yes to the final payment?"/>
                 <button name="button_paid_final_payment" string="Paid Final Payment" type="object" attrs="{'invisible': [('state_final_payment', '!=', 'director')]}" groups="account.group_account_invoice"/>
                 <button name="button_done" type="object" string="Thanh lý hợp đồng" class="oe_highlight" attrs="{'invisible': ['|', ('state_final_payment', '!=', 'paid'), ('state', '!=', 'approved')]}"/>
             </xpath>
