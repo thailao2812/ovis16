@@ -108,6 +108,8 @@ class RequestPayment(models.Model):
 
     total_contract_value = fields.Float(string='Total Value Contract', digits=(12, 0), compute='_compute_request_amount', store=True)
 
+    note_by_security_gate = fields.Text(string='Note Security Gate')
+
     def generate_advance_line(self):
         for rec in self:
             if not self.env.context.get('total'):
