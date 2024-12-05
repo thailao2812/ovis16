@@ -20,8 +20,18 @@
             <xpath expr="//field[@name='contract_line_ids']/tree/field[@name='product_qty']" position="after">
                 <field name="open_qty" string="Qty No Advance"/>
             </xpath>
+            <xpath expr="//field[@name='price_unit']" position="after">
+                <field name="purchase_contract_id"/>
+            </xpath>
+            <xpath expr="//field[@name='contract_line_ids']/tree/field[@name='product_qty']" position="before">
+                <field name="request_payment_id" options="{'no_create': True}" string="Request Payment" domain="[('purchase_contract_id', '=', parent.purchase_contract_id)]"/>
+                <field name="remain_request_payment" string="Remain Request Payment"/>
+            </xpath>
             <xpath expr="//button[@name='button_convert']" position="attributes">
                 <attribute name="confirm">Bạn có chắc muốn Convert không? Hãy kiểm tra lại lượng Qty No Advance trước khi Convert, nếu đã chắc, vui lòng nhấn OK, nếu không xin hãy kiểm tra lại lượng Qty No Advance 1 lần nữa. Khi Convert hoàn thành, sẽ không thể chỉnh sửa lượng Qty No Advance</attribute>
+            </xpath>
+            <xpath expr="//button[@name='button_convert_ptbf']" position="attributes">
+                <attribute name="confirm">Bạn có chắc muốn Convert không?</attribute>
             </xpath>
 
         </field>

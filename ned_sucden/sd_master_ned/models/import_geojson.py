@@ -3,18 +3,28 @@ from odoo import fields, models, api, _
 import base64
 import numpy as np
 
-import xlrd
-from odoo.exceptions import ValidationError, UserError
-from math import radians, sin, cos, sqrt, atan2
 from shapely.geometry import shape, Polygon, Point
 from shapely.errors import GEOSException
 from shapely.wkt import loads
 import json,ast
 from datetime import datetime,date, timedelta
 from geopy.distance import geodesic
-from geopy import distance
-import re
+import pyproj
+import json
+from shapely.ops import transform
+import pandas as pd
+from rasterstats import zonal_stats
+import os
+import glob
+buffer_distance = 225.68
+from odoo.exceptions import UserError
 
+# merge_layer_tif_filepath_vn = "/Users/laoquocthai/VNM_Regions_Crop"
+# merge_layer_tif_filepath_col = "/Users/laoquocthai/COL_Regions_Crop"
+# merge_layer_tif_filepath_bra = "/Users/laoquocthai/BRA_Regions_Crop"
+merge_layer_tif_filepath_vn = "/opt/VNM_Regions_Crop"
+merge_layer_tif_filepath_col = "/opt/COL_Regions_Crop"
+merge_layer_tif_filepath_bra = "/opt/BRA_Regions_Crop"
 
 
 class ImportGeoJson(models.Model):
@@ -24,7 +34,7 @@ class ImportGeoJson(models.Model):
     file = fields.Binary(string='File')
     filename = fields.Char(string='Name')
     vendor_id = fields.Many2one('res.partner', string='Responsibility Person')
-    country_id = fields.Many2one('res.country', string='Country')
+    country_id = fields.Many2one('res.country', string='Country', related='supplier_id.country_id', store=True)
     import_date = fields.Date(string='Import Date', default=datetime.now())
     line_ids = fields.One2many('geojson.data', 'import_id')
     state = fields.Selection([
@@ -35,7 +45,7 @@ class ImportGeoJson(models.Model):
     count_point = fields.Integer(string='Count Point')
     contact_number = fields.Char(string='Contact Number')
     supplier_id = fields.Many2one('res.partner', string='Supplier Name')
-    supplier_number = fields.Char(string='Supplier Number')
+    supplier_number = fields.Char(string='Supplier Number', related='supplier_id.partner_code', store=True)
     supplier_master_id = fields.Many2one('supplier.master.data')
     purchase_no = fields.Char(string='Purchase #')
     total_data = fields.Integer(string='# Geometry', compute='compute_total_date', store=True)
@@ -43,206 +53,312 @@ class ImportGeoJson(models.Model):
         ('red', 'Red'),
         ('green', 'Green'),
     ], string='Status Check')
+    properties_ids = fields.Many2many('properties.polygon')
 
     @api.depends('count_polygon', 'count_point')
-    def compute_total_date(self):
+    def _compute_total_data(self):
         for rec in self:
             rec.total_data = rec.count_polygon + rec.count_point
 
-    def calculate_length(self, start, stop):
-        return geodesic((start[1], start[0]), (stop[1], stop[0])).meters
+    def get_layers_in_folder(self, folder_name):
+        """Retrieve layer files from a specified folder."""
+        return glob.glob(os.path.join(folder_name, "*.tif"))
 
     def count_decimal_places(self, number):
         """Return the number of decimal places in a number."""
         number_str = str(number)
-        if '.' in number_str:
-            return len(number_str.split('.')[1])
-        else:
+        return len(number_str.split('.')[1]) if '.' in number_str else 0
+
+    def calculate_length(self, start, stop):
+        """Calculate the geodesic distance between two points."""
+        return geodesic((start[1], start[0]), (stop[1], stop[0])).meters
+
+    def calculate_angle(self, coordinate_1, coordinate_2, coordinate_3):
+        """Calculate the angle at coordinate_2 given points coordinate_1, coordinate_2, and coordinate_3."""
+        vector_1 = np.array(coordinate_1) - np.array(coordinate_2)
+        vector_2 = np.array(coordinate_3) - np.array(coordinate_2)
+        cosine_angle = np.dot(vector_1, vector_2) / (np.linalg.norm(vector_1) * np.linalg.norm(vector_2))
+        angle = np.arccos(np.clip(cosine_angle, -1.0, 1.0))  # Clip to handle floating-point errors
+        return np.degrees(angle)
+
+    def check_angle(self, geom, minimum_angle_degree):
+        """Check if any angle in the polygon geometry is less than the specified minimum angle degree."""
+        try:
+            if geom.geom_type == "MultiPolygon":
+                geom = geom.convex_hull
+
+            vertices = list(geom.exterior.coords)[:-1]  # Exclude the last point as it duplicates the first
+            num_points = len(vertices)
+
+            angles = [
+                self.calculate_angle(vertices[i - 1], vertices[i], vertices[(i + 1) % num_points])
+                for i in range(num_points)
+            ]
+            return any(angle < minimum_angle_degree for angle in angles)
+
+        except Exception:
+            return True
+
+    def checking_deforestation(self, geometry, country):
+        """Check deforestation percentage based on geometry and country."""
+        region_layer_paths = False
+        if country.code == 'VN':
+            region_layer_paths = self.get_layers_in_folder(merge_layer_tif_filepath_vn)
+        if country.code == 'CO':
+            region_layer_paths = self.get_layers_in_folder(merge_layer_tif_filepath_col)
+        if country.code == 'BR':
+            region_layer_paths = self.get_layers_in_folder(merge_layer_tif_filepath_bra)
+        if not region_layer_paths:
+            # raise UserError(f"No layer files found for country {country.name}.")
             return 0
+        for layer_path in region_layer_paths:
+            stats = zonal_stats(geometry, layer_path, stats=["max", "sum", "count"])
+            if stats:
+                total_pixels, sum_overlap_pixels = stats[0]["count"], stats[0]["sum"]
+                if sum_overlap_pixels:
+                    overlap_percentage = round((sum_overlap_pixels - total_pixels) * 100 / total_pixels, 1)
+                    return overlap_percentage
+        return 0
 
     def import_file(self):
-        if self.file:
-            self.line_ids = [(5, )]
-            # Giải mã file từ dạng base64
-            file_content = base64.b64decode(self.file)
-            # Chuyển đổi nội dung file thành định dạng json
-            geojson_data = json.loads(file_content)
-            existing_polygons = self.env['res.partner.area'].search([])
-            existing_polygons_shapes = []
-            for record in existing_polygons:
-                try:
-                    gshape_paths = json.loads(record.gshape_paths)
-                    coordinates = [(point['lng'], point['lat']) for point in gshape_paths['options']['paths']]
-                    existing_polygons_shapes.append(Polygon(coordinates))
-                except (json.JSONDecodeError, GEOSException, KeyError) as e:
-                    continue
+        """Import GeoJSON file and process geometries."""
+        if not self.file:
+            return
 
-            duplicate_count = 0
-            duplicate_point_count = 0
-            partial_duplicate_count = 0
-            partial_duplicate_percentage_list = []
-            mess = ''
+        # Decode the file and load GeoJSON data
+        self.line_ids = [(5,)]
+        file_content = base64.b64decode(self.file)
+        geojson_data = json.loads(file_content)
 
-            existing_points = self.env['partner.multiple.point'].search([])
-            existing_points_shapes = [Point(record.partner_longitude, record.partner_latitude) for record in
-                                      existing_points]
-            count_point = 0
-            count_polygon = 0
-            for feature in geojson_data['features']:
-                # Giả sử mỗi feature là một bản ghi bạn muốn tạo
-                geometry = feature.get('geometry', {})
-                if geometry.get('type') in ['Polygon', 'MultiPolygon']:
-                    coordinates = False
-                    less_4_point = False
-                    un_close = False
-                    inside = False
-                    check_decimal = False
-                    if geometry.get('type') == 'Polygon':
-                        coordinates = geometry.get('coordinates', [])[0]
-                    if geometry.get('type') == 'MultiPolygon':
-                        coordinates = geometry.get('coordinates', [])[0][0]
-                    count_polygon += 1
-                    check_spike = self.check_angle(Polygon(coordinates), 20)
+        # Cache for existing polygons and points to avoid duplicate checks
+        existing_polygons = self.env['res.partner.area'].search([
+            ('latitude', '=', False),
+            ('longitude', '=', False),
+        ])
+        existing_polygons_shapes = []
+        for record in existing_polygons:
+            try:
+                gshape_paths = json.loads(record.gshape_paths)
+                coordinates = [(point['lng'], point['lat']) for point in gshape_paths['options']['paths']]
+                existing_polygons_shapes.append(Polygon(coordinates))
+            except (json.JSONDecodeError, GEOSException, KeyError) as e:
+                continue
 
-                    if len(coordinates) < 4:
-                        less_4_point = True
+        existing_points = self.env['res.partner.area'].search([
+            ('latitude', '!=', False),
+            ('longitude', '!=', False),
+        ])
+        existing_points_shapes = [Point(record.longitude, record.latitude) for record in
+                                  existing_points]
 
-                    # Chuyển đổi tọa độ thành polygon shapely
-                    new_polygon = Polygon([(coord[0], coord[1]) for coord in coordinates])
-                    is_duplicate = any(new_polygon.equals(existing_polygon) for existing_polygon in existing_polygons_shapes)
+        # Cache for properties to reduce database hits
+        properties_cache = {prop.name: prop.id for prop in self.env['properties.polygon'].search([])}
 
-                    # Check for partial duplicates
-                    points_in_new_polygon = [Point(coord[0], coord[1]) for coord in coordinates]
-                    points_inside_existing_polygons = 0
-                    buffer_radius = 0.00001
-                    if duplicate_count == 0:
-                        for point in points_in_new_polygon:
-                            if any(existing_polygon.intersects(point.buffer(buffer_radius)) for existing_polygon in existing_polygons_shapes):
-                                points_inside_existing_polygons += 1
+        line_data = []
+        is_valid = True
+        value_valid_polygon = []
+        value_valid_polygon_from_point = []
+        count_point, count_polygon = 0, 0
+        paths = []
+        lines = {}
+        for feature in geojson_data['features']:
+            geometry = feature.get('geometry', {})
+            properties = feature.get('properties', {})
+            json_string = json.dumps(properties)
 
-                    total_points = len(points_in_new_polygon)
-                    if points_inside_existing_polygons > 0:
-                        partial_duplicate_percentage = min((points_inside_existing_polygons / total_points) * 100, 100)
-                        partial_duplicate_percentage_list.append(partial_duplicate_percentage)
-                        partial_duplicate_count += 1
+            # Lưu chuỗi JSON vào field char
 
-                    paths = []
-                    lines = {}
-                    for coord in coordinates:
-                        lat, lng = coord[1], coord[0]
-                        lat_decimal = self.count_decimal_places(lat)
-                        lng_decimal = self.count_decimal_places(lng)
-                        if lat_decimal < 6 or lng_decimal < 6:
-                            check_decimal = True
-                            continue
-                        paths.append({"lat": lat, "lng": lng})
-                    if not paths:
-                        coordinates = True
-                    if coordinates[0] != coordinates[-1]:
-                        un_close = True
-                    if points_inside_existing_polygons > 0:
-                        inside = True
-                    if not coordinates or less_4_point or check_spike or un_close or is_duplicate or inside or check_decimal:
-                        self.env['geojson.data'].create({
-                            'name': 'Polygon number %s' % str(count_polygon),
-                            'type': 'polygon',
-                            'missing_geometry': True if not coordinates else False,
-                            'spike': check_spike,
-                            'points_check': less_4_point,
-                            'is_unclose': un_close,
-                            'decimal_precision': check_decimal,
-                            'is_duplicate_partial': inside,
-                            'is_overlapping': is_duplicate,
-                            'state_check': 'red',
-                            'import_id': self.id
-                        })
-                        continue
-                    for i, coord_pair in enumerate(zip(coordinates, coordinates[1:] + [coordinates[0]]), start=1):
-                        start, stop = coord_pair
-                        start_lat, start_lng = start[1], start[0]
-                        stop_lat, stop_lng = stop[1], stop[0]
-                        lines[str(i)] = {
-                            "start": {"lat": start_lat, "lng": start_lng},
-                            "stop": {"lat": stop_lat, "lng": stop_lng},
-                            "length": self.calculate_length(start, stop)
-                        }
-                    new_data_format = {
-                        "type": "polygon",
-                        "options": {
-                            "paths": paths
-                        },
-                        "lines": lines
+            # Process properties
+            for line in properties:
+                line_name = line.strip()
+                if line_name not in properties_cache:
+                    new_prop = self.env['properties.polygon'].create({'name': line_name})
+                    properties_cache[line_name] = new_prop.id
+
+                self.properties_ids = [(4, properties_cache[line_name])]
+
+            if geometry.get('type') in ['Polygon', 'MultiPolygon']:
+
+                coordinates_path = geometry.get('coordinates', [])[0] if geometry.get('type') == 'Polygon' else \
+                geometry.get('coordinates', [])[0][0]
+                for coord in coordinates_path:
+                    lat, lng = coord[1], coord[0]
+                    paths.append({"lat": lat, "lng": lng})
+                new_polygon = Polygon(coordinates_path)
+
+                is_duplicate = any(new_polygon.equals(existing_polygon) for existing_polygon in existing_polygons_shapes)
+                count_polygon += 1
+                if self.country_id.code in ['BR', 'CO', 'VN']:
+                    deforestation_percent = self.checking_deforestation(new_polygon, self.country_id)
+                else:
+                    deforestation_percent = 0
+                check_spike = self.check_angle(new_polygon, 1)
+                less_4_point = len(coordinates_path) < 4
+                un_close = coordinates_path and coordinates_path[0] != coordinates_path[-1]
+                check_decimal = any(
+                    self.count_decimal_places(coord[0]) < 6 or self.count_decimal_places(coord[1]) < 6 for coord in
+                    coordinates_path)
+
+                line_entry = {
+                    'name': f'Polygon number {count_polygon}',
+                    'type': 'polygon',
+                    'missing_geometry': not coordinates_path,
+                    'spike': check_spike,
+                    'points_check': less_4_point,
+                    'is_unclose': un_close,
+                    'decimal_precision': check_decimal,
+                    'is_duplicate_partial': False,
+                    'is_overlapping': is_duplicate,
+                    'deforestation_percentage': deforestation_percent if deforestation_percent > 5 else 0,
+                    'state_check': 'red' if (
+                                not coordinates_path or less_4_point or check_spike or un_close or is_duplicate or check_decimal or deforestation_percent > 5) else 'green',
+                    'import_id': self.id,
+                    'properties_data': json.dumps(properties),
+                    'data': json_string
+                }
+                line_data.append(line_entry)
+                if not coordinates_path or check_spike or less_4_point or un_close or check_decimal or is_duplicate or deforestation_percent > 5:
+                    is_valid = False
+                for i, coord_pair in enumerate(zip(coordinates_path, coordinates_path[1:] + [coordinates_path[0]]), start=1):
+                    start, stop = coord_pair
+                    start_lat, start_lng = start[1], start[0]
+                    stop_lat, stop_lng = stop[1], stop[0]
+                    lines[str(i)] = {
+                        "start": {"lat": start_lat, "lng": start_lng},
+                        "stop": {"lat": stop_lat, "lng": stop_lng},
+                        "length": self.calculate_length(start, stop)
+                    }
+                new_data_format = {
+                    "type": "polygon",
+                    "options": {
+                        "paths": paths
+                    },
+                    "lines": lines
+                }
+                if is_valid:
+                    value_valid_polygon.append(new_data_format)
+
+            elif geometry.get('type') == 'Point':
+                coordinates = geometry.get('coordinates', [])
+                count_point += 1
+                lat, lng = coordinates[1], coordinates[0]
+                new_point = Point(lng, lat)
+                longitude = new_point.x  # Kinh độ
+                latitude = new_point.y
+                check_decimal = self.count_decimal_places(lat) < 6 or self.count_decimal_places(lng) < 6
+                is_duplicate = any(new_point.equals(existing_point) for existing_point in existing_points_shapes)
+
+                # Thiết lập hệ tọa độ phẳng (metric) tạm thời để tính toán khoảng cách
+                local_proj = pyproj.CRS(proj='aeqd', lat_0=lat, lon_0=lng)  # Hệ tọa độ Azimuthal Equidistant
+
+                # Biến đổi tọa độ từ hệ địa lý sang hệ metric tạm thời
+                project = pyproj.Transformer.from_crs("EPSG:4326", local_proj, always_xy=True).transform
+                projected_point = transform(project, new_point)
+
+                # Tạo buffer (với bán kính bằng một nửa đường kính được cung cấp)
+                buffer_polygon = projected_point.buffer(buffer_distance / 2)
+
+                # Biến đổi lại về hệ địa lý (EPSG:4326)
+                reverse_project = pyproj.Transformer.from_crs(local_proj, "EPSG:4326", always_xy=True).transform
+                final_polygon = transform(reverse_project, buffer_polygon)
+
+                coords = list(final_polygon.exterior.coords)
+
+                # Chuyển đổi danh sách các tọa độ thành dạng lat, lng
+                paths = [{'lat': lat, 'lng': lng} for lng, lat in coords]
+
+                # Tạo object với định dạng yêu cầu
+                obj = {
+                    'type': 'polygon',
+                    'lat': latitude,
+                    'lng': longitude,
+                    'options': {
+                        'paths': paths
+                    },
+                    'lines': {}
+                }
+                # Tính độ dài và các đoạn thẳng (lines) giữa các điểm
+                for i in range(len(paths) - 1):
+                    start = paths[i]
+                    stop = paths[i + 1]
+                    # Sử dụng geodesic để tính khoảng cách theo mét
+                    length = geodesic((start['lat'], start['lng']), (stop['lat'], stop['lng'])).meters
+
+                    obj['lines'][str(i + 1)] = {
+                        'start': start,
+                        'stop': stop,
+                        'length': length
                     }
 
-                    create_new_polygon = self.env['res.partner.area'].create({
-                        'gshape_name': 'Farm of %s' % self.vendor_id.name,
-                        'partner_id': self.vendor_id.id,
-                        'gshape_paths': new_data_format
-                    })
-                    create_new_polygon._compute_gshape_polygon_lines()
-                    dict_obj = ast.literal_eval(create_new_polygon.gshape_paths)
-                    create_new_polygon.gshape_paths = json.dumps(dict_obj)
-                    create_new_polygon._compute_gshape_polygon_lines()
-                    create_new_polygon.import_id = self.id
-                    self.count_polygon += 1
-                    self.env['geojson.data'].create({
-                        'name': 'Polygon number %s' % str(count_polygon),
-                        'type': 'polygon',
-                        'import_id': self.id,
-                        'state_check': 'green'
-                    })
-                if geometry.get('type') == 'Point':
-                    count_point += 1
-                    multiple_point = self.env['partner.multiple.point']
-                    coordinates = geometry.get('coordinates', [])
-                    lat, lng = coordinates[1], coordinates[0]
-                    new_point = Point(lng, lat)
-                    is_duplicate = any(new_point.equals(existing_point) for existing_point in existing_points_shapes)
-                    if is_duplicate:
-                        duplicate_point_count += 1
-                        self.env['geojson.data'].create({
-                            'name': 'Point number %s' % str(count_point),
-                            'type': 'point',
-                            'is_overlapping': True,
-                            'state_check': 'red',
-                            'import_id': self.id
-                        })
-                        continue
-                    self.env['geojson.data'].create({
-                        'name': 'Point number %s' % str(count_point),
-                        'type': 'point',
-                        'import_id': self.id,
-                        'state_check': 'green'
-                    })
-                    multiple_point.create({
-                        'partner_id': self.vendor_id.id,
-                        'partner_latitude': lat,
-                        'partner_longitude': lng,
-                        'import_id': self.id
-                    })
-                    self.count_point += 1
-            # if duplicate_count > 0:
-            #     mess += "We have %s Polygon that have the same data that already stored in database, in your file, please check again!<br/>" % duplicate_count
-            # if duplicate_point_count > 0:
-            #     mess += "We have %s Point that have the same data that already stored in database, in your file, please check again!<br/>" % duplicate_point_count
-            # if partial_duplicate_count > 0:
-            #     mess += "We have %s Polygon that contains points already stored in the database. Please check again!<br/>" % partial_duplicate_count
-            #     for i, percentage in enumerate(partial_duplicate_percentage_list, 1):
-            #         mess += "Polygon %s contains %.2f%% points already stored in the database.<br/>" % (i, percentage)
-            # if mess:
-            #     self.message_post(body=mess)
-            if (any(self.line_ids.mapped('is_duplicate_partial'))
-                    or any(self.line_ids.mapped('is_overlapping'))
-                    or any(self.line_ids.mapped('is_unclose'))
-                    or any(self.line_ids.mapped('spike'))
-                    or any(self.line_ids.mapped('missing_geometry'))
-                    or any(self.line_ids.mapped('decimal_precision'))
-                    or any(self.line_ids.mapped('points_check'))):
-                self.status_check = 'red'
-            else:
-                self.status_check = 'green'
-            self.state = 'imported'
-            self.import_date = datetime.now()
+
+                # return final_polygon
+
+                line_entry = {
+                    'name': f'Point number {count_point}',
+                    'type': 'point',
+                    'is_overlapping': is_duplicate,
+                    'decimal_precision': check_decimal,
+                    'state_check': 'red' if is_duplicate or check_decimal else 'green',
+                    'import_id': self.id,
+                    'properties_data': json.dumps(properties),
+                    'data': json_string
+                }
+                line_data.append(line_entry)
+                if is_duplicate or check_decimal:
+                    is_valid = False
+                if is_valid:
+                    value_valid_polygon_from_point.append(obj)
+
+            paths = []
+
+        # Batch create `geojson.data` entries
+        self.env['geojson.data'].create(line_data)
+
+        self.create_valid_data(is_valid, value_valid_polygon, value_valid_polygon_from_point)
+
+        # Update status check based on `state_check` values in `line_data`
+        self.status_check = 'red' if any(line['state_check'] == 'red' for line in line_data) else 'green'
+        self.state = 'imported'
+        self.import_date = datetime.now()
+
+    def create_valid_data(self, is_valid, value_valid_polygon, value_valid_polygon_from_point):
+        if not is_valid:
+            return
+
+        # Danh sách để lưu dữ liệu cần tạo
+        polygon_data = []
+
+        # Chuẩn bị dữ liệu cho các đối tượng "polygon"
+        for val_pol in value_valid_polygon:
+            polygon_data.append({
+                'gshape_name': 'Farm of %s' % self.supplier_id.name,
+                'partner_id': self.supplier_id.id,
+                'gshape_paths': json.dumps(val_pol),
+                'type_geometry': 'polygon',
+                'import_id': self.id
+            })
+
+        for val_pol in value_valid_polygon_from_point:
+            lat = val_pol['lat']
+            lng = val_pol['lng']
+            polygon_data.append({
+                'gshape_name': 'Farm of %s' % self.supplier_id.name,
+                'partner_id': self.supplier_id.id,
+                'gshape_paths': json.dumps(val_pol),
+                'latitude': lat,
+                'longitude': lng,
+                'type_geometry': 'polygon',
+                'import_id': self.id
+            })
+            del val_pol['lat']
+            del val_pol['lng']
+
+        # Tạo các bản ghi "polygon" và "point" một lần
+        all_data = polygon_data
+        created_records = self.env['res.partner.area'].create(all_data)
+
+        # Chỉ gọi _compute_gshape_polygon_lines() một lần cho tất cả các bản ghi mới tạo
+        created_records._compute_gshape_polygon_lines()
 
     def _get_action_view_polygon(self):
         '''
@@ -293,44 +409,21 @@ class ImportGeoJson(models.Model):
             res['supplier_id'] = partner.id
         return res
 
-    def calculate_angle(self, cordinate_1, cordinate_2, cordinate_3):
-        """Calculate the angle at p2 given points p1, p2, and p3."""
-        distance_between_1_and_2 = np.array(cordinate_1) - np.array(cordinate_2)
-        distance_between_2_and_3 = np.array(cordinate_3) - np.array(cordinate_2)
-        cosine_angle = np.dot(distance_between_1_and_2, distance_between_2_and_3) / (
-                    np.linalg.norm(distance_between_1_and_2) * np.linalg.norm(distance_between_2_and_3))
-        angle = np.arccos(np.clip(cosine_angle, -1.0, 1.0))  # Clip to handle floating-point errors
-        return np.degrees(angle)
-
-    def check_angle(self, geom, minimum_angle_degree):
-        try:
-            # Geometry in Polygon type
-            if geom.geom_type == "MultiPolygon":
-                geom = geom.convex_hull
-            vertices_geometry = list(geom.exterior.coords)
-            vertices_geometry = vertices_geometry[:-1]
-            number_of_points = len(vertices_geometry)
-            angles = []
-            for i in range(number_of_points):
-                point_1 = vertices_geometry[i - 1]
-                point_2 = vertices_geometry[i]
-                point_3 = vertices_geometry[(i + 1) % number_of_points]
-                angle = self.calculate_angle(point_1, point_2, point_3)
-                angles.append(angle)
-            return np.any(np.array(angles) < minimum_angle_degree)
-        except:
-            # Geometry in other type like LinearString, etc...
-            return True
-
-    # Assuming 'gdf' is your GeoPandas DataFrame
-    # gdf['has_angle_less_than_20'] = gdf.geometry.apply(lambda x: self.check_angle(x, 20))
-    # print(gdf[gdf["has_angle_less_than_20"] == True])
+    def open_wizard_export_error(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Export Error',
+            'view_mode': 'form',
+            'res_model': 'wizard.export.error',
+            'view_id': self.env.ref('sd_master_ned.wizard_export_error').id,
+            'target': 'new',  # Mở wizard trong modal pop-up
+        }
 
 
 class GeoJSonData(models.Model):
     _name = 'geojson.data'
 
-    import_id = fields.Many2one('import.geojson')
+    import_id = fields.Many2one('import.geojson', ondelete='cascade')
     name = fields.Char(string='Name')
     type = fields.Selection([
         ('point', 'Point'),
@@ -347,3 +440,6 @@ class GeoJSonData(models.Model):
         ('red', 'Red'),
         ('green', 'Green')
     ], string='Status Check')
+    properties_data = fields.Char(string='Properties Data')
+    deforestation_percentage = fields.Float(string='Deforestation Percentage', digits=(16, 1))
+    data = fields.Char(string='Data')

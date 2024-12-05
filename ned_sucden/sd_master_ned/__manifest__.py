@@ -10,12 +10,17 @@
     """,
     'data': [
         'security/ir.model.access.csv',
+        'wizard/wizard_export_error_view.xml',
+        'wizard/wizard_export_geojson_view.xml',
+
         'views/import_geojson_view.xml',
         'views/res_partner_area_view.xml',
         'views/res_partner_view.xml',
         'views/partner_multiple_point_view.xml',
         'views/supplier_master_data.xml',
         'views/menu.xml',
+
+        'report/report.xml',
     ],
     'installable': True,
     'auto_install': False,

@@ -9,4 +9,4 @@ import math
 class AccountMoveLine(models.Model):
     _inherit = "account.move.line"
 
-    price_unit = fields.Float(digits=(12, 4))
+    price_unit = fields.Float(digits=(12,4))

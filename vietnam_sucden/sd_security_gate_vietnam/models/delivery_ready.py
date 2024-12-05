@@ -9,6 +9,10 @@ class DeliveryReady(models.Model):
     _name = 'delivery.ready'
 
     delivery_id = fields.Many2one('ned.security.gate.queue', string='DR')
+    license_plate = fields.Char(string='Vehicle No.', related='delivery_id.license_plate', store=True)
+    arrivial_time = fields.Datetime('Arrival Time', related='delivery_id.arrivial_time', store=True)
+    supplier_id = fields.Many2one('res.partner', related='delivery_id.supplier_id', store=True)
+    approx_quantity = fields.Float('Estimated Quantity', related='delivery_id.approx_quantity', store=True)
     request_payment_id = fields.Many2one('request.payment', ondelete='cascade')
     percent = fields.Integer(string='%', default=70)
     total_qty = fields.Float(string='Total Qty', compute='compute_total_qty', store=True, digits=(12, 0))

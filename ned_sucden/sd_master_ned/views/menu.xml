@@ -10,13 +10,32 @@
 		            parent="menu_eudr_root"
 		            sequence="1"/>
 
-						  <menuitem name="Supplier Master"
-									id="menu_supplier_master"
-									action="action_supplier_master"
-									sequence="1"
-									parent="menu_master_supplier"/>
+					  	<menuitem name="Supplier Master"
+								id="menu_supplier_master"
+								action="action_supplier_master"
+								sequence="1"
+								parent="menu_master_supplier"/>
 						<menuitem id="menu_import_geojson_farmer"
 							name="Import Geojson"
 							action="action_import_geojson_farmer" parent="menu_master_supplier"
 							sequence="2"/>
+				<menuitem id="menu_master_contact_area"
+		            name="Area"
+		            parent="menu_eudr_root"
+		            sequence="2"/>
+						<menuitem name="Contact Area"
+							id="menu_contact_area_polygon"
+							action="contacts_area.action_res_partner_area"
+							sequence="1"
+							parent="menu_master_contact_area"/>
+				<menuitem id="menu_report_geojson"
+		            name="Report"
+		            parent="menu_eudr_root"
+		            sequence="3"/>
+					<menuitem name="Report GEOJSON"
+							id="menu_export_geojson"
+							action="sd_master_ned.action_wizard_export_geojson"
+							sequence="1"
+							parent="menu_report_geojson"/>
+
 </odoo>
