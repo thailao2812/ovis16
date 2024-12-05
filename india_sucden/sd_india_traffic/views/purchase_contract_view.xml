@@ -163,6 +163,32 @@
             <xpath expr="//field[@name='company_id']" position="after">
                 <field name="fob_management_id"/>
             </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page name="purchase_contract_price" string="Purchase Contract Price">
+                    <field name="contract_price_purchase_ids" readonly="1">
+                        <tree>
+                            <field name="product_id" required="1"/>
+                            <field name="date_price" required="1"/>
+                            <field name="exchange"/>
+                            <field name="trade_month"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="exchange_rate"/>
+                            <field name="market_price"/>
+                            <field name="fob"/>
+                            <field name="a_differential"/>
+                            <field name="ab_differential"/>
+                            <field name="outturn"/>
+                            <field name="partner_id" required="1"/>
+                            <field name="quantity"/>
+                            <field name="certificate_id"/>
+                            <field name="price"/>
+                            <field name="premium"/>
+                            <field name="total"/>
+                            <field name="state" widget="badge" readonly="1"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
         </field>
     </record>
 </odoo>
