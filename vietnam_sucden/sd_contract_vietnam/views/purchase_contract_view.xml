@@ -34,10 +34,10 @@
             </xpath>
             <xpath expr="//button[@name='button_approve']" position="after">
                 <button name="print_final_payment" string="Print Final Payment" type="object" attrs="{'invisible': ['|', ('state', '!=', 'approved'), ('state_final_payment', '!=', 'draft')]}"/>
-                <button name="button_request_final_payment" string="Request Final Payment" type="object" attrs="{'invisible': [('state_final_payment', '!=', 'draft')]}"/>
-                <button name="button_approve_final_payment" string="Approve Final Payment" type="object" attrs="{'invisible': [('state_final_payment', '!=', 'request')]}"/>
-                <button name="button_approve_director_final_payment" string="Director Approve Final Payment" type="object" attrs="{'invisible': [('state_final_payment', '!=', 'approve')]}"/>
-                <button name="button_paid_final_payment" string="Paid Final Payment" type="object" attrs="{'invisible': [('state_final_payment', '!=', 'director')]}"/>
+                <button name="button_request_final_payment" string="Request Final Payment" type="object" attrs="{'invisible': [('state_final_payment', '!=', 'draft')]}" groups="grou_request_final_payment"/>
+                <button name="button_approve_final_payment" string="Approve Final Payment" type="object" attrs="{'invisible': [('state_final_payment', '!=', 'request')]}" groups="group_approve_final_payment"/>
+                <button name="button_approve_director_final_payment" string="Director Approve Final Payment" type="object" attrs="{'invisible': [('state_final_payment', '!=', 'approve')]}" groups="group_director_approve_final_payment"/>
+                <button name="button_paid_final_payment" string="Paid Final Payment" type="object" attrs="{'invisible': [('state_final_payment', '!=', 'director')]}" groups="account.group_account_invoice"/>
                 <button name="button_done" type="object" string="Thanh lý hợp đồng" class="oe_highlight" attrs="{'invisible': ['|', ('state_final_payment', '!=', 'paid'), ('state', '!=', 'approved')]}"/>
             </xpath>
             <xpath expr="//button[@name='compute_amount']" position="replace">

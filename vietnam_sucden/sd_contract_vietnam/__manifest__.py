@@ -10,6 +10,7 @@
     """,
     'data': [
         'security/ir.model.access.csv',
+        'security/request_final_payment_security.xml',
         'data/group.xml',
         'views/purchase_contract_view.xml',
         'views/shipping_instruction_view.xml',
