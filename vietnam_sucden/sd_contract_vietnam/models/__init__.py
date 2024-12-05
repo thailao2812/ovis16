@@ -11,3 +11,4 @@ from . import average_price_contract
 from . import request_payment
 from . import npe_nvp_relation
 from . import s_contract
+from . import account_payment

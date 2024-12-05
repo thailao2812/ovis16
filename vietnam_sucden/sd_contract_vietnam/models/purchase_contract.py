@@ -25,6 +25,37 @@ class PurchaseContract(models.Model):
 
     license_2nd_id = fields.Many2one('ned.certificate.license', string='IB License')
 
+    according_final_payment_id = fields.Many2one('purchase.contract.according', string='According Final Payment')
+
+    invoice_lines_ids = fields.One2many('purchase.invoice.line', 'purchase_contract_id')
+
+    state_final_payment = fields.Selection([
+        ('draft', 'Draft'),
+        ('request', 'Request'),
+        ('approve', 'Approve'),
+        ('director', 'Director'),
+        ('paid', 'Paid'),
+    ], string='Final Payment State', default='draft')
+
+    def button_request_final_payment(self):
+        for record in self:
+            record.state_final_payment = 'request'
+
+    def button_approve_final_payment(self):
+        for record in self:
+            record.state_final_payment = 'approve'
+
+    def button_approve_director_final_payment(self):
+        for record in self:
+            record.state_final_payment = 'director'
+
+    def button_paid_final_payment(self):
+        for record in self:
+            return record.action_request_register_payment()
+
+    def print_final_payment(self):
+        return self.env.ref('sd_contract_vietnam.report_final_payment_purchase_contract').report_action(self)
+
 
 class OpenQtyNPE(models.Model):
     _name = 'open.qty.npe'
@@ -32,3 +63,22 @@ class OpenQtyNPE(models.Model):
     purchase_contract_id = fields.Many2one('purchase.contract')
     contract_id = fields.Many2one('purchase.contract', string='NPE')
     qty = fields.Float(string='')
+
+class PurchaseInvoiceLine(models.Model):
+    _name = 'purchase.invoice.line'
+
+    purchase_contract_id = fields.Many2one('purchase.contract')
+    name = fields.Char(string='Invoice No.')
+    invoice_date = fields.Date(string='Invoice Date')
+    quantity = fields.Float(string='Invoice Quantity')
+    price_unit = fields.Float(string='Invoice Price')
+    total_amount = fields.Float(string='Total Amount Untax', compute='compute_total_amount', store=True)
+    tax = fields.Float(string='Tax Amount')
+    total_amount_tax = fields.Float(string='Total Amount', compute='compute_total_amount', store=True)
+
+    @api.depends('quantity', 'price_unit', 'tax')
+    def compute_total_amount(self):
+        for rec in self:
+            rec.total_amount = rec.price_unit * rec.quantity
+            rec.total_amount_tax = (rec.price_unit * rec.quantity) + rec.tax
+

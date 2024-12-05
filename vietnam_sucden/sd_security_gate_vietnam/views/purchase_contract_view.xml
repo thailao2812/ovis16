@@ -48,7 +48,7 @@
                         <field name="state" widget="statusbar" statusbar_visible="draft,request,security,purchasing,approved,accounting_2,approved_director,paid"/>
                     </header>
                     <separator string="Contract Information"/>
-                    <group>
+                    <group attrs="{'readonly': [('state', '!=', 'draft')]}">
                         <group>
                             <field name="partner_id" readonly="1"/>
                             <field name="product_id" invisible="1"/>
@@ -71,7 +71,7 @@
                         </group>
                     </group>
                     <separator string="Payment Information"/>
-                    <group>
+                    <group attrs="{'readonly': [('state', '!=', 'draft')]}">
                         <group>
                             <field name="payment_quantity"/>
                             <field name="fix_price" string="Payment Price"/>
@@ -100,7 +100,7 @@
                     <separator string="Delivery Registration KTN" attrs="{'invisible': [('is_converted', '=', True)]}"/>
                     <button name="action_hide_delivery_ktn" type='object' string="Hide Delivery KTN" attrs="{'invisible': ['|', ('hide_delivery_ktn', '=', True), ('is_converted', '=', True)]}"/>
                     <button name="action_open_hide_delivery_ktn" type='object' string="Open Delivery KTN" attrs="{'invisible': ['|', ('hide_delivery_ktn', '=', False), ('is_converted', '=', True)]}"/>
-                    <field name="delivery_70_ktn_ids" no_label="1" context="{'seq': name}" attrs="{'invisible': ['|', ('hide_delivery_ktn', '=', True), ('is_converted', '=', True)]}">
+                    <field name="delivery_70_ktn_ids" no_label="1" context="{'seq': name}" attrs="{'invisible': ['|', ('hide_delivery_ktn', '=', True), ('is_converted', '=', True)], 'readonly': [('state', '!=', 'draft')]}">
                         <tree editable="bottom">
                             <field name="delivery_id" required="1" options="{'no_create': True}" context="{'request_payment': True, 'partner_id': parent.partner_id, 'product_id': parent.product_id,
                             'ids': parent.delivery_ktn_array, 'seq': parent.name, 'purchase_contract_id': parent.parent_id_purchase_contract,
@@ -116,7 +116,7 @@
                     <separator string="Delivery Registration 70%" attrs="{'invisible': [('is_converted', '=', True)]}"/>
                     <button name="action_hide_delivery" type='object' string="Hide Delivery 70%" attrs="{'invisible': ['|', ('hide_delivery', '=', True), ('is_converted', '=', True)]}"/>
                     <button name="action_open_hide_delivery" type='object' string="Open Delivery 70%" attrs="{'invisible': ['|', ('hide_delivery', '=', False), ('is_converted', '=', True)]}"/>
-                    <field name="delivery_70_ids" no_label="1" context="{'seq': name}" attrs="{'invisible': ['|', ('hide_delivery', '=', True), ('is_converted', '=', True)]}">
+                    <field name="delivery_70_ids" no_label="1" context="{'seq': name}" attrs="{'invisible': ['|', ('hide_delivery', '=', True), ('is_converted', '=', True)], 'readonly': [('state', '!=', 'draft')]}">
                         <tree editable="bottom">
                             <field name="delivery_id" required="1" options="{'no_create': True}" context="{'request_payment': True, 'partner_id': parent.partner_id, 'product_id': parent.product_id,
                             'ids': parent.delivery_array, 'seq': parent.name, 'purchase_contract_id': parent.parent_id_purchase_contract,
@@ -132,7 +132,7 @@
                     <separator string="GRN 90%" attrs="{'invisible': [('is_converted', '=', True)]}"/>
                     <button name="action_hide_grn_ready" type='object' string="Hide GRN 90%" attrs="{'invisible': ['|', ('hide_grn_ready', '=', True), ('is_converted', '=', True)]}"/>
                     <button name="action_open_grn_ready" type='object' string="Open GRN 90%" attrs="{'invisible': ['|', ('hide_grn_ready', '=', False), ('is_converted', '=', True)]}"/>
-                    <field name="grn_90_ids" no_label="1" context="{'seq': name}" attrs="{'invisible': ['|', ('hide_grn_ready', '=', True), ('is_converted', '=', True)]}">
+                    <field name="grn_90_ids" no_label="1" context="{'seq': name}" attrs="{'invisible': ['|', ('hide_grn_ready', '=', True), ('is_converted', '=', True)], 'readonly': [('state', '!=', 'draft')]}">
                         <tree editable="bottom">
                             <field name="picking_id" required="1" options="{'no_create': True}" context="{'request_payment': True, 'partner_id': parent.partner_id,
                             'product_id': parent.product_id, 'ids': parent.grn_90_array, 'seq': parent.name,
@@ -149,7 +149,7 @@
                     <separator string="GRN 100% Factory" attrs="{'invisible': [('is_converted', '=', True)]}"/>
                     <button name="action_hide_grn_done" type='object' string="Hide GRN 100%" attrs="{'invisible': ['|', ('hide_grn_done', '=', True), ('is_converted', '=', True)]}"/>
                     <button name="action_open_grn_done" type='object' string="Open GRN 100%" attrs="{'invisible': ['|', ('hide_grn_done', '=', False), ('is_converted', '=', True)]}"/>
-                    <field name="grn_100_factory_ids" no_label="1" context="{'seq': name}" attrs="{'invisible': ['|', ('hide_grn_done', '=', True), ('is_converted', '=', True)]}">
+                    <field name="grn_100_factory_ids" no_label="1" context="{'seq': name}" attrs="{'invisible': ['|', ('hide_grn_done', '=', True), ('is_converted', '=', True)], 'readonly': [('state', '!=', 'draft')]}">
                         <tree editable="bottom">
                             <field name="picking_id" required="1" options="{'no_create': True}" context="{'request_payment': True, 'partner_id': parent.partner_id,
                             'product_id': parent.product_id, 'ids': parent.grn_100_factory_array, 'seq': parent.name,
@@ -166,7 +166,7 @@
                     <separator string="GRN 100% FOT" attrs="{'invisible': [('is_converted', '=', True)]}"/>
                     <button name="action_hide_grn_fot_done" type='object' string="Hide GRN FOT 100%" attrs="{'invisible': ['|', ('hide_grn_fot_done', '=', True), ('is_converted', '=', True)]}"/>
                     <button name="action_open_grn_fot_done" type='object' string="Open GRN FOT 100%" attrs="{'invisible': ['|', ('hide_grn_fot_done', '=', False), ('is_converted', '=', True)]}"/>
-                    <field name="grn_100_fot_ids" no_label="1" context="{'seq': name}" attrs="{'invisible': ['|', ('hide_grn_fot_done', '=', True), ('is_converted', '=', True)]}">
+                    <field name="grn_100_fot_ids" no_label="1" context="{'seq': name}" attrs="{'invisible': ['|', ('hide_grn_fot_done', '=', True), ('is_converted', '=', True)], 'readonly': [('state', '!=', 'draft')]}">
                         <tree editable="bottom">
                             <field name="picking_id" required="1" options="{'no_create': True}" context="{'request_payment': True, 'partner_id': parent.partner_id,
                             'product_id': parent.product_id, 'ids': parent.grn_100_fot_array, 'seq': parent.name, 'payment_percent': 100, 'factory': False,
@@ -182,7 +182,7 @@
                         </tree>
                     </field>
                     <separator string="Status of Goods" attrs="{'invisible': [('is_converted', '=', True)]}"/>
-                    <field name="status_goods_ids" widget="section_and_note_one2many" no_label="1" attrs="{'invisible': [('is_converted', '=', True)]}">
+                    <field name="status_goods_ids" widget="section_and_note_one2many" no_label="1" attrs="{'invisible': [('is_converted', '=', True)], 'readonly': [('state', '!=', 'draft')]}">
                         <tree editable="top">
                             <field name="display_type" invisible="1"/>
                             <field name="name" readonly="1" options="{'no_open': True, 'no_create': True}" force_save="1"/>
@@ -334,7 +334,7 @@
                     <separator string="Delivery Registration KTN"/>
                     <button name="action_hide_delivery_ktn" type='object' string="Hide Delivery KTN" attrs="{'invisible': [('hide_delivery_ktn', '=', True)]}"/>
                     <button name="action_open_hide_delivery_ktn" type='object' string="Open Delivery KTN" attrs="{'invisible': [('hide_delivery_ktn', '=', False)]}"/>
-                    <field name="delivery_70_ktn_ids" no_label="1" context="{'seq': name}" attrs="{'invisible': [('hide_delivery_ktn', '=', True)]}">
+                    <field name="delivery_70_ktn_ids" no_label="1" context="{'seq': name}" attrs="{'invisible': [('hide_delivery_ktn', '=', True)], 'readonly': [('state', '!=', 'draft')]}">
                         <tree editable="bottom">
                             <field name="delivery_id" required="1" options="{'no_create': True}" context="{'request_payment': True, 'partner_id': parent.partner_id, 'product_id': parent.product_id,
                             'ids': parent.delivery_ktn_array, 'seq': parent.name, 'purchase_contract_id': parent.parent_id_purchase_contract, 'delivery_ktn': True, 'date': parent.date_contract}"/>
@@ -349,7 +349,7 @@
                     <separator string="Delivery Registration 70%"/>
                     <button name="action_hide_delivery" type='object' string="Hide Delivery 70%" attrs="{'invisible': [('hide_delivery', '=', True)]}"/>
                     <button name="action_open_hide_delivery" type='object' string="Open Delivery 70%" attrs="{'invisible': [('hide_delivery', '=', False)]}"/>
-                    <field name="delivery_70_ids" no_label="1" context="{'seq': name}" attrs="{'invisible': [('hide_delivery', '=', True)]}">
+                    <field name="delivery_70_ids" no_label="1" context="{'seq': name}" attrs="{'invisible': [('hide_delivery', '=', True)], 'readonly': [('state', '!=', 'draft')]}">
                         <tree editable="bottom">
                             <field name="delivery_id" required="1" options="{'no_create': True}" context="{'request_payment': True, 'partner_id': parent.partner_id, 'product_id': parent.product_id,
                             'ids': parent.delivery_array, 'seq': parent.name, 'purchase_contract_id': parent.parent_id_purchase_contract, 'delivery_factory': True, 'date': parent.date_contract}"/>
@@ -364,7 +364,7 @@
                     <separator string="GRN 90%"/>
                     <button name="action_hide_grn_ready" type='object' string="Hide GRN 90%" attrs="{'invisible': [('hide_grn_ready', '=', True)]}"/>
                     <button name="action_open_grn_ready" type='object' string="Open GRN 90%" attrs="{'invisible': [('hide_grn_ready', '=', False)]}"/>
-                    <field name="grn_90_ids" no_label="1" context="{'seq': name}" attrs="{'invisible': [('hide_grn_ready', '=', True)]}">
+                    <field name="grn_90_ids" no_label="1" context="{'seq': name}" attrs="{'invisible': [('hide_grn_ready', '=', True)], 'readonly': [('state', '!=', 'draft')]}">
                         <tree editable="bottom">
                             <field name="picking_id" required="1" options="{'no_create': True}" context="{'request_payment': True, 'partner_id': parent.partner_id,
                             'product_id': parent.product_id, 'ids': parent.grn_90_array, 'seq': parent.name, 'payment_percent': 90,
@@ -380,7 +380,7 @@
                     <separator string="GRN 100% Factory"/>
                     <button name="action_hide_grn_done" type='object' string="Hide GRN 100%" attrs="{'invisible': [('hide_grn_done', '=', True)]}"/>
                     <button name="action_open_grn_done" type='object' string="Open GRN 100%" attrs="{'invisible': [('hide_grn_done', '=', False)]}"/>
-                    <field name="grn_100_factory_ids" no_label="1" context="{'seq': name}" attrs="{'invisible': [('hide_grn_done', '=', True)]}">
+                    <field name="grn_100_factory_ids" no_label="1" context="{'seq': name}" attrs="{'invisible': [('hide_grn_done', '=', True)], 'readonly': [('state', '!=', 'draft')]}">
                         <tree editable="bottom">
                             <field name="picking_id" required="1" options="{'no_create': True}" context="{'request_payment': True, 'partner_id': parent.partner_id,
                             'product_id': parent.product_id, 'ids': parent.grn_100_factory_array, 'seq': parent.name, 'date': parent.date_contract,
@@ -396,7 +396,7 @@
                     <separator string="GRN 100% FOT"/>
                     <button name="action_hide_grn_fot_done" type='object' string="Hide GRN FOT 100%" attrs="{'invisible': [('hide_grn_fot_done', '=', True)]}"/>
                     <button name="action_open_grn_fot_done" type='object' string="Open GRN FOT 100%" attrs="{'invisible': [('hide_grn_fot_done', '=', False)]}"/>
-                    <field name="grn_100_fot_ids" no_label="1" context="{'seq': name}" attrs="{'invisible': [('hide_grn_fot_done', '=', True)]}">
+                    <field name="grn_100_fot_ids" no_label="1" context="{'seq': name}" attrs="{'invisible': [('hide_grn_fot_done', '=', True)], 'readonly': [('state', '!=', 'draft')]}">
                         <tree editable="bottom">
                             <field name="picking_id" required="1" options="{'no_create': True}" context="{'request_payment': True, 'partner_id': parent.partner_id,
                             'product_id': parent.product_id, 'ids': parent.grn_100_fot_array, 'seq': parent.name, 'date': parent.date_contract,

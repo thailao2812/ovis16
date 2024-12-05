@@ -78,7 +78,7 @@
                             <field name="paid_quantity" readonly="1" groups="sd_security_gate_vietnam.group_request_payment_seeing_money_value"/>
                             <field name="balance_quantity" readonly="1" groups="sd_security_gate_vietnam.group_request_payment_seeing_money_value"/>
                             <field name="type" invisible="1"/>
-                            <field name="attachment_ids" widget="many2many_binary" string="Attach a file"/>
+                            <field name="attachment_ids" widget="many2many_attachment_preview" string="Attach a file"/>
                             <field name="is_converted" invisible="1"/>
                         </group>
                         <group>
@@ -346,6 +346,12 @@
             </xpath>
             <xpath expr="//field[@name='state']" position="after">
                 <field name="is_attach_file" decoration-success="is_attach_file != ''"/>
+            </xpath>
+            <xpath expr="//field[@name='users_request_id']" position="replace">
+                <field name="state" widget="badge"/>
+            </xpath>
+            <xpath expr="//field[@name='provisional_amount']" position="after">
+                <field name="users_request_id"/>
             </xpath>
         </field>
     </record>

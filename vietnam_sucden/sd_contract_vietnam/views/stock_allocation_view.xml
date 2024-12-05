@@ -28,6 +28,12 @@
                     <attribute name="attrs">{'invisible': [('picking_fot_id', '!=', False)]}</attribute>
                     <attribute name="context">{'grn_fot_allocation': True, 'partner_id': parent.partner_id}</attribute>
                 </xpath>
+                <xpath expr="//button[@name='action_request_register_payment']" position="replace">
+
+                </xpath>
+                <xpath expr="//button[@name='button_done']" position="replace">
+
+                </xpath>
             </field>
     </record>
 

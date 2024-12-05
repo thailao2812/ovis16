@@ -6,3 +6,4 @@ from . import report_npe_nvp
 from . import report_npe
 from . import report_ptbf
 from . import report_npe_ptbf
+from . import report_final_payment_purchase_contract

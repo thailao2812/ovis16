@@ -9,3 +9,4 @@ from . import purchase_contract
 from . import account_payment
 from . import advance_line, reference_information
 from . import stock_allocation
+from . import ir_attachment
