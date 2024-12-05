@@ -37,5 +37,5 @@ class ReportFOBStatement(models.Model):
 
     # New field
     exchange_id = fields.Many2one('exchange.india', string='Exchange', related='product_id.exchange_id', store=True)
-    fob_value_usc = fields.Float(string='FOB Value (USC)', digits=(12, 2))
+    fob_value_usc = fields.Float(string='FOB Price (USC)', digits=(12, 2))
     currency_uom_usc = fields.Char(string='Currency / UOM')
