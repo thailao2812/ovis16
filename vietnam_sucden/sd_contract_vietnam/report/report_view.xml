@@ -41,4 +41,20 @@
 	        <field name="print_report_name">'License %s' % (object.name)</field>
 	    </record>
 
+	<record id="report_final_payment_purchase_contract" model="ir.actions.report">
+	        <field name="name">report_final_payment_purchase_contract</field>
+	        <field name="type">ir.actions.report</field>
+	        <field name="model">purchase.contract</field>
+	        <field name="report_name">report_final_payment_purchase_contract</field>
+	        <field name="report_type">aeroo</field>
+	        <field name="in_format">oo-ods</field>
+	        <field name="out_format" model="report.mimetypes" search="[('code','=','oo-pdf'),('compatible_types','=','oo-odt')]"/>
+	        <field name="preview">True</field>
+	        <field name="parser_state">loc</field>
+	        <field name="parser_loc">sd_contract_vietnam/report/report_final_payment_purchase_contract.py</field>
+	        <field name="report_file">sd_contract_vietnam/report/report_final_payment_purchase_contract.odt</field>
+	        <field name="tml_source">file</field>
+	        <field name="print_report_name">'Final Payment Contract %s' % (object.name)</field>
+	    </record>
+
 </odoo>

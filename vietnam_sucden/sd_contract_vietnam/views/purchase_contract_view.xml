@@ -27,6 +27,42 @@
             </xpath>
             <xpath expr="//field[@name='license_id']" position="after">
                 <field name="license_2nd_id"/>
+                <field name="state_final_payment" widget="badge" readonly="1"/>
+            </xpath>
+            <xpath expr="//div[@class='oe_button_box']" position="before">
+                <widget name="web_ribbon" title="Final Payment" attrs="{'invisible': [('state_final_payment', '!=', 'paid')]}"/>
+            </xpath>
+            <xpath expr="//button[@name='button_approve']" position="after">
+                <button name="print_final_payment" string="Print Final Payment" type="object" attrs="{'invisible': ['|', ('state', '!=', 'approved'), ('state_final_payment', '!=', 'draft')]}"/>
+                <button name="button_request_final_payment" string="Request Final Payment" type="object" attrs="{'invisible': [('state_final_payment', '!=', 'draft')]}"/>
+                <button name="button_approve_final_payment" string="Approve Final Payment" type="object" attrs="{'invisible': [('state_final_payment', '!=', 'request')]}"/>
+                <button name="button_approve_director_final_payment" string="Director Approve Final Payment" type="object" attrs="{'invisible': [('state_final_payment', '!=', 'approve')]}"/>
+                <button name="button_paid_final_payment" string="Paid Final Payment" type="object" attrs="{'invisible': [('state_final_payment', '!=', 'director')]}"/>
+                <button name="button_done" type="object" string="Thanh lý hợp đồng" class="oe_highlight" attrs="{'invisible': ['|', ('state_final_payment', '!=', 'paid'), ('state', '!=', 'approved')]}"/>
+            </xpath>
+            <xpath expr="//button[@name='compute_amount']" position="replace">
+
+            </xpath>
+            <xpath expr="//field[@name='according_id']" position="after">
+                <field name="according_final_payment_id"/>
+            </xpath>
+            <xpath expr="//page[@name='invoice']" position="replace">
+
+            </xpath>
+            <xpath expr="//page[@name='product']" position="after">
+                <page string="Invoice" name="invoice_supplier">
+                    <field name="invoice_lines_ids">
+                        <tree editable="bottom">
+                            <field name="name"/>
+                            <field name="invoice_date"/>
+                            <field name="quantity"/>
+                            <field name="price_unit"/>
+                            <field name="total_amount"/>
+                            <field name="tax"/>
+                            <field name="total_amount_tax"/>
+                        </tree>
+                    </field>
+                </page>
             </xpath>
 
         </field>
@@ -67,6 +103,34 @@
             </xpath>
             <xpath expr="//field[@name='license_id']" position="after">
                 <field name="license_2nd_id"/>
+                <field name="state_final_payment" widget="badge" readonly="1"/>
+            </xpath>
+            <xpath expr="//div[@class='oe_button_box']" position="before">
+                <widget name="web_ribbon" title="Final Payment" attrs="{'invisible': [('state_final_payment', '!=', 'paid')]}"/>
+            </xpath>
+            <xpath expr="//button[@name='button_approve']" position="after">
+                <button name="button_request_final_payment" string="Request Final Payment" type="object" attrs="{'invisible': [('state_final_payment', '!=', 'draft')]}"/>
+                <button name="button_approve_final_payment" string="Approve Final Payment" type="object" attrs="{'invisible': [('state_final_payment', '!=', 'request')]}"/>
+                <button name="button_approve_director_final_payment" string="Director Approve Final Payment" type="object" attrs="{'invisible': [('state_final_payment', '!=', 'approve')]}"/>
+                <button name="button_paid_final_payment" string="Paid Final Payment" type="object" attrs="{'invisible': [('state_final_payment', '!=', 'director')]}"/>
+            </xpath>
+            <xpath expr="//field[@name='according_id']" position="after">
+                <field name="according_final_payment_id"/>
+            </xpath>
+            <xpath expr="//page[@name='product']" position="after">
+                <page string="Invoice" name="invoice_supplier">
+                    <field name="invoice_lines_ids">
+                        <tree editable="bottom">
+                            <field name="name"/>
+                            <field name="invoice_date"/>
+                            <field name="quantity"/>
+                            <field name="price_unit"/>
+                            <field name="total_amount"/>
+                            <field name="tax"/>
+                            <field name="total_amount_tax"/>
+                        </tree>
+                    </field>
+                </page>
             </xpath>
         </field>
     </record>
@@ -98,6 +162,9 @@
 
             <xpath expr="//field[@name='license_id']" position="after">
                 <field name="license_2nd_id"/>
+            </xpath>
+            <xpath expr="//page[@name='invoice']" position="replace">
+
             </xpath>
         </field>
     </record>

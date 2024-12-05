@@ -77,7 +77,7 @@
                             <field name="paid_quantity" groups="sd_security_gate_vietnam.group_request_payment_seeing_money_value"/>
                             <field name="balance_quantity" groups="sd_security_gate_vietnam.group_request_payment_seeing_money_value"/>
                             <field name="type" invisible="1"/>
-                            <field name="attachment_ids" widget="many2many_binary" string="Attach a file"/>
+                            <field name="attachment_ids" widget="many2many_attachment_preview" string="Attach a file"/>
                             <field name="is_converted" invisible="1"/>
                         </group>
                         <group>
