@@ -33,7 +33,7 @@ class WizardSearchSaleContractLinkPurchase(models.TransientModel):
                 self.sale_contract_ids.line_purchase_ids = [(3, id) for id in ids_to_remove]
                 if sale.state in ['draft', 'submit', 'approve']:
                     for pur in purchase_contract:
-                        if pur.finished_qty - pur.total_allocated <= 0:
+                        if pur.finished_qty - pur.total_allocated_qty <= 0:
                             continue
                         value = {
                             'purchase_contract_id': pur.id,
