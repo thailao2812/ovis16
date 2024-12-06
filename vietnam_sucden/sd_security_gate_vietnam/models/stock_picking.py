@@ -34,84 +34,46 @@ class StockPicking(models.Model):
 
     @api.model
     def name_search(self, name='', args=None, operator='ilike', limit=100):
-        args = []
-        domain = []
-        check = []
-        args += ['|', ('name', operator, name), ('description_name', operator, name)]
-        backorder = self.search(args + domain, limit=limit)
-        if self._context.get('back_order'):
-            domain = [('picking_type_id.code', '=', 'incoming'),
-                      ('picking_type_id.operation', '=', 'factory'),
-                      ('partner_id', '=', self._context.get('partner_id')),
-                      ('date_done', '>=', self._context.get('date_done')),
-                      ('backorder_id', '=', False)]
+        if self._context.get('allocation_grn'):
+            backorder = self.search(args, limit=limit)
+        else:
+            args = []
+            domain = []
+            check = []
+            args += ['|', ('name', operator, name), ('description_name', operator, name)]
             backorder = self.search(args + domain, limit=limit)
-        if self._context.get('request_payment') and self._context.get('payment_percent') and self._context.get('seq'):
-            grn_array = self._context.get('ids')
-            if isinstance(grn_array, str):
-                grn_array = grn_array.strip('][').split(', ')
-                grn_array = [int(x) for x in grn_array if x.isdigit()]
-            check += [('id', 'not in', grn_array)]
-            if self._context.get('payment_percent') == 90:
-                check += [('warehouse_id.code', 'in', ['FA', 'KTN-LT-N', 'KTN-AP-N']),
-                           ('partner_id', '=', self._context.get('partner_id')),
-                           ('state', 'not in', ['done', 'cancel', 'draft']), ('picking_type_id.operation', '=', 'factory'),
-                           ('picking_type_id.code', '=', 'incoming'),
-                            ('date_done', '>=', self._context.get('date')),
-                           ('product_id', '=', self._context.get('product_id'))]
-                grn_ids = self.search(args+check)
-                grn_ready = self.env['grn.ready'].search([
-                    ('request_payment_id.name', '<', int(self._context.get('seq')))
-                ]).filtered(
-                    lambda x: x.picking_id.id in grn_ids.ids
-                )
-                if grn_ready:
-                    grn_ready_2nd = self.env['grn.ready'].search([
-                        ('id', 'not in', grn_ready.ids)
-                    ]).filtered(lambda x: x.picking_id.id in grn_ids.ids)
-                else:
-                    grn_ready_2nd = self.env['grn.ready'].search([]).filtered(
-                        lambda x: x.picking_id.id in grn_ids.ids)
-
-                arr_done = []
-                for i in grn_ready:
-                    if i.remain_qty == 0:
-                        if i.picking_id.id not in arr_done:
-                            arr_done.append(i.picking_id.id)
-                for i in grn_ready_2nd:
-                    if i.remain_qty == 0:
-                        if i.picking_id.id not in arr_done:
-                            arr_done.append(i.picking_id.id)
-                args += [('warehouse_id.code', 'in', ['FA', 'KTN-LT-N', 'KTN-AP-N']),
-                           ('partner_id', '=', self._context.get('partner_id')),
-                            ('picking_type_id.operation', '=', 'factory'),
-                            ('date_done', '>=', self._context.get('date')),
-                           ('picking_type_id.code', '=', 'incoming'), ('id', 'not in', grn_array),
-                            ('id', 'not in', arr_done), ('product_id', '=', self._context.get('product_id')),
-                         ('state', 'not in', ['done', 'cancel', 'draft']), ('backorder_id', '=', False)]
+            if self._context.get('back_order'):
+                domain = [('picking_type_id.code', '=', 'incoming'),
+                          ('picking_type_id.operation', '=', 'factory'),
+                          ('partner_id', '=', self._context.get('partner_id')),
+                          ('date_done', '>=', self._context.get('date_done')),
+                          ('backorder_id', '=', False)]
                 backorder = self.search(args + domain, limit=limit)
-
-            if self._context.get('payment_percent') == 100:
-                if self.env.context.get('factory'):
+            if self._context.get('request_payment') and self._context.get('payment_percent') and self._context.get('seq'):
+                grn_array = self._context.get('ids')
+                if isinstance(grn_array, str):
+                    grn_array = grn_array.strip('][').split(', ')
+                    grn_array = [int(x) for x in grn_array if x.isdigit()]
+                check += [('id', 'not in', grn_array)]
+                if self._context.get('payment_percent') == 90:
                     check += [('warehouse_id.code', 'in', ['FA', 'KTN-LT-N', 'KTN-AP-N']),
-                              ('partner_id', '=', self._context.get('partner_id')),
-                              ('state', 'in', ['done']),
-                              ('date_done', '>=', self._context.get('date')),
-                              ('picking_type_id.operation', '=', 'factory'),
-                              ('picking_type_id.code', '=', 'incoming'),
-                              ('product_id', '=', self._context.get('product_id'))]
-                    grn_ids = self.search(args + check)
-                    grn_ready = self.env['grn.done.factory'].search([
+                               ('partner_id', '=', self._context.get('partner_id')),
+                               ('state', 'not in', ['done', 'cancel', 'draft']), ('picking_type_id.operation', '=', 'factory'),
+                               ('picking_type_id.code', '=', 'incoming'),
+                                ('date_done', '>=', self._context.get('date')),
+                               ('product_id', '=', self._context.get('product_id'))]
+                    grn_ids = self.search(args+check)
+                    grn_ready = self.env['grn.ready'].search([
                         ('request_payment_id.name', '<', int(self._context.get('seq')))
                     ]).filtered(
                         lambda x: x.picking_id.id in grn_ids.ids
                     )
                     if grn_ready:
-                        grn_ready_2nd = self.env['grn.done.factory'].search([
+                        grn_ready_2nd = self.env['grn.ready'].search([
                             ('id', 'not in', grn_ready.ids)
                         ]).filtered(lambda x: x.picking_id.id in grn_ids.ids)
                     else:
-                        grn_ready_2nd = self.env['grn.done.factory'].search([]).filtered(
+                        grn_ready_2nd = self.env['grn.ready'].search([]).filtered(
                             lambda x: x.picking_id.id in grn_ids.ids)
 
                     arr_done = []
@@ -124,52 +86,93 @@ class StockPicking(models.Model):
                             if i.picking_id.id not in arr_done:
                                 arr_done.append(i.picking_id.id)
                     args += [('warehouse_id.code', 'in', ['FA', 'KTN-LT-N', 'KTN-AP-N']),
-                             ('partner_id', '=', self._context.get('partner_id')),
-                             ('picking_type_id.operation', '=', 'factory'),
-                             ('date_done', '>=', self._context.get('date')),
-                             ('picking_type_id.code', '=', 'incoming'), ('id', 'not in', grn_array),
-                             ('id', 'not in', arr_done), ('product_id', '=', self._context.get('product_id')),
-                             ('state', 'in', ['done']), ('backorder_id', '=', False)]
+                               ('partner_id', '=', self._context.get('partner_id')),
+                                ('picking_type_id.operation', '=', 'factory'),
+                                ('date_done', '>=', self._context.get('date')),
+                               ('picking_type_id.code', '=', 'incoming'), ('id', 'not in', grn_array),
+                                ('id', 'not in', arr_done), ('product_id', '=', self._context.get('product_id')),
+                             ('state', 'not in', ['done', 'cancel', 'draft']), ('backorder_id', '=', False)]
                     backorder = self.search(args + domain, limit=limit)
-                else:
-                    check += [('warehouse_id.code', 'in', ['FA', 'KTN-LT-N', 'KTN-AP-N']),
-                              ('partner_id', '=', self._context.get('partner_id')),
-                              ('state', 'in', ['done']),
-                              ('date_done', '>=', self._context.get('date')),
-                              ('picking_type_id.operation', '=', 'station'),
-                              ('picking_type_id.code', '=', 'incoming'),
-                              ('product_id', '=', self._context.get('product_id'))]
-                    grn_ids = self.search(args + check)
-                    grn_ready = self.env['grn.done.fot'].search([
-                        ('request_payment_id.name', '<', int(self._context.get('seq')))
-                    ]).filtered(
-                        lambda x: x.picking_id.id in grn_ids.ids
-                    )
-                    if grn_ready:
-                        grn_ready_2nd = self.env['grn.done.fot'].search([
-                            ('id', 'not in', grn_ready.ids)
-                        ]).filtered(lambda x: x.picking_id.id in grn_ids.ids)
-                    else:
-                        grn_ready_2nd = self.env['grn.done.fot'].search([]).filtered(
-                            lambda x: x.picking_id.id in grn_ids.ids)
 
-                    arr_done = []
-                    for i in grn_ready:
-                        if i.remain_qty == 0:
-                            if i.picking_id.id not in arr_done:
-                                arr_done.append(i.picking_id.id)
-                    for i in grn_ready_2nd:
-                        if i.remain_qty == 0:
-                            if i.picking_id.id not in arr_done:
-                                arr_done.append(i.picking_id.id)
-                    args += [('warehouse_id.code', 'in', ['FA', 'KTN-LT-N', 'KTN-AP-N']),
-                             ('partner_id', '=', self._context.get('partner_id')),
-                             ('picking_type_id.operation', '=', 'station'),
-                             ('date_done', '>=', self._context.get('date')),
-                             ('picking_type_id.code', '=', 'incoming'), ('id', 'not in', grn_array),
-                             ('id', 'not in', arr_done), ('product_id', '=', self._context.get('product_id')),
-                             ('state', 'in', ['done']), ('backorder_id', '=', False)]
-                    backorder = self.search(args + domain, limit=limit)
+                if self._context.get('payment_percent') == 100:
+                    if self.env.context.get('factory'):
+                        check += [('warehouse_id.code', 'in', ['FA', 'KTN-LT-N', 'KTN-AP-N']),
+                                  ('partner_id', '=', self._context.get('partner_id')),
+                                  ('state', 'in', ['done']),
+                                  ('date_done', '>=', self._context.get('date')),
+                                  ('picking_type_id.operation', '=', 'factory'),
+                                  ('picking_type_id.code', '=', 'incoming'),
+                                  ('product_id', '=', self._context.get('product_id'))]
+                        grn_ids = self.search(args + check)
+                        grn_ready = self.env['grn.done.factory'].search([
+                            ('request_payment_id.name', '<', int(self._context.get('seq')))
+                        ]).filtered(
+                            lambda x: x.picking_id.id in grn_ids.ids
+                        )
+                        if grn_ready:
+                            grn_ready_2nd = self.env['grn.done.factory'].search([
+                                ('id', 'not in', grn_ready.ids)
+                            ]).filtered(lambda x: x.picking_id.id in grn_ids.ids)
+                        else:
+                            grn_ready_2nd = self.env['grn.done.factory'].search([]).filtered(
+                                lambda x: x.picking_id.id in grn_ids.ids)
+
+                        arr_done = []
+                        for i in grn_ready:
+                            if i.remain_qty == 0:
+                                if i.picking_id.id not in arr_done:
+                                    arr_done.append(i.picking_id.id)
+                        for i in grn_ready_2nd:
+                            if i.remain_qty == 0:
+                                if i.picking_id.id not in arr_done:
+                                    arr_done.append(i.picking_id.id)
+                        args += [('warehouse_id.code', 'in', ['FA', 'KTN-LT-N', 'KTN-AP-N']),
+                                 ('partner_id', '=', self._context.get('partner_id')),
+                                 ('picking_type_id.operation', '=', 'factory'),
+                                 ('date_done', '>=', self._context.get('date')),
+                                 ('picking_type_id.code', '=', 'incoming'), ('id', 'not in', grn_array),
+                                 ('id', 'not in', arr_done), ('product_id', '=', self._context.get('product_id')),
+                                 ('state', 'in', ['done']), ('backorder_id', '=', False)]
+                        backorder = self.search(args + domain, limit=limit)
+                    else:
+                        check += [('warehouse_id.code', 'in', ['FA', 'KTN-LT-N', 'KTN-AP-N']),
+                                  ('partner_id', '=', self._context.get('partner_id')),
+                                  ('state', 'in', ['done']),
+                                  ('date_done', '>=', self._context.get('date')),
+                                  ('picking_type_id.operation', '=', 'station'),
+                                  ('picking_type_id.code', '=', 'incoming'),
+                                  ('product_id', '=', self._context.get('product_id'))]
+                        grn_ids = self.search(args + check)
+                        grn_ready = self.env['grn.done.fot'].search([
+                            ('request_payment_id.name', '<', int(self._context.get('seq')))
+                        ]).filtered(
+                            lambda x: x.picking_id.id in grn_ids.ids
+                        )
+                        if grn_ready:
+                            grn_ready_2nd = self.env['grn.done.fot'].search([
+                                ('id', 'not in', grn_ready.ids)
+                            ]).filtered(lambda x: x.picking_id.id in grn_ids.ids)
+                        else:
+                            grn_ready_2nd = self.env['grn.done.fot'].search([]).filtered(
+                                lambda x: x.picking_id.id in grn_ids.ids)
+
+                        arr_done = []
+                        for i in grn_ready:
+                            if i.remain_qty == 0:
+                                if i.picking_id.id not in arr_done:
+                                    arr_done.append(i.picking_id.id)
+                        for i in grn_ready_2nd:
+                            if i.remain_qty == 0:
+                                if i.picking_id.id not in arr_done:
+                                    arr_done.append(i.picking_id.id)
+                        args += [('warehouse_id.code', 'in', ['FA', 'KTN-LT-N', 'KTN-AP-N']),
+                                 ('partner_id', '=', self._context.get('partner_id')),
+                                 ('picking_type_id.operation', '=', 'station'),
+                                 ('date_done', '>=', self._context.get('date')),
+                                 ('picking_type_id.code', '=', 'incoming'), ('id', 'not in', grn_array),
+                                 ('id', 'not in', arr_done), ('product_id', '=', self._context.get('product_id')),
+                                 ('state', 'in', ['done']), ('backorder_id', '=', False)]
+                        backorder = self.search(args + domain, limit=limit)
         return backorder.name_get()
 
     @api.model
