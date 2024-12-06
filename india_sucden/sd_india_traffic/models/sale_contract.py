@@ -118,7 +118,7 @@ class SaleContractIndia(models.Model):
         for record in self:
             record.allocated_quantity = sum(i.current_allocated for i in record.line_purchase_ids.filtered(
                 lambda x: x.state == 'approve_allocation'))
-            record.balance_quantity = record.total_quantity - record.allocated_quantity
+            record.balance_quantity = round(record.total_quantity, 2) - round(record.allocated_quantity, 2)
             if record.balance_quantity < 0:
                 raise UserError(_("You cannot allocate more than PSC Qty, check again!"))
 
