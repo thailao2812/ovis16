@@ -35,7 +35,7 @@ class PurchaseContract(models.Model):
         ('approve', 'Approve'),
         ('director', 'Director'),
         ('paid', 'Paid'),
-    ], string='Final Payment State', default='draft')
+    ], string='Final Payment State', default='draft', tracking=True)
 
     def button_request_final_payment(self):
         for record in self:
