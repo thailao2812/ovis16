@@ -68,7 +68,7 @@
                         <group>
                             <field name="is_dr_request" invisible="1"/>
                             <field name="type_of_ptbf_payment" class="bold-text" readonly="1" attrs="{'invisible': [('type', '!=', 'ptbf')]}"/>
-                            <field name="price_tobe_fix" class="bold-text" readonly="1" options="{'no_create': True}" domain="[('contract_id', '=', parent_id_purchase_contract)]" attrs="{'required': ['|', ('type', '=', 'ptbf'), ('type_of_ptbf_payment', 'in', ['fixation', 'fixation_advance'])], 'invisible': ['|', ('type_of_ptbf_payment', 'not in', ['fixation', 'fixation_advance']), ('type', '!=', 'ptbf')]}"/>
+                            <field name="price_tobe_fix" class="bold-text" readonly="1" options="{'no_create': True}" domain="[('contract_id', '=', parent_id_purchase_contract)]" attrs="{'required': [('type', '=', 'ptbf'), ('type_of_ptbf_payment', 'in', ['fixation', 'fixation_advance'])], 'invisible': ['|', ('type_of_ptbf_payment', 'not in', ['fixation', 'fixation_advance']), ('type', '!=', 'ptbf')]}"/>
                             <field name="partner_id" readonly="1"/>
                             <field name="product_id" invisible="1"/>
                             <field name="purchase_contract_id" readonly="1"/>
