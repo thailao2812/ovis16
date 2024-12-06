@@ -29,7 +29,7 @@ class RequestPayment(models.Model):
                                   states={'draft': [('readonly', False)]}, default=_default_currency_id)
     amount_untaxed = fields.Monetary(string='Contract Value (not include Tax)', related='purchase_contract_id.amount_untaxed', store=True)
     total_value = fields.Float(string='Total', compute='compute_total_value', store=True, digits=(12, 0))
-    deposit_amount = fields.Float(string='Deposit Amount', related='purchase_contract_id.deposit_amount', store=True, digits=(12, 0))
+    deposit_amount = fields.Float(string='Deposit Amount', digits=(12, 0))
     liquidation_amount = fields.Float(string='Liquidation Amount', compute='compute_liquidation_amount', store=True, readonly=False, digits=(12, 0))
     total_payment = fields.Float(string='Total Payment', compute='compute_total_value', store=True)
     amount_in_text = fields.Char(string='Amount in text', compute='compute_amount_in_text', store=False)
