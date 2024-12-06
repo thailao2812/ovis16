@@ -26,15 +26,15 @@ class WizardSearchSaleContractLinkPurchase(models.TransientModel):
                     ('id', 'not in', self.sale_contract_ids.line_purchase_ids.mapped('purchase_contract_id').ids),
                     ('open_qty_check', '=', False)
                 ])
-                # Thu thập toàn bộ các ID cần xóa
-                ids_to_remove = self.sale_contract_ids.line_purchase_ids.filtered(lambda x: x.balance_qty <= 0).ids
-
-                # Gỡ liên kết các bản ghi chỉ với một thao tác
-                self.sale_contract_ids.line_purchase_ids = [(3, id) for id in ids_to_remove]
+                # # Thu thập toàn bộ các ID cần xóa
+                # ids_to_remove = self.sale_contract_ids.line_purchase_ids.filtered(lambda x: x.balance_qty <= 0).ids
+                #
+                # # Gỡ liên kết các bản ghi chỉ với một thao tác
+                # self.sale_contract_ids.line_purchase_ids = [(3, id) for id in ids_to_remove]
                 if sale.state in ['draft', 'submit', 'approve']:
                     for pur in purchase_contract:
-                        if pur.finished_qty - pur.total_allocated_qty <= 0:
-                            continue
+                        # if pur.finished_qty - pur.total_allocated_qty <= 0:
+                        #     continue
                         value = {
                             'purchase_contract_id': pur.id,
                             'sale_contract_id': sale.id
@@ -57,17 +57,17 @@ class WizardSearchSaleContractLinkPurchase(models.TransientModel):
                 ('p_date', '>=', self.date_from),
                 ('p_date', '<=', self.date_to)
             ])
-            # Lấy toàn bộ line_purchase_ids từ tất cả sale_contracts
-            all_lines = sale_contracts.mapped('line_purchase_ids')
-
-            # Lọc các ID cần xóa (balance_qty <= 0)
-            ids_to_remove = all_lines.filtered(lambda x: x.balance_qty <= 0).ids
-
-            # Gỡ toàn bộ liên kết một lần
-            for contract in sale_contracts:
-                contract.write({
-                    'line_purchase_ids': [(3, id) for id in ids_to_remove if id in contract.line_purchase_ids.ids]
-                })
+            # # Lấy toàn bộ line_purchase_ids từ tất cả sale_contracts
+            # all_lines = sale_contracts.mapped('line_purchase_ids')
+            #
+            # # Lọc các ID cần xóa (balance_qty <= 0)
+            # ids_to_remove = all_lines.filtered(lambda x: x.balance_qty <= 0).ids
+            #
+            # # Gỡ toàn bộ liên kết một lần
+            # for contract in sale_contracts:
+            #     contract.write({
+            #         'line_purchase_ids': [(3, id) for id in ids_to_remove if id in contract.line_purchase_ids.ids]
+            #     })
             return {
                 'name': _('PSC to PC Linked'),
                 'view_type': 'form',
