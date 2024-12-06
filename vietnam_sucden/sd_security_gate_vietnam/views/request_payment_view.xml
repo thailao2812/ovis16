@@ -68,7 +68,7 @@
                         <group>
                             <field name="is_dr_request" invisible="1"/>
                             <field name="type_of_ptbf_payment" class="bold-text" readonly="1" attrs="{'invisible': [('type', '!=', 'ptbf')]}"/>
-                            <field name="price_tobe_fix" class="bold-text" readonly="1" options="{'no_create': True}" domain="[('contract_id', '=', parent_id_purchase_contract)]" attrs="{'required': [('type_of_ptbf_payment', 'in', ['fixation', 'fixation_advance'])], 'invisible': ['|', ('type_of_ptbf_payment', 'not in', ['fixation', 'fixation_advance']), ('type', '!=', 'ptbf')]}"/>
+                            <field name="price_tobe_fix" class="bold-text" readonly="1" options="{'no_create': True}" domain="[('contract_id', '=', parent_id_purchase_contract)]" attrs="{'required': ['|', ('type', '=', 'ptbf'), ('type_of_ptbf_payment', 'in', ['fixation', 'fixation_advance'])], 'invisible': ['|', ('type_of_ptbf_payment', 'not in', ['fixation', 'fixation_advance']), ('type', '!=', 'ptbf')]}"/>
                             <field name="partner_id" readonly="1"/>
                             <field name="product_id" invisible="1"/>
                             <field name="purchase_contract_id" readonly="1"/>
@@ -132,7 +132,7 @@
                                 <field name="remain_qty" decoration-danger="check == True" decoration-bf="check == True" context="{'seq': parent.name, 'purchase_contract_id': parent.parent_id_purchase_contract}"/>
                             </tree>
                         </field>
-                    <group attrs="{'invisible': [('type_of_ptbf_payment', '!=', 'fixation_advance')]}">
+                    <group attrs="{'invisible': ['|', ('type', '!=', 'ptbf'), ('type_of_ptbf_payment', '!=', 'fixation_advance')]}">
                         <field name="qty_advance_fix" readonly="1" class="bold-text"/>
                         <field name="price_usd" readonly="1" class="bold-text"/>
                         <field name="price_diff" readonly="1" class="bold-text"/>
