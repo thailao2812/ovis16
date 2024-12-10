@@ -23,6 +23,7 @@ class wizard_purchase_contract(models.TransientModel):
 
     def button_convert(self):
         npe_nvp_relation = self.env['npe.nvp.relation']
+        print('vao day')
         
         for line in self.contract_line_ids:
             if line.qty_received < line.product_qty+ line.total_qty_fixed:
@@ -160,7 +161,7 @@ class wizard_purchase_contract(models.TransientModel):
             if r['count_place']>1:
                 raise UserError('You must select NPE with the same Delivery Place.')
         
-        res['purchase_contract_id'] = self.env['purchase.contract'].browse(self._context.get('active_id'))
+        res['purchase_contract_id'] = self.env['purchase.contract'].browse(self._context.get('active_id')).id
         for active_id in self._context.get('active_ids'):
             if self._context.get('active_model',False) ==  'ptbf.fixprice':
                 contract_obj = self.env['purchase.contract'].browse(self._context.get('default_purchase_contract_id'))
