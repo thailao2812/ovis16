@@ -113,12 +113,13 @@ class SaleContractIndia(models.Model):
                 street += self.partner_id.state_id.name
             self.partner_address = street
 
-    @api.depends('line_purchase_ids', 'line_purchase_ids.current_allocated', 'total_quantity', 'state', 'line_purchase_ids.state')
+    @api.depends('line_purchase_ids', 'line_purchase_ids.current_allocated', 'total_quantity', 'state',
+                 'line_purchase_ids.state', 'current_allocate_qty')
     def _compute_transaction_qty(self):
         for record in self:
             record.allocated_quantity = sum(i.current_allocated for i in record.line_purchase_ids.filtered(
                 lambda x: x.state == 'approve_allocation'))
-            record.balance_quantity = round(record.total_quantity, 2) - round(record.allocated_quantity, 2)
+            record.balance_quantity = round(record.total_quantity, 2) - round(record.current_allocate_qty, 2)
             if record.balance_quantity < 0:
                 raise UserError(_("You cannot allocate more than PSC Qty, check again!"))
 
