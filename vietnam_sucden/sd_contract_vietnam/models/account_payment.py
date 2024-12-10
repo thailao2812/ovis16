@@ -11,6 +11,6 @@ class AccountPayment(models.Model):
         res = super(AccountPayment, self).action_post()
         if self.env.context.get('final_payment'):
             if self.purchase_contract_id:
-                if self.puchase_contract_id.state_final_payment == 'director':
+                if self.purchase_contract_id.state_final_payment == 'director':
                     self.purchase_contract_id.state_final_payment = 'paid'
         return res
