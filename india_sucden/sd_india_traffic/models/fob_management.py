@@ -40,11 +40,11 @@ class FOBManagement(models.Model):
                 ('purchase_contract_id', '=', rec.purchase_contract_id.id),
                 ('id', '!=', rec.id)
             ], limit=1)
-            purchase_contract_check = self.env['purchase.contract'].search([
-                ('fob_management_id', '=', rec.id),
-                ('id', '=', rec.purchase_contract_id.id)
-            ], limit=1)
-            if fob_check or purchase_contract_check:
+            # purchase_contract_check = self.env['purchase.contract'].search([
+            #     ('fob_management_id', '=', rec.id),
+            #     ('id', '=', rec.purchase_contract_id.id)
+            # ], limit=1)
+            if fob_check:
                 raise UserError(_("You cannot setting 1 Contract for multiple FOB, please check again"))
             contract_price_purchase = self.env['contract.price.purchase'].search([
                 ('contract_id', '=', rec.purchase_contract_id.id)
