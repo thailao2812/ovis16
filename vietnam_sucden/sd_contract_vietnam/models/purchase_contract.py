@@ -53,6 +53,24 @@ class PurchaseContract(models.Model):
         for record in self:
             return record.action_request_register_payment()
 
+    def action_request_register_payment(self):
+        return {
+            'name': _('Register Payment'),
+            'res_model': 'account.payment',
+            'view_mode': 'form',
+            # 'domain':self.request_payment_ids.ids,
+            'context': {
+                'active_model': 'purchase.contract',
+                'active_ids': self.ids,
+                'final_payment': True,
+                'default_partner_type': 'supplier',
+                'default_is_final_payment': True
+                # 'currency_id':
+            },
+            'target': 'new',
+            'type': 'ir.actions.act_window',
+        }
+
     def print_final_payment(self):
         return self.env.ref('sd_contract_vietnam.report_final_payment_purchase_contract').report_action(self)
 
