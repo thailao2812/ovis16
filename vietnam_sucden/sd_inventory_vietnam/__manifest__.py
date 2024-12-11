@@ -13,6 +13,7 @@
         'security/group.xml',
         'views/stack_merge_view.xml',
         'views/stock_picking_view.xml',
+        'views/request_material_view.xml',
         'report/report.xml',
         'wizard/wizard_report_stack_merge_view.xml',
     ],

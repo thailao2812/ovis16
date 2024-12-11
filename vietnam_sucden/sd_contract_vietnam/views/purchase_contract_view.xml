@@ -34,13 +34,26 @@
             </xpath>
             <xpath expr="//button[@name='button_approve']" position="after">
                 <button name="print_final_payment" string="Print Final Payment" type="object" attrs="{'invisible': ['|', ('state', '!=', 'approved'), ('state_final_payment', '!=', 'draft')]}"/>
-                <button name="button_request_final_payment" string="Request Final Payment" type="object"
-                        attrs="{'invisible': ['|', ('state', '!=', 'approved'), ('state_final_payment', '!=', 'draft')]}" groups="sd_contract_vietnam.group_request_final_payment"
-                confirm="Are you sure want to request Final Payment?"/>
-                <button name="button_approve_final_payment" string="Approve Final Payment" type="object" attrs="{'invisible': [('state_final_payment', '!=', 'request')]}" groups="sd_contract_vietnam.group_approve_final_payment"
-                        confirm="Are you sure that you want to approve Final Payment?"/>
-                <button name="button_approve_director_final_payment" string="Director Approve Final Payment" type="object" attrs="{'invisible': [('state_final_payment', '!=', 'approve')]}"
-                        groups="sd_contract_vietnam.group_director_approve_final_payment" confirm="So, are we really ready to say yes to the final payment?"/>
+                <button name="button_request_final_payment"
+                    string="🚀 Request Final Payment"
+                    type="object"
+                    attrs="{'invisible': ['|', ('state', '!=', 'approved'), ('state_final_payment', '!=', 'draft')]}"
+                    groups="sd_contract_vietnam.group_request_final_payment"
+                    confirm="💡 Are you sure? Time to kickstart the process and request that final payment! 🏃‍♂️💸"/>
+
+                 <button name="button_approve_final_payment"
+                    string="✅ Approve Final Payment"
+                    type="object"
+                    attrs="{'invisible': [('state_final_payment', '!=', 'request')]}"
+                    groups="sd_contract_vietnam.group_approve_final_payment"
+                    confirm="👍 Ready to greenlight this final payment? Let's make it official! 🖋️💵"/>
+
+            <button name="button_approve_director_final_payment"
+                    string="👑 Director Approve Final Payment"
+                    type="object"
+                    attrs="{'invisible': [('state_final_payment', '!=', 'approve')]}"
+                    groups="sd_contract_vietnam.group_director_approve_final_payment"
+                    confirm="🥂 Final check, boss! Are we truly ready to roll out the red carpet for the final payment? 🎉💳"/>
                 <button name="button_paid_final_payment" string="Paid Final Payment" type="object" attrs="{'invisible': [('state_final_payment', '!=', 'director')]}" groups="account.group_account_invoice"/>
                 <button name="button_done" type="object" string="Thanh lý hợp đồng" class="oe_highlight" attrs="{'invisible': ['|', ('state_final_payment', '!=', 'paid'), ('state', '!=', 'approved')]}"/>
             </xpath>
@@ -113,9 +126,26 @@
                 <widget name="web_ribbon" title="Final Payment" attrs="{'invisible': [('state_final_payment', '!=', 'paid')]}"/>
             </xpath>
             <xpath expr="//button[@name='button_approve']" position="after">
-                <button name="button_request_final_payment" string="Request Final Payment" type="object" attrs="{'invisible': [('state_final_payment', '!=', 'draft')]}"/>
-                <button name="button_approve_final_payment" string="Approve Final Payment" type="object" attrs="{'invisible': [('state_final_payment', '!=', 'request')]}"/>
-                <button name="button_approve_director_final_payment" string="Director Approve Final Payment" type="object" attrs="{'invisible': [('state_final_payment', '!=', 'approve')]}"/>
+                <button name="button_request_final_payment"
+                    string="🚀 Request Final Payment"
+                    type="object"
+                    attrs="{'invisible': ['|', ('state', '!=', 'approved'), ('state_final_payment', '!=', 'draft')]}"
+                    groups="sd_contract_vietnam.group_request_final_payment"
+                    confirm="💡 Are you sure? Time to kickstart the process and request that final payment! 🏃‍♂️💸"/>
+
+                 <button name="button_approve_final_payment"
+                    string="✅ Approve Final Payment"
+                    type="object"
+                    attrs="{'invisible': [('state_final_payment', '!=', 'request')]}"
+                    groups="sd_contract_vietnam.group_approve_final_payment"
+                    confirm="👍 Ready to greenlight this final payment? Let's make it official! 🖋️💵"/>
+
+            <button name="button_approve_director_final_payment"
+                    string="👑 Director Approve Final Payment"
+                    type="object"
+                    attrs="{'invisible': [('state_final_payment', '!=', 'approve')]}"
+                    groups="sd_contract_vietnam.group_director_approve_final_payment"
+                    confirm="🥂 Final check, boss! Are we truly ready to roll out the red carpet for the final payment? 🎉💳"/>
                 <button name="button_paid_final_payment" string="Paid Final Payment" type="object" attrs="{'invisible': [('state_final_payment', '!=', 'director')]}"/>
             </xpath>
             <xpath expr="//field[@name='according_id']" position="after">
@@ -191,6 +221,42 @@
         <field name="arch" type="xml">
 			 <xpath expr="//field[@name='product_id']" position="after">
                  <field name="interest"/>
+            </xpath>
+
+        </field>
+    </record>
+
+    <record id="view_nvp_contract_tree_inherit_vietnam" model="ir.ui.view">
+        <field name="name">view_nvp_contract_tree_inherit_vietnam</field>
+        <field name="model">purchase.contract</field>
+        <field name="inherit_id" ref="sd_purchase_contract.view_nvp_contract_tree"/>
+        <field name="arch" type="xml">
+			 <xpath expr="//field[@name='state']" position="after">
+                 <field name="state_final_payment" widget="badge"/>
+            </xpath>
+            <xpath expr="//tree" position="attributes">
+                 <attribute name="decoration-success">state_final_payment == 'paid'</attribute>
+            </xpath>
+            <xpath expr="//field[@name='diff_price']" position="after">
+                <field name="difams"/>
+            </xpath>
+
+        </field>
+    </record>
+
+    <record id="view_ptbf_contract_tree_inherit_vietnam" model="ir.ui.view">
+        <field name="name">view_ptbf_contract_tree_inherit_vietnam</field>
+        <field name="model">purchase.contract</field>
+        <field name="inherit_id" ref="sd_purchase_contract.view_ptbf_contract_tree"/>
+        <field name="arch" type="xml">
+			 <xpath expr="//field[@name='state']" position="after">
+                 <field name="state_final_payment" widget="badge"/>
+            </xpath>
+            <xpath expr="//tree" position="attributes">
+                 <attribute name="decoration-success">state_final_payment == 'paid'</attribute>
+            </xpath>
+            <xpath expr="//field[@name='diff_price']" position="after">
+                <field name="difams"/>
             </xpath>
 
         </field>

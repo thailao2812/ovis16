@@ -15,4 +15,5 @@ class AccountPayment(models.Model):
             if self.purchase_contract_id:
                 if self.purchase_contract_id.state_final_payment == 'director':
                     self.purchase_contract_id.state_final_payment = 'paid'
+                    self.purchase_contract_id.button_done()
         return res
