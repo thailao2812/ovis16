@@ -51,6 +51,13 @@ class PurchaseContract(models.Model):
 
     def button_paid_final_payment(self):
         for record in self:
+            payment = self.env['account.payment'].search([
+                ('purchase_contract_id', '=', record.id),
+                ('is_final_payment', '=', True),
+                ('state', 'not in', ['posted', 'cancel']),
+            ], limit=1)
+            if payment:
+                raise UserError(_("🚀 Uh-oh! Looks like your final payment is chilling in the ‘to-do’ list. 🛋️ Time to give it a little nudge and check it off! ✅💸✨"))
             return record.action_request_register_payment()
 
     def action_request_register_payment(self):
