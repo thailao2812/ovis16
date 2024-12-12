@@ -37,6 +37,9 @@ class PurchaseContract(models.Model):
         ('paid', 'Paid'),
     ], string='Final Payment State', default='draft', tracking=True)
 
+    partner_invoice_id = fields.Many2one(required=False)
+    partner_shipping_id = fields.Many2one(required=False)
+
     def button_request_final_payment(self):
         for record in self:
             record.state_final_payment = 'request'
