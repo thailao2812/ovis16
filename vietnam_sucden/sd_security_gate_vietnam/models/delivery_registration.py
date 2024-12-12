@@ -85,7 +85,7 @@ class DeliveryRegistration(models.Model):
                         ('supplier_id', '=', self._context.get('partner_id')),
                         ('id', 'not in', deliver_array),
                         ('picking_ktn_id', '=', False),
-                        # ('arrivial_time', '>=', self._context.get('date')),
+                        ('arrivial_time', '>=', self._context.get('date')),
                         ('id', 'not in', arr_done), ('product_ids', 'in', product.id)]
                     delivery_registration = self.search(domain+args, limit=limit)
             except ValidationError as e:
