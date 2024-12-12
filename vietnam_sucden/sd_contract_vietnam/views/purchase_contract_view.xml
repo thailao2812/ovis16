@@ -22,15 +22,15 @@
                 <field name="equiv_faq_price"/>
             </xpath>
             <xpath expr="//field[@name='premium']" position="after">
-                <field name="deposit_amount"/>
+<!--                <field name="deposit_amount"/>-->
                 <field name="print_company"/>
             </xpath>
             <xpath expr="//field[@name='license_id']" position="after">
                 <field name="license_2nd_id"/>
-                <field name="state_final_payment" widget="badge" readonly="1"/>
+                <field name="state_final_payment" widget="badge" readonly="1" invisble="1"/>
             </xpath>
             <xpath expr="//div[@class='oe_button_box']" position="before">
-                <widget name="web_ribbon" title="Final Payment" attrs="{'invisible': [('state_final_payment', '!=', 'paid')]}"/>
+                <widget name="web_ribbon" title="Final Payment" attrs="{'invisible': [('state_final_payment', '!=', 'paid')]}" groups="sd_contract_vietnam.group_request_final_payment,sd_contract_vietnam.group_approve_final_payment,sd_contract_vietnam.group_director_approve_final_payment"/>
             </xpath>
             <xpath expr="//button[@name='button_approve']" position="after">
                 <button name="print_final_payment" string="Print Final Payment" type="object" attrs="{'invisible': ['|', ('state', '!=', 'approved'), ('state_final_payment', '!=', 'draft')]}"/>
@@ -55,13 +55,13 @@
                     groups="sd_contract_vietnam.group_director_approve_final_payment"
                     confirm="🥂 Final check, boss! Are we truly ready to roll out the red carpet for the final payment? 🎉💳"/>
                 <button name="button_paid_final_payment" string="Paid Final Payment" type="object" attrs="{'invisible': [('state_final_payment', '!=', 'director')]}" groups="account.group_account_invoice"/>
-                <button name="button_done" type="object" string="Thanh lý hợp đồng" class="oe_highlight" attrs="{'invisible': ['|', ('state_final_payment', '!=', 'paid'), ('state', '!=', 'approved')]}"/>
+<!--                <button name="button_done" type="object" string="Thanh lý hợp đồng" class="oe_highlight" attrs="{'invisible': ['|', ('state_final_payment', '!=', 'paid'), ('state', '!=', 'approved')]}"/>-->
             </xpath>
             <xpath expr="//button[@name='compute_amount']" position="replace">
 
             </xpath>
             <xpath expr="//field[@name='according_id']" position="after">
-                <field name="according_final_payment_id"/>
+                <field name="according_final_payment_id" groups="sd_contract_vietnam.group_request_final_payment,sd_contract_vietnam.group_approve_final_payment,sd_contract_vietnam.group_director_approve_final_payment"/>
             </xpath>
             <xpath expr="//page[@name='invoice']" position="replace">
 
@@ -120,10 +120,10 @@
             </xpath>
             <xpath expr="//field[@name='license_id']" position="after">
                 <field name="license_2nd_id"/>
-                <field name="state_final_payment" widget="badge" readonly="1"/>
+                <field name="state_final_payment" widget="badge" readonly="1" invisble="1"/>
             </xpath>
             <xpath expr="//div[@class='oe_button_box']" position="before">
-                <widget name="web_ribbon" title="Final Payment" attrs="{'invisible': [('state_final_payment', '!=', 'paid')]}"/>
+                <widget name="web_ribbon" title="Final Payment" attrs="{'invisible': [('state_final_payment', '!=', 'paid')]}" groups="sd_contract_vietnam.group_request_final_payment,sd_contract_vietnam.group_approve_final_payment,sd_contract_vietnam.group_director_approve_final_payment"/>
             </xpath>
             <xpath expr="//button[@name='button_approve']" position="after">
                 <button name="button_request_final_payment"
@@ -149,7 +149,7 @@
                 <button name="button_paid_final_payment" string="Paid Final Payment" type="object" attrs="{'invisible': [('state_final_payment', '!=', 'director')]}"/>
             </xpath>
             <xpath expr="//field[@name='according_id']" position="after">
-                <field name="according_final_payment_id"/>
+                <field name="according_final_payment_id" groups="sd_contract_vietnam.group_request_final_payment,sd_contract_vietnam.group_approve_final_payment,sd_contract_vietnam.group_director_approve_final_payment"/>
             </xpath>
             <xpath expr="//page[@name='product']" position="after">
                 <page string="Invoice" name="invoice_supplier">
