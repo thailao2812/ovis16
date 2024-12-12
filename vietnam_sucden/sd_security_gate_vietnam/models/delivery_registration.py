@@ -9,6 +9,8 @@ class DeliveryRegistration(models.Model):
 
     picking_ktn_id = fields.Many2one('stock.picking', string='GRN KTN Link')
 
+    arrivial_time = fields.Datetime('Arrival Time', readonly=False)
+
     def button_link_grn_ktn(self):
         for rec in self:
             if rec.picking_ktn_id:
@@ -82,6 +84,7 @@ class DeliveryRegistration(models.Model):
                     args += [('type_transfer', '=', 'other'),
                         ('supplier_id', '=', self._context.get('partner_id')),
                         ('id', 'not in', deliver_array),
+                        ('picking_ktn_id', '=', False),
                         # ('arrivial_time', '>=', self._context.get('date')),
                         ('id', 'not in', arr_done), ('product_ids', 'in', product.id)]
                     delivery_registration = self.search(domain+args, limit=limit)
@@ -150,7 +153,8 @@ class DeliveryRegistration(models.Model):
                     ('type_transfer', '=', 'other'),
                     ('supplier_id', '=', self._context.get('partner_id')),
                     ('id', 'not in', deliver_array),
-                    # ('arrivial_time', '>=', self._context.get('date')),
+                    ('picking_ktn_id', '=', False),
+                    ('arrivial_time', '>=', self._context.get('date')),
                     ('id', 'not in', arr_done), ('product_ids', 'in', product.id)]
         return super(DeliveryRegistration, self).search_read(domain=domain, fields=fields, offset=offset, limit=limit,
                                                      order=order)
