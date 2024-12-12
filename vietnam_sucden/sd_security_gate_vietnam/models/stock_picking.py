@@ -9,6 +9,25 @@ class StockPicking(models.Model):
 
     display_name = fields.Char(compute='_compute_display_name', compute_sudo=True)
 
+    grn_ready_ids = fields.One2many('grn.ready', 'picking_id')
+    grn_done_factory_ids = fields.One2many('grn.done.factory', 'picking_id')
+
+    allocated_request_payment = fields.Integer(string='Allocated Payment', compute='_compute_data_request_payment', store=True)
+    remain_request_payment = fields.Integer(string='Remaining for Payment', compute='_compute_data_request_payment', store=True)
+
+    @api.depends('grn_ready_ids', 'grn_done_factory_ids', 'grn_ready_ids.request_qty',
+                 'grn_done_factory_ids.request_qty', "total_init_qty", "state", "total_qty")
+    def _compute_data_request_payment(self):
+        for rec in self:
+            if rec.state == 'assigned':
+                rec.allocated_request_payment = sum(rec.grn_ready_ids.mapped('request_qty')) + sum(rec.grn_done_factory_ids.mapped('request_qty'))
+                rec.remain_request_payment = rec.total_init_qty - (sum(rec.grn_ready_ids.mapped('request_qty')) + sum(rec.grn_done_factory_ids.mapped('request_qty')))
+            if rec.state == 'done':
+                rec.allocated_request_payment = sum(rec.grn_ready_ids.mapped('request_qty')) + sum(
+                    rec.grn_done_factory_ids.mapped('request_qty'))
+                rec.remain_request_payment = rec.total_qty - (sum(rec.grn_ready_ids.mapped('request_qty')) + sum(
+                    rec.grn_done_factory_ids.mapped('request_qty')))
+
     @api.depends('name', 'picking_type_id')
     def _compute_display_name(self):
         for sri in self:
