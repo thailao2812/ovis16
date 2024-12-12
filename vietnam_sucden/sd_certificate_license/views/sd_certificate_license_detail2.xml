@@ -120,7 +120,7 @@
         <field name="name">Certificate License Detail 2</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">v.sd.certificate.license.detail2</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">tree</field>
         <field name="view_id" ref="view_sd_certificate_license_detail2_tree"/>
         <!-- <field name="view_id" ref="view_sd_certificate_license_detail2_tree"/> -->
         <!-- <field name="context">{'search_by_field_date': ['fob_date']}</field> -->
