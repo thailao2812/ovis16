@@ -27,4 +27,12 @@
                 parent="sd_quality.quality_control_report_root_menu" 
                 name="Certificate License Detail 2"
                 groups="sd_quality.group_kcs_user,sd_quality.group_kcs_manager"/>
+            
+            <menuitem id="action_shipping_instruction_license_allocations_purchase_contract_menu" 
+                action="sd_certificate_license.action_shipping_instruction_license_allocations" 
+                sequence="26"
+                parent="sd_purchase_contract.purchase_contract_root_master_data_menu" 
+                name="SI License Allocations"
+                groups="sd_purchase_contract.group_purchase_contract_user,base.group_user"/>
+
 </odoo>
