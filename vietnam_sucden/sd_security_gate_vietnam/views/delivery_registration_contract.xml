@@ -57,7 +57,7 @@
 		        				options="{'no_create': True, 'no_open': True}" class="oe_inline"/>
                             </group>
                             <group>
-                                <field name="arrivial_time" />
+                                <field name="arrivial_time" required="1"/>
                                 <field name="estimated_bags" />
  	    						<field name="approx_quantity" required = "1" />
                                 <field name="security_id" />
