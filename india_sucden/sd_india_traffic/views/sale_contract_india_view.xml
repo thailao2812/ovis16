@@ -126,6 +126,7 @@
                 <form string="PSC to PC Linked">
                     <header>
                         <button name="button_approve_allocation" string="Approve Allocation" type="object" states="approve" class="oe_highlight"/>
+                        <button name="open_wizard_select_date_range" string="Filter Purchase Contract" type="object" states="approve" class="oe_highlight"/>
                         <field name="state" widget="statusbar" statusbar_visible="approve_allocation" attrs="{'invisible': [('state', '!=', 'approve_allocation')]}"/>
                     </header>
                     <sheet>
