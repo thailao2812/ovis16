@@ -89,6 +89,15 @@ class PurchaseContract(models.Model):
             if not rec.product_id:
                 rec.certificate_id = False
 
+
+    def cron_auto_calculate_open_qty(self):
+        purchase_contract = self.env['purchase.contract'].search([
+        ])
+        for i in purchase_contract:
+            i._compute_allocated_qty()
+            i._compute_finished_qty()
+            i._compute_open_qty()
+
     # @api.model
     # def name_search(self, name, args=None, operator='ilike', limit=100):
     #     args = args or []
