@@ -19,6 +19,7 @@ class WizardSelectDateRangePurchaseContract(models.TransientModel):
             purchase_contract = self.env['purchase.contract'].search([
                 ('product_id.item_group_id', '=', item_group_id.id),
                 ('type', 'in', ['purchase', 'ptbf']),
+                ('state', '!=', 'cancel'),
                 ('open_qty', '>', 0),
                 ('id', 'not in', sale_contract_india.line_purchase_ids.mapped('purchase_contract_id').ids),
                 ('open_qty_check', '=', False),
