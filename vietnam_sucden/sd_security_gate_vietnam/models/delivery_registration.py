@@ -56,7 +56,7 @@ class DeliveryRegistration(models.Model):
                         ('state', 'not in', ['cancel', 'closed', 'reject']),
                         ('supplier_id', '=', self._context.get('partner_id')),
                         ('id', 'not in', deliver_array),
-                        ('arrivial_time', '>=', self._context.get('date')),
+                        ('arrivial_time', '<=', self._context.get('date')),
                         ('id', 'not in', arr_done), ('product_ids', 'in', product.id)]
                     delivery_registration = self.search(domain+args, limit=limit)
 
@@ -85,7 +85,7 @@ class DeliveryRegistration(models.Model):
                         ('supplier_id', '=', self._context.get('partner_id')),
                         ('id', 'not in', deliver_array),
                         ('picking_ktn_id', '=', False),
-                        ('arrivial_time', '>=', self._context.get('date')),
+                        ('arrivial_time', '<=', self._context.get('date')),
                         ('id', 'not in', arr_done), ('product_ids', 'in', product.id)]
                     delivery_registration = self.search(domain+args, limit=limit)
             except ValidationError as e:
@@ -124,7 +124,7 @@ class DeliveryRegistration(models.Model):
                     ('state', 'not in', ['cancel', 'closed', 'reject']),
                     ('supplier_id', '=', self._context.get('partner_id')),
                     ('id', 'not in', deliver_array),
-                    ('arrivial_time', '>=', self._context.get('date')),
+                    ('arrivial_time', '<=', self._context.get('date')),
                     ('id', 'not in', arr_done), ('product_ids', 'in', product.id)]
 
             if self._context.get('delivery_ktn'):
@@ -154,7 +154,7 @@ class DeliveryRegistration(models.Model):
                     ('supplier_id', '=', self._context.get('partner_id')),
                     ('id', 'not in', deliver_array),
                     ('picking_ktn_id', '=', False),
-                    ('arrivial_time', '>=', self._context.get('date')),
+                    ('arrivial_time', '<=', self._context.get('date')),
                     ('id', 'not in', arr_done), ('product_ids', 'in', product.id)]
         return super(DeliveryRegistration, self).search_read(domain=domain, fields=fields, offset=offset, limit=limit,
                                                      order=order)
