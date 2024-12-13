@@ -10,7 +10,8 @@ class ShippingInstructionLicenseAllocation(models.Model):
     warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse')
     date_etd = fields.Date(related='shipping_id.factory_etd', string='ETD Date', store=True)
     certificated_ids = fields.Many2many(related='shipping_id.certificated_ids', string='Cer Compliant')
-
+    partner_id = fields.Many2one(related='license_id.partner_id', store=True)
+    
     @api.onchange('certificated_ids','shipping_id.certificated_ids')
     def _onchange_certificated_ids(self):
         if self.certificated_ids:

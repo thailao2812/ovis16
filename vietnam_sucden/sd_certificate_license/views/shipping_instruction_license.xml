@@ -6,17 +6,18 @@
             <field name="model">shipping.instruction.license.allocation</field>
             <field name="arch" type="xml">
                 <tree string="SI License Allocations" default_order="id desc">
-                    <field name = 'shipping_id' readonly = '1'/>
-                    <field name = 'warehouse_id' readonly = '1'/>
-                    <field name = 'date_etd' readonly = '1'/>
                     <field name = 'certificated_ids' readonly = '1' widget="many2many_tags"/>
-                    <field name = 'license_id' readonly = '1'/>
                     <field name = 'type' readonly = '1'/>
+                    <field name = 'license_id' readonly = '1'/>
+                    <field name = 'partner_id' readonly = '1'/>
+                    <field name = 'warehouse_id' readonly = '1'/>
+                    <field name = 'shipping_id' readonly = '1'/>
+                    <field name = 'date_etd' readonly = '1'/>
                     <field name = 'product_id' readonly = '1'/>
                     <field name = 'grade_id' readonly = '1'/>
                     <field name = 'state' readonly = '1'/>
-                    <field name = 'crop_id' readonly = '1'/>
                     <field name = 'allocation_qty' readonly = '1'/>
+                    <field name = 'crop_id' readonly = '1'/>
                 </tree>
             </field>
         </record>
@@ -47,6 +48,7 @@
                     <group expand="1" string="Group By">
                         <filter string="License Number" domain="[]" name="filter_license_id" context="{'group_by':'license_id'}"/>
                         <filter string="Warehouse" domain="[]" name="filter_warehouse_id" context="{'group_by':'warehouse_id'}"/>
+                        <filter string="Supplier" domain="[]" name="filter_partner_id" context="{'group_by':'partner_id'}"/>
                     </group>
                 </search>
             </field>
