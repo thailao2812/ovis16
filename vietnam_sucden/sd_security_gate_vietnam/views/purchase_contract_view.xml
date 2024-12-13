@@ -104,7 +104,7 @@
                         <tree editable="bottom">
                             <field name="delivery_id" required="1" options="{'no_create': True}" context="{'request_payment': True, 'partner_id': parent.partner_id, 'product_id': parent.product_id,
                             'ids': parent.delivery_ktn_array, 'seq': parent.name, 'purchase_contract_id': parent.parent_id_purchase_contract,
-                            'delivery_ktn': True, 'date': parent.date_contract}"/>
+                            'delivery_ktn': True, 'date': parent.date}"/>
                             <field name="quantity" sum="quantity"/>
                             <field name="percent" readonly="1"/>
                             <field name="total_qty" sum="total_qty"/>
@@ -120,7 +120,7 @@
                         <tree editable="bottom">
                             <field name="delivery_id" required="1" options="{'no_create': True}" context="{'request_payment': True, 'partner_id': parent.partner_id, 'product_id': parent.product_id,
                             'ids': parent.delivery_array, 'seq': parent.name, 'purchase_contract_id': parent.parent_id_purchase_contract,
-                            'delivery_factory': True, 'date': parent.date_contract}"/>
+                            'delivery_factory': True, 'date': parent.date}"/>
                             <field name="quantity" sum="quantity"/>
                             <field name="percent" readonly="1"/>
                             <field name="total_qty" sum="total_qty"/>
@@ -337,7 +337,7 @@
                     <field name="delivery_70_ktn_ids" no_label="1" context="{'seq': name}" attrs="{'invisible': [('hide_delivery_ktn', '=', True)], 'readonly': [('state', '!=', 'draft')]}">
                         <tree editable="bottom">
                             <field name="delivery_id" required="1" options="{'no_create': True}" context="{'request_payment': True, 'partner_id': parent.partner_id, 'product_id': parent.product_id,
-                            'ids': parent.delivery_ktn_array, 'seq': parent.name, 'purchase_contract_id': parent.parent_id_purchase_contract, 'delivery_ktn': True, 'date': parent.date_contract}"/>
+                            'ids': parent.delivery_ktn_array, 'seq': parent.name, 'purchase_contract_id': parent.parent_id_purchase_contract, 'delivery_ktn': True, 'date': parent.date}"/>
                             <field name="quantity" sum="quantity"/>
                             <field name="percent" readonly="1"/>
                             <field name="total_qty" sum="total_qty"/>
@@ -352,7 +352,7 @@
                     <field name="delivery_70_ids" no_label="1" context="{'seq': name}" attrs="{'invisible': [('hide_delivery', '=', True)], 'readonly': [('state', '!=', 'draft')]}">
                         <tree editable="bottom">
                             <field name="delivery_id" required="1" options="{'no_create': True}" context="{'request_payment': True, 'partner_id': parent.partner_id, 'product_id': parent.product_id,
-                            'ids': parent.delivery_array, 'seq': parent.name, 'purchase_contract_id': parent.parent_id_purchase_contract, 'delivery_factory': True, 'date': parent.date_contract}"/>
+                            'ids': parent.delivery_array, 'seq': parent.name, 'purchase_contract_id': parent.parent_id_purchase_contract, 'delivery_factory': True, 'date': parent.date}"/>
                             <field name="quantity" sum="quantity"/>
                             <field name="percent" readonly="1"/>
                             <field name="total_qty" sum="total_qty"/>
@@ -629,7 +629,7 @@
                         <tree editable="bottom">
                             <field name="delivery_id" required="1" options="{'no_create': True}" context="{'request_payment': True, 'partner_id': parent.partner_id, 'product_id': parent.product_id,
                             'ids': parent.delivery_ktn_array, 'seq': parent.name, 'purchase_contract_id': parent.parent_id_purchase_contract,
-                            'delivery_ktn': True, 'date': parent.date_contract}"/>
+                            'delivery_ktn': True, 'date': parent.date}"/>
                             <field name="quantity" sum="quantity"/>
                             <field name="percent" readonly="1"/>
                             <field name="total_qty" sum="total_qty"/>
@@ -645,7 +645,7 @@
                         <tree editable="bottom">
                             <field name="delivery_id" required="1" options="{'no_create': True}" context="{'request_payment': True, 'partner_id': parent.partner_id, 'product_id': parent.product_id,
                             'ids': parent.delivery_array, 'seq': parent.name, 'purchase_contract_id': parent.parent_id_purchase_contract,
-                            'delivery_factory': True, 'date': parent.date_contract}"/>
+                            'delivery_factory': True, 'date': parent.date}"/>
                             <field name="quantity" sum="quantity"/>
                             <field name="percent" readonly="1"/>
                             <field name="total_qty" sum="total_qty"/>
