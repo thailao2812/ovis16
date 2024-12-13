@@ -189,6 +189,20 @@ class SaleContractIndia(models.Model):
                     res.append((record.id, record.name))
         return res
 
+    def open_wizard_select_date_range(self):
+        return {
+            'name': _('Filter Purchase Contract'),
+            'res_model': 'wizard.select.date.range.purchase.contract',
+            'view_mode': 'form',
+            # 'domain':self.request_payment_ids.ids,
+            'context': {
+                'active_model': 'sale.contract.india',
+                'res_id': self.id,
+            },
+            'target': 'new',
+            'type': 'ir.actions.act_window',
+        }
+
 
 class SaleContractLineIndia(models.Model):
     _name = 'sale.contract.line.india'
