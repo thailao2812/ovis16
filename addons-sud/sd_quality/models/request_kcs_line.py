@@ -1212,6 +1212,7 @@ class RequestKCSLine(models.Model):
                         line.deduction = deduction
                     else:
                         deduction = line.deduction_manual
+                        line.deduction = deduction
                     line.qty_reached = product_qty * deduction/100 or 0.0
                     line.basis_weight = product_qty + product_qty * deduction/100 or 0.0
             else:
