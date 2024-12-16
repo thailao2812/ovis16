@@ -63,6 +63,9 @@ class PurchaseContract(models.Model):
     gross_qty = fields.Float(string='Gross Quantity (SN)', digits=(12,0), readonly=False)
     quality_deduction = fields.Float(string='Quality Deduction', digits=(12,0), compute='compute_quality_deduction', store=True)
 
+    crop_id = fields.Many2one('ned.crop', string='Crop', required=True, readonly=False,
+                              states={})
+
     @api.depends('gross_qty', 'total_qty', 'origin')
     def compute_quality_deduction(self):
         for rec in self:
