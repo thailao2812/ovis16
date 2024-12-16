@@ -51,12 +51,15 @@
                                 class="oe_highlight" context="{'dont_redirect_to_payments': True}"
                                 string="Register Payment" data-hotkey="g" groups="account.group_account_invoice"/>
 
-<!--                    print button-->
+                    <!--for NVP-->
                     <button name="print_printout_payment_npv" string="Print Request Payment SVNP" type="object" class="oe_highlight" attrs="{'invisible': [('type', '!=', 'purchase')]}"/>
                     <button name="print_nvp_fix_from_npe" string="Advance Fix From NPE" type="object" class="oe_highlight" attrs="{'invisible': [('is_converted', '=', False)]}"/>
-
+                    <!--for NPE-->
                     <button name="print_request_payment_npe" string="Print Request Payment NPE" type="object" class="oe_highlight" attrs="{'invisible': [('type', '!=', 'consign')]}"/>
                     <button name="print_advance_payment" string="Print Advance Payment NPE" type="object" class="oe_highlight" attrs="{'invisible': [('type', '!=', 'consign')]}"/>
+                    <!--for PTBF-->
+                    <button name="print_request_payment_ptbf" string="Print Request Payment PTBF" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('type_of_ptbf_payment', 'not in', ['fixation', 'advance']), ('type', '!=', 'ptbf')]}"/>
+                    <button name="print_advance_request_payment_ptbf" string="Print Advance PTBF" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('type_of_ptbf_payment', '!=', 'advance'), ('type', '!=', 'ptbf')]}"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,request,security,purchasing,approved,accounting_2,approved_director,paid"/>
                 </header>
 
@@ -111,7 +114,7 @@
                             <field name="quantity_advance" readonly="1"/>
                             <field name="liffe_price" readonly="1"/>
                             <field name="price_diff" readonly="1"/>
-                            <field name="differencial_price" readonly="1"/>
+                            <field name="differencial_price" readonly="1" string="Reference Price"/>
                             <field name="advance_price_usd" readonly="1"/>
                             <field name="total_advance_payment_usd" readonly="1"/>
                             <field name="rate" readonly="1"/>
