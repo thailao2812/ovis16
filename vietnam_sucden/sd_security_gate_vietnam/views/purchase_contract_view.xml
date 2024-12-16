@@ -487,6 +487,15 @@
                 <attribute name="context">{'default_parent_id': active_id, 'type':type,'partner_id':partner_id,'purchase_contract_id':active_id,'contract_line':contract_line}</attribute>
                 <attribute name="attrs">{'readonly': [('state','!=','approved')]}</attribute>
             </xpath>
+            <xpath expr="//field[@name='request_payment_ids']//tree//button[@name='print_advance_payment']" position="replace">
+
+            </xpath>
+            <xpath expr="//field[@name='request_payment_ids']//tree//button[@name='print_printout_payment_npv']" position="replace">
+
+            </xpath>
+            <xpath expr="//field[@name='request_payment_ids']//tree//button[@name='print_payment_request']" position="replace">
+
+            </xpath>
             <xpath expr="//field[@name='request_payment_ids']//tree/field[@name='type']" position="after">
                 <field name="state" widget="badge"/>
                 <field name="is_attach_file" decoration-success="is_attach_file != ''"/>

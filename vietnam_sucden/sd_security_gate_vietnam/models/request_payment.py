@@ -803,11 +803,22 @@ class RequestPayment(models.Model):
             })
             rec.state = 'security'
 
+    def _get_printed_report_name(self):
+        self.ensure_one()
+        report_name = (_('Request Payment - %s - Time %') % (self.purchase_contract_id.name, self.name))
+        return report_name
+
     def print_nvp_fix_from_npe(self):
         return self.env.ref('sd_security_gate_vietnam.printout_payment_npv_fixed_by_npe_report').report_action(self)
 
     def print_request_payment_npe(self):
         return self.env.ref('sd_security_gate_vietnam.printout_request_payment_npe_report').report_action(self)
+
+    def print_request_payment_ptbf(self):
+        return self.env.ref('sd_security_gate_vietnam.printout_request_payment_ptbf_report').report_action(self)
+
+    def print_advance_request_payment_ptbf(self):
+        return self.env.ref('sd_security_gate_vietnam.printout_request_payment_ptbf_advance_report').report_action(self)
 
 class StatusGoods(models.Model):
     _name = 'status.goods'
