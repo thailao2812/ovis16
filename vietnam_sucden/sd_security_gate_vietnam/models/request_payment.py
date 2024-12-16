@@ -805,7 +805,7 @@ class RequestPayment(models.Model):
 
     def _get_printed_report_name(self):
         self.ensure_one()
-        report_name = (_('Request Payment - %s - Time %') % (self.purchase_contract_id.name, self.name))
+        report_name = (_('Request Payment - %s - Time %s') % (self.purchase_contract_id.name, self.name))
         return report_name
 
     def print_nvp_fix_from_npe(self):
