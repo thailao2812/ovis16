@@ -22,6 +22,7 @@
         'wizard/wizard_psc_to_sc_link_view.xml',
         'wizard/wizard_report_psc_to_sc_link_view.xml',
         'wizard/wizard_select_date_range_purchase_contract_view.xml',
+        'wizard/wizard_select_date_range_s_contract_view.xml',
         'views/report_psc_to_sc_link_view.xml',
         'views/purchase_contract_view.xml',
         'views/market_india_view.xml',

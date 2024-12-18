@@ -14,6 +14,7 @@ class PscToScLinked(models.Model):
     sc_qty = fields.Float(string='SC Qty')
     balance_qty = fields.Float(string='Balance Qty')
     value = fields.Float(string='Value (USD/MT)', compute='compute_value', store=True)
+    allocated_qty = fields.Float(string='Allocated Qty')
     current_allocated = fields.Float(string='Current Allocation')
     state = fields.Selection(related='sale_contract_id.state', string='State')
     state_allocate = fields.Selection([
@@ -43,6 +44,7 @@ class PscToScLinked(models.Model):
             self.product_id = self.s_contract.product_id.id
             self.sc_qty = self.s_contract.total_qty
             self.balance_qty = self.s_contract.open_qty
+            self.allocated_qty = self.s_contract.total_allocated_sc
 
     @api.constrains('current_allocated')
     def _constrains_current_allocated(self):
@@ -55,9 +57,11 @@ class PscToScLinked(models.Model):
         for rec in self:
             rec.s_contract._compute_total_allocated()
             rec.state_allocate = 'submit'
+            rec.onchange_s_contract()
 
     def button_draft(self):
         for rec in self:
             rec.s_contract._compute_total_allocated()
             rec.state_allocate = 'draft'
+            rec.onchange_s_contract()
 
