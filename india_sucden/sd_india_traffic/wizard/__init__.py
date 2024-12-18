@@ -5,3 +5,4 @@ from . import wizard_report_fob_statement
 from . import wizard_psc_to_sc_link
 from . import wizard_report_psc_to_sc_link
 from . import wizard_select_date_range_purchase_contract
+from . import wizard_select_date_range_s_contract
