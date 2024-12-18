@@ -30,9 +30,21 @@ class Parser(models.AbstractModel):
             'manage_datetime': self.manage_datetime,
             'get_paid_quantity': self.get_paid_quantity,
             'get_string_amount': self.get_string_amount,
-            'get_liquidation': self.get_liquidation
+            'get_liquidation': self.get_liquidation,
+            'get_minutes_of_fixation': self.get_minutes_of_fixation,
         })
         return localcontext
+
+    def get_minutes_of_fixation(self, request):
+        if request:
+            ptbf_fix_price_no = request.price_tobe_fix.no
+            search_other_request = self.env['request.payment'].search([
+                ('type', '=', 'ptbf'),
+                ('type_of_ptbf_payment', '=', 'fixation'),
+                ('price_tobe_fix', '=', request.price_tobe_fix.id),
+                ('create_date', '<', request.create_date),
+            ])
+            return str(ptbf_fix_price_no) + '/' + str(len(search_other_request) + 1)
 
     def get_paid_quantity(self, request):
         if request:

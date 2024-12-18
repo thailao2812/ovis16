@@ -110,6 +110,9 @@ class RequestPayment(models.Model):
 
     note_by_security_gate = fields.Text(string='Note Security Gate')
 
+    request_deposit = fields.Integer(string='Request Deposit')
+
+
     def generate_advance_line(self):
         for rec in self:
             if not self.env.context.get('total'):
@@ -429,7 +432,7 @@ class RequestPayment(models.Model):
 
     @api.depends('payment_quantity', 'fix_price', 'liquidation_amount', 'deposit_amount', 'advance_payment_converted', 'payment_quantity',
                  'total_interest', 'is_converted', 'type', 'type_of_ptbf_payment', 'final_price_vnd', 'total_advance_payment_usd',
-                 'rate', 'qty_advance_fix', 'fixation_advance_line_ids', 'fixation_advance_line_ids.request_amount')
+                 'rate', 'qty_advance_fix', 'fixation_advance_line_ids', 'fixation_advance_line_ids.request_amount', 'request_deposit')
     def _compute_request_amount(self):
         for rec in self:
             if rec.type == 'purchase':
@@ -455,6 +458,9 @@ class RequestPayment(models.Model):
                         rec.request_amount = rec.total_contract_value - sum(rec.fixation_advance_line_ids.filtered(lambda x: x.id != advance_remain_line.id and x.name != 'Total:').mapped('request_amount')) - rec.liquidation_amount
                     else:
                         rec.request_amount = 0
+
+            if rec.request_deposit > 0:
+                rec.request_amount = rec.request_deposit
 
     @api.depends('converted_line_ids', 'converted_line_ids.advance_payment', 'converted_line_ids.interest')
     def compute_advance_payment_converted(self):
