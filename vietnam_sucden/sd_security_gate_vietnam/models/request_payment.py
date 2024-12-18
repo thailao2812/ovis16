@@ -829,6 +829,9 @@ class RequestPayment(models.Model):
     def print_request_payment_advance_ptbf(self):
         return self.env.ref('sd_security_gate_vietnam.request_payment_ptbf_advance_report').report_action(self)
 
+    def print_minutes_of_closing_price(self):
+        return self.env.ref('sd_security_gate_vietnam.report_ptbf_minutes_of_closing_price').report_action(self)
+
 class StatusGoods(models.Model):
     _name = 'status.goods'
 
