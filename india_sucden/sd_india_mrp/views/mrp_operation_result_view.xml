@@ -9,7 +9,14 @@
             </xpath>
             <xpath expr="//field[@name='resource_id']" position="replace">
             </xpath>
+            <xpath expr="//field[@name='state']" position="before">
+                <button name="button_confirm" states="draft" string="Done" type="object" class="oe_highlight" confirm="Are you sure to Confirm the Production Result?"/>
+                <button name="button_cancel" states="draft,done" string="Cancel" type="object" confirm="Are you sure to cancel this Production Result?"/>
+            </xpath>
 
+            <xpath expr="//field[@name='produced_products']" position="attributes">
+                <attribute name="attrs">{'readonly': [('state', '!=', 'draft')]}</attribute>
+            </xpath>
         </field>
     </record>
 </odoo>
