@@ -12,6 +12,12 @@
             <xpath expr="//field[@name='request_line']/tree/field[@name='stack_id']" position="attributes">
                 <attribute name="readonly">0</attribute>
             </xpath>
+            <xpath expr="//button[@name='set_to_approved']" position="after">
+                <button name="button_cancel" states="done,approved,draft" type="object" string="Cancel" class="oe_highlight" confirm="Are you sure to cancel this Request Material?"/>
+            </xpath>
+            <xpath expr="//button[@name='set_to_approved']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
 
         </field>
     </record>
