@@ -42,3 +42,18 @@ class MrpProduction(models.Model):
             })
         self._compute_qty()
         self.create_report_pnl()
+
+    def action_cancel(self):
+        """ Kiểm tra các điều kiện rùi cập nhật trạng thái cancel """
+        if self.state == 'done':
+            raise UserError(_('The Other is Done, cannot cancel'))
+        # Trường hợp đã tạo git rùi thì ko có tạo phiếu Cancel
+        request_material = self.env['request.materials'].search([
+            ('production_id', '=', self.id), ('state', '!=', 'cancel')
+        ])
+        if request_material:
+            raise UserError(_('You have Request Material for this MO, cannot Cancel it!'))
+
+        self.state = 'cancel'
+        # self._action_cancel()
+        return True
