@@ -14,3 +14,5 @@ access_wizard_reason_refuse,access_wizard_reason_refuse,model_wizard_refuse_requ
 
 access_advance_line,access_advance_line,model_advance_line,base.group_user,1,1,1,1
 access_reference_information,access_reference_information,model_reference_information,base.group_user,1,1,1,1
+
+access_fixation_advance_ptbf_npe,access_fixation_advance_ptbf_npe,model_fixation_advance_ptbf_npe,base.group_user,1,1,1,1
