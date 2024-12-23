@@ -100,7 +100,7 @@ class WeighbridgeApiService(Component):
                                                 parking_order=p.parking_order, code=p.picking_type_id.code, picking_name=p.picking_type_id.name, 
                                                 state=p.state, default_code=p.product_ids.default_code, product_id=p.product_ids.id, type_transfer=p.type_transfer,
                                                 districts_id=p.districts_id, packing_id=p.packing_id, approx_quantity=p.approx_quantity,
-                                                arrival_time=None if p.arrivial_time == False else dtime.strptime(str(p.arrivial_time), "%Y-%m-%d %H:%M:%S").strftime(DATETIME_FORMAT),
+                                                arrival_time=None if p.arrivial_time == False else dtime.strptime(str(p.arrivial_time), "%Y-%m-%d %H:%M:%S.%f").strftime(DATETIME_FORMAT),
                                                 time_out=get_timeout, block_request=p.block_request, weigh_block=p.weigh_block))
         else: # Thêm estate_name cho riêng India
             for p in self.env["ned.security.gate.queue"].search(domain):
