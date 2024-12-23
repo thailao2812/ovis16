@@ -12,7 +12,7 @@ class FixationAdvancePTBFNPE(models.Model):
     request_origin_id = fields.Many2one('request.payment', string='Request Origin', ondelete='cascade')
     name = fields.Char(string='Advance Payment')
     contract_id = fields.Many2one('purchase.contract', string='NPE No.')
-    date_contract = fields.Date(string='Date')
+    date_contract = fields.Date(string='Date Advance')
     temp_quantity = fields.Integer(string='Quantity')
     quantity = fields.Integer(string='Quantity')
     request_amount = fields.Float(string='Request Amount', digits=(12, 0))
