@@ -19,6 +19,7 @@ class SecurityGateSearchParam(Datamodel):
     _inherit = "masterdata.search.param"
     
     warehouse_id = fields.String(load_default="1,22")
+    country = fields.String(load_default="vietnam")
     
 ###========= Datamodel OUTPUT =========###
 class SecurityGateShortInfo(Datamodel):
@@ -43,8 +44,12 @@ class SecurityGateShortInfo(Datamodel):
     type_transfer = fields.String()
     districts_id = fields.Integer(allow_none=True)
     packing_id = fields.Integer()
+    arrival_time = fields.DateTime(allow_none=True)
     time_out = fields.DateTime(allow_none=True)
     estate_name = fields.String()
+    block_request = fields.Boolean()
+    weigh_block = fields.Boolean()
+    approx_quantity = fields.Integer()
 
 class SecurityGateShortInfoExt(Datamodel):
     _name = "security.gate.short.infoext"
@@ -86,7 +91,7 @@ class WeighbridgeApiService(Component):
             domain.append(("warehouse_id", "in", array))
         res = []
         SecurityGateShortInfo = self.env.datamodels["security.gate.short.info"]
-        if len(array) == 1:
+        if security_gate_search_param.country == 'vietnam':
             for p in self.env["ned.security.gate.queue"].search(domain):
                 get_timeout = None if p.time_out == False else dtime.strptime(str(p.time_out), "%Y-%m-%d %H:%M:%S.%f").strftime(DATETIME_FORMAT)
                 res.append(SecurityGateShortInfo(id=p.id, name=p.name, warehouse_id=p.warehouse_id, supplier_id=p.supplier_id, customer_id=p.customer_id, 
@@ -94,8 +99,9 @@ class WeighbridgeApiService(Component):
                                                 else p.last_cont, estimated_bags=p.estimated_bags,
                                                 parking_order=p.parking_order, code=p.picking_type_id.code, picking_name=p.picking_type_id.name, 
                                                 state=p.state, default_code=p.product_ids.default_code, product_id=p.product_ids.id, type_transfer=p.type_transfer,
-                                                districts_id=p.districts_id, packing_id=p.packing_id, 
-                                                time_out=get_timeout))
+                                                districts_id=p.districts_id, packing_id=p.packing_id, approx_quantity=p.approx_quantity,
+                                                arrival_time=None if p.arrivial_time == False else dtime.strptime(str(p.arrivial_time), "%Y-%m-%d %H:%M:%S").strftime(DATETIME_FORMAT),
+                                                time_out=get_timeout, block_request=p.block_request, weigh_block=p.weigh_block))
         else: # Thêm estate_name cho riêng India
             for p in self.env["ned.security.gate.queue"].search(domain):
                 get_timeout = None if p.time_out == False else dtime.strptime(str(p.time_out), "%Y-%m-%d %H:%M:%S.%f").strftime(DATETIME_FORMAT)
@@ -621,3 +627,70 @@ class WeighbridgeApiService(Component):
                 }
 
         return mess
+
+### UPDATE DR ###
+    def _input_dr_schema(self):
+        return {"security_id": {"type": "integer"},
+                "supplier_id": {"type": "integer"},
+                "estimated_bags": {"type": "integer"},
+                "approx_quantity": {"type": "integer"},
+                }
+                # "weight_scale_id": {"type": "integer"},
+        
+    def _output_dr_schema(self):
+        return {
+                'status_code': {"type": "string"},
+                'message': {"type": "string"},
+                'security_id': {"type": "integer"},
+                'security_name': {"type": "string"},
+                }
+
+    @restapi.method(
+        [(["/ned_security_gate_queue/update_dr"], "POST")],
+        input_param=restapi.CerberusValidator("_input_dr_schema"),
+        output_param=restapi.CerberusValidator("_output_dr_schema"),
+        auth="api_key",
+    )
+    def update_dr(self, **params):
+        supplier_id = params.get('supplier_id')
+        estimated_bags = params.get('estimated_bags')
+        approx_quantity = params.get('approx_quantity')
+        
+        # weight_scale_id = params.get('weight_scale_id')
+        # weight_scale_id = self.env['res.users'].sudo().search([('login','=',weight_scale_id)])
+        
+        security_id = params.get('security_id')
+        if security_id and isinstance(security_id, str):
+            security_id = int(params.get('security_id'))
+            
+        if not security_id:
+            return {
+                    'status_code': 'SUD23-404',
+                    'message': 'DR does not exist.',
+                    }
+        
+        security_id = self.env['ned.security.gate.queue'].sudo().browse(security_id)
+        security_id.with_user(182).update({
+                    'supplier_id': supplier_id,
+                    'estimated_bags': estimated_bags,
+                    'approx_quantity': approx_quantity,
+                    'weigh_block': True,
+                    'time_in': dtime.now(),
+                })
+        return {
+                'status_code': 'SUD23-200',
+                'message': 'DR update successfully.',
+                'security_id': security_id.id,
+                'security_name': security_id.name,
+                }
+
+        # security_id.sudo().write({
+        #         'license_plate': vehicle_no,
+        #         'supplier_id': partner_id,
+        #     })
+
+        # if not security_id.time_in:
+        #     security_id.sudo().write({
+        #             'time_in': dtime.now()
+        #         })
+

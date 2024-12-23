@@ -8,7 +8,7 @@ import math
 class DeliveryReady(models.Model):
     _name = 'delivery.ready'
 
-    delivery_id = fields.Many2one('ned.security.gate.queue', string='DR')
+    delivery_id = fields.Many2one('ned.security.gate.queue', string='DR', domain="[('weigh_block', '=', True)]", ondelete='cascade')
     license_plate = fields.Char(string='Vehicle No.', related='delivery_id.license_plate', store=True)
     arrivial_time = fields.Datetime('Arrival Time', related='delivery_id.arrivial_time', store=True)
     supplier_id = fields.Many2one('res.partner', related='delivery_id.supplier_id', store=True)

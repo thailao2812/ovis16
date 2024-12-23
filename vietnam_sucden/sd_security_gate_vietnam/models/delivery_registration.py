@@ -10,6 +10,12 @@ class DeliveryRegistration(models.Model):
     picking_ktn_id = fields.Many2one('stock.picking', string='GRN KTN Link')
 
     arrivial_time = fields.Datetime('Arrival Time', readonly=False)
+    
+    def _compute_my_field_readonly(self):
+        self.block_request = self.env['res.users'].has_group('sd_purchase_contract.group_purchase_contract_user')
+
+    block_request = fields.Boolean(default=False, string="Truck block request")
+    weigh_block = fields.Boolean(default=False, string="Weigh & Block", readonly=True)
 
     def button_link_grn_ktn(self):
         for rec in self:
