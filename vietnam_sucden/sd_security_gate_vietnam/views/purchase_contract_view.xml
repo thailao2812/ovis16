@@ -621,9 +621,9 @@
                             <field name="check" invisible="1"/>
                         </tree>
                     </field>
-                    <button name="calculate_remain_advance_ptbf_npe" string="Calculate Remain" type="object" class="oe_highlight"/>
+                    <button name="calculate_remain_advance_ptbf_npe" attrs="{'invisible': ['|', ('is_converted', '!=', True), ('type_of_ptbf_payment', '!=', 'fixation_advance_ptbf_npe')]}" string="Calculate Remain" type="object" class="oe_highlight"/>
                     <span>--------</span>
-                    <button name="calculate_total_advance_ptbf_npe" string="Calculate Total" type="object" class="oe_highlight"/>
+                    <button name="calculate_total_advance_ptbf_npe" attrs="{'invisible': ['|', ('is_converted', '!=', True), ('type_of_ptbf_payment', '!=', 'fixation_advance_ptbf_npe')]}" string="Calculate Total" type="object" class="oe_highlight"/>
                     <separator string="Payment Information"/>
                     <group>
                         <group>
