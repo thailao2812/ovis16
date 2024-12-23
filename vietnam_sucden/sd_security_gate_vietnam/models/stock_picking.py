@@ -77,7 +77,7 @@ class StockPicking(models.Model):
                 if self._context.get('payment_percent') == 90:
                     check += [('warehouse_id.code', 'in', ['FA', 'KTN-LT-N', 'KTN-AP-N']),
                                ('partner_id', '=', self._context.get('partner_id')),
-                               ('state', 'not in', ['done', 'cancel', 'draft']), ('picking_type_id.operation', '=', 'factory'),
+                               ('state', 'not in', ['done', 'cancel', 'draft']),
                                ('picking_type_id.code', '=', 'incoming'),
                                 ('date_done', '>=', self._context.get('date')),
                                ('product_id', '=', self._context.get('product_id'))]
@@ -106,7 +106,6 @@ class StockPicking(models.Model):
                                 arr_done.append(i.picking_id.id)
                     args += [('warehouse_id.code', 'in', ['FA', 'KTN-LT-N', 'KTN-AP-N']),
                                ('partner_id', '=', self._context.get('partner_id')),
-                                ('picking_type_id.operation', '=', 'factory'),
                                 ('date_done', '>=', self._context.get('date')),
                                ('picking_type_id.code', '=', 'incoming'), ('id', 'not in', grn_array),
                                 ('id', 'not in', arr_done), ('product_id', '=', self._context.get('product_id')),
@@ -119,7 +118,6 @@ class StockPicking(models.Model):
                                   ('partner_id', '=', self._context.get('partner_id')),
                                   ('state', 'in', ['done']),
                                   ('date_done', '>=', self._context.get('date')),
-                                  ('picking_type_id.operation', '=', 'factory'),
                                   ('picking_type_id.code', '=', 'incoming'),
                                   ('product_id', '=', self._context.get('product_id'))]
                         grn_ids = self.search(args + check)
@@ -147,7 +145,6 @@ class StockPicking(models.Model):
                                     arr_done.append(i.picking_id.id)
                         args += [('warehouse_id.code', 'in', ['FA', 'KTN-LT-N', 'KTN-AP-N']),
                                  ('partner_id', '=', self._context.get('partner_id')),
-                                 ('picking_type_id.operation', '=', 'factory'),
                                  ('date_done', '>=', self._context.get('date')),
                                  ('picking_type_id.code', '=', 'incoming'), ('id', 'not in', grn_array),
                                  ('id', 'not in', arr_done), ('product_id', '=', self._context.get('product_id')),
@@ -206,7 +203,6 @@ class StockPicking(models.Model):
             if self._context.get('payment_percent') == 90:
                 check += [('warehouse_id.code', 'in', ['FA', 'KTN-LT-N', 'KTN-AP-N']),
                           ('partner_id', '=', self._context.get('partner_id')),
-                        ('picking_type_id.operation', '=', 'factory'),
                           ('date_done', '>=', self._context.get('date')),
                           ('picking_type_id.code', '=', 'incoming'),
                           ('product_id', '=', self._context.get('product_id')),
@@ -236,7 +232,6 @@ class StockPicking(models.Model):
                             arr_done.append(i.picking_id.id)
                 domain += [('warehouse_id.code', 'in', ['FA', 'KTN-LT-N', 'KTN-AP-N']),
                          ('partner_id', '=', self._context.get('partner_id')),
-                         ('picking_type_id.operation', '=', 'factory'),
                            ('date_done', '>=', self._context.get('date')),
                          ('picking_type_id.code', '=', 'incoming'), ('id', 'not in', grn_array),
                          ('id', 'not in', arr_done), ('product_id', '=', self._context.get('product_id')),
@@ -275,7 +270,6 @@ class StockPicking(models.Model):
                                 arr_done.append(i.picking_id.id)
                     domain += [('warehouse_id.code', 'in', ['FA', 'KTN-LT-N', 'KTN-AP-N']),
                                ('partner_id', '=', self._context.get('partner_id')),
-                               ('picking_type_id.operation', '=', 'factory'),
                                ('date_done', '>=', self._context.get('date')),
                                ('picking_type_id.code', '=', 'incoming'), ('id', 'not in', grn_array),
                                ('id', 'not in', arr_done), ('product_id', '=', self._context.get('product_id')),
