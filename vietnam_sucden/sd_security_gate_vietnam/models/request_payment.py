@@ -102,7 +102,7 @@ class RequestPayment(models.Model):
     fixation_advance_line_ids = fields.One2many('advance.line', 'request_id', string='Advance Line')
     reference_information_line_ids = fields.One2many('reference.information',  'request_id', string='Reference Information')
     qty_advance_fix = fields.Integer(string='Fix Quantity', compute='compute_total_qty', store=True)
-    total_amount_usd = fields.Float(string='Total Amount USD', compute='compute_price', store=True, digits=(12, 2))
+    total_amount_usd = fields.Float(string='Total Amount USD', compute='compute_price', store=True, digits=(12, 6))
     average_rate = fields.Float(string='Average Rate', digits=(12, 0), compute='compute_price', store=True)
     rate = fields.Float(string='Rate', digits=(12, 0))
 
@@ -320,6 +320,7 @@ class RequestPayment(models.Model):
                     continue
 
     def calculate_remain_advance_ptbf_npe(self):
+        self.ensure_one()
         for rec in self:
             checking_line_remain = self.env['fixation.advance.ptbf.npe'].search([
                 ('request_payment_id', '=', rec.id),
@@ -390,14 +391,17 @@ class RequestPayment(models.Model):
             rec.final_price_vnd = round(sum(total_total.mapped('total')) / rec.qty_advance_fix, 0) if rec.qty_advance_fix > 0 else 0
             # Create Total
             self.env['fixation.advance.ptbf.npe'].create(value_total)
-            # self.create_total_advance_ptbf_npe(rec)
+            self.create_total_advance_ptbf_npe(rec)
 
     def create_total_advance_ptbf_npe(self, rec):
+        if rec.fixation_advance_ptbf_npe_total_ids:
+            rec.fixation_advance_ptbf_npe_total_ids.unlink()
         for line in rec.fixation_advance_ptbf_npe_ids:
-            if line.name != 'Còn lại/ Remain Payment:' or line.name != 'Total All':
+            if line.name != 'Còn lại/ Remain Payment:' and line.name != 'Total All':
                 value_total = {
                     'request_payment_id': rec.id,
                     'name': line.name,
+                    'contract_id': line.contract_id.id if line.contract_id else False,
                     'date_contract': line.date_contract,
                     'usd': line.usd,
                     'ex_rate': line.ex_rate,
@@ -410,15 +414,31 @@ class RequestPayment(models.Model):
                 value_total = {
                     'request_payment_id': rec.id,
                     'name': line.name,
+                    'contract_id': line.contract_id.id,
                     'date_contract': line.date_contract,
                     'usd': line.usd,
                     'ex_rate': line.ex_rate,
                     'interest': line.interest,
                     'vnd': line.vnd,
-                    'total': line.total,
+                    'total': rec.request_amount - sum(rec.fixation_advance_ptbf_npe_ids.filtered(lambda x: x.name == 'Total').mapped('total')),
                 }
+                self.env['fixation.advance.ptbf.npe.total'].create(value_total)
+            if line.name == 'Total All':
+                value_total = {
+                    'request_payment_id': rec.id,
+                    'name': line.name,
+                    'contract_id': line.contract_id.id,
+                    'date_contract': line.date_contract,
+                    'usd': line.usd,
+                    'ex_rate': line.ex_rate,
+                    'interest': line.interest,
+                    'vnd': line.vnd,
+                    'total': rec.request_amount,
+                }
+                self.env['fixation.advance.ptbf.npe.total'].create(value_total)
 
     def generate_advance_line(self):
+        self.ensure_one()
         for rec in self:
             if not self.env.context.get('total'):
                 if rec.qty_advance_fix == 0:
@@ -452,6 +472,7 @@ class RequestPayment(models.Model):
                 self.env['advance.line'].create(value)
 
     def generate_reference_information(self):
+        self.ensure_one()
         for rec in self:
             rec.reference_information_line_ids = [(5, 0)]
             check_advance_line = rec.fixation_advance_line_ids.filtered(lambda x: x.name and x.rate > 0)
@@ -522,7 +543,7 @@ class RequestPayment(models.Model):
                 rec.total_advance_payment_usd = round((rec.advance_price_usd * rec.payment_quantity) / 1000, 2)
             if rec.type_of_ptbf_payment in ['fixation_advance', 'fixation_advance_ptbf_npe']:
                 rec.final_price_usd = rec.price_usd + rec.price_diff
-                rec.total_amount_usd = round((rec.final_price_usd * rec.qty_advance_fix) / 1000, 2)
+                rec.total_amount_usd = round((rec.final_price_usd * rec.qty_advance_fix) / 1000, 6)
                 if rec.type_of_ptbf_payment == 'fixation_advance':
                     rec.average_rate = rec.fixation_advance_line_ids.filtered(lambda x: x.name == 'Total:').rate
                 if rec.qty_advance_fix > 0:

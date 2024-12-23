@@ -16,7 +16,7 @@ class FixationAdvancePTBFNPETotal(models.Model):
     temp_quantity = fields.Integer(string='Quantity')
     quantity = fields.Integer(string='Quantity')
     request_amount = fields.Float(string='Request Amount', digits=(12, 0))
-    usd = fields.Float(string='USD', compute='_compute_usd', store=True)
+    usd = fields.Float(string='USD')
     ex_rate = fields.Float(string='Exchange Rate', digits=(12, 0))
     rate = fields.Float(string='Rate', digits=(12, 2))
     interest = fields.Float(string='Interest', digits=(12, 0))

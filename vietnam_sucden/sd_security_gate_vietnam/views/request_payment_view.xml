@@ -151,7 +151,7 @@
                         <field name="request_amount" class="bold-text" readonly="1" decoration-danger="request_amount > 0" groups="sd_security_gate_vietnam.group_request_payment_seeing_money_value"/>
                     </group>
                     <separator string="Reference Information" attrs="{'invisible': ['|', ('is_converted', '!=', True), ('type_of_ptbf_payment', '!=', 'fixation_advance_ptbf_npe')]}"/>
-                    <field readonly="1" name="fixation_advance_ptbf_npe_ids" attrs="{'invisible': ['|', ('is_converted', '!=', True), ('type_of_ptbf_payment', '!=', 'fixation_advance_ptbf_npe')]}" >
+                    <field readonly="1" name="fixation_advance_ptbf_npe_total_ids" attrs="{'invisible': ['|', ('is_converted', '!=', True), ('type_of_ptbf_payment', '!=', 'fixation_advance_ptbf_npe')]}" >
                         <tree>
                             <field name="name" readonly="1" decoration-bf="check == True" decoration-danger="check == True"/>
                             <field name="contract_id" readonly="1" decoration-bf="check == True" decoration-danger="check == True"/>
