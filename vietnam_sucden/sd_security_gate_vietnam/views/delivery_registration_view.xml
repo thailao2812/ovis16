@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_security_gate_queue_form_inherit_sd_vietnam" model="ir.ui.view">
+		<field name="name">view_security_gate_queue_form_inherit_sd_vietnam</field>
+		<field name="model">ned.security.gate.queue</field>
+		<field name="inherit_id" ref="sd_security_gate.view_security_gate_queue_form"/>
+		<field name="arch" type="xml">
+			<xpath expr="//field[@name='link_fot_id']" position="after">
+				<field name="block_request" 
+                attrs="{'readonly': [('state','in', ['closed','cancel','approved'])]}" groups="base.user_root, sd_purchase_contract.group_purchase_contract_user"/>
+                <!-- readonly="1" groups="base.user_root,sd_purchase_contract.group_purchase_contract_user" optional="show"/> -->
+                <field name="weigh_block"/> 
+			</xpath>
+        </field>
+	</record>
+
+	<record id="view_security_gate_queue_tree_inherit_sd_vietnam" model="ir.ui.view">
+		<field name="name">view_security_gate_queue_tree_inherit_sd_vietnam</field>
+		<field name="model">ned.security.gate.queue</field>
+		<field name="inherit_id" ref="sd_security_gate.view_security_gate_queue_tree"/>
+		<field name="arch" type="xml">
+			<xpath expr="//field[@name='parking_order']" position="after">
+				<field name="block_request"/>
+				<field name="weigh_block"/>
+			</xpath>
+		</field>
+	</record>
+</odoo>

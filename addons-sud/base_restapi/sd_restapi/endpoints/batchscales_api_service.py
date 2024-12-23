@@ -1447,8 +1447,8 @@ class BatchscalesApiService(Component):
             total_odoo_row += 1
 
         if total_row == total_odoo_row:
-            stock_picking_obj.button_qc_assigned()
-            stock_picking_obj.button_sd_validate()
+            stock_picking_obj.with_user(182).button_qc_assigned()
+            stock_picking_obj.with_user(182).button_sd_validate()
             stock_picking_obj.with_user(182).update({'state_kcs': 'draft'})
             mess = {
                 'status_code': 'SUD23-200',
