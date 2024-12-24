@@ -28,7 +28,7 @@ class FixationAdvancePTBFNPETotal(models.Model):
     @api.depends('name')
     def _compute_check(self):
         for rec in self:
-            if rec.name == 'Total':
+            if rec.name == 'Còn lại/ Remain Payment:':
                 rec.check = True
             else:
                 rec.check = False

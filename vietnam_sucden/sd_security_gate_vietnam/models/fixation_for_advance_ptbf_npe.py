@@ -16,12 +16,12 @@ class FixationAdvancePTBFNPE(models.Model):
     temp_quantity = fields.Integer(string='Quantity')
     quantity = fields.Integer(string='Quantity')
     request_amount = fields.Float(string='Request Amount', digits=(12, 0))
-    usd = fields.Float(string='USD', compute='_compute_usd', store=True)
+    usd = fields.Float(string='USD', compute='_compute_usd', store=True, digits=(12, 6))
     ex_rate = fields.Float(string='Exchange Rate', digits=(12, 0))
     rate = fields.Float(string='Rate', digits=(12, 2))
     interest = fields.Float(string='Interest', digits=(12, 0))
-    vnd = fields.Float(string='VND', digits=(12, 0), compute='_compute_total', store=True)
-    total = fields.Float(string='Total', digits=(12, 0), compute='_compute_total', store=True)
+    vnd = fields.Float(string='VND', digits=(12, 6), compute='_compute_total', store=True)
+    total = fields.Float(string='Total', digits=(12, 6), compute='_compute_total', store=True)
 
     check = fields.Boolean(string='Check', compute='_compute_check', store=True)
 
@@ -36,17 +36,14 @@ class FixationAdvancePTBFNPE(models.Model):
     @api.depends('name')
     def _compute_check(self):
         for rec in self:
-            if rec.name == 'Total':
-                rec.check = True
-            else:
-                rec.check = False
+            rec.check = False
 
     @api.depends('total', 'ex_rate')
     def _compute_usd(self):
         for rec in self:
             if rec.name == 'Total':
                 if rec.ex_rate > 0:
-                    rec.usd = float_round(rec.total / rec.ex_rate, precision_digits=2)
+                    rec.usd = float_round(rec.total / rec.ex_rate, precision_digits=6)
                 else:
                     rec.usd = 0
 
