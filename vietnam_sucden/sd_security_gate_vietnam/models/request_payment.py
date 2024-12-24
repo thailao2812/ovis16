@@ -171,7 +171,7 @@ class RequestPayment(models.Model):
                         rate = i.rate / 30 / 100
                         if seq == 1:
                             if point_qty - line.mirror_request_amount >= 0:
-                                request_amount = advance_price * line.mirror_request_amount - line.liquidation_amount
+                                request_amount = advance_price * line.mirror_request_amount
 
                                 value.update(
                                     {
@@ -267,8 +267,8 @@ class RequestPayment(models.Model):
                                     'ex_rate': 0,
                                     'rate': False,
                                     'interest': 0,
-                                    'vnd': (advance_price * line.mirror_request_amount) - line.liquidation_amount,
-                                    'total': (advance_price * line.mirror_request_amount) - line.liquidation_amount,
+                                    'vnd': (advance_price * line.mirror_request_amount),
+                                    'total': (advance_price * line.mirror_request_amount),
                                 }
                             )
                             self.env['fixation.advance.ptbf.npe'].create(value)
