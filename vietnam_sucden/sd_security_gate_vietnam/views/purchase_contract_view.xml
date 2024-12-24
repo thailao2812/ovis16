@@ -606,16 +606,16 @@
                     </group>
                     <field readonly="1" name="fixation_advance_ptbf_npe_total_ids" attrs="{'invisible': ['|', ('is_converted', '!=', True), ('type_of_ptbf_payment', '!=', 'fixation_advance_ptbf_npe')]}" >
                         <tree>
-                            <field name="name" readonly="1" decoration-bf="check == True" decoration-danger="check == True"/>
-                            <field name="contract_id" readonly="1" decoration-bf="check == True" decoration-danger="check == True"/>
-                            <field name="date_contract" readonly="1" decoration-bf="check == True" decoration-danger="check == True"/>
-                            <field name="quantity" readonly="1" decoration-bf="check == True" decoration-danger="check == True"/>
-                            <field name="usd" readonly="1" decoration-bf="check == True" decoration-danger="check == True"/>
-                            <field name="ex_rate" decoration-bf="check == True" decoration-danger="check == True" attrs="{'readonly': [('name', 'not in', ['Total', 'Còn lại/ Remain Payment:'])]}"/>
-                            <field name="rate" decoration-bf="check == True" decoration-danger="check == True" readonly="1"/>
-                            <field name="interest" decoration-bf="check == True" decoration-danger="check == True" readonly="1"/>
-                            <field name="vnd" decoration-bf="check == True" decoration-danger="check == True" readonly="1"/>
-                            <field name="total" decoration-bf="check == True" decoration-danger="check == True" readonly="1"/>
+                            <field name="name" readonly="1" />
+                            <field name="contract_id" readonly="1" />
+                            <field name="date_contract" readonly="1" />
+                            <field name="quantity" readonly="1" />
+                            <field name="usd" readonly="1" />
+                            <field name="ex_rate"  readonly="1"/>
+                            <field name="rate" readonly="1"/>
+                            <field name="interest" readonly="1"/>
+                            <field name="vnd" readonly="1"/>
+                            <field name="total"  readonly="1" decoration-bf="check == True" decoration-danger="check == True"/>
                             <field name="check" invisible="1"/>
                         </tree>
                     </field>
@@ -623,16 +623,16 @@
                     <button name="generate_fixation_advance_ptbf_npe" string="Generate Data" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('is_converted', '!=', True), ('type_of_ptbf_payment', '!=', 'fixation_advance_ptbf_npe')]}"/>
                     <field name="fixation_advance_ptbf_npe_ids" attrs="{'invisible': ['|', ('is_converted', '!=', True), ('type_of_ptbf_payment', '!=', 'fixation_advance_ptbf_npe')]}" >
                         <tree editable="top">
-                            <field name="name" readonly="1" decoration-bf="check == True" decoration-danger="check == True"/>
-                            <field name="contract_id" readonly="1" decoration-bf="check == True" decoration-danger="check == True"/>
-                            <field name="date_contract" readonly="1" decoration-bf="check == True" decoration-danger="check == True"/>
-                            <field name="quantity" readonly="1" decoration-bf="check == True" decoration-danger="check == True"/>
-                            <field name="usd" readonly="1" decoration-bf="check == True" decoration-danger="check == True"/>
-                            <field name="ex_rate" decoration-bf="check == True" decoration-danger="check == True" attrs="{'readonly': [('name', 'not in', ['Total', 'Còn lại/ Remain Payment:'])]}"/>
-                            <field name="rate" decoration-bf="check == True" decoration-danger="check == True" readonly="1"/>
-                            <field name="interest" decoration-bf="check == True" decoration-danger="check == True" readonly="1"/>
-                            <field name="vnd" decoration-bf="check == True" decoration-danger="check == True" readonly="1"/>
-                            <field name="total" decoration-bf="check == True" decoration-danger="check == True" readonly="1"/>
+                            <field name="name" readonly="1" decoration-muted="check == False"/>
+                            <field name="contract_id" readonly="1" decoration-muted="check == False"/>
+                            <field name="date_contract" readonly="1" decoration-muted="check == False"/>
+                            <field name="quantity" readonly="1" decoration-muted="check == False"/>
+                            <field name="usd" readonly="1" decoration-muted="check == False"/>
+                            <field name="ex_rate" decoration-muted="check == False" attrs="{'readonly': [('name', 'not in', ['Total', 'Còn lại/ Remain Payment:'])]}"/>
+                            <field name="rate" decoration-muted="check == False" readonly="1"/>
+                            <field name="interest" decoration-muted="check == False" readonly="1"/>
+                            <field name="vnd" decoration-muted="check == False" readonly="1"/>
+                            <field name="total" decoration-muted="check == False" readonly="1"/>
                             <field name="check" invisible="1"/>
                         </tree>
                     </field>
