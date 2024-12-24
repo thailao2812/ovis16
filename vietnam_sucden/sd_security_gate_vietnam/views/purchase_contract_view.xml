@@ -44,7 +44,7 @@
             <xpath expr="//field[@name='request_payment_ids']//form" position="replace">
                 <form>
                     <header>
-                        <button name="request_payment" string="Request" type="object" class="oe_highlight" states="draft" groups="sd_security_gate_vietnam.group_request_payment"/>
+                        <button name="request_payment" string="Request" type="object" class="oe_highlight" states="draft" groups="sd_security_gate_vietnam.group_request_payment" confirm="🧐 Hãy chắc chắn bạn muốn Request Payment nha! Nhớ kiểm tra kỹ Liquidation hoặc Deposit xem có quên hay nhầm gì không nhé! Nếu tất cả đã ổn, thì… OK thôi nào! 💸😎✨"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,request,security,purchasing,approved,accounting_2,approved_director,paid"/>
                     </header>
                     <separator string="Contract Information"/>
@@ -67,7 +67,7 @@
                             <field name="fix_price"/>
                             <field name="amount_untaxed"/>
                             <field name="name" readonly="1"/>
-                            <field name="date"/>
+                            <field name="date" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                         </group>
                     </group>
                     <separator string="Payment Information"/>
@@ -78,14 +78,13 @@
                             <field name="total_value"/>
                             <field name="advance_payment_converted" attrs="{'invisible': [('is_converted', '!=', True)]}"/>
                             <field name="total_interest" attrs="{'invisible': [('is_converted', '!=', True)]}"/>
-                            <field name="deposit_amount" attrs="{'invisible': [('is_converted', '=', True)]}"/>
-                            <field name="liquidation_amount"/>
-                            <field name="request_deposit" string="Request Amount" attrs="{'invisible': [('payment_quantity', '>', 0)]}"/>
-                            <field name="request_amount" decoration-danger="request_amount > 0"/>
+                            <field name="deposit_amount" attrs="{'invisible': [('is_converted', '=', True)], 'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="liquidation_amount" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="request_amount" attrs="{'readonly': [('state', '!=', 'draft')]}" decoration-danger="request_amount > 0" decoration-bf="request_amount > 0"/>
                             <field name="amount_in_text"/>
-                            <field name="partner_bank_id" domain="[('partner_id','=',partner_id)]" required="1"/>
-                            <field name="account_no"/>
-                            <field name="chinhanh"/>
+                            <field name="partner_bank_id" attrs="{'readonly': [('state', '!=', 'draft')]}" domain="[('partner_id','=',partner_id)]" required="1"/>
+                            <field name="account_no" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="chinhanh" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             <field name="delivery_array" invisible="1"/>
                             <field name="delivery_ktn_array" invisible="1"/>
                             <field name="grn_90_array" invisible="1"/>
@@ -280,7 +279,7 @@
             <xpath expr="//field[@name='request_payment_ids']//form" position="replace">
                 <form>
                     <header>
-                        <button name="request_payment" groups="sd_security_gate_vietnam.group_request_payment" string="Request" type="object" class="oe_highlight" states="draft"/>
+                        <button name="request_payment" groups="sd_security_gate_vietnam.group_request_payment" string="Request" type="object" class="oe_highlight" states="draft" confirm="🧐 Hãy chắc chắn bạn muốn Request Payment nha! Nhớ kiểm tra kỹ Liquidation hoặc Deposit xem có quên hay nhầm gì không nhé! Nếu tất cả đã ổn, thì… OK thôi nào! 💸😎✨"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,request,security,purchasing,approved,accounting_2,approved_director,paid"/>
                     </header>
                     <separator string="Contract Information"/>
@@ -300,10 +299,10 @@
                         <group>
                             <field name="date_contract"/>
                             <field name="quantity_contract" string="Contract Quantity"/>
-                            <field name="price_npe"/>
+                            <field name="price_npe" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             <field name="amount_untaxed"/>
                             <field name="name" readonly="1"/>
-                            <field name="date"/>
+                            <field name="date" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                         </group>
                     </group>
                     <separator string="Payment Information"/>
@@ -313,14 +312,14 @@
                             <field name="mirror_request_amount" string="Remain Qty"/>
                             <field name="fix_price" string="Advance Price"/>
                             <field name="total_value"/>
-                            <field name="deposit_amount"/>
+                            <field name="deposit_amount" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             <field name="liquidation_amount" invisible="1"/>
                             <field name="request_deposit" string='Request Amount' attrs="{'invisible': [('payment_quantity', '>', 0)]}"/>
-                            <field name="request_amount" decoration-danger="request_amount > 0"/>
+                            <field name="request_amount" attrs="{'readonly': [('state', '!=', 'draft')]}" decoration-danger="request_amount > 0" decoration-bf="request_amount > 0"/>
                             <field name="amount_in_text"/>
-                            <field name="partner_bank_id" domain="[('partner_id','=',partner_id)]" required="1"/>
-                            <field name="account_no"/>
-                            <field name="chinhanh"/>
+                            <field name="partner_bank_id" attrs="{'readonly': [('state', '!=', 'draft')]}" domain="[('partner_id','=',partner_id)]" required="1"/>
+                            <field name="account_no" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="chinhanh" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             <field name="delivery_array" invisible="1"/>
                             <field name="delivery_ktn_array" invisible="1"/>
                             <field name="grn_90_array" invisible="1"/>
@@ -514,8 +513,11 @@
                     <separator string="Contract Information"/>
                     <group>
                         <group>
-                            <field name="type_of_ptbf_payment"/>
-                            <field name="price_tobe_fix" options="{'no_create': True}" domain="[('contract_id', '=', parent_id_purchase_contract)]" attrs="{'required': [('type_of_ptbf_payment', 'in', ['fixation', 'fixation_advance', 'fixation_advance_ptbf_npe'])], 'invisible': ['|', ('type_of_ptbf_payment', 'not in', ['fixation', 'fixation_advance', 'fixation_advance_ptbf_npe']), ('type', '!=', 'ptbf')]}"/>
+                            <field name="type_of_ptbf_payment" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="price_tobe_fix" options="{'no_create': True}" domain="[('contract_id', '=', parent_id_purchase_contract)]"
+                                   attrs="{'required': [('type_of_ptbf_payment', 'in', ['fixation', 'fixation_advance', 'fixation_advance_ptbf_npe'])],
+                                   'invisible': ['|', ('type_of_ptbf_payment', 'not in', ['fixation', 'fixation_advance', 'fixation_advance_ptbf_npe']), ('type', '!=', 'ptbf')],
+                                   'readonly': [('state', '!=', 'draft')]}"/>
 
                             <field name="partner_id" readonly="1"/>
                             <field name="product_id" invisible="1"/>
@@ -534,7 +536,7 @@
                             <field name="fix_price"/>
                             <field name="amount_untaxed"/>
                             <field name="name" readonly="1"/>
-                            <field name="date"/>
+                            <field name="date" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             <field name="type" invisible="1"/>
                         </group>
                     </group>
@@ -605,7 +607,7 @@
                          <field name="total_contract_value"/>
                         <field name="request_amount" readonly="1" decoration-danger="request_amount > 0" decoration-bf="request_amount > 0"/>
                     </group>
-                    <field name="fixation_advance_ptbf_npe_total_ids" attrs="{'invisible': ['|', ('is_converted', '!=', True), ('type_of_ptbf_payment', '!=', 'fixation_advance_ptbf_npe')]}" >
+                    <field readonly="1" name="fixation_advance_ptbf_npe_total_ids" attrs="{'invisible': ['|', ('is_converted', '!=', True), ('type_of_ptbf_payment', '!=', 'fixation_advance_ptbf_npe')]}" >
                         <tree editable="top">
                             <field name="name" readonly="1" decoration-bf="check_bold == True"/>
                             <field name="contract_id" readonly="1" decoration-bf="check_bold == True"/>
@@ -623,8 +625,8 @@
                     </field>
                     <separator string="Reference Information" attrs="{'invisible': ['|', ('is_converted', '!=', True), ('type_of_ptbf_payment', '!=', 'fixation_advance_ptbf_npe')]}"/>
                     <button name="generate_fixation_advance_ptbf_npe" string="Generate Data" type="object" class="oe_highlight"
-                            attrs="{'invisible': ['|', ('is_converted', '!=', True), ('type_of_ptbf_payment', '!=', 'fixation_advance_ptbf_npe')]}"/>
-                    <field name="fixation_advance_ptbf_npe_ids" attrs="{'invisible': ['|', ('is_converted', '!=', True), ('type_of_ptbf_payment', '!=', 'fixation_advance_ptbf_npe')]}" >
+                            attrs="{'invisible': ['|', '|', ('is_converted', '!=', True), ('type_of_ptbf_payment', '!=', 'fixation_advance_ptbf_npe'), ('state', '!=', 'draft')]}"/>
+                    <field name="fixation_advance_ptbf_npe_ids" attrs="{'invisible': ['|', ('is_converted', '!=', True), ('type_of_ptbf_payment', '!=', 'fixation_advance_ptbf_npe')], 'readonly': [('state', '!=', 'draft')]}" >
                         <tree editable="top">
                             <field name="name" readonly="1" decoration-muted="check == False"/>
                             <field name="contract_id" readonly="1" decoration-muted="check == False"/>
@@ -639,9 +641,9 @@
                             <field name="check" invisible="1"/>
                         </tree>
                     </field>
-                    <button name="calculate_remain_advance_ptbf_npe" attrs="{'invisible': ['|', ('is_converted', '!=', True), ('type_of_ptbf_payment', '!=', 'fixation_advance_ptbf_npe')]}" string="Calculate Remain" type="object" class="oe_highlight"/>
+                    <button name="calculate_remain_advance_ptbf_npe" attrs="{'invisible': ['|', '|', ('is_converted', '!=', True), ('type_of_ptbf_payment', '!=', 'fixation_advance_ptbf_npe'), ('state', '!=', 'draft')]}" string="Calculate Remain" type="object" class="oe_highlight"/>
                     <span>--------</span>
-                    <button name="calculate_total_advance_ptbf_npe" attrs="{'invisible': ['|', ('is_converted', '!=', True), ('type_of_ptbf_payment', '!=', 'fixation_advance_ptbf_npe')]}" string="Calculate Total" type="object" class="oe_highlight"/>
+                    <button name="calculate_total_advance_ptbf_npe" attrs="{'invisible': ['|', '|', ('is_converted', '!=', True), ('type_of_ptbf_payment', '!=', 'fixation_advance_ptbf_npe'), ('state', '!=', 'draft')]}" string="Calculate Total" type="object" class="oe_highlight"/>
                     <separator string="Payment Information"/>
                     <group>
                         <group>
@@ -651,14 +653,14 @@
                             <field name="advance_payment_converted" attrs="{'invisible': [('is_converted', '!=', True)]}"/>
                             <field name="total_interest" attrs="{'invisible': [('is_converted', '!=', True)]}"/>
                             <field name="deposit_amount" attrs="{'invisible': [('is_converted', '=', True)]}"/>
-                            <field name="liquidation_amount" attrs="{'invisible': [('type_of_ptbf_payment', '=', 'advance')]}"/>
+                            <field name="liquidation_amount" attrs="{'invisible': [('type_of_ptbf_payment', '=', 'advance')], 'readonly': [('state', '!=', 'draft')]}"/>
                             <field name="total_contract_value" attrs="{'invisible': [('type_of_ptbf_payment', '!=', 'fixation_advance')]}"/>
                             <field name="request_deposit" attrs="{'invisible': [('payment_quantity', '>', 0)]}" string="Request Amount"/>
                             <field name="request_amount" readonly="1" decoration-danger="request_amount > 0" decoration-bf="request_amount > 0"/>
                             <field name="amount_in_text"/>
-                            <field name="partner_bank_id" domain="[('partner_id','=',partner_id)]" required="1"/>
-                            <field name="account_no"/>
-                            <field name="chinhanh"/>
+                            <field name="partner_bank_id" domain="[('partner_id','=',partner_id)]" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="account_no" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="chinhanh" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             <field name="delivery_array" invisible="1"/>
                             <field name="delivery_ktn_array" invisible="1"/>
                             <field name="grn_90_array" invisible="1"/>
