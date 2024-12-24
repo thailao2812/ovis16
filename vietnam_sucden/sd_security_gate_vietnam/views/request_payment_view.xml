@@ -153,17 +153,18 @@
                     <separator string="Reference Information" attrs="{'invisible': ['|', ('is_converted', '!=', True), ('type_of_ptbf_payment', '!=', 'fixation_advance_ptbf_npe')]}"/>
                     <field readonly="1" name="fixation_advance_ptbf_npe_total_ids" attrs="{'invisible': ['|', ('is_converted', '!=', True), ('type_of_ptbf_payment', '!=', 'fixation_advance_ptbf_npe')]}" >
                         <tree>
-                            <field name="name" readonly="1"/>
-                            <field name="contract_id" readonly="1"/>
-                            <field name="date_contract" readonly="1"/>
-                            <field name="quantity" readonly="1"/>
-                            <field name="usd" readonly="1"/>
-                            <field name="ex_rate" readonly="1"/>
-                            <field name="rate"/>
-                            <field name="interest"/>
-                            <field name="vnd" />
-                            <field name="total" decoration-bf="check == True" decoration-danger="check == True" readonly="1"/>
+                            <field name="name" readonly="1" decoration-bf="check_bold == True"/>
+                            <field name="contract_id" readonly="1" decoration-bf="check_bold == True"/>
+                            <field name="date_contract" readonly="1" decoration-bf="check_bold == True"/>
+                            <field name="quantity" readonly="1" decoration-bf="check_bold == True"/>
+                            <field name="usd" readonly="1" decoration-bf="check_bold == True"/>
+                            <field name="ex_rate" readonly="1" decoration-bf="check_bold == True"/>
+                            <field name="rate" decoration-bf="check_bold == True"/>
+                            <field name="interest" decoration-bf="check_bold == True"/>
+                            <field name="vnd" decoration-bf="check_bold == True"/>
+                            <field name="total" decoration-bf="check == True or check_bold == True" decoration-danger="check == True" readonly="1"/>
                             <field name="check" invisible="1"/>
+                            <field name="check_bold" invisible="1"/>
                         </tree>
                     </field>
                     <separator string="Payment Information"/>

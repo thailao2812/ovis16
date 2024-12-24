@@ -603,7 +603,7 @@
                         <field name="average_rate"/>
                         <field name="final_price_vnd"/>
                          <field name="total_contract_value"/>
-                        <field name="request_amount" decoration-danger="request_amount > 0"/>
+                        <field name="request_amount" decoration-danger="request_amount > 0" decoration-bf="request_amount > 0"/>
                     </group>
                     <field readonly="1" name="fixation_advance_ptbf_npe_total_ids" attrs="{'invisible': ['|', ('is_converted', '!=', True), ('type_of_ptbf_payment', '!=', 'fixation_advance_ptbf_npe')]}" >
                         <tree>
@@ -616,7 +616,7 @@
                             <field name="rate" readonly="1" decoration-bf="check_bold == True"/>
                             <field name="interest" readonly="1" decoration-bf="check_bold == True"/>
                             <field name="vnd" readonly="1" decoration-bf="check_bold == True"/>
-                            <field name="total"  readonly="1" decoration-bf="check_bold == True" decoration-danger="check == True" />
+                            <field name="total"  readonly="1" decoration-bf="check_bold == True or check == True" decoration-danger="check == True" />
                             <field name="check" invisible="1"/>
                             <field name="check_bold" invisible="1"/>
                         </tree>
@@ -653,7 +653,7 @@
                             <field name="liquidation_amount"/>
                             <field name="total_contract_value" attrs="{'invisible': [('type_of_ptbf_payment', '!=', 'fixation_advance')]}"/>
                             <field name="request_deposit" attrs="{'invisible': [('payment_quantity', '>', 0)]}" string="Request Amount"/>
-                            <field name="request_amount" decoration-danger="request_amount > 0"/>
+                            <field name="request_amount" decoration-danger="request_amount > 0" decoration-bf="request_amount > 0"/>
                             <field name="amount_in_text"/>
                             <field name="partner_bank_id" domain="[('partner_id','=',partner_id)]" required="1"/>
                             <field name="account_no"/>
