@@ -622,8 +622,9 @@
                         </tree>
                     </field>
                     <separator string="Reference Information" attrs="{'invisible': ['|', ('is_converted', '!=', True), ('type_of_ptbf_payment', '!=', 'fixation_advance_ptbf_npe')]}"/>
-                    <button name="generate_fixation_advance_ptbf_npe" string="Generate Data" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('is_converted', '!=', True), ('type_of_ptbf_payment', '!=', 'fixation_advance_ptbf_npe')]}"/>
-                    <field name="fixation_advance_ptbf_npe_ids" attrs="{'invisible': ['|', ('is_converted', '!=', True), ('type_of_ptbf_payment', '!=', 'fixation_advance_ptbf_npe')]}" >
+                    <button name="generate_fixation_advance_ptbf_npe" string="Generate Data" type="object" class="oe_highlight"
+                            attrs="{'invisible': ['|','|', ('is_converted', '!=', True), ('type_of_ptbf_payment', '!=', 'fixation_advance_ptbf_npe'), ('state', '!=', 'draft')]}"/>
+                    <field name="fixation_advance_ptbf_npe_ids" attrs="{'invisible': ['|', ('is_converted', '!=', True), ('type_of_ptbf_payment', '!=', 'fixation_advance_ptbf_npe')], 'readonly': [('state', '!=', 'draft')]}" >
                         <tree editable="top">
                             <field name="name" readonly="1" decoration-muted="check == False"/>
                             <field name="contract_id" readonly="1" decoration-muted="check == False"/>
@@ -638,9 +639,9 @@
                             <field name="check" invisible="1"/>
                         </tree>
                     </field>
-                    <button name="calculate_remain_advance_ptbf_npe" attrs="{'invisible': ['|', ('is_converted', '!=', True), ('type_of_ptbf_payment', '!=', 'fixation_advance_ptbf_npe')]}" string="Calculate Remain" type="object" class="oe_highlight"/>
+                    <button name="calculate_remain_advance_ptbf_npe" attrs="{'invisible': ['|', '|', ('is_converted', '!=', True), ('type_of_ptbf_payment', '!=', 'fixation_advance_ptbf_npe'), ('state', '!=', 'draft')]}" string="Calculate Remain" type="object" class="oe_highlight"/>
                     <span>--------</span>
-                    <button name="calculate_total_advance_ptbf_npe" attrs="{'invisible': ['|', ('is_converted', '!=', True), ('type_of_ptbf_payment', '!=', 'fixation_advance_ptbf_npe')]}" string="Calculate Total" type="object" class="oe_highlight"/>
+                    <button name="calculate_total_advance_ptbf_npe" attrs="{'invisible': ['|', '|', ('is_converted', '!=', True), ('type_of_ptbf_payment', '!=', 'fixation_advance_ptbf_npe'), ('state', '!=', 'draft')]}" string="Calculate Total" type="object" class="oe_highlight"/>
                     <separator string="Payment Information"/>
                     <group>
                         <group>
