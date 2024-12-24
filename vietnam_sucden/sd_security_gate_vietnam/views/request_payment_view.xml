@@ -11,25 +11,25 @@
             <xpath expr="//header" position="replace">
                 <header>
                     <button name="request_payment" string="Request" type="object" states="draft" class="oe_highlight"
-                            groups="sd_security_gate_vietnam.group_request_payment"/>
+                            groups="sd_security_gate_vietnam.group_request_payment" confirm="🧐 Hãy chắc chắn bạn muốn Request Payment nha! Nhớ kiểm tra kỹ Liquidation hoặc Deposit xem có quên hay nhầm gì không nhé! Nếu tất cả đã ổn, thì… OK thôi nào! 💸😎✨"/>
 
                     <button name="action_refuse" string="Reject" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('is_dr_request', '!=', True), ('state', '!=', 'request')]}"
-                            confirm="Are you sure to reject this request?" groups="sd_security_gate_vietnam.group_security_request_payment"/>
+                            confirm="🚨 Are you absolutely sure you want to reject this request? 🤔 Think carefully—once you hit reject, there’s no turning back! 🚫✨" groups="sd_security_gate_vietnam.group_security_request_payment"/>
 
                     <button name="action_refuse" string="Reject" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('is_dr_request', '=', True), ('state', '!=', 'request')]}"
-                            confirm="Are you sure to reject this request?" groups="sd_security_gate_vietnam.group_confirm_request_payment"/>
+                            confirm="🚨 Are you absolutely sure you want to reject this request? 🤔 Think carefully—once you hit reject, there’s no turning back! 🚫✨" groups="sd_security_gate_vietnam.group_confirm_request_payment"/>
 
                     <button name="action_refuse" string="Reject" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('is_dr_request', '!=', True), ('state', '!=', 'security')]}"
-                            confirm="Are you sure to reject this request?" groups="sd_security_gate_vietnam.group_confirm_request_payment"/>
+                            confirm="🚨 Are you absolutely sure you want to reject this request? 🤔 Think carefully—once you hit reject, there’s no turning back! 🚫✨" groups="sd_security_gate_vietnam.group_confirm_request_payment"/>
 
                     <button name="action_refuse" string="Reject" type="object" class="oe_highlight" states="purchasing"
-                            confirm="Are you sure to reject this request?" groups="sd_security_gate_vietnam.group_approve_1st_accounting_request_payment"/>
+                            confirm="🚨 Are you absolutely sure you want to reject this request? 🤔 Think carefully—once you hit reject, there’s no turning back! 🚫✨" groups="sd_security_gate_vietnam.group_approve_1st_accounting_request_payment"/>
 
                     <button name="action_refuse" string="Reject" type="object" class="oe_highlight" states="approved"
-                            confirm="Are you sure to reject this request?" groups="sd_security_gate_vietnam.group_approve_2st_accounting_request_payment"/>
+                            confirm="🚨 Are you absolutely sure you want to reject this request? 🤔 Think carefully—once you hit reject, there’s no turning back! 🚫✨" groups="sd_security_gate_vietnam.group_approve_2st_accounting_request_payment"/>
 
                     <button name="action_refuse" string="Reject" type="object" class="oe_highlight" states="accounting_2"
-                            confirm="Are you sure to reject this request?" groups="sd_security_gate_vietnam.group_director_request_payment"/>
+                            confirm="🚨 Are you absolutely sure you want to reject this request? 🤔 Think carefully—once you hit reject, there’s no turning back! 🚫✨" groups="sd_security_gate_vietnam.group_director_request_payment"/>
 
                     <button name="security_approve" string="Security" type="object"
                             attrs="{'invisible': ['|', ('is_dr_request', '!=', True), ('state', '!=', 'request')]}"
@@ -37,16 +37,16 @@
                             groups="sd_security_gate_vietnam.group_security_request_payment"/>
                     <button name="approve_purchasing" string="Confirm" type="object"
                             attrs="{'invisible': ['|', ('is_dr_request', '=', True), ('state', '!=', 'request')]}" class="oe_highlight"
-                            groups="sd_security_gate_vietnam.group_confirm_request_payment"/>
+                            groups="sd_security_gate_vietnam.group_confirm_request_payment" confirm="💸 Are you really, really sure you want to confirm this payment request? 🤔 No take-backs once you hit confirm! 🚀✨ Let’s make it rain—or double-check first! 🌟💵"/>
                     <button name="approve_purchasing" string="Confirm" type="object"
                             attrs="{'invisible': ['|', ('is_dr_request', '!=', True), ('state', '!=', 'security')]}" class="oe_highlight"
-                            groups="sd_security_gate_vietnam.group_confirm_request_payment"/>
+                            groups="sd_security_gate_vietnam.group_confirm_request_payment" confirm="💸 Are you really, really sure you want to confirm this payment request? 🤔 No take-backs once you hit confirm! 🚀✨ Let’s make it rain—or double-check first! 🌟💵"/>
                     <button name="btt_approved" string="Approve Accounting 1st" type="object" states="purchasing" class="oe_highlight"
-                            groups="sd_security_gate_vietnam.group_approve_1st_accounting_request_payment"/>
+                            groups="sd_security_gate_vietnam.group_approve_1st_accounting_request_payment" confirm="📜 Alright, it’s time for the Accountant’s Grand Approval Show! 🎩✨ Accountants, step up and give your royal stamp of approval—because no numbers get through without your magic touch! 💼📊💃"/>
                     <button name="approve_accounting_v2" string="Approve Accounting 2st" type="object" states="approved" class="oe_highlight"
-                            groups="sd_security_gate_vietnam.group_approve_2st_accounting_request_payment"/>
+                            groups="sd_security_gate_vietnam.group_approve_2st_accounting_request_payment" confirm="👑 Now it’s the Chief Accountant’s Turn! 🧐 The ultimate boss of numbers is here to give the final thumbs up 👍 or the legendary side-eye 👀. Show us your accounting power and make it official! 💼📈✨"/>
                     <button name="approve_by_director" string="Approve by Director" type="object" states="accounting_2" class="oe_highlight"
-                            groups="sd_security_gate_vietnam.group_director_request_payment"/>
+                            groups="sd_security_gate_vietnam.group_director_request_payment" confirm="🎯 It’s time for the Director’s Final Verdict! 🏆 The big boss is in the house—ready to approve, reject, or maybe just drop some wisdom. 🚀💼 Seal the deal, boss, and make it legendary! 👔✨"/>
                     	<button states="approved_director" name="action_request_register_payment" type="object"
                                 class="oe_highlight" context="{'dont_redirect_to_payments': True}"
                                 string="Register Payment" data-hotkey="g" groups="account.group_account_invoice"/>

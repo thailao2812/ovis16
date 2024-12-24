@@ -314,7 +314,7 @@
                             <field name="fix_price" string="Advance Price"/>
                             <field name="total_value"/>
                             <field name="deposit_amount"/>
-                            <field name="liquidation_amount"/>
+                            <field name="liquidation_amount" invisible="1"/>
                             <field name="request_deposit" string='Request Amount' attrs="{'invisible': [('payment_quantity', '>', 0)]}"/>
                             <field name="request_amount" decoration-danger="request_amount > 0"/>
                             <field name="amount_in_text"/>
@@ -508,7 +508,7 @@
             <xpath expr="//field[@name='request_payment_ids']//form" position="replace">
                 <form>
                     <header>
-                        <button name="request_payment" string="Request" type="object" class="oe_highlight" states="draft" groups="sd_security_gate_vietnam.group_request_payment"/>
+                        <button name="request_payment" string="Request" type="object" class="oe_highlight" states="draft" groups="sd_security_gate_vietnam.group_request_payment" confirm="🧐 Hãy chắc chắn bạn muốn Request Payment nha! Nhớ kiểm tra kỹ Liquidation hoặc Deposit xem có quên hay nhầm gì không nhé! Nếu tất cả đã ổn, thì… OK thôi nào! 💸😎✨"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,request,security,purchasing,approved,accounting_2,approved_director,paid"/>
                     </header>
                     <separator string="Contract Information"/>
@@ -605,8 +605,8 @@
                          <field name="total_contract_value"/>
                         <field name="request_amount" readonly="1" decoration-danger="request_amount > 0" decoration-bf="request_amount > 0"/>
                     </group>
-                    <field readonly="1" name="fixation_advance_ptbf_npe_total_ids" attrs="{'invisible': ['|', ('is_converted', '!=', True), ('type_of_ptbf_payment', '!=', 'fixation_advance_ptbf_npe')]}" >
-                        <tree>
+                    <field name="fixation_advance_ptbf_npe_total_ids" attrs="{'invisible': ['|', ('is_converted', '!=', True), ('type_of_ptbf_payment', '!=', 'fixation_advance_ptbf_npe')]}" >
+                        <tree editable="top">
                             <field name="name" readonly="1" decoration-bf="check_bold == True"/>
                             <field name="contract_id" readonly="1" decoration-bf="check_bold == True"/>
                             <field name="date_contract" readonly="1" decoration-bf="check_bold == True"/>
@@ -615,7 +615,7 @@
                             <field name="ex_rate"  readonly="1" decoration-bf="check_bold == True"/>
                             <field name="rate" readonly="1" decoration-bf="check_bold == True"/>
                             <field name="interest" readonly="1" decoration-bf="check_bold == True"/>
-                            <field name="vnd" readonly="1" decoration-bf="check_bold == True"/>
+                            <field name="vnd" decoration-bf="check_bold == True"/>
                             <field name="total"  readonly="1" decoration-bf="check_bold == True or check == True" decoration-danger="check == True" />
                             <field name="check" invisible="1"/>
                             <field name="check_bold" invisible="1"/>
@@ -634,7 +634,7 @@
                             <field name="ex_rate" decoration-muted="check == False" attrs="{'readonly': [('name', 'not in', ['Total', 'Còn lại/ Remain Payment:'])]}"/>
                             <field name="rate" decoration-muted="check == False" readonly="1"/>
                             <field name="interest" decoration-muted="check == False" readonly="1"/>
-                            <field name="vnd" decoration-muted="check == False" readonly="1"/>
+                            <field name="vnd" decoration-muted="check == False"/>
                             <field name="total" decoration-muted="check == False" readonly="1"/>
                             <field name="check" invisible="1"/>
                         </tree>
@@ -651,7 +651,7 @@
                             <field name="advance_payment_converted" attrs="{'invisible': [('is_converted', '!=', True)]}"/>
                             <field name="total_interest" attrs="{'invisible': [('is_converted', '!=', True)]}"/>
                             <field name="deposit_amount" attrs="{'invisible': [('is_converted', '=', True)]}"/>
-                            <field name="liquidation_amount"/>
+                            <field name="liquidation_amount" attrs="{'invisible': [('type_of_ptbf_payment', '=', 'advance')]}"/>
                             <field name="total_contract_value" attrs="{'invisible': [('type_of_ptbf_payment', '!=', 'fixation_advance')]}"/>
                             <field name="request_deposit" attrs="{'invisible': [('payment_quantity', '>', 0)]}" string="Request Amount"/>
                             <field name="request_amount" readonly="1" decoration-danger="request_amount > 0" decoration-bf="request_amount > 0"/>

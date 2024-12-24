@@ -801,6 +801,20 @@ class RequestPayment(models.Model):
             if rec.request_deposit > 0:
                 rec.request_amount = rec.request_deposit
 
+    @api.depends('name', 'type', 'type_of_ptbf_payment')
+    def compute_liquidation_amount(self):
+        for rec in self:
+            if rec.type == 'ptbf' or rec.type == 'purchase':
+                if rec.type_of_ptbf_payment != 'advance':
+                    if int(rec.name) == 1:
+                        rec.liquidation_amount = 10000000
+                    else:
+                        rec.liquidation_amount = 0
+                else:
+                    rec.liquidation_amount = 0
+            else:
+                rec.liquidation_amount = 0
+
     @api.depends('converted_line_ids', 'converted_line_ids.advance_payment', 'converted_line_ids.interest')
     def compute_advance_payment_converted(self):
         for rec in self:
