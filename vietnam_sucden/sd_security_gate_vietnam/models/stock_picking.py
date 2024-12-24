@@ -76,11 +76,12 @@ class StockPicking(models.Model):
                 check += [('id', 'not in', grn_array)]
                 if self._context.get('payment_percent') == 90:
                     check += [('warehouse_id.code', 'in', ['FA', 'KTN-LT-N', 'KTN-AP-N']),
-                               ('partner_id', '=', self._context.get('partner_id')),
-                               ('state', 'not in', ['done', 'cancel', 'draft']),
-                               ('picking_type_id.code', '=', 'incoming'),
+                                ('partner_id', '=', self._context.get('partner_id')),
+                                ('state', 'not in', ['done', 'cancel', 'draft']),
+                                ('picking_type_id.code', '=', 'incoming'),
+                                ('name', '=like', 'GRN%'),
                                 ('date_done', '>=', self._context.get('date')),
-                               ('product_id', '=', self._context.get('product_id'))]
+                                ('product_id', '=', self._context.get('product_id'))]
                     grn_ids = self.search(args+check)
                     grn_ready = self.env['grn.ready'].search([
                         ('request_payment_id.name', '<', int(self._context.get('seq')))
@@ -106,7 +107,7 @@ class StockPicking(models.Model):
                                 arr_done.append(i.picking_id.id)
                     args += [('warehouse_id.code', 'in', ['FA', 'KTN-LT-N', 'KTN-AP-N']),
                                ('partner_id', '=', self._context.get('partner_id')),
-                                ('date_done', '>=', self._context.get('date')),
+                                ('date_done', '>=', self._context.get('date')),('name', '=like', 'GRN%'),
                                ('picking_type_id.code', '=', 'incoming'), ('id', 'not in', grn_array),
                                 ('id', 'not in', arr_done), ('product_id', '=', self._context.get('product_id')),
                              ('state', 'not in', ['done', 'cancel', 'draft']), ('backorder_id', '=', False)]
@@ -116,7 +117,7 @@ class StockPicking(models.Model):
                     if self.env.context.get('factory'):
                         check += [('warehouse_id.code', 'in', ['FA', 'KTN-LT-N', 'KTN-AP-N']),
                                   ('partner_id', '=', self._context.get('partner_id')),
-                                  ('state', 'in', ['done']),
+                                  ('state', 'in', ['done']), ('name', '=like', 'GRN%'),
                                   ('date_done', '>=', self._context.get('date')),
                                   ('picking_type_id.code', '=', 'incoming'),
                                   ('product_id', '=', self._context.get('product_id'))]
@@ -145,7 +146,7 @@ class StockPicking(models.Model):
                                     arr_done.append(i.picking_id.id)
                         args += [('warehouse_id.code', 'in', ['FA', 'KTN-LT-N', 'KTN-AP-N']),
                                  ('partner_id', '=', self._context.get('partner_id')),
-                                 ('date_done', '>=', self._context.get('date')),
+                                 ('date_done', '>=', self._context.get('date')), ('name', '=like', 'GRN%'),
                                  ('picking_type_id.code', '=', 'incoming'), ('id', 'not in', grn_array),
                                  ('id', 'not in', arr_done), ('product_id', '=', self._context.get('product_id')),
                                  ('state', 'in', ['done']), ('backorder_id', '=', False)]
@@ -153,7 +154,7 @@ class StockPicking(models.Model):
                     else:
                         check += [('warehouse_id.code', 'in', ['FA', 'KTN-LT-N', 'KTN-AP-N']),
                                   ('partner_id', '=', self._context.get('partner_id')),
-                                  ('state', 'in', ['done']),
+                                  ('state', 'in', ['done']), ('name', '=like', 'GRN%'),
                                   ('date_done', '>=', self._context.get('date')),
                                   ('picking_type_id.operation', '=', 'station'),
                                   ('picking_type_id.code', '=', 'incoming'),
@@ -183,7 +184,7 @@ class StockPicking(models.Model):
                                     arr_done.append(i.picking_id.id)
                         args += [('warehouse_id.code', 'in', ['FA', 'KTN-LT-N', 'KTN-AP-N']),
                                  ('partner_id', '=', self._context.get('partner_id')),
-                                 ('picking_type_id.operation', '=', 'station'),
+                                 ('picking_type_id.operation', '=', 'station'), ('name', '=like', 'GRN%'),
                                  ('date_done', '>=', self._context.get('date')),
                                  ('picking_type_id.code', '=', 'incoming'), ('id', 'not in', grn_array),
                                  ('id', 'not in', arr_done), ('product_id', '=', self._context.get('product_id')),
@@ -204,7 +205,7 @@ class StockPicking(models.Model):
                 check += [('warehouse_id.code', 'in', ['FA', 'KTN-LT-N', 'KTN-AP-N']),
                           ('partner_id', '=', self._context.get('partner_id')),
                           ('date_done', '>=', self._context.get('date')),
-                          ('picking_type_id.code', '=', 'incoming'),
+                          ('picking_type_id.code', '=', 'incoming'), ('name', '=like', 'GRN%'),
                           ('product_id', '=', self._context.get('product_id')),
                           ('state', 'not in', ['done', 'cancel', 'draft'])]
                 grn_ids = self.search(domain + check)
@@ -232,7 +233,7 @@ class StockPicking(models.Model):
                             arr_done.append(i.picking_id.id)
                 domain += [('warehouse_id.code', 'in', ['FA', 'KTN-LT-N', 'KTN-AP-N']),
                          ('partner_id', '=', self._context.get('partner_id')),
-                           ('date_done', '>=', self._context.get('date')),
+                           ('date_done', '>=', self._context.get('date')), ('name', '=like', 'GRN%'),
                          ('picking_type_id.code', '=', 'incoming'), ('id', 'not in', grn_array),
                          ('id', 'not in', arr_done), ('product_id', '=', self._context.get('product_id')),
                          ('state', 'not in', ['done', 'cancel', 'draft']), ('backorder_id', '=', False)]
@@ -242,7 +243,7 @@ class StockPicking(models.Model):
                               ('partner_id', '=', self._context.get('partner_id')),
                               ('picking_type_id.operation', '=', 'factory'),
                               ('date_done', '>=', self._context.get('date')),
-                              ('picking_type_id.code', '=', 'incoming'),
+                              ('picking_type_id.code', '=', 'incoming'), ('name', '=like', 'GRN%'),
                               ('product_id', '=', self._context.get('product_id')),
                               ('state', 'in', ['done'])]
                     grn_ids = self.search(domain + check)
@@ -270,7 +271,7 @@ class StockPicking(models.Model):
                                 arr_done.append(i.picking_id.id)
                     domain += [('warehouse_id.code', 'in', ['FA', 'KTN-LT-N', 'KTN-AP-N']),
                                ('partner_id', '=', self._context.get('partner_id')),
-                               ('date_done', '>=', self._context.get('date')),
+                               ('date_done', '>=', self._context.get('date')), ('name', '=like', 'GRN%'),
                                ('picking_type_id.code', '=', 'incoming'), ('id', 'not in', grn_array),
                                ('id', 'not in', arr_done), ('product_id', '=', self._context.get('product_id')),
                                ('state', 'in', ['done']), ('backorder_id', '=', False)]
@@ -279,7 +280,7 @@ class StockPicking(models.Model):
                               ('partner_id', '=', self._context.get('partner_id')),
                               ('picking_type_id.operation', '=', 'station'),
                               ('date_done', '>=', self._context.get('date')),
-                              ('picking_type_id.code', '=', 'incoming'),
+                              ('picking_type_id.code', '=', 'incoming'), ('name', '=like', 'GRN%'),
                               ('product_id', '=', self._context.get('product_id')),
                               ('state', 'in', ['done'])]
                     grn_ids = self.search(domain + check)
@@ -307,7 +308,7 @@ class StockPicking(models.Model):
                                 arr_done.append(i.picking_id.id)
                     domain += [('warehouse_id.code', 'in', ['FA', 'KTN-LT-N', 'KTN-AP-N']),
                                ('partner_id', '=', self._context.get('partner_id')),
-                               ('picking_type_id.operation', '=', 'station'),
+                               ('picking_type_id.operation', '=', 'station'), ('name', '=like', 'GRN%'),
                                ('date_done', '>=', self._context.get('date')),
                                ('picking_type_id.code', '=', 'incoming'), ('id', 'not in', grn_array),
                                ('id', 'not in', arr_done), ('product_id', '=', self._context.get('product_id')),

@@ -420,7 +420,7 @@ class RequestPayment(models.Model):
                     'ex_rate': line.ex_rate,
                     'interest': line.interest,
                     'vnd': line.vnd,
-                    'total': rec.request_amount - sum(rec.fixation_advance_ptbf_npe_ids.filtered(lambda x: x.name == 'Total').mapped('total')),
+                    'total': rec.total_contract_value - sum(rec.fixation_advance_ptbf_npe_ids.filtered(lambda x: x.name == 'Total').mapped('total')),
                 }
                 self.env['fixation.advance.ptbf.npe.total'].create(value_total)
             if line.name == 'Total All':
@@ -433,7 +433,7 @@ class RequestPayment(models.Model):
                     'ex_rate': line.ex_rate,
                     'interest': line.interest,
                     'vnd': line.vnd,
-                    'total': rec.request_amount,
+                    'total': rec.total_contract_value,
                 }
                 self.env['fixation.advance.ptbf.npe.total'].create(value_total)
 
@@ -796,7 +796,8 @@ class RequestPayment(models.Model):
                     else:
                         rec.request_amount = 0
                 if rec.type_of_ptbf_payment == 'fixation_advance_ptbf_npe':
-                    rec.request_amount = rec.final_price_vnd * rec.qty_advance_fix
+                    rec.total_contract_value = rec.final_price_vnd * rec.qty_advance_fix
+                    rec.request_amount = rec.fixation_advance_ptbf_npe_total_ids.filtered(lambda x: x.name == 'Còn lại/ Remain Payment:').total - rec.deposit_amount - rec.liquidation_amount
             if rec.request_deposit > 0:
                 rec.request_amount = rec.request_deposit
 

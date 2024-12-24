@@ -24,6 +24,7 @@ class FixationAdvancePTBFNPETotal(models.Model):
     total = fields.Float(string='Total', digits=(12, 0))
 
     check = fields.Boolean(string='Check', compute='_compute_check', store=True)
+    check_bold = fields.Boolean(string='Check Bold', compute='_compute_check_bold', store=True)
 
     @api.depends('name')
     def _compute_check(self):
@@ -32,3 +33,11 @@ class FixationAdvancePTBFNPETotal(models.Model):
                 rec.check = True
             else:
                 rec.check = False
+
+    @api.depends('name')
+    def _compute_check_bold(self):
+        for rec in self:
+            if rec.name == 'Total':
+                rec.check_bold = True
+            else:
+                rec.check_bold = False
