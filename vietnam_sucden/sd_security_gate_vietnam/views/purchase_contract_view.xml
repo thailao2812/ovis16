@@ -615,7 +615,7 @@
                             <field name="ex_rate"  readonly="1" decoration-bf="check_bold == True"/>
                             <field name="rate" readonly="1" decoration-bf="check_bold == True"/>
                             <field name="interest" readonly="1" decoration-bf="check_bold == True"/>
-                            <field name="vnd" decoration-bf="check_bold == True"/>
+                            <field name="vnd" decoration-bf="check_bold == True" readonly="1"/>
                             <field name="total"  readonly="1" decoration-bf="check_bold == True or check == True" decoration-danger="check == True" />
                             <field name="check" invisible="1"/>
                             <field name="check_bold" invisible="1"/>
@@ -634,7 +634,7 @@
                             <field name="ex_rate" decoration-muted="check == False" attrs="{'readonly': [('name', 'not in', ['Total', 'Còn lại/ Remain Payment:'])]}"/>
                             <field name="rate" decoration-muted="check == False" readonly="1"/>
                             <field name="interest" decoration-muted="check == False" readonly="1"/>
-                            <field name="vnd" decoration-muted="check == False"/>
+                            <field name="vnd" decoration-muted="check == False" readonly="1"/>
                             <field name="total" decoration-muted="check == False" readonly="1"/>
                             <field name="check" invisible="1"/>
                         </tree>
