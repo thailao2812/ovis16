@@ -20,7 +20,7 @@ class FixationAdvancePTBFNPE(models.Model):
     ex_rate = fields.Float(string='Exchange Rate', digits=(12, 0))
     rate = fields.Float(string='Rate', digits=(12, 2))
     interest = fields.Float(string='Interest', digits=(12, 0))
-    vnd = fields.Float(string='VND', digits=(12, 6), compute='_compute_total', store=True)
+    vnd = fields.Float(string='VND', digits=(12, 6), compute='_compute_total', store=True, readonly=False)
     total = fields.Float(string='Total', digits=(12, 6), compute='_compute_total', store=True)
 
     check = fields.Boolean(string='Check', compute='_compute_check', store=True)

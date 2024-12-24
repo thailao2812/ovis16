@@ -74,13 +74,11 @@ class RequestPayment(models.Model):
                 amount_in_words = amount_in_words + ' ' + 'đồng'
                 rec.amount_in_text = amount_in_words
 
+    # Remove old function
     @api.depends('name')
     def compute_liquidation_amount(self):
         for rec in self:
-            if int(rec.name) == 1:
-                rec.liquidation_amount = 10000000
-            else:
-                rec.liquidation_amount = 0
+            return True
 
     @api.depends('payment_quantity', 'fix_price', 'liquidation_amount', 'deposit_amount')
     def compute_total_value(self):
