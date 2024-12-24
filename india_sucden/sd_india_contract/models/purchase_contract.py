@@ -18,6 +18,9 @@ class PurchaseContractLine(models.Model):
 class PurchaseContract(models.Model):
     _inherit = 'purchase.contract'
 
+    def _default_crop_id(self):
+        return self.env['ned.crop'].search([('state', '=', 'current')], limit=1)
+
     state = fields.Selection([('draft', 'New'),
                               ('commercial', 'Commercial'),
                               ('accounting', 'Accounting'),
@@ -63,7 +66,7 @@ class PurchaseContract(models.Model):
     gross_qty = fields.Float(string='Gross Quantity (SN)', digits=(12,0), readonly=False)
     quality_deduction = fields.Float(string='Quality Deduction', digits=(12,0), compute='compute_quality_deduction', store=True)
 
-    crop_id = fields.Many2one('ned.crop', string='Crop', required=True, readonly=False,
+    crop_id = fields.Many2one('ned.crop', string='Crop', required=True, readonly=False, default=_default_crop_id,
                               states={})
 
     @api.depends('gross_qty', 'total_qty', 'origin')
@@ -91,7 +94,6 @@ class PurchaseContract(models.Model):
 
         deal_line = self.date_order + timedelta(days=15)
         self.update({
-            'crop_id': crop_ids and crop_ids.id or False,
             'deadline_date': deal_line
         })
 

@@ -77,7 +77,7 @@ class PurchaseReport(models.Model):
                               pc.relation_price_unit as net_price, 
                               pc.premium as premium,
                                pc.gross_price as gross_price, 
-                               sp.total_init_qty * pc.gross_price as gross_value,
+                               sa.qty_allocation_net * pc.gross_price as gross_value,
                            sp.deduction_qty * pc.gross_price as deduction_value, 
                            sp.total_qty * pc.gross_price as net_value
                     from stock_allocation sa
