@@ -17,6 +17,23 @@ class DeliveryRegistration(models.Model):
     block_request = fields.Boolean(default=False, string="Truck block request")
     weigh_block = fields.Boolean(default=False, string="Weigh & Block", readonly=True)
 
+    @api.onchange('block_request')
+    def _onchange_block_request(self):
+        if self.block_request:
+            if self.picking_ids and len(self.picking_ids)== 1:
+                picking_id = self.picking_ids and self.picking_ids[0]
+                if picking_id:
+                    for move in picking_id.move_line_ids_without_package:
+                        if move.first_weight > 0 and len(move) == 1 and picking_id.state == 'draft':
+                            self.weigh_block = True
+                            picks = self.env['stock.picking'].sudo().search([('vehicle_no','=',self.license_plate)], order='id desc')
+                            for line in picks.move_line_ids_without_package:
+                                if line.second_weight > 0 and len(move) == 1:
+                                    self.approx_quantity = round(move.first_weight - line.second_weight, -3)
+                                    break
+        else:
+            self.weigh_block = False
+
     def button_link_grn_ktn(self):
         for rec in self:
             if rec.picking_ktn_id:
