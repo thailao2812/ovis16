@@ -676,18 +676,32 @@ class RequestPayment(models.Model):
                 'state': 'Approve by Director: %s' % self.env.user.name
             })
             value = False
+            if self.type == 'ptbf' and self.type_of_ptbf_payment == 'fixation_advance_ptbf_npe':
+                ptpf_fix_price = self.price_tobe_fix
+                value = {
+                    'date_receive': self.date,
+                    'product_id': self.product_id.id,
+                    'qty_receive': self.qty_advance_fix,
+                    'qty_price': self.qty_advance_fix,
+                    'final_price_en': self.final_price_usd,
+                    'rate': self.average_rate,
+                    'final_price_vn': self.final_price_vnd,
+                    'total_amount_en': self.final_price_usd * self.qty_advance_fix,
+                    'total_amount_vn': self.final_price_vnd * self.qty_advance_fix,
+                    'history_id': ptpf_fix_price.id
+                }
             if self.type == 'ptbf' and self.type_of_ptbf_payment == 'fixation_advance':
                 ptpf_fix_price = self.price_tobe_fix
                 value = {
                     'date_receive': self.date,
                     'product_id': self.product_id.id,
-                    'qty_receive': self.payment_quantity,
-                    'qty_price': self.payment_quantity,
+                    'qty_receive': self.qty_advance_fix,
+                    'qty_price': self.qty_advance_fix,
                     'final_price_en': self.final_price_usd,
                     'rate': self.average_rate,
                     'final_price_vn': self.final_price_vnd,
-                    'total_amount_en': self.final_price_usd * self.payment_quantity,
-                    'total_amount_vn': self.final_price_vnd * self.payment_quantity,
+                    'total_amount_en': self.final_price_usd * self.qty_advance_fix,
+                    'total_amount_vn': self.final_price_vnd * self.qty_advance_fix,
                     'history_id': ptpf_fix_price.id
                 }
             if self.type == 'ptbf' and self.type_of_ptbf_payment == 'fixation':
