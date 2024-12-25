@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+	    <menuitem id="menu_action_mrp_operation_result_scale_line"
+            action="action_mrp_operation_result_scale_line" sequence="410" 
+            parent="mrp.menu_mrp_manufacturing"/>
+    </data>
+</odoo>
