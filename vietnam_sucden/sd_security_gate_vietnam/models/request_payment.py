@@ -686,7 +686,7 @@ class RequestPayment(models.Model):
                     'final_price_en': self.final_price_usd,
                     'rate': self.average_rate,
                     'final_price_vn': self.final_price_vnd,
-                    'total_amount_en': self.final_price_usd * self.qty_advance_fix,
+                    'total_amount_en': (self.final_price_usd * self.qty_advance_fix)/1000,
                     'total_amount_vn': self.final_price_vnd * self.qty_advance_fix,
                     'history_id': ptpf_fix_price.id
                 }
@@ -700,7 +700,7 @@ class RequestPayment(models.Model):
                     'final_price_en': self.final_price_usd,
                     'rate': self.average_rate,
                     'final_price_vn': self.final_price_vnd,
-                    'total_amount_en': self.final_price_usd * self.qty_advance_fix,
+                    'total_amount_en': (self.final_price_usd * self.qty_advance_fix)/1000,
                     'total_amount_vn': self.final_price_vnd * self.qty_advance_fix,
                     'history_id': ptpf_fix_price.id
                 }
@@ -714,7 +714,7 @@ class RequestPayment(models.Model):
                     'final_price_en': self.final_price_usd,
                     'rate': self.rate,
                     'final_price_vn': self.final_price_vnd,
-                    'total_amount_en': self.final_price_usd * self.payment_quantity,
+                    'total_amount_en': (self.final_price_usd * self.payment_quantity)/1000,
                     'total_amount_vn': self.final_price_vnd * self.payment_quantity,
                     'history_id': ptpf_fix_price.id
                 }
