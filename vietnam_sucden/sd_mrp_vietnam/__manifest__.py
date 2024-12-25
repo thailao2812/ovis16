@@ -9,7 +9,9 @@
     'description': """
     """,
     'data': [
-        'views/mrp_bom_premium.xml'
+        'views/mrp_bom_premium.xml',
+        'views/result_scale_line.xml',
+        'views/menu.xml',
     ],
     'assets': {
 

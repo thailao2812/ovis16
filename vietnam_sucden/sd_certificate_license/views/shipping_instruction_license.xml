@@ -65,7 +65,7 @@
             <field name="context">{}</field>
         </record>
 
-            <record model="ir.actions.act_window.view" id="action_queue_exstore_view">
+        <record model="ir.actions.act_window.view" id="action_queue_exstore_view">
             <field name="sequence" eval="1"/>
             <field name="view_mode">tree</field>
             <field name="view_id" ref="view_shipping_instruction_license_allocations_tree"/>
