@@ -146,6 +146,7 @@ class NedSecurityGateQueue(models.Model):
     license_plate = fields.Char(string='Vehicle No.', required=True, states={}, tracking=True)
     change_warehouse_id = fields.Many2one('stock.warehouse', 'Change Warehouse', readonly=False,
                                           states={}, tracking=True)
+    arrivial_time = fields.Datetime('Arrival Time', readonly=False)
 
     def button_commercial(self):
         for this in self:
