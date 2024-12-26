@@ -970,7 +970,7 @@ class RequestPayment(models.Model):
                 self.env['history.payment.quantity'].create(value)
 
     @api.depends('status_goods_ids', 'type', 'status_goods_ids.request_quantity', 'is_converted', 'quantity_contract',
-                 'quantity_of_price_tobe_fix', 'type_of_ptbf_payment', 'price_tobe_fix')
+                 'quantity_of_price_tobe_fix', 'type_of_ptbf_payment', 'price_tobe_fix', 'qty_advance_fix')
     def compute_payment_quantity(self):
         for rec in self:
             rec.payment_quantity = 0
@@ -988,6 +988,10 @@ class RequestPayment(models.Model):
                 else:
                     rec.payment_quantity = rec.quantity_contract
                     rec.mirror_request_amount = 0
+            else:
+                if rec.type == 'ptbf':
+                    if rec.type_of_ptbf_payment == 'fixation_advance':
+                        rec.payment_quantity = rec.qty_advance_fix
 
     def action_hide_delivery(self):
         for rec in self:
