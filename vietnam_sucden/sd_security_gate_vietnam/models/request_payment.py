@@ -598,8 +598,13 @@ class RequestPayment(models.Model):
             ('approved', 'Accounting 1st'),
             ('accounting_2', 'Accounting 2nd'),
             ('approved_director', 'Approve by Director'),
-            ('paid', 'Paid')
+            ('paid', 'Paid'),
+            ('cancel', 'Cancel')
         ]
+
+    def btt_cancel(self):
+        for rec in self:
+            rec.state = 'cancel'
 
     @api.depends('request_payment_ids', 'request_amount', 'advance_payment_quantity')
     def _compute_request_payment(self):
