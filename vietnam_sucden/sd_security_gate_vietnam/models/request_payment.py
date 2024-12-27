@@ -1102,11 +1102,14 @@ class RequestPayment(models.Model):
                     rec.delivery_70_ktn_ids.mapped('request_qty'))
             if not rec.grn_90_ids:
                 grn_ready_status_goods.picking_ids = [(5, )]
+                grn_ready_status_goods.paid_quantity = sum(rec.grn_90_ids.mapped('paid_quantity'))
             if not rec.grn_100_factory_ids:
                 grn_done_factory_status_goods.picking_ids = [(5, )]
+                grn_done_factory_status_goods.paid_quantity = sum(rec.grn_100_factory_ids.mapped('paid_quantity'))
             if not rec.grn_100_fot_ids:
                 grn_done_fot_status_goods.picking_ids = [(5, )]
                 grn_done_fot_status_goods.description_name_fot = ''
+                grn_done_fot_status_goods.paid_quantity = sum(rec.grn_100_fot_ids.mapped('paid_quantity'))
 
 
 
