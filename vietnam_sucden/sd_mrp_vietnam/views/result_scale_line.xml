@@ -7,15 +7,17 @@
             <field name="arch" type="xml">
                 <search string="MRP Operation Result Scale Line search">
                     <!-- <field name="production_id" string="Batch No."/> -->
+                    <field name="batch_name" string="Batch No."/>
+                    <field name="form_name" string="GIP GRP"/>
                     <field name="product_id" string="Product"/>
                     <field name="usr_api_create" string="Create by"/>
                     
-                    <!-- <group expand="1" string="Group By...">
-                        <filter name="non_zero" string="Remove Zero Value" domain="[('product_qty','!=',0)]" />
-                        <filter string="Batch No." name="production_id" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'production_id'}"/>
-                        <filter string="Production" name="product_id" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
-                        <filter string="SI No." name="si_id" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'si_id'}"/>
-                    </group> -->
+                    <group expand="1" string="Group By...">
+                        <filter name="non_zero" string="Remove None Batch" domain="[('batch_name','=','')]" />
+                        <filter string="Batch No." name="batch_name" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'batch_name'}"/>
+                        <filter string="GIP GRP" name="form_name" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'form_name'}"/>
+                        <filter string="Create by" name="usr_api_create" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'usr_api_create'}"/>
+                    </group>
                     
                </search>
             </field>
