@@ -15,7 +15,7 @@ class DeliveryRegistration(models.Model):
         self.block_request = self.env['res.users'].has_group('sd_purchase_contract.group_purchase_contract_user')
 
     block_request = fields.Boolean(default=False, string="Truck block request")
-    weigh_block = fields.Boolean(default=False, string="Weigh & Block", readonly=True)
+    weigh_block = fields.Boolean(default=False, string="Weigh & Block")
 
     @api.onchange('block_request')
     def _onchange_block_request(self):

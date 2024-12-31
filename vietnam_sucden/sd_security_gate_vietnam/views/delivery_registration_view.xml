@@ -7,9 +7,10 @@
 		<field name="arch" type="xml">
 			<xpath expr="//field[@name='link_fot_id']" position="after">
 				<field name="block_request" 
-                attrs="{'readonly': [('state','in', ['closed','cancel'])]}" groups="base.user_root, sd_purchase_contract.group_purchase_contract_user"/>
+                	attrs="{'readonly': [('state','in', ['closed','cancel'])]}" groups="base.user_root, sd_purchase_contract.group_purchase_contract_user"/>
                 <!-- readonly="1" groups="base.user_root,sd_purchase_contract.group_purchase_contract_user" optional="show"/> -->
-                <field name="weigh_block"/> 
+                <field name="weigh_block"
+					attrs="{'readonly': [('state','in', ['closed','cancel'])]}" groups="base.user_root, sd_purchase_contract.group_purchase_contract_user"/>
 			</xpath>
         </field>
 	</record>
