@@ -16,7 +16,7 @@ class WizardSelectDateRangeSContract(models.TransientModel):
         sale_contract_india = self.env['sale.contract.india'].browse(self.env.context.get('res_id'))
         if sale_contract_india.exists():
             item_group_id = sale_contract_india.item_group_id
-            s_contract = self.env['purchase.contract'].search([
+            s_contract = self.env['s.contract'].search([
                 ('product_id.item_group_id', '=', item_group_id.id),
                 ('type', 'in', ['export', 'local']),
                 ('state', '!=', 'cancel'),

@@ -206,7 +206,7 @@ class SaleContractIndia(models.Model):
     def open_wizard_select_sc_date_range(self):
         return {
             'name': _('Filter S Contract'),
-            'res_model': 'wizard.select.date.range.purchase.contract',
+            'res_model': 'wizard.select.date.range.s.contract',
             'view_mode': 'form',
             # 'domain':self.request_payment_ids.ids,
             'context': {
