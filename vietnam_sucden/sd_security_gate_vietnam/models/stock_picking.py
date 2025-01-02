@@ -53,9 +53,18 @@ class StockPicking(models.Model):
 
     @api.model
     def name_search(self, name='', args=None, operator='ilike', limit=100):
+        print(self._context)
         if self._context.get('allocation_grn'):
+            if name:
+                args += ['|', ('name', operator, name), ('description_name', operator, name)]
             backorder = self.search(args, limit=limit)
         else:
+            if self._context.get('grn_fot_allocation'):
+                if name:
+                    args += ['|', ('name', operator, name), ('description_name', operator, name)]
+                domain = args
+                backorder = self.search(args + domain, limit=limit)
+                return backorder.name_get()
             args = []
             domain = []
             check = []
