@@ -232,11 +232,11 @@
                                         <field name="sc_date" readonly="1" force_save="1"/>
                                         <field name="partner_id" readonly="1" force_save="1"/>
                                         <field name="product_id" readonly="1" force_save="1"/>
-                                        <field name="sc_qty" readonly="1" force_save="1"/>
-                                        <field name="allocated_qty" readonly="1" force_save="1"/>
-                                        <field name="balance_qty" readonly="1" force_save="1"/>
+                                        <field name="sc_qty" readonly="1" force_save="1" sum="sc_qty"/>
+                                        <field name="allocated_qty" readonly="1" force_save="1" sum="allocated_qty"/>
+                                        <field name="balance_qty" readonly="1" force_save="1" sum="balance_qty"/>
                                         <field name="value"/>
-                                        <field name="current_allocated" attrs="{'readonly': [('state_allocate', '=', 'submit')]}"/>
+                                        <field name="current_allocated" attrs="{'readonly': [('state_allocate', '=', 'submit')]}" sum="current_allocated"/>
                                         <button name="button_submit" string="Submit" type="object" attrs="{'invisible': [('state_allocate', '=', 'submit')]}"/>
                                         <button name="button_draft" string="Set to Draft" type="object" attrs="{'invisible': [('state_allocate', '=', 'draft')]}"/>
                                         <field name="state_allocate" readonly="1"/>
