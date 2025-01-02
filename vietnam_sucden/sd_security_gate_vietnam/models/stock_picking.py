@@ -90,6 +90,7 @@ class StockPicking(models.Model):
                                 ('picking_type_id.code', '=', 'incoming'),
                                 ('picking_type_id.operation', '!=', 'station'),
                                 ('name', '=like', 'GRN%'),
+                                ('remain_request_payment', '>', 0),
                                 ('date_done', '>=', self._context.get('date')),
                                 ('product_id', '=', self._context.get('product_id'))]
                     grn_ids = self.search(args+check)
@@ -119,6 +120,7 @@ class StockPicking(models.Model):
                                ('partner_id', '=', self._context.get('partner_id')),
                                 ('date_done', '>=', self._context.get('date')),('name', '=like', 'GRN%'),
                                 ('picking_type_id.operation', '!=', 'station'),
+                                ('remain_request_payment', '>', 0),
                                ('picking_type_id.code', '=', 'incoming'), ('id', 'not in', grn_array),
                                 ('id', 'not in', arr_done), ('product_id', '=', self._context.get('product_id')),
                              ('state', 'not in', ['done', 'cancel', 'draft']), ('backorder_id', '=', False)]
@@ -132,6 +134,7 @@ class StockPicking(models.Model):
                                   ('date_done', '>=', self._context.get('date')),
                                   ('picking_type_id.operation', '!=', 'station'),
                                   ('picking_type_id.code', '=', 'incoming'),
+                                  ('remain_request_payment', '>', 0),
                                   ('product_id', '=', self._context.get('product_id'))]
                         grn_ids = self.search(args + check)
                         grn_ready = self.env['grn.done.factory'].search([
@@ -161,6 +164,7 @@ class StockPicking(models.Model):
                                  ('date_done', '>=', self._context.get('date')), ('name', '=like', 'GRN%'),
                                  ('picking_type_id.code', '=', 'incoming'), ('id', 'not in', grn_array),
                                  ('picking_type_id.operation', '!=', 'station'),
+                                 ('remain_request_payment', '>', 0),
                                  ('id', 'not in', arr_done), ('product_id', '=', self._context.get('product_id')),
                                  ('state', 'in', ['done']), ('backorder_id', '=', False)]
                         backorder = self.search(args + domain, limit=limit)
@@ -171,6 +175,7 @@ class StockPicking(models.Model):
                                   ('date_done', '>=', self._context.get('date')),
                                   ('picking_type_id.operation', '=', 'station'),
                                   ('picking_type_id.code', '=', 'incoming'),
+                                  ('remain_request_payment', '>', 0),
                                   ('product_id', '=', self._context.get('product_id'))]
                         grn_ids = self.search(args + check)
                         grn_ready = self.env['grn.done.fot'].search([
@@ -199,6 +204,7 @@ class StockPicking(models.Model):
                                  ('partner_id', '=', self._context.get('partner_id')),
                                  ('picking_type_id.operation', '=', 'station'), ('name', '=like', 'GRN%'),
                                  ('date_done', '>=', self._context.get('date')),
+                                 ('remain_request_payment', '>', 0),
                                  ('picking_type_id.code', '=', 'incoming'), ('id', 'not in', grn_array),
                                  ('id', 'not in', arr_done), ('product_id', '=', self._context.get('product_id')),
                                  ('state', 'in', ['done']), ('backorder_id', '=', False)]
@@ -218,6 +224,7 @@ class StockPicking(models.Model):
                 check += [('warehouse_id.code', 'in', ['FA', 'KTN-LT-N', 'KTN-AP-N']),
                           ('partner_id', '=', self._context.get('partner_id')),
                           ('date_done', '>=', self._context.get('date')),
+                          ('remain_request_payment', '>', 0),
                           ('picking_type_id.code', '=', 'incoming'), ('name', '=like', 'GRN%'),
                           ('picking_type_id.operation', '!=', 'station'),
                           ('product_id', '=', self._context.get('product_id')),
@@ -250,6 +257,7 @@ class StockPicking(models.Model):
                            ('date_done', '>=', self._context.get('date')), ('name', '=like', 'GRN%'),
                          ('picking_type_id.code', '=', 'incoming'), ('id', 'not in', grn_array),
                            ('picking_type_id.operation', '!=', 'station'),
+                           ('remain_request_payment', '>', 0),
                          ('id', 'not in', arr_done), ('product_id', '=', self._context.get('product_id')),
                          ('state', 'not in', ['done', 'cancel', 'draft']), ('backorder_id', '=', False)]
             if self._context.get('payment_percent') == 100:
@@ -259,6 +267,7 @@ class StockPicking(models.Model):
                               ('picking_type_id.operation', '=', 'factory'),
                               ('date_done', '>=', self._context.get('date')),
                               ('picking_type_id.operation', '!=', 'station'),
+                              ('remain_request_payment', '>', 0),
                               ('picking_type_id.code', '=', 'incoming'), ('name', '=like', 'GRN%'),
                               ('product_id', '=', self._context.get('product_id')),
                               ('state', 'in', ['done'])]
@@ -290,6 +299,7 @@ class StockPicking(models.Model):
                                ('date_done', '>=', self._context.get('date')), ('name', '=like', 'GRN%'),
                                ('picking_type_id.code', '=', 'incoming'), ('id', 'not in', grn_array),
                                ('picking_type_id.operation', '!=', 'station'),
+                               ('remain_request_payment', '>', 0),
                                ('id', 'not in', arr_done), ('product_id', '=', self._context.get('product_id')),
                                ('state', 'in', ['done']), ('backorder_id', '=', False)]
                 else:
@@ -297,6 +307,7 @@ class StockPicking(models.Model):
                               ('partner_id', '=', self._context.get('partner_id')),
                               ('picking_type_id.operation', '=', 'station'),
                               ('date_done', '>=', self._context.get('date')),
+                              ('remain_request_payment', '>', 0),
                               ('picking_type_id.code', '=', 'incoming'), ('name', '=like', 'GRN%'),
                               ('product_id', '=', self._context.get('product_id')),
                               ('state', 'in', ['done'])]
@@ -327,6 +338,7 @@ class StockPicking(models.Model):
                                ('partner_id', '=', self._context.get('partner_id')),
                                ('picking_type_id.operation', '=', 'station'), ('name', '=like', 'GRN%'),
                                ('date_done', '>=', self._context.get('date')),
+                               ('remain_request_payment', '>', 0),
                                ('picking_type_id.code', '=', 'incoming'), ('id', 'not in', grn_array),
                                ('id', 'not in', arr_done), ('product_id', '=', self._context.get('product_id')),
                                ('state', 'in', ['done']), ('backorder_id', '=', False)]
