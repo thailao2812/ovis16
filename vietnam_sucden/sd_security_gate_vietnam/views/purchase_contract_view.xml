@@ -852,6 +852,9 @@
             <xpath expr="//field[@name='name']" position="before">
                 <button name="button_approve" type="object" string="Approve" attrs="{'invisible': &quot;['|', ('user_approve', '!=', uid), ('state', 'in', ['approved', 'done', 'cancel'])]&quot;}" class="oe_highlight"/>
             </xpath>
+            <xpath expr="//field[@name='delivery_place_id']" position="after">
+                <field name="stop_loss_value"/>
+            </xpath>
         </field>
     </record>
 </odoo>
