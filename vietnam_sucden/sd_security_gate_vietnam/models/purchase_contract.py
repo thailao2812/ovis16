@@ -19,12 +19,13 @@ class PurchaseContract(models.Model):
 
     stop_loss_value = fields.Float(string='Stop Loss Price', compute='_compute_stop_loss_value', store=True)
 
-    @api.depends('stop_loss_price', 'total_advance', 'qty_unfixed', 'type')
+    @api.depends('stop_loss_price', 'total_advance', 'type', 'request_payment_ids', 'request_payment_ids.payment_quantity', 'request_payment_ids.state')
     def _compute_stop_loss_value(self):
         for rec in self:
             if rec.type == 'consign':
-                if rec.qty_unfixed > 0:
-                    rec.stop_loss_value = ((rec.total_advance / rec.qty_unfixed) * rec.stop_loss_price)/ 100
+                total_payment_qty = sum(rec.request_payment_ids.mapped('payment_quantity'))
+                if total_payment_qty > 0:
+                    rec.stop_loss_value = ((rec.total_advance / total_payment_qty) * rec.stop_loss_price)/ 100
                 else:
                     rec.stop_loss_value = 0
             else:
