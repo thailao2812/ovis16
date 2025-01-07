@@ -140,8 +140,8 @@ class NedSecurityGateQueue(models.Model):
     quality_slip_no = fields.Char(string='1St Quality Slip No', tracking=True)
     remark_note = fields.Text(string='Remarks')
     type_contract = fields.Selection([
-        ('cr', 'Regular Contract'),
-        ('cs', 'Consignment Contract'),
+        ('cr', 'CR'),
+        ('cs', 'CS'),
         ('ra_cr', 'RA-CR'),
         ('ra_cs', 'RA-CS'),
         ('sdv_cr', 'SDV-CR'),
