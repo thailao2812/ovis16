@@ -118,7 +118,7 @@ class OperationResultScaleLineShortInfo(Datamodel):
     shift_name = fields.String()
     packing_branch_id = fields.Integer()
     pallet_weight = fields.Float()
-    lining_bag = fields.String()
+    lining_bag = fields.Boolean()
     scale_grp_id = fields.Integer()
     scale_grp_line_id = fields.Integer()
     picking_scale_id = fields.Integer()
@@ -594,7 +594,7 @@ class BatchscalesApiService(Component):
                 "shift_name": {"type": "string"},
                 "packing_branch_id": {},
                 "pallet_weight": {"type": "float"},
-                "lining_bag": {"type": "string"},
+                "lining_bag": {"type": "boolean"},
                 "scale_grp_id": {},
                 "scale_grp_line_id": {},
                 "picking_scale_id": {},

@@ -140,8 +140,14 @@ class NedSecurityGateQueue(models.Model):
     quality_slip_no = fields.Char(string='1St Quality Slip No', tracking=True)
     remark_note = fields.Text(string='Remarks')
     type_contract = fields.Selection([
-        ('cr', 'Regular Contract'),
-        ('cs', 'Consignment Contract')
+        ('cr', 'CR'),
+        ('cs', 'CS'),
+        ('ra_cr', 'RA-CR'),
+        ('ra_cs', 'RA-CS'),
+        ('sdv_cr', 'SDV-CR'),
+        ('sdv_cs', 'SDV-CS'),
+        ('eudr_cr', 'EUDR-CR'),
+        ('eudr_cs', 'EUDR-CS'),
     ], string='Type Contract', default=None, tracking=True)
     license_plate = fields.Char(string='Vehicle No.', required=True, states={}, tracking=True)
     change_warehouse_id = fields.Many2one('stock.warehouse', 'Change Warehouse', readonly=False,
