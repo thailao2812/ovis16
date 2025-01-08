@@ -30,7 +30,7 @@ class StockMoveLine(models.Model):
     @api.constrains('bag_no', 'lot_id', 'state')
     def _contrains_bag_no(self):
         for obj in self:
-            if obj.picking_id.picking_type_id.code not in ('material_in','material_out','phys_adj', 'outgoing') and obj.bag_no <= 0 and obj.state != 'draft':
+            if obj.picking_id.picking_type_id.code not in ('material_in','material_out','phys_adj', 'outgoing', 'production_out') and obj.bag_no <= 0 and obj.state != 'draft':
                 if obj.lot_id:
                     raise ValidationError(_('Bag Qty> 0'))
             if obj.picking_id.picking_type_id.code == 'outgoing':
