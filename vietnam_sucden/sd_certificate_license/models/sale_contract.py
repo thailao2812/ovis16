@@ -36,6 +36,7 @@ class SaleContract(models.Model):
     def button_load(self):
         if self.shipping_id:
             self.certificate_id_list = [(6, 0, [x.id for x in self.shipping_id.certificated_ids])]
+            self.license_certificate_ids = [(6, 0, [x.license_id.id for x in self.shipping_id.license_allocation_ids])]
             self.contract_line.unlink()
             product_qty = new_qty = 0.0
             val ={
