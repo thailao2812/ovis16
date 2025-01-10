@@ -104,6 +104,27 @@
             <xpath expr="//page[@name='nls_nvl']" position="attributes">
                 <attribute name="string">Sale Contract</attribute>
             </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="PSC to SC" name="psc_to_sc">
+                    <field name="psc_to_sc_ids" readonly="1">
+                        <tree>
+                            <field name="s_contract" readonly="1"/>
+                            <field name="sc_date" readonly="1" force_save="1"/>
+                            <field name="partner_id" readonly="1" force_save="1"/>
+                            <field name="product_id" readonly="1" force_save="1"/>
+                            <field name="sc_qty" readonly="1" force_save="1" sum="sc_qty"/>
+                            <field name="allocated_qty" readonly="1" force_save="1" sum="allocated_qty"/>
+                            <field name="balance_qty" readonly="1" force_save="1" sum="balance_qty"/>
+                            <field name="value" readonly="1"/>
+                            <field name="current_allocated" readonly="1" sum="current_allocated"/>
+                            <field name="state_allocate" readonly="1"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+            <xpath expr="//field[@name='pss_type']" position="after">
+                <field name="open_qty" readonly="1"/>
+            </xpath>
 
         </field>
     </record>
