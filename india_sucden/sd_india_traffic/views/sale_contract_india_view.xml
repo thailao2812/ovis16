@@ -95,6 +95,10 @@
                     <field name="price_uom"/>
                     <field name="crop_id"/>
                     <field name="sn_date"/>
+                    <field name="allocated_quantity" string="Allocated Purchase Contract" sum="allocated_quantity"/>
+                    <field name="balance_quantity" string="Balance Qty for Purchase Contract" sum="balance_quantity"/>
+                    <field name="allocated_quantity_sc" string="Allocated S Contract" sum="allocated_quantity_sc"/>
+                    <field name="balance_quantity_sc" string="Balance Qty for S Contract" sum="balance_quantity_sc"/>
                     <field name="state"/>
                 </tree>
             </field>
