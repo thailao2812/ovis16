@@ -13,7 +13,7 @@ class PscToPcLinked(models.Model):
     product_id = fields.Many2one('product.product', string='Item Name - Item Code')
     quantity = fields.Float(string='PC Qty.', compute='compute_pc_qty', store=True)
     receive_qty = fields.Float(string='Receive Qty.')
-    outturn = fields.Float(string='Outturn %')
+    outturn = fields.Float(string='Outturn %', related='purchase_contract_id.outturn', store=True)
     finished_qty = fields.Float(string='Finished Qty/PC', compute='compute_pc_qty', store=True)
     finished_actual_qty = fields.Float(string='Finished Qty /Actual Qty')
     total_allocated = fields.Float(string='Allocated Qty', compute='compute_pc_qty', store=True)
@@ -39,7 +39,7 @@ class PscToPcLinked(models.Model):
             self.product_id = self.purchase_contract_id.product_id.id
             # self.quantity = self.purchase_contract_id.gross_qty if self.purchase_contract_id.origin else self.purchase_contract_id.total_qty
             self.receive_qty = self.purchase_contract_id.qty_received
-            self.outturn = self.purchase_contract_id.outturn
+            # self.outturn = self.purchase_contract_id.outturn
             # self.finished_qty = self.purchase_contract_id.finished_qty
             self.finished_actual_qty = self.purchase_contract_id.finished_receive_qty
             # self.total_allocated = self.purchase_contract_id.total_allocated_qty
