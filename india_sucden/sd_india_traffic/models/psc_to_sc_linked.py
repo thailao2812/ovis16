@@ -12,7 +12,7 @@ class PscToScLinked(models.Model):
     partner_id = fields.Many2one('res.partner', string='Customer')
     product_id = fields.Many2one('product.product', string='Item name - Item code')
     sc_qty = fields.Float(string='SC Qty')
-    balance_qty = fields.Float(string='Balance Qty')
+    balance_qty = fields.Float(string='Balance Qty', digits=(16, 2))
     value = fields.Float(string='Value (USD/MT)', compute='compute_value', store=True)
     allocated_qty = fields.Float(string='Allocated Qty')
     current_allocated = fields.Float(string='Current Allocation')
