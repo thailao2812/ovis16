@@ -961,7 +961,10 @@ class RequestPayment(models.Model):
     @api.depends('balance', 'payment_quantity', 'type', 'type_of_ptbf_payment')
     def current_balance_qty(self):
         for rec in self:
-            rec.current_balance = rec.balance - rec.payment_quantity
+            if rec.balance > 0:
+                rec.current_balance = rec.balance - rec.payment_quantity
+            else:
+                rec.current_balance = rec.balance
 
     @api.depends('name')
     def compute_history_payment(self):
