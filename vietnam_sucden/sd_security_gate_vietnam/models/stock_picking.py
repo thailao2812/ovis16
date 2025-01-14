@@ -19,6 +19,7 @@ class StockPicking(models.Model):
                  'grn_done_factory_ids.request_qty', "total_init_qty", "state", "total_qty")
     def _compute_data_request_payment(self):
         for rec in self:
+            rec.allocated_request_payment = 0
             if rec.state == 'assigned':
                 rec.allocated_request_payment = sum(rec.grn_ready_ids.mapped('request_qty')) + sum(rec.grn_done_factory_ids.mapped('request_qty'))
                 rec.remain_request_payment = rec.total_init_qty - (sum(rec.grn_ready_ids.mapped('request_qty')) + sum(rec.grn_done_factory_ids.mapped('request_qty')))
