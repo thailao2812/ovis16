@@ -940,7 +940,7 @@ class RequestPayment(models.Model):
                 if point_qty == 0:
                     continue
 
-    @api.depends('history_quantity_payment', 'history_quantity_payment.quantity', 'purchase_contract_id', 'purchase_contract_id.total_qty', 'name')
+    @api.depends('history_quantity_payment', 'history_quantity_payment.quantity', 'purchase_contract_id', 'purchase_contract_id.total_qty', 'name', 'type', 'type_of_ptbf_payment')
     def compute_balance_quantity(self):
         for rec in self:
             other_request_payment = self.search([
@@ -948,9 +948,17 @@ class RequestPayment(models.Model):
                 ('purchase_contract_id', '=', rec.parent_id_purchase_contract)
             ], order='name asc')
             purchase_contract = self.env['purchase.contract'].browse(rec.parent_id_purchase_contract)
-            rec.balance = purchase_contract.total_qty - sum(other_request_payment.mapped('payment_quantity'))
+            if rec.type == 'ptbf':
+                other_request_payment_ptbf = self.search([
+                    ('name', '<', int(rec.name)),
+                    ('purchase_contract_id', '=', rec.parent_id_purchase_contract),
+                    ('type_of_ptbf_payment', 'in', ['fixation', 'advance'])
+                ], order='name asc')
+                rec.balance = purchase_contract.total_qty - sum(other_request_payment_ptbf.mapped('payment_quantity'))
+            else:
+                rec.balance = purchase_contract.total_qty - sum(other_request_payment.mapped('payment_quantity'))
 
-    @api.depends('balance', 'payment_quantity')
+    @api.depends('balance', 'payment_quantity', 'type', 'type_of_ptbf_payment')
     def current_balance_qty(self):
         for rec in self:
             rec.current_balance = rec.balance - rec.payment_quantity
