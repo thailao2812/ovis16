@@ -119,6 +119,8 @@ class RequestPayment(models.Model):
     fixation_advance_ptbf_npe_total_ids = fields.One2many('fixation.advance.ptbf.npe.total', 'request_payment_id', string='Fixation For Advance NPE')
     total_interest_advance_ptbf_npe = fields.Float(string='Total Interest', compute='compute_total_interest_advance_ptbf_npe', store=True)
 
+    warehouse_id = fields.Many2one('stock.warehouse', related='purchase_contract_id.warehouse_id', string='Warehouse')
+
     @api.depends('fixation_advance_ptbf_npe_ids', 'fixation_advance_ptbf_npe_ids.interest')
     def compute_total_interest_advance_ptbf_npe(self):
         for rec in self:
