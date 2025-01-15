@@ -59,6 +59,7 @@ class StockPicking(models.Model):
             if name:
                 args += ['|', ('name', operator, name), ('description_name', operator, name)]
             backorder = self.search(args, limit=limit)
+            return backorder.name_get()
         else:
             if self._context.get('grn_fot_allocation'):
                 if name:
@@ -85,7 +86,7 @@ class StockPicking(models.Model):
                     grn_array = [int(x) for x in grn_array if x.isdigit()]
                 check += [('id', 'not in', grn_array)]
                 if self._context.get('payment_percent') == 90:
-                    check += [('warehouse_id.code', 'in', ['FA', 'KTN-LT-N', 'KTN-AP-N']),
+                    check += [('warehouse_id', '=', self._context.get('warehouse_id')),
                                 ('partner_id', '=', self._context.get('partner_id')),
                                 ('state', 'not in', ['done', 'cancel', 'draft']),
                                 ('picking_type_id.code', '=', 'incoming'),
@@ -117,7 +118,7 @@ class StockPicking(models.Model):
                         if i.remain_qty == 0:
                             if i.picking_id.id not in arr_done:
                                 arr_done.append(i.picking_id.id)
-                    args += [('warehouse_id.code', 'in', ['FA', 'KTN-LT-N', 'KTN-AP-N']),
+                    args += [('warehouse_id', '=', self._context.get('warehouse_id')),
                                ('partner_id', '=', self._context.get('partner_id')),
                                 ('date_done', '>=', self._context.get('date')),('name', '=like', 'GRN%'),
                                 ('picking_type_id.operation', '!=', 'station'),
@@ -129,7 +130,7 @@ class StockPicking(models.Model):
 
                 if self._context.get('payment_percent') == 100:
                     if self.env.context.get('factory'):
-                        check += [('warehouse_id.code', 'in', ['FA', 'KTN-LT-N', 'KTN-AP-N']),
+                        check += [('warehouse_id', '=', self._context.get('warehouse_id')),
                                   ('partner_id', '=', self._context.get('partner_id')),
                                   ('state', 'in', ['done']), ('name', '=like', 'GRN%'),
                                   ('date_done', '>=', self._context.get('date')),
@@ -160,7 +161,7 @@ class StockPicking(models.Model):
                             if i.remain_qty == 0:
                                 if i.picking_id.id not in arr_done:
                                     arr_done.append(i.picking_id.id)
-                        args += [('warehouse_id.code', 'in', ['FA', 'KTN-LT-N', 'KTN-AP-N']),
+                        args += [('warehouse_id', '=', self._context.get('warehouse_id')),
                                  ('partner_id', '=', self._context.get('partner_id')),
                                  ('date_done', '>=', self._context.get('date')), ('name', '=like', 'GRN%'),
                                  ('picking_type_id.code', '=', 'incoming'), ('id', 'not in', grn_array),
@@ -222,7 +223,7 @@ class StockPicking(models.Model):
                 grn_array = [int(x) for x in grn_array if x.isdigit()]
             check += [('id', 'not in', grn_array)]
             if self._context.get('payment_percent') == 90:
-                check += [('warehouse_id.code', 'in', ['FA', 'KTN-LT-N', 'KTN-AP-N']),
+                check += [('warehouse_id', '=', self._context.get('warehouse_id')),
                           ('partner_id', '=', self._context.get('partner_id')),
                           ('date_done', '>=', self._context.get('date')),
                           ('remain_request_payment', '>', 0),
@@ -253,7 +254,7 @@ class StockPicking(models.Model):
                     if i.remain_qty == 0:
                         if i.picking_id.id not in arr_done:
                             arr_done.append(i.picking_id.id)
-                domain += [('warehouse_id.code', 'in', ['FA', 'KTN-LT-N', 'KTN-AP-N']),
+                domain += [('warehouse_id', '=', self._context.get('warehouse_id')),
                          ('partner_id', '=', self._context.get('partner_id')),
                            ('date_done', '>=', self._context.get('date')), ('name', '=like', 'GRN%'),
                          ('picking_type_id.code', '=', 'incoming'), ('id', 'not in', grn_array),
@@ -263,7 +264,7 @@ class StockPicking(models.Model):
                          ('state', 'not in', ['done', 'cancel', 'draft']), ('backorder_id', '=', False)]
             if self._context.get('payment_percent') == 100:
                 if self.env.context.get('factory'):
-                    check += [('warehouse_id.code', 'in', ['FA', 'KTN-LT-N', 'KTN-AP-N']),
+                    check += [('warehouse_id', '=', self._context.get('warehouse_id')),
                               ('partner_id', '=', self._context.get('partner_id')),
                               ('picking_type_id.operation', '=', 'factory'),
                               ('date_done', '>=', self._context.get('date')),
@@ -295,7 +296,7 @@ class StockPicking(models.Model):
                         if i.remain_qty == 0:
                             if i.picking_id.id not in arr_done:
                                 arr_done.append(i.picking_id.id)
-                    domain += [('warehouse_id.code', 'in', ['FA', 'KTN-LT-N', 'KTN-AP-N']),
+                    domain += [('warehouse_id', '=', self._context.get('warehouse_id')),
                                ('partner_id', '=', self._context.get('partner_id')),
                                ('date_done', '>=', self._context.get('date')), ('name', '=like', 'GRN%'),
                                ('picking_type_id.code', '=', 'incoming'), ('id', 'not in', grn_array),
