@@ -957,7 +957,11 @@ class RequestPayment(models.Model):
                     ('type_of_ptbf_payment', 'in', ['fixation', 'advance'])
                 ], order='name asc')
                 if other_request_payment_ptbf:
-                    rec.balance = purchase_contract.total_qty - sum(other_request_payment_ptbf.mapped('payment_quantity')) - rec.payment_quantity
+                    if rec.type_of_ptbf_payment not in ['fixation', 'advance']:
+                        payment_qty = 0
+                    else:
+                        payment_qty = rec.payment_quantity
+                    rec.balance = purchase_contract.total_qty - sum(other_request_payment_ptbf.mapped('payment_quantity')) - payment_qty
                 else:
                     rec.balance = purchase_contract.total_qty - rec.payment_quantity
             else:
