@@ -288,7 +288,9 @@ class MasterDataApiService(Component):
 
     def _get_district_schema(self):
         return {"id": {"type": "integer", "required": True},
-                "name": {"type": "string", "required": True}}
+                "name": {"type": "string", "required": True},
+                "state_id": {},
+                "state_name": {}}
 
     @restapi.method(
         [(["/res_district/list"], "GET")],
@@ -296,8 +298,8 @@ class MasterDataApiService(Component):
         auth="api_key",
     )
     def district_list(self):
-        districts = self.env["res.district"].search([("active", "=", True)])
-        return [{"id": p.id, "name": p.name} for p in districts]
+        districts = self.env["res.district"].search([("active", "=", True),("state_id", "!=", False)])
+        return [{"id": p.id, "name": p.name, "state_id": p.state_id.id, "state_name": p.state_id.name} for p in districts]
     
     @restapi.method(
         [(["/res_district/search"], "GET")],

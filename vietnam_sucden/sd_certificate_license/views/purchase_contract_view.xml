@@ -68,9 +68,9 @@
             <xpath expr="//field[@name='license_id']" position="before">
                 <field name="certificated_ids" widget="many2many_tags"/>
             </xpath>
-            <xpath expr="//field[@name='certificate_id']" position="attributes">
+            <!-- <xpath expr="//field[@name='certificate_id']" position="attributes">
                 <attribute name="invisible">1</attribute>
-            </xpath>
+            </xpath> -->
         </field>
     </record>
 
