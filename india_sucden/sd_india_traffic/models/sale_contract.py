@@ -124,7 +124,7 @@ class SaleContractIndia(models.Model):
                 raise UserError(_("You cannot allocate more than PSC Qty, check again!"))
 
     @api.depends('sale_contract_factory_ids', 'sale_contract_factory_ids.state_allocate',
-                 'sale_contract_factory_ids.current_allocated')
+                 'sale_contract_factory_ids.current_allocated', 'total_quantity')
     def _compute_transaction_sc_qty(self):
         for record in self:
             record.allocated_quantity_sc = sum(i.current_allocated for i in record.sale_contract_factory_ids.filtered(
