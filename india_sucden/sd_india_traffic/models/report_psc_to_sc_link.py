@@ -8,7 +8,7 @@ class ReportPSCtoSCLink(models.Model):
     _description = 'Report PSC to SC Linked'
 
     p_number = fields.Many2one('sale.contract.india', string='P Contract No')
-    p_qty = fields.Float(string='P Contract Qty Mt')
+    p_qty = fields.Float(string='P Contract Qty')
     p_price = fields.Float(string='P Contract price')
     currency_uom = fields.Char(string='Currency / UOM', default='USD/MT')
     p_amount = fields.Float(string='P Contract Total Amount')

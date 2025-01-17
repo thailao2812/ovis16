@@ -214,25 +214,25 @@
         </field>
     </record>
 
-     <record id="view_nvp_contract_tree_inherit_india_traffic" model="ir.ui.view">
-        <field name="name">view_nvp_contract_tree_inherit_india_traffic</field>
-        <field name="model">purchase.contract</field>
-        <field name="inherit_id" ref="sd_purchase_contract.view_nvp_contract_tree"/>
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='product_id']" position="after">
-                <field name="open_qty"/>
-            </xpath>
-        </field>
-     </record>
+<!--     <record id="view_nvp_contract_tree_inherit_india_traffic" model="ir.ui.view">-->
+<!--        <field name="name">view_nvp_contract_tree_inherit_india_traffic</field>-->
+<!--        <field name="model">purchase.contract</field>-->
+<!--        <field name="inherit_id" ref="sd_purchase_contract.view_nvp_contract_tree"/>-->
+<!--        <field name="arch" type="xml">-->
+<!--            <xpath expr="//field[@name='product_id']" position="after">-->
+<!--                <field name="open_qty"/>-->
+<!--            </xpath>-->
+<!--        </field>-->
+<!--     </record>-->
 
-    <record id="view_purchase_contract_tree_inherit_india_traffic" model="ir.ui.view">
-        <field name="name">view_purchase_contract_tree_inherit_india_traffic</field>
-        <field name="model">purchase.contract</field>
-        <field name="inherit_id" ref="sd_purchase_contract.view_purchase_contract_tree"/>
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='product_id']" position="after">
-                <field name="open_qty"/>
-            </xpath>
-        </field>
-     </record>
+<!--    <record id="view_purchase_contract_tree_inherit_india_traffic" model="ir.ui.view">-->
+<!--        <field name="name">view_purchase_contract_tree_inherit_india_traffic</field>-->
+<!--        <field name="model">purchase.contract</field>-->
+<!--        <field name="inherit_id" ref="sd_purchase_contract.view_purchase_contract_tree"/>-->
+<!--        <field name="arch" type="xml">-->
+<!--            <xpath expr="//field[@name='product_id']" position="after">-->
+<!--                <field name="open_qty"/>-->
+<!--            </xpath>-->
+<!--        </field>-->
+<!--     </record>-->
 </odoo>

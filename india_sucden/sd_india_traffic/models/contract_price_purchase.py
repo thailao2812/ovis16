@@ -37,6 +37,16 @@ class ContractPricePurchase(models.Model):
         ('approve', 'Approved'),
     ], string='State', default='draft')
     outturn = fields.Float(string='Outturn %', compute='compute_outturn', store=True, readonly=False)
+    open_qty = fields.Float(string='Open Qty', related='contract_id.open_qty', store=True)
+    outturn_qty = fields.Float(string='OT Qty', compute='compute_outturn_qty', store=True)
+    total_allocated_qty = fields.Float(string='Total Allocated', related='contract_id.total_allocated_qty', store=True)
+    open_p_contract = fields.Float(string='Open P Contract', compute='compute_outturn_qty', store=True)
+
+    @api.depends('outturn', 'quantity', 'total_allocated_qty')
+    def compute_outturn_qty(self):
+        for rec in self:
+            rec.outturn_qty = (rec.outturn * rec.quantity)/100
+            rec.open_p_contract = rec.outturn_qty - rec.total_allocated_qty
 
     @api.depends('product_id', 'product_id.outturn')
     def compute_outturn(self):
