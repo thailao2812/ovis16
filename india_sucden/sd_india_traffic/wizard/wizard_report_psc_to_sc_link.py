@@ -20,21 +20,18 @@ class WizardReportPSCtoSC(models.TransientModel):
         if (not self.date_from and self.date_to) or (self.date_from and not self.date_to):
             raise UserError(_("You have to input date from and date to OR leave it blank to Generate Report!!"))
         p_contract = False
-        if self.date_from and self.date_to:
-            p_contract = self.env['sale.contract.india'].search([
-                ('p_date', '>=', self.date_from),
-                ('p_date', '<=', self.date_to)
-            ])
+        domain = []
         if self.season_id:
-            p_contract = p_contract.filtered(lambda x: x.crop_id.id == self.season_id.id)
+            domain += [('crop_id', '=', self.season_id.id)]
         if self.item_group_ids:
-            p_contract = p_contract.filtered(lambda x: x.item_group_id.id in self.item_group_ids.ids)
+            domain += [('item_group_id', 'in', self.item_group_ids.ids)]
+        if self.date_from and self.date_to:
+            domain += [('p_date', '>=', self.date_from), ('p_date', '<=', self.date_to)]
         if self.sale_contract_ids:
-            p_contract = self.sale_contract_ids
-        if not p_contract:
-            p_contract = self.env['sale.contract.india'].search([
-                ('p_number', '!=', False)
-            ])
+            domain += [('id', 'in', self.sale_contract_ids.ids)]
+        if domain:
+            p_contract = self.env['sale.contract.india'].search(domain)
+
         number = 1
         for p in p_contract:
             if p.sale_contract_factory_ids:
@@ -49,7 +46,7 @@ class WizardReportPSCtoSC(models.TransientModel):
                             'p_number': p.id,
                             'p_qty': p.total_quantity,
                             'p_price': p.price_unit,
-                            'p_amount': (p.total_quantity * p.price_unit) / number,
+                            'p_amount': (p.total_quantity/number) * p.price_unit,
                             's_contract_id': line.s_contract.id,
                             'product_id': line.s_contract.product_id.id,
                             's_qty': line.s_contract.total_qty,
@@ -58,7 +55,7 @@ class WizardReportPSCtoSC(models.TransientModel):
                             'packing_cost': line.s_contract.packing_cost,
                             'certificate_premium': line.s_contract.premium_cert,
                             's_total_price': p.price_unit + line.s_contract.differential + line.s_contract.packing_cost + line.s_contract.premium_cert,
-                            's_contract_amount': ((p.price_unit + line.s_contract.differential + line.s_contract.packing_cost + line.s_contract.premium_cert) * line.s_contract.total_allocated_sc) / number,
+                            's_contract_amount': (line.s_contract.total_qty/number) * (p.price_unit + line.s_contract.differential + line.s_contract.packing_cost + line.s_contract.premium_cert),
                             'open_position': p.balance_quantity_sc,
                             'open_position_value': (p.balance_quantity_sc * p.price_unit) / number
                         }
