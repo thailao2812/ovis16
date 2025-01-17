@@ -19,7 +19,7 @@ class PurchaseContract(models.Model):
 
     stop_loss_value = fields.Float(string='Stop Loss Price', compute='_compute_stop_loss_value', store=True)
 
-    warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse', required=True, readonly=True,
+    warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse', required=False, readonly=True,
                                    states={}, default=False, related='delivery_place_id.warehouse_id', store=True)
 
     @api.depends('stop_loss_price', 'total_advance', 'type', 'request_payment_ids', 'request_payment_ids.payment_quantity', 'request_payment_ids.state')
