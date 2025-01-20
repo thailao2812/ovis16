@@ -20,13 +20,13 @@ class AdvanceLine(models.Model):
     quantity_fix = fields.Integer(string='Quantity Fix')
     check = fields.Boolean(string='Check')
 
-    @api.depends('quantity_fix', 'request_payment_id', 'rate')
+    @api.depends('quantity_fix', 'request_payment_id', 'rate', 'quantity_advance')
     def compute_total_advance_usd(self):
         for rec in self:
             if rec.request_payment_id:
                 rec.total_advance_payment_usd = rec.request_payment_id.total_advance_payment_usd
                 rec.request_amount = rec.request_payment_id.request_amount
-                if rec.quantity_fix > 0:
+                if rec.quantity_fix < rec.quantity_advance:
                     rec.request_amount = rec.quantity_fix * rec.request_payment_id.advance_price_vnd
                     rec.total_advance_payment_usd = rec.request_amount / rec.rate
 
