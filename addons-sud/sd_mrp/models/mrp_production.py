@@ -39,10 +39,10 @@ class MrpProduction(models.Model):
             self.notes = self.bom_id.detail or ''
     
     def action_to_draft(self):
-        if len(self.move_line_finished_good_ids) ==0 and len(self.move_line_material_ids) ==0:
-            self.state = 'draft'
-        else:
-            raise UserError(_('This Manufacturing Order have had GIP or GRP already. You can not set to draft!!!'))
+        # if len(self.move_line_finished_good_ids) ==0 and len(self.move_line_material_ids) ==0:
+        self.state = 'draft'
+        # else:
+        #     raise UserError(_('This Manufacturing Order have had GIP or GRP already. You can not set to draft!!!'))
 
     def action_cancel(self):
         """ Kiểm tra các điều kiện rùi cập nhật trạng thái cancel """
