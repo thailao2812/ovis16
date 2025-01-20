@@ -11,14 +11,24 @@ class AdvanceLine(models.Model):
     request_payment_id = fields.Many2one('request.payment', string='Request Payment')
     name = fields.Char(string='Description')
     request_date = fields.Date(string='Date', related='request_payment_id.date', store=True, readonly=False)
-    total_advance_payment_usd = fields.Float(string='Total Advance Payment (USD)', digits=(12, 2), related='request_payment_id.total_advance_payment_usd', store=True, readonly=False)
+    total_advance_payment_usd = fields.Float(string='Total Advance Payment (USD)', digits=(12, 2), compute='compute_total_advance_usd', store=True, readonly=False)
     rate = fields.Float(string='Exchange Rate', digits=(12, 0), related='request_payment_id.rate', store=True, readonly=False)
-    request_amount = fields.Float(string='Request Amount VND', digits=(12, 0), related='request_payment_id.request_amount', store=True, readonly=False)
+    request_amount = fields.Float(string='Request Amount VND', digits=(12, 0), compute='compute_total_advance_usd', store=True, readonly=False)
     advance_qty = fields.Integer(string='Advance Quantity', related='request_payment_id.quantity_advance', store=True)
     fixed_quantity = fields.Integer(string='Fixed Quantity', compute='compute_fixed_qty', store=True)
     remain_qty = fields.Integer(string='Remain Qty Advance', compute='compute_remain_qty', store=True)
     quantity_fix = fields.Integer(string='Quantity Fix')
     check = fields.Boolean(string='Check')
+
+    @api.depends('quantity_fix', 'request_payment_id', 'rate')
+    def compute_total_advance_usd(self):
+        for rec in self:
+            if rec.request_payment_id:
+                rec.total_advance_payment_usd = rec.request_payment_id.total_advance_payment_usd
+                rec.request_amount = rec.request_payment_id.request_amount
+                if rec.quantity_fix > 0:
+                    rec.request_amount = rec.quantity_fix * rec.request_payment_id.advance_price_vnd
+                    rec.total_advance_payment_usd = rec.request_amount / rec.rate
 
     @api.depends('request_payment_id')
     def compute_fixed_qty(self):
