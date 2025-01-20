@@ -121,6 +121,26 @@ class RequestPayment(models.Model):
 
     warehouse_id = fields.Many2one('stock.warehouse', related='purchase_contract_id.warehouse_id', string='Warehouse')
 
+    @api.depends('purchase_contract_id', 'purchase_contract_id.request_payment_ids',
+                 'purchase_contract_id.request_payment_ids.name',
+                 'purchase_contract_id.request_payment_ids.payment_quantity', 'name', 'type', 'type_of_ptbf_payment')
+    def compute_paid_quantity(self):
+        for rec in self:
+            if int(rec.name) > 1:
+                if rec.type == 'ptbf':
+                    paid_quantity = sum(rec.purchase_contract_id.request_payment_ids._origin.filtered(
+                        lambda x: int(x.name) < int(rec.name) and x.type_of_ptbf_payment in ['fixation', 'advance']).mapped('payment_quantity'))
+                    rec.paid_quantity = paid_quantity
+                    rec.balance_quantity = rec.quantity_contract - rec.paid_quantity
+                else:
+                    paid_quantity = sum(rec.purchase_contract_id.request_payment_ids._origin.filtered(
+                        lambda x: int(x.name) < int(rec.name)).mapped('payment_quantity'))
+                    rec.paid_quantity = paid_quantity
+                    rec.balance_quantity = rec.quantity_contract - rec.paid_quantity
+            else:
+                rec.paid_quantity = 0
+                rec.balance_quantity = rec.quantity_contract - rec.paid_quantity
+
     @api.depends('fixation_advance_ptbf_npe_ids', 'fixation_advance_ptbf_npe_ids.interest')
     def compute_total_interest_advance_ptbf_npe(self):
         for rec in self:
