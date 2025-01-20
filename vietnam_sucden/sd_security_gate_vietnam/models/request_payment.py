@@ -504,7 +504,9 @@ class RequestPayment(models.Model):
                 if not line.name:
                     value = {
                         'request_id': line.request_id.id,
-                        'request_payment_id': line.request_payment_id.id
+                        'request_payment_id': line.request_payment_id.id,
+                        'total_advance_payment_usd': line.total_advance_payment_usd,
+                        'request_amount': line.request_amount,
                     }
                     self.env['reference.information'].create(value)
                 else:
