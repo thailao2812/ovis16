@@ -163,7 +163,7 @@ class StockMoveLineShortInfo(Datamodel):
     mrp_name = fields.String()
     init_qty = fields.Float(load_default=0.0)
     bag_no = fields.Integer()
-    packing_id = fields.Integer()
+    packing_id = fields.Integer(allow_none=True)
     state_kcs = fields.String()
     rml_id = fields.Integer()
     rm_id = fields.Integer()
@@ -1078,7 +1078,7 @@ class BatchscalesApiService(Component):
         for p in result:
             res.append(StackShortInfo(sp_id=p['sp_id'], name=p['name'], lot_id=p['lot_id'], stack_name=p['stack_name'], 
                                       production_id=p['production_id'], mrp_name=p['mrp_name'], init_qty=p['init_qty'],
-                                      bag_no=p['bag_no'], packing_id=str(p['packing_id']), state_kcs=p['state_kcs'],
+                                      bag_no=p['bag_no'], packing_id=p['packing_id'], state_kcs=p['state_kcs'],
                                       rml_id=p['rml_id'], rm_id=p['rm_id'], rm_name=p['rm_name'], 
                                       sp_state=p['sp_state'], tare_weight=p['tare_weight'], gross_weight=p['gross_weight'], 
                                       product_id=p['product_id'], scale_gip_id=p['scale_gip_id']))
