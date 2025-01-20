@@ -15,9 +15,7 @@
                     <field name="product_id"/>
                     <field name="s_qty" sum="s_qty"/>
                     <field name="allocated_qty" sum="allocated_qty"/>
-                    <field name="differential"/>
-                    <field name="packing_cost"/>
-                    <field name="certificate_premium"/>
+<!--                    <field name="differential"/>-->
                     <field name="s_total_price"/>
                     <field name="currency_uom_2nd"/>
                     <field name="s_contract_amount" sum="s_contract_amount"/>
