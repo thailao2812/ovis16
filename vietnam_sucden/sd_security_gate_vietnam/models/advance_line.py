@@ -81,8 +81,11 @@ class AdvanceLine(models.Model):
     def compute_remain_qty(self):
         for rec in self:
             if not rec.name:
-                rec.remain_qty = rec.advance_qty - rec.fixed_quantity - rec.quantity_fix
-                if rec.remain_qty < 0:
-                    raise UserError(_("Remain Quantity cannot < 0!!!"))
+                if rec.request_payment_id:
+                    rec.remain_qty = rec.advance_qty - rec.fixed_quantity - rec.quantity_fix
+                    if rec.remain_qty < 0:
+                        raise UserError(_("Remain Quantity cannot < 0!!!"))
+                else:
+                    rec.remain_qty = 0
             if rec.name:
                 rec.remain_qty = 0
