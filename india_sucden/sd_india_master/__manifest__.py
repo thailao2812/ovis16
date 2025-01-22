@@ -19,6 +19,8 @@
         'views/ned_certificate_view.xml',
         'views/interest_configuration_view.xml',
         'views/analysis_batch_report_view.xml',
+        'views/grade_premium_view.xml',
+        'views/markup_value_view.xml',
         'data/data.xml',
     ],
     'installable': True,

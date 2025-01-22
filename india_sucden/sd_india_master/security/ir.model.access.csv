@@ -7,3 +7,6 @@ access_interest_configuration,access_interest_configuration,model_interest_confi
 access_analysis_batch_report,access_analysis_batch_report,model_analysis_batch_report,base.group_user,1,1,1,1
 
 access_financial_year,access_financial_year,model_financial_year,base.group_user,1,1,1,1
+
+access_markup_value,access_markup_value,model_markup_value,base.group_user,1,1,1,1
+access_grade_premium,access_grade_premium,model_grade_premium_india,base.group_user,1,1,1,1
