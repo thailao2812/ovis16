@@ -529,7 +529,8 @@
                                    attrs="{'required': [('type_of_ptbf_payment', 'in', ['fixation', 'fixation_advance', 'fixation_advance_ptbf_npe'])],
                                    'invisible': ['|', ('type_of_ptbf_payment', 'not in', ['fixation', 'fixation_advance', 'fixation_advance_ptbf_npe']), ('type', '!=', 'ptbf')],
                                    'readonly': [('state', '!=', 'draft')]}"/>
-
+                            <field name="convert_id" options="{'no_create': True}" context="{'convert_npe': True, 'purchase_contract_id': purchase_contract_id}"
+                                   attrs="{'invisible': ['|', ('is_converted', '=', False), ('type_of_ptbf_payment', '!=', 'advance')], 'required': [('is_converted', '=', True), ('type_of_ptbf_payment', '=', 'advance')]}"/>
                             <field name="partner_id" readonly="1"/>
                             <field name="warehouse_id" readonly="1"/>
                             <field name="product_id" invisible="1"/>
@@ -566,6 +567,8 @@
                     <separator string="Advance Information" attrs="{'invisible': [('type_of_ptbf_payment', '!=', 'advance')]}"/>
                     <group attrs="{'invisible': [('type_of_ptbf_payment', '!=', 'advance')]}">
                         <group>
+                            <field name="convert_qty" attrs="{'invisible': ['|', ('is_converted', '=', False), ('type_of_ptbf_payment', '!=', 'advance')], 'required': [('is_converted', '=', True), ('type_of_ptbf_payment', '=', 'advance')]}"/>
+                            <field name="remain_qty" string="Remain quantity of Convert" readonly="1"/>
                             <field name="payment_quantity" string="Advance quantity"/>
                             <field name="liffe_price"/>
                             <field name="price_diff"/>
