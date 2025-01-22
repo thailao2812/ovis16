@@ -60,7 +60,7 @@ class StockPicking(models.Model):
             backorder = self.search(args, limit=limit)
             return backorder.name_get()
         else:
-            if self._context.get('grn_fot_allocation'):
+            if self._context.get('grn_fot_allocation') and 'request_payment' not in self._context:
                 if name:
                     args += ['|', ('name', operator, name), ('description_name', operator, name)]
                 domain = args
@@ -209,6 +209,7 @@ class StockPicking(models.Model):
                                  ('picking_type_id.code', '=', 'incoming'), ('id', 'not in', grn_array),
                                  ('id', 'not in', arr_done), ('product_id', '=', self._context.get('product_id')),
                                  ('state', 'in', ['done']), ('backorder_id', '=', False)]
+                        print(args)
                         backorder = self.search(args + domain, limit=limit)
         return backorder.name_get()
 

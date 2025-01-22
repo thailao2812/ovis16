@@ -525,7 +525,7 @@
                     <group>
                         <group>
                             <field name="type_of_ptbf_payment" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                            <field name="price_tobe_fix" options="{'no_create': True}" domain="[('contract_id', '=', parent_id_purchase_contract)]"
+                            <field name="price_tobe_fix" options="{'no_create': True}" domain="[('contract_id', '=', parent_id_purchase_contract), ('remain_qty', '>', 0)]"
                                    attrs="{'required': [('type_of_ptbf_payment', 'in', ['fixation', 'fixation_advance', 'fixation_advance_ptbf_npe'])],
                                    'invisible': ['|', ('type_of_ptbf_payment', 'not in', ['fixation', 'fixation_advance', 'fixation_advance_ptbf_npe']), ('type', '!=', 'ptbf')],
                                    'readonly': [('state', '!=', 'draft')]}"/>
@@ -596,7 +596,7 @@
                                 <field name="quantity_fix" decoration-bf="check == True" context="{'seq': parent.name, 'purchase_contract_id': parent.parent_id_purchase_contract}"/>
                             </tree>
                         </field>
-                    <button name="generate_advance_line" class="btn-primary" string="Generate Advance Line" attrs="{'invisible': [('type_of_ptbf_payment', '!=', 'fixation_advance')]}" type="object"/>
+                    <button name="generate_advance_line" class="btn-primary" string="Generate Advance Line" attrs="{'invisible': ['|', ('type_of_ptbf_payment', '!=', 'fixation_advance'), ('state', '!=', 'draft')]}" type="object"/>
                     <separator string="Reference Information" attrs="{'invisible': [('type_of_ptbf_payment', '!=', 'fixation_advance')]}"/>
                     <field name="reference_information_line_ids" attrs="{'invisible': [('type_of_ptbf_payment', '!=', 'fixation_advance')]}" >
                         <tree editable="top">
@@ -608,7 +608,7 @@
                             <field name="request_amount" decoration-muted="1"/>
                         </tree>
                     </field>
-                    <button name="generate_reference_information" class="btn-primary" string="Generate" attrs="{'invisible': [('type_of_ptbf_payment', '!=', 'fixation_advance')]}" type="object"/>
+                    <button name="generate_reference_information" class="btn-primary" string="Generate" attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('type_of_ptbf_payment', '!=', 'fixation_advance')]}" type="object"/>
                     <separator string="Fix Price Information" attrs="{'invisible': [('type_of_ptbf_payment', 'not in', ['fixation_advance', 'fixation_advance_ptbf_npe'])]}"/>
                     <group attrs="{'invisible': [('type_of_ptbf_payment', 'not in', ['fixation_advance', 'fixation_advance_ptbf_npe'])]}">
                         <field name="qty_advance_fix" readonly="1"/>
