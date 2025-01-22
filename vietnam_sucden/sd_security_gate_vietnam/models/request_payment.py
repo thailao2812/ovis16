@@ -121,6 +121,15 @@ class RequestPayment(models.Model):
 
     warehouse_id = fields.Many2one('stock.warehouse', related='purchase_contract_id.warehouse_id', string='Warehouse')
 
+    convert_id = fields.Many2one('npe.nvp.relation', string='Contract Convert')
+    convert_qty = fields.Float(string='Advance Convert Quantity')
+    remain_qty = fields.Float(string='Remaining Qty', related='convert_id.remain_qty' , store=True)
+
+    @api.onchange('convert_qty')
+    def onchange_convert_qty(self):
+        if self.convert_qty > self.remain_qty:
+            raise UserError(_("Fix Convert Qty cannot be greater than Remaining Qty"))
+
     @api.depends('purchase_contract_id', 'purchase_contract_id.request_payment_ids',
                  'purchase_contract_id.request_payment_ids.name',
                  'purchase_contract_id.request_payment_ids.payment_quantity', 'name', 'type', 'type_of_ptbf_payment')
@@ -1016,7 +1025,7 @@ class RequestPayment(models.Model):
                 self.env['history.payment.quantity'].create(value)
 
     @api.depends('status_goods_ids', 'type', 'status_goods_ids.request_quantity', 'is_converted', 'quantity_contract',
-                 'quantity_of_price_tobe_fix', 'type_of_ptbf_payment', 'price_tobe_fix', 'qty_advance_fix')
+                 'quantity_of_price_tobe_fix', 'type_of_ptbf_payment', 'price_tobe_fix', 'qty_advance_fix', 'convert_qty')
     def compute_payment_quantity(self):
         for rec in self:
             rec.payment_quantity = 0
@@ -1031,6 +1040,9 @@ class RequestPayment(models.Model):
             if rec.is_converted:
                 if rec.type_of_ptbf_payment in ['fixation_advance', 'fixation_advance_ptbf_npe']:
                     rec.payment_quantity = rec.price_tobe_fix.quantity
+                elif rec.type_of_ptbf_payment == 'advance':
+                    rec.payment_quantity = rec.convert_qty
+                    rec.mirror_request_amount = 0
                 else:
                     rec.payment_quantity = rec.quantity_contract
                     rec.mirror_request_amount = 0
