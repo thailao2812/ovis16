@@ -474,6 +474,19 @@ class RequestPayment(models.Model):
             if not self.env.context.get('total'):
                 if rec.qty_advance_fix == 0:
                     raise UserError(_("Hãy nhập số lượng muốn fix cho từng Advance mà bạn chọn!"))
+                for advance in rec.fixation_advance_line_ids.filtered(lambda x: not x.name):
+                    if advance.remain_qty == 0:
+                        checking_advance_line = self.env['advance.line'].search([
+                            ('request_payment_id', '=', advance.request_payment_id.id),
+                            ('id', '!=', advance.id)
+                        ])
+                        if checking_advance_line:
+                            total_checking_advance_line = sum(checking_advance_line.mapped('request_amount'))
+                            advance.request_amount = advance.request_payment_id.request_amount - total_checking_advance_line
+                            advance.total_advance_payment_usd = advance.request_amount / advance.rate
+                        else:
+                            advance.request_amount = advance.request_payment_id.request_amount
+                            advance.total_advance_payment_usd = advance.request_payment_id.total_advance_payment_usd
                 if not any(rec.fixation_advance_line_ids.filtered(lambda x: x.name)):
                     # Remain
                     value = {
