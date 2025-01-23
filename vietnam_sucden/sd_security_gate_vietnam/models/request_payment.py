@@ -415,13 +415,17 @@ class RequestPayment(models.Model):
                 ('total', '!=', 0),
                 ('request_payment_id', '=', rec.id)
             ])
+            total_usd = 0
+            for i in get_all_advance_ptbf_npe_for_total:
+                total_usd += i.usd * i.ex_rate
+            ex_rate = total_usd / sum(get_all_advance_ptbf_npe_for_total.mapped('usd'))
 
             value_total = {
                 'request_payment_id': rec.id,
                 'name': "Total All",
                 'quantity': sum(get_all_advance_ptbf_npe_for_total.mapped('quantity')),
                 'usd': sum(get_all_advance_ptbf_npe_for_total.mapped('usd')),
-                'ex_rate': sum(total_ex_rate.mapped('ex_rate')) / len(total_ex_rate),
+                'ex_rate': ex_rate,
                 'interest': sum(total_interest.mapped('interest')),
                 'vnd': sum(total_vnd.mapped('vnd')),
                 'total': sum(total_total.mapped('total')),
