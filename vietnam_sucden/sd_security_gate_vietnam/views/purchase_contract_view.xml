@@ -622,7 +622,7 @@
                          <field name="total_contract_value"/>
                         <field name="request_amount" readonly="1" decoration-danger="request_amount > 0" decoration-bf="request_amount > 0"/>
                     </group>
-                    <field readonly="1" name="fixation_advance_ptbf_npe_total_ids" attrs="{'invisible': ['|', ('is_converted', '!=', True), ('type_of_ptbf_payment', '!=', 'fixation_advance_ptbf_npe')]}" >
+                    <field name="fixation_advance_ptbf_npe_total_ids" attrs="{'invisible': ['|', ('is_converted', '!=', True), ('type_of_ptbf_payment', '!=', 'fixation_advance_ptbf_npe')]}" >
                         <tree editable="top">
                             <field name="name" readonly="1" decoration-bf="check_bold == True"/>
                             <field name="contract_id" readonly="1" decoration-bf="check_bold == True"/>
@@ -642,7 +642,7 @@
                     <button name="generate_fixation_advance_ptbf_npe" string="Generate Data" type="object" class="oe_highlight"
                             attrs="{'invisible': ['|', '|', ('is_converted', '!=', True), ('type_of_ptbf_payment', '!=', 'fixation_advance_ptbf_npe'), ('state', '!=', 'draft')]}"/>
                     <field name="fixation_advance_ptbf_npe_ids" attrs="{'invisible': ['|', ('is_converted', '!=', True), ('type_of_ptbf_payment', '!=', 'fixation_advance_ptbf_npe')], 'readonly': [('state', '!=', 'draft')]}" >
-                        <tree editable="top">
+                        <tree editable="top" default_order="id asc">
                             <field name="name" readonly="1" decoration-muted="check == False"/>
                             <field name="contract_id" readonly="1" decoration-muted="check == False"/>
                             <field name="date_contract" readonly="1" decoration-muted="check == False"/>

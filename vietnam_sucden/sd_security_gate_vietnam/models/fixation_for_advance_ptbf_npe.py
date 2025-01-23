@@ -30,8 +30,10 @@ class FixationAdvancePTBFNPE(models.Model):
         for rec in self:
             if rec.name == 'Còn lại/ Remain Payment:':
                 rec.vnd = rec.usd * rec.ex_rate
-                total_interest = rec.request_payment_id.total_interest_advance_ptbf_npe
-                rec.total = rec.vnd + total_interest
+                # total_interest = rec.request_payment_id.total_interest_advance_ptbf_npe
+                # print(total_interest, 'total_interest')
+                # print(rec.vnd, 'vnd')
+                rec.total = rec.usd * rec.ex_rate
 
     @api.depends('name')
     def _compute_check(self):

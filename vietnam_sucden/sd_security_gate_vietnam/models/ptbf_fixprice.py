@@ -8,7 +8,7 @@ from odoo.exceptions import ValidationError, UserError
 class PTBFFixPrice(models.Model):
     _inherit = 'ptbf.fixprice'
 
-    request_payment_ids = fields.One2many('request.payment', 'price_tobe_fix')
+    request_payment_ids = fields.One2many('request.payment', 'price_tobe_fix', ondelete='cascade')
     remain_qty = fields.Float(compute='_compute_remain_qty', string='Remaining Quantity', store=True)
 
     @api.depends('request_payment_ids', 'request_payment_ids.state', 'request_payment_ids.payment_quantity', 'quantity')
