@@ -430,7 +430,7 @@ class RequestPayment(models.Model):
                 'vnd': sum(total_vnd.mapped('vnd')),
                 'total': sum(total_total.mapped('total')),
             }
-            rec.average_rate = sum(total_ex_rate.mapped('ex_rate')) / len(total_ex_rate)
+            rec.average_rate = ex_rate
             rec.final_price_vnd = round(sum(total_total.mapped('total')) / rec.qty_advance_fix, 0) if rec.qty_advance_fix > 0 else 0
             # Create Total
             self.env['fixation.advance.ptbf.npe'].create(value_total)
