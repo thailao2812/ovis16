@@ -8,7 +8,7 @@ from odoo.exceptions import ValidationError, UserError
 class NVPNPERelation(models.Model):
     _inherit = 'npe.nvp.relation'
 
-    request_payment_ids = fields.One2many('request.payment', 'convert_id')
+    request_payment_ids = fields.One2many('request.payment', 'convert_id', ondelete='cascade')
     remain_qty = fields.Float(compute='_compute_qty', string='Remaining Quantity', store=True)
 
     @api.depends('request_payment_ids', 'request_payment_ids.payment_quantity', 'request_payment_ids.state', 'product_qty')
