@@ -78,6 +78,13 @@
                     </field>
                 </page>
             </xpath>
+            <xpath expr="//button[@name='printf_nvp']" position="attributes">
+                <attribute name="attrs">{'invisible': [('origin', '!=', False)]}</attribute>
+            </xpath>
+
+            <xpath expr="//button[@name='button_approve']" position="after">
+                <button name="print_nvp_npe" string="Print NVP From NPE" type="object" class="oe_highlight" attrs="{'invisible': [('origin', '=', False)]}"/>
+            </xpath>
 
         </field>
     </record>
@@ -192,7 +199,6 @@
                 <field name="license_2nd_id"/>
             </xpath>
             <xpath expr="//page[@name='invoice']" position="replace">
-
             </xpath>
         </field>
     </record>

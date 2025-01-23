@@ -84,6 +84,9 @@ class PurchaseContract(models.Model):
     def print_final_payment(self):
         return self.env.ref('sd_contract_vietnam.report_final_payment_purchase_contract').report_action(self)
 
+    def print_nvp_npe(self):
+        return self.env.ref('sd_contract_vietnam.report_nvp_npe_contact').report_action(self)
+
 
 class OpenQtyNPE(models.Model):
     _name = 'open.qty.npe'
