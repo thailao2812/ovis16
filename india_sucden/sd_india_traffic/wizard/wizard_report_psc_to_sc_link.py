@@ -36,8 +36,7 @@ class WizardReportPSCtoSC(models.TransientModel):
         for p in p_contract:
             if p.sale_contract_factory_ids:
                 for line in p.sale_contract_factory_ids:
-                    if line.s_contract.type == 'export':
-                        number = 1000
+                    number = 1000
                     si = self.env['shipping.instruction'].search([
                         ('contract_id', '=', line.s_contract.id)
                     ])
@@ -49,8 +48,8 @@ class WizardReportPSCtoSC(models.TransientModel):
                     crop_s_contract = line.s_contract.crop_id
                     product_id = line.s_contract.product_id
                     markup_value_id = self.env['markup.value'].search([
-                        ('from_date', '>=', date_allocation),
-                        ('to_date', '<=', date_allocation),
+                        ('from_date', '<=', date_allocation),
+                        ('to_date', '>=', date_allocation),
                     ], limit=1)
                     if markup_value_id:
                         markup_value = markup_value_id.value
@@ -65,6 +64,7 @@ class WizardReportPSCtoSC(models.TransientModel):
                             'p_number': p.id,
                             'p_qty': p.total_quantity,
                             'p_price': p.price_unit,
+                            "date_allocate": date_allocation,
                             'p_amount': (p.total_quantity/number) * p.price_unit,
                             's_contract_id': line.s_contract.id,
                             'product_id': line.s_contract.product_id.id,
@@ -75,7 +75,8 @@ class WizardReportPSCtoSC(models.TransientModel):
                             'packing_cost': line.s_contract.packing_cost,
                             'certificate_premium': line.s_contract.premium_cert,
                             's_total_price': p.price_unit + line.s_contract.packing_cost + line.s_contract.premium_cert + markup_value + grade_premium,
-                            's_contract_amount': (line.s_contract.total_qty/number) * (p.price_unit + line.s_contract.differential + line.s_contract.packing_cost + line.s_contract.premium_cert),
+                            's_contract_amount': (line.s_contract.total_allocated_sc * (
+                                        p.price_unit + line.s_contract.packing_cost + line.s_contract.premium_cert + markup_value + grade_premium)) / number,
                             'open_position': p.balance_quantity_sc,
                             'open_position_value': (p.balance_quantity_sc * p.price_unit) / number
                         }
@@ -87,6 +88,7 @@ class WizardReportPSCtoSC(models.TransientModel):
                                 'p_qty': p.total_quantity,
                                 'p_price': p.price_unit,
                                 'p_amount': (p.total_quantity * p.price_unit) / number,
+                                "date_allocate": date_allocation,
                                 's_contract_id': line.s_contract.id,
                                 'shipping_instruction_id': s.id,
                                 'product_id': line.s_contract.product_id.id,
@@ -97,7 +99,7 @@ class WizardReportPSCtoSC(models.TransientModel):
                                 'packing_cost': line.s_contract.packing_cost,
                                 'certificate_premium': line.s_contract.premium_cert,
                                 's_total_price': p.price_unit + line.s_contract.packing_cost + line.s_contract.premium_cert + markup_value + grade_premium,
-                                's_contract_amount': ((p.price_unit + line.s_contract.differential + line.s_contract.packing_cost + line.s_contract.premium_cert) * line.s_contract.total_allocated_sc) / number,
+                                's_contract_amount': (line.s_contract.total_allocated_sc * (p.price_unit + line.s_contract.packing_cost + line.s_contract.premium_cert + markup_value + grade_premium)) / number,
                                 'open_position': p.balance_quantity_sc,
                                 'open_position_value': (p.balance_quantity_sc * p.price_unit) / number
                             }
