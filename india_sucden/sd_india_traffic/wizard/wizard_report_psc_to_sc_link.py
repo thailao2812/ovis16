@@ -42,6 +42,8 @@ class WizardReportPSCtoSC(models.TransientModel):
                         ('contract_id', '=', line.s_contract.id)
                     ])
                     date_allocation = line.date_allocate
+                    if not date_allocation:
+                        raise UserError(_("Please input date allocate for PSC to SC link, before generate report!!"))
                     markup_value = 0
                     grade_premium = 0
                     crop_s_contract = line.s_contract.crop_id
