@@ -41,6 +41,23 @@ class WizardReportPSCtoSC(models.TransientModel):
                     si = self.env['shipping.instruction'].search([
                         ('contract_id', '=', line.s_contract.id)
                     ])
+                    date_allocation = line.date_allocate
+                    markup_value = 0
+                    grade_premium = 0
+                    crop_s_contract = line.s_contract.crop_id
+                    product_id = line.s_contract.product_id
+                    markup_value_id = self.env['markup.value'].search([
+                        ('from_date', '>=', date_allocation),
+                        ('to_date', '<=', date_allocation),
+                    ], limit=1)
+                    if markup_value_id:
+                        markup_value = markup_value_id.value
+                    grade_premium_id = self.env['grade.premium.india'].search([
+                        ('crop_id', '=', crop_s_contract.id),
+                        ('product_ids', 'in', product_id.ids)
+                    ], limit=1)
+                    if grade_premium_id:
+                        grade_premium = grade_premium_id.premium
                     if not si:
                         value = {
                             'p_number': p.id,
@@ -51,10 +68,11 @@ class WizardReportPSCtoSC(models.TransientModel):
                             'product_id': line.s_contract.product_id.id,
                             's_qty': line.s_contract.total_qty,
                             'allocated_qty': line.s_contract.total_allocated_sc,
-                            # 'differential': line.s_contract.differential,
-                            # 'packing_cost': line.s_contract.packing_cost,
-                            # 'certificate_premium': line.s_contract.premium_cert,
-                            's_total_price': p.price_unit + line.s_contract.differential + line.s_contract.packing_cost + line.s_contract.premium_cert,
+                            'markup_value': markup_value,
+                            'grade_premium': grade_premium,
+                            'packing_cost': line.s_contract.packing_cost,
+                            'certificate_premium': line.s_contract.premium_cert,
+                            's_total_price': p.price_unit + line.s_contract.packing_cost + line.s_contract.premium_cert + markup_value + grade_premium,
                             's_contract_amount': (line.s_contract.total_qty/number) * (p.price_unit + line.s_contract.differential + line.s_contract.packing_cost + line.s_contract.premium_cert),
                             'open_position': p.balance_quantity_sc,
                             'open_position_value': (p.balance_quantity_sc * p.price_unit) / number
@@ -72,10 +90,11 @@ class WizardReportPSCtoSC(models.TransientModel):
                                 'product_id': line.s_contract.product_id.id,
                                 's_qty': line.s_contract.total_qty,
                                 'allocated_qty': line.s_contract.total_allocated_sc,
-                                'differential': line.s_contract.differential,
+                                'markup_value': markup_value,
+                                'grade_premium': grade_premium,
                                 'packing_cost': line.s_contract.packing_cost,
                                 'certificate_premium': line.s_contract.premium_cert,
-                                's_total_price': p.price_unit + line.s_contract.differential + line.s_contract.packing_cost + line.s_contract.premium_cert,
+                                's_total_price': p.price_unit + line.s_contract.packing_cost + line.s_contract.premium_cert + markup_value + grade_premium,
                                 's_contract_amount': ((p.price_unit + line.s_contract.differential + line.s_contract.packing_cost + line.s_contract.premium_cert) * line.s_contract.total_allocated_sc) / number,
                                 'open_position': p.balance_quantity_sc,
                                 'open_position_value': (p.balance_quantity_sc * p.price_unit) / number
