@@ -29,3 +29,4 @@ class ReportPSCtoSCLink(models.Model):
 
     markup_value = fields.Float(string='Markup Value')
     grade_premium = fields.Float(string='Grade Premium')
+    date_allocate = fields.Date(string='Date Allocate')
