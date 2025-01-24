@@ -234,6 +234,7 @@
                                     <tree editable="top">
                                         <field name="s_contract" attrs="{'readonly': [('state_allocate', '=', 'submit')]}" options="{'no_create': 1}" required="1" domain="[('product_id.item_group_id', '=', parent.item_group_id)]"/>
                                         <field name="sc_date" readonly="1" force_save="1"/>
+                                        <field name="date_allocate" required="1"/>
                                         <field name="partner_id" readonly="1" force_save="1"/>
                                         <field name="product_id" readonly="1" force_save="1"/>
                                         <field name="sc_qty" readonly="1" force_save="1" sum="sc_qty"/>

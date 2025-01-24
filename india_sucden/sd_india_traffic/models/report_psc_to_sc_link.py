@@ -26,3 +26,6 @@ class ReportPSCtoSCLink(models.Model):
     currency_uom_3rd = fields.Char(string='Currency / UOM', default='USD/MT')
     open_position = fields.Float(string='Open Position Qty')
     open_position_value = fields.Float(string='Open Position Value')
+
+    markup_value = fields.Float(string='Markup Value')
+    grade_premium = fields.Float(string='Grade Premium')

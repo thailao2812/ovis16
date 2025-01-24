@@ -22,6 +22,8 @@ class PscToScLinked(models.Model):
         ('submit', 'Submit')
     ], string='State', default='draft')
 
+    date_allocate = fields.Date(string='Date Allocated')
+
     @api.depends('s_contract')
     def compute_value(self):
         for rec in self:
@@ -56,12 +58,16 @@ class PscToScLinked(models.Model):
     def button_submit(self):
         for rec in self:
             rec.s_contract._compute_total_allocated()
+            if not rec.date_allocate:
+                raise UserError(_("Please input a date allocated."))
             rec.state_allocate = 'submit'
             rec.onchange_s_contract()
 
     def button_draft(self):
         for rec in self:
             rec.s_contract._compute_total_allocated()
+            if not rec.date_allocate:
+                raise UserError(_("Please input a date allocated."))
             rec.state_allocate = 'draft'
             rec.onchange_s_contract()
 
