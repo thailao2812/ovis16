@@ -54,13 +54,17 @@ class Parser(models.AbstractModel):
 
     def get_psc_name(self, scontract):
         if scontract:
-            psc_name = '/'.join(i.p_number for i in scontract.psc_to_sc_ids.mapped('sale_contract_id'))
-            return psc_name
+            if scontract.psc_to_sc_ids:
+                psc_name = '/'.join(i.p_number for i in scontract.psc_to_sc_ids.mapped('sale_contract_id'))
+                return psc_name
+            return ''
 
     def get_psc_date(self, scontract):
         if scontract:
-            psc_name = ';'.join(self.get_date(i.p_date) for i in scontract.psc_to_sc_ids.mapped('sale_contract_id'))
-            return psc_name
+            if scontract.psc_to_sc_ids:
+                psc_name = ';'.join(self.get_date(i.p_date) for i in scontract.psc_to_sc_ids.mapped('sale_contract_id'))
+                return psc_name
+            return ''
     
     def get_account_holder(self,partner):
         if not self.account_holder:
