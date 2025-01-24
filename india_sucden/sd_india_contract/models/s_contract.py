@@ -37,6 +37,23 @@ class SContract(models.Model):
     date_from = fields.Date(string='Date From')
     date_to = fields.Date(string='Date To')
 
+    pss_status = fields.Selection([
+        ('pending', 'Pending'),
+        ('sent', 'Sent'),
+        ('approved', 'Approved'),
+        ('rejected', 'Rejected'),
+        ('none', '')
+    ], string='PSS Status', compute='_compute_pss_status', store=True)
+
+    @api.depends('pss_management_ids', 'pss_management_ids.pss_status', 'pss_management_ids.approve_date')
+    def _compute_pss_status(self):
+        for rec in self:
+            if rec.pss_management_ids:
+                pss_management = max(rec.pss_management_ids, key=lambda x: x.approve_date)
+                rec.pss_status = pss_management.pss_status
+            else:
+                rec.pss_status = 'none'
+
     @api.model
     def _get_new_status_type(self):
         return [('kushalnagar', 'Kushalnagar'), ('mangalore', 'Mangalore')]

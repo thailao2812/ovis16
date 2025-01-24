@@ -78,6 +78,9 @@
             <xpath expr="//field[@name='total_qty']" position="before">
                 <field name="price_unit"/>
             </xpath>
+            <xpath expr="//field[@name='pss_type']" position="after">
+                <field name="pss_status"/>
+            </xpath>
         </field>
     </record>
 </odoo>
