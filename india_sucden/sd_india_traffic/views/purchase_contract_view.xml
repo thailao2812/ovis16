@@ -47,10 +47,11 @@
                 <field name="partner_id" readonly="1"/>
                 <field name="date_order" readonly="1"/>
                 <field name="product_id" readonly="1"/>
-                <field name="total_qty" readonly="1"/>
+                <field name="total_qty" readonly="1" string="Contract Qty"/>
+                <field name="gross_qty" readonly="1"/>
                 <field name="qty_received" readonly="1"/>
                 <field name="outturn" readonly="1"/>
-                <field name="finished_qty" readonly="1"/>
+                <field name="finished_qty" readonly="1" string="Finished Qty/SN"/>
                 <field name="finished_receive_qty" readonly="1"/>
                 <field name="open_qty" readonly="1"/>
                 <field name="total_allocated_qty" readonly="1"/>
@@ -112,7 +113,7 @@
             <field name="name">PSC to PC Linked Report</field>
             <field name="res_model">purchase.contract</field>
             <field name="view_mode">tree</field>
-            <field name="domain">[('type', 'in', ['purchase', 'ptbf'])]</field>
+            <field name="domain">[('type', 'in', ['purchase', 'ptbf']), ('state', '!=', 'cancel')]</field>
             <field name="context">{}</field>
         	<field name="search_view_id" ref="sd_india_traffic.purchase_contract_fob_link_search"/>
             <field name="help" type="html">
