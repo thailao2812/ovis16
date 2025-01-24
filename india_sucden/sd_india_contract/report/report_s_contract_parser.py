@@ -46,9 +46,21 @@ class Parser(models.AbstractModel):
             'get_shipt_weights':self.get_shipt_weights,
             'get_container_status':self.get_container_status,
             'get_string_selection': self.get_string_selection,
-            'get_data_document_contract': self.get_data_document_contract
+            'get_data_document_contract': self.get_data_document_contract,
+            'get_psc_name': self.get_psc_name,
+            'get_psc_date': self.get_psc_date,
         })
         return localcontext
+
+    def get_psc_name(self, scontract):
+        if scontract:
+            psc_name = '/'.join(i.p_number for i in scontract.psc_to_sc_ids.mapped('sale_contract_id'))
+            return psc_name
+
+    def get_psc_date(self, scontract):
+        if scontract:
+            psc_name = ';'.join(self.get_date(i.p_date) for i in scontract.psc_to_sc_ids.mapped('sale_contract_id'))
+            return psc_name
     
     def get_account_holder(self,partner):
         if not self.account_holder:

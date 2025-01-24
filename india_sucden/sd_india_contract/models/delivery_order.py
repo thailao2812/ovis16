@@ -16,6 +16,9 @@ class DeliveryOrder(models.Model):
 
     trucking_no = fields.Char(string="Trucking No.", readonly=False, states={})
 
+    s_contract_id = fields.Many2one('s.contract', related='shipping_id.contract_id', store=True)
+    ship_to_id = fields.Many2one('res.partner', related='shipping_id.ship_to', store=True)
+
     @api.model
     def _get_new_packing_type(self):
         return [('kushalnagar', 'Kushalnagar'), ('mangalore', 'Managalore')]
