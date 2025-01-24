@@ -15,6 +15,7 @@
                 <field name="s_contract_id"/>
             </xpath>
             <xpath expr="//field[@name='shipping_id']" position="after">
+                <field name="partner_id"/>
                 <field name="ship_to_id"/>
             </xpath>
         </field>
