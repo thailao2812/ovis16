@@ -10,6 +10,7 @@
                 	<field name="date_price" required="1"/>
                 	<field name="exchange"/>
                 	<field name="trade_month"/>
+                	<field name="gross_qty"/>
                 	<field name="currency_id" invisible="1"/>
                 	<field name="open_qty"/>
                 	<field name="outturn_qty"/>
