@@ -11,8 +11,7 @@ DATE_FORMAT = "%d-%m-%Y"
 from odoo import api, fields, models, SUPERUSER_ID, _
 from odoo.addons.report_aeroo.report_parser import Parser
 from babel.dates import format_date, format_datetime, format_time
-
-
+from odoo.tools.misc import formatLang
 
 
 class Parser(models.AbstractModel):
@@ -49,8 +48,17 @@ class Parser(models.AbstractModel):
             'get_data_document_contract': self.get_data_document_contract,
             'get_psc_name': self.get_psc_name,
             'get_psc_date': self.get_psc_date,
+            'get_price_sale_contract': self.get_price_sale_contract
         })
         return localcontext
+
+    def get_price_sale_contract(self, scontract):
+        if scontract:
+            if scontract.contract_ids:
+                price = sum(scontract.contract_ids.mapped('price_unit')) / len(scontract.contract_ids)
+                return price
+            else:
+                return 0
 
     def get_psc_name(self, scontract):
         if scontract:
