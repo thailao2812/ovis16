@@ -1,9 +1,6 @@
 version: '3.8'
 services:
   odoo:
-    build:
-      context: .
-      dockerfile: Dockerfile_ned
     container_name: ovis-web
     image: odoo:16
     depends_on:
