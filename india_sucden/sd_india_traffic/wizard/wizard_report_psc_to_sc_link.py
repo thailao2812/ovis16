@@ -109,7 +109,7 @@ class WizardReportPSCtoSC(models.TransientModel):
                     'p_number': p.id,
                     'p_qty': p.total_quantity,
                     'p_price': p.price_unit,
-                    'p_amount': p.total_quantity * p.price_unit,
+                    'p_amount': (p.total_quantity * p.price_unit)/number,
                     's_contract_id': False,
                     'product_id': False,
                     's_qty': 0,
