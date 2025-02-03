@@ -923,6 +923,8 @@ class RequestPayment(models.Model):
                 for line in npe.request_payment_ids.filtered(
                         lambda x: x.mirror_request_amount > 0).sorted(lambda x: int(x.name)):
                     seq = 0
+                    if point_qty == 0:
+                        continue
                     for i in line.rate_ids.sorted(lambda x: x.date):
                         seq += 1
                         total_date = (i.date_end - i.date).days
@@ -996,8 +998,6 @@ class RequestPayment(models.Model):
                         'interest': 0
                     }
                     self.env['converted.line'].create(value)
-                if point_qty == 0:
-                    continue
 
     @api.depends('history_quantity_payment', 'history_quantity_payment.quantity', 'purchase_contract_id', 'purchase_contract_id.total_qty', 'name', 'type', 'type_of_ptbf_payment')
     def compute_balance_quantity(self):

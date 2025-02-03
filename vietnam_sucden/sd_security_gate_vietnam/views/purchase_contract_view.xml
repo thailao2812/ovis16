@@ -232,7 +232,7 @@
                     <button name="populate_converted_line_ids" string="Generate Data" type="object"
                             attrs="{'invisible': [('is_converted', '!=', True)]}" class="oe_highlight"/>
                     <separator string="Fixation Detail" attrs="{'invisible': [('is_converted', '!=', True)]}"/>
-                    <field name="converted_line_ids" attrs="{'invisible': [('is_converted', '!=', True)]}" readonly="1">
+                    <field name="converted_line_ids" attrs="{'invisible': [('is_converted', '!=', True)]}" readonly="0">
                         <tree>
                             <field name="fixation_qty" sum="fixation_qty"/>
                             <field name="purchase_contract_id"/>
