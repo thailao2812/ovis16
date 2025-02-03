@@ -191,6 +191,7 @@ class RequestPayment(models.Model):
                     continue
                 for line in npe.request_payment_ids.filtered(
                         lambda x: x.mirror_request_amount > 0).sorted(lambda x: int(x.name)):
+                    print(line.purchase_contract_id.name)
                     if point_qty == 0:
                         continue
                     request_count += 1
@@ -824,9 +825,9 @@ class RequestPayment(models.Model):
 
     def request_payment(self):
         for rec in self:
-            if rec.is_converted and rec.type == 'ptbf':
-                if rec.type_of_ptbf_payment == 'fixation':
-                    raise UserError(_("PTBF Convert from NPE only choose Advance or Fixation for Advance"))
+            # if rec.is_converted and rec.type == 'ptbf':
+            #     if rec.type_of_ptbf_payment == 'fixation':
+            #         raise UserError(_("PTBF Convert from NPE only choose Advance or Fixation for Advance"))
             self.env['user.process.state'].create({
                 'request_payment_id': rec.id,
                 'user_id': self.env.user.id,
