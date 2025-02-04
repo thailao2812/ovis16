@@ -202,6 +202,7 @@
                 <field name="vendor_invoice_date"/>
                 <field name="product_id"/>
                 <field name="price"/>
+                <field name="purchase_quantity"/>
             </xpath>
             <xpath expr="//field[@name='request_payment_ids']/form/group/group[1]/field[@name='type_payment']" position="attributes">
                 <attribute name="readonly">1</attribute>
@@ -463,6 +464,7 @@
                 <field name="vendor_invoice_date"/>
                 <field name="product_id"/>
                 <field name="price"/>
+                <field name="purchase_quantity"/>
             </xpath>
             <xpath expr="//field[@name='request_payment_ids']/form/group/group[1]/field[@name='partner_id']" position="attributes">
                 <attribute name="readonly">1</attribute>
