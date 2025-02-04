@@ -25,7 +25,7 @@ class FixationAdvancePTBFNPE(models.Model):
 
     check = fields.Boolean(string='Check', compute='_compute_check', store=True)
 
-    @api.depends('usd', 'ex_rate')
+    @api.depends('usd', 'ex_rate', 'interest', 'vnd')
     def _compute_total(self):
         for rec in self:
             if rec.name == 'Còn lại/ Remain Payment:':
@@ -34,6 +34,8 @@ class FixationAdvancePTBFNPE(models.Model):
                 # print(total_interest, 'total_interest')
                 # print(rec.vnd, 'vnd')
                 rec.total = rec.usd * rec.ex_rate
+            if rec.name == 'Total':
+                rec.total = rec.vnd + rec.interest
 
     @api.depends('name')
     def _compute_check(self):

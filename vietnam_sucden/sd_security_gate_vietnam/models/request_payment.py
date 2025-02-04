@@ -191,7 +191,6 @@ class RequestPayment(models.Model):
                     continue
                 for line in npe.request_payment_ids.filtered(
                         lambda x: x.mirror_request_amount > 0).sorted(lambda x: int(x.name)):
-                    print(line.purchase_contract_id.name)
                     if point_qty == 0:
                         continue
                     request_count += 1
@@ -257,7 +256,8 @@ class RequestPayment(models.Model):
                             checking_advance_ptbf_npe = self.env['fixation.advance.ptbf.npe'].search([
                                 ('contract_id', '=', npe.id),
                                 ('request_payment_id', '=', rec.id),
-                                ('request_origin_id', '=', line.id)
+                                ('request_origin_id', '=', line.id),
+                                ('request_amount', '>', 0)
                             ])
                             value.update(
                                 {
@@ -366,10 +366,8 @@ class RequestPayment(models.Model):
                 ('name', '=', 'Total'),
                 ('request_payment_id', '=', rec.id),
             ])
-            print(get_all_advance_ptbf_npe_for_total)
             if sum(get_all_advance_ptbf_npe_for_total.mapped('usd')) == 0:
                 raise UserError(_("You have to input Ex Rate for calculate USD before get Total"))
-            print(sum(get_all_advance_ptbf_npe_for_total.mapped('usd')))
             value_remain = {
                 'request_payment_id': rec.id,
                 'name': "Còn lại/ Remain Payment:",
