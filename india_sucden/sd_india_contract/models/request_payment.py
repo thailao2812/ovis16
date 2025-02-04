@@ -47,11 +47,11 @@ class RequestPayment(models.Model):
 
     purchase_quantity = fields.Float(string='Purchase Quantity')
 
-    @api.constrains('purchase_quantity')
-    def constrains_purchase_quantity(self):
-        for rec in self:
-            if rec.purchase_quantity <= 0:
-                raise UserError('Purchase Quantity must be greater than 0')
+    # @api.constrains('purchase_quantity')
+    # def constrains_purchase_quantity(self):
+    #     for rec in self:
+    #         if rec.purchase_quantity <= 0:
+    #             raise UserError('Purchase Quantity must be greater than 0')
 
     @api.depends('request_amount', 'tds_amount', 'tds_assessable_value', 'financial_year_id')
     def compute_net_payment(self):
