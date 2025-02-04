@@ -45,6 +45,8 @@ class RequestPayment(models.Model):
     date_approve = fields.Date(string='Date Approve')
     purchase_date = fields.Date(string='Purchase Date')
 
+    purchase_quantity = fields.Float(string='Purchase Quantity')
+
     @api.depends('request_amount', 'tds_amount', 'tds_assessable_value', 'financial_year_id')
     def compute_net_payment(self):
         for rec in self:
