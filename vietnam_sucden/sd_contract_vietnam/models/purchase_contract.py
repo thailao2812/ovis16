@@ -87,6 +87,25 @@ class PurchaseContract(models.Model):
     def print_nvp_npe(self):
         return self.env.ref('sd_contract_vietnam.report_nvp_npe_contact').report_action(self)
 
+    def print_nvp_word(self):
+        return self.env.ref('sd_contract_vietnam.report_nvp_word').report_action(self)
+
+    def print_npe_word(self):
+        return self.env.ref('sd_contract_vietnam.report_nve_word').report_action(self)
+
+    def print_nvp_npe_word(self):
+        return self.env.ref('sd_contract_vietnam.report_nvp_npe_contact_word').report_action(self)
+
+    def print_ptbf_word(self):
+        if self.nvp_ids:
+            return self.env.ref(
+                'sd_contract_vietnam.report_ptbf_npe_word').report_action(self)
+
+        else:
+            return self.env.ref(
+                'sd_contract_vietnam.report_ptbf_word').report_action(self)
+
+
 
 class OpenQtyNPE(models.Model):
     _name = 'open.qty.npe'
