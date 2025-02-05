@@ -554,13 +554,13 @@
                         </group>
                     </group>
                     <separator string="Fixation Information" attrs="{'invisible': [('type_of_ptbf_payment', '!=', 'fixation')]}"/>
-                    <group attrs="{'invisible': [('type_of_ptbf_payment', '!=', 'fixation')]}">
+                    <group attrs="{'invisible': [('type_of_ptbf_payment', '!=', 'fixation')], 'readonly': [('state', '!=', 'draft')]}">
                         <group>
                             <field name="payment_quantity"/>
                             <field name="price_usd"/>
                             <field name="price_diff"/>
                             <field name="final_price_usd"/>
-                            <field name="rate"/>
+                            <field name="rate" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             <field name="final_price_vnd"/>
                         </group>
                     </group>
@@ -570,19 +570,19 @@
                             <field name="convert_qty" attrs="{'invisible': ['|', ('is_converted', '=', False), ('type_of_ptbf_payment', '!=', 'advance')], 'required': [('is_converted', '=', True), ('type_of_ptbf_payment', '=', 'advance')]}"/>
                             <field name="remain_qty" string="Remain quantity of Convert" readonly="1"/>
                             <field name="payment_quantity" string="Advance quantity"/>
-                            <field name="liffe_price"/>
+                            <field name="liffe_price" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             <field name="price_diff"/>
                             <field name="differencial_price"/>
                             <field name="advance_price_usd"/>
                             <field name="total_advance_payment_usd"/>
-                            <field name="rate"/>
+                            <field name="rate" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             <field name="advance_price_vnd"/>
                         </group>
                     </group>
 
                     <separator string="Fixation For Advance" attrs="{'invisible': [('type_of_ptbf_payment', '!=', 'fixation_advance')]}"/>
                     <field name="fixation_advance_line_ids"  no_label="1" context="{'seq': name, 'purchase_contract_id': parent_id_purchase_contract}"
-                                   attrs="{'required': [('type_of_ptbf_payment', 'in', ['fixation_advance'])], 'invisible': [('type_of_ptbf_payment', '!=', 'fixation_advance')]}">
+                                   attrs="{'required': [('type_of_ptbf_payment', 'in', ['fixation_advance'])], 'invisible': [('type_of_ptbf_payment', '!=', 'fixation_advance')], 'readonly': [('state', '!=' ,'draft')]}">
                             <tree editable="top">
                                 <field name="request_payment_id" context="{'seq': parent.name, 'purchase_contract_id': parent.parent_id_purchase_contract}" options="{'no_create': True}" domain="[('purchase_contract_id', '=', parent.parent_id_purchase_contract), ('type_of_ptbf_payment', '=', 'advance')]"/>
                                 <field name="name" readonly="1" decoration-bf="1"/>
@@ -598,7 +598,7 @@
                         </field>
                     <button name="generate_advance_line" class="btn-primary" string="Generate Advance Line" attrs="{'invisible': ['|', ('type_of_ptbf_payment', '!=', 'fixation_advance'), ('state', '!=', 'draft')]}" type="object"/>
                     <separator string="Reference Information" attrs="{'invisible': [('type_of_ptbf_payment', '!=', 'fixation_advance')]}"/>
-                    <field name="reference_information_line_ids" attrs="{'invisible': [('type_of_ptbf_payment', '!=', 'fixation_advance')]}" >
+                    <field name="reference_information_line_ids" attrs="{'invisible': [('type_of_ptbf_payment', '!=', 'fixation_advance')], 'readonly': [('state', '!=', 'draft')]}" >
                         <tree editable="top">
                             <field name="request_payment_id" decoration-muted="1"/>
                             <field name="name" readonly="1" decoration-muted="1"/>
