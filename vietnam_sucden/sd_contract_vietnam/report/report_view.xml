@@ -47,7 +47,7 @@
 	        <field name="model">purchase.contract</field>
 	        <field name="report_name">report_final_payment_purchase_contract</field>
 	        <field name="report_type">aeroo</field>
-	        <field name="in_format">oo-ods</field>
+	        <field name="in_format">oo-odt</field>
 	        <field name="out_format" model="report.mimetypes" search="[('code','=','oo-pdf'),('compatible_types','=','oo-odt')]"/>
 	        <field name="preview">True</field>
 	        <field name="parser_state">loc</field>
@@ -63,12 +63,92 @@
 	        <field name="model">purchase.contract</field>
 	        <field name="report_name">report_nvp_npe_contact</field>
 	        <field name="report_type">aeroo</field>
-	        <field name="in_format">oo-ods</field>
+	        <field name="in_format">oo-odt</field>
 	        <field name="out_format" model="report.mimetypes" search="[('code','=','oo-pdf'),('compatible_types','=','oo-odt')]"/>
 	        <field name="preview">True</field>
 	        <field name="parser_state">loc</field>
 	        <field name="parser_loc">sd_contract_vietnam/report/report_nvp_from_npe.py</field>
 	        <field name="report_file">sd_contract_vietnam/report/report_nvp_from_npe.odt</field>
+	        <field name="tml_source">file</field>
+	        <field name="print_report_name">'%s' % (object.name)</field>
+	    </record>
+
+	<record id="report_nvp_npe_contact_word" model="ir.actions.report">
+	        <field name="name">report_nvp_npe_contact_word</field>
+	        <field name="type">ir.actions.report</field>
+	        <field name="model">purchase.contract</field>
+	        <field name="report_name">report_nvp_npe_contact_word</field>
+	        <field name="report_type">aeroo</field>
+	        <field name="in_format">oo-odt</field>
+	        <field name="out_format" model="report.mimetypes" search="[('code','=','oo-doc'),('compatible_types','=','oo-odt')]"/>
+	        <field name="preview">True</field>
+	        <field name="parser_state">loc</field>
+	        <field name="parser_loc">sd_contract_vietnam/report/report_nvp_npe_contact_word.py</field>
+	        <field name="report_file">sd_contract_vietnam/report/report_nvp_npe_contact_word.odt</field>
+	        <field name="tml_source">file</field>
+	        <field name="print_report_name">'%s' % (object.name)</field>
+	    </record>
+
+	<record id="report_nvp_word" model="ir.actions.report">
+	        <field name="name">report_nvp_word</field>
+	        <field name="type">ir.actions.report</field>
+	        <field name="model">purchase.contract</field>
+	        <field name="report_name">report_nvp_word</field>
+	        <field name="report_type">aeroo</field>
+	        <field name="in_format">oo-odt</field>
+	        <field name="out_format" model="report.mimetypes" search="[('code','=','oo-doc'),('compatible_types','=','oo-odt')]"/>
+	        <field name="preview">True</field>
+	        <field name="parser_state">loc</field>
+	        <field name="parser_loc">sd_contract_vietnam/report/report_nvp_word_parser.py</field>
+	        <field name="report_file">sd_contract_vietnam/report/report_nvp_word.odt</field>
+	        <field name="tml_source">file</field>
+	        <field name="print_report_name">'%s' % (object.name)</field>
+	    </record>
+
+	<record id="report_nve_word" model="ir.actions.report">
+	        <field name="name">report_nve_word</field>
+	        <field name="type">ir.actions.report</field>
+	        <field name="model">purchase.contract</field>
+	        <field name="report_name">report_nve_word</field>
+	        <field name="report_type">aeroo</field>
+	        <field name="in_format">oo-odt</field>
+	        <field name="out_format" model="report.mimetypes" search="[('code','=','oo-doc'),('compatible_types','=','oo-odt')]"/>
+	        <field name="preview">True</field>
+	        <field name="parser_state">loc</field>
+	        <field name="parser_loc">sd_contract_vietnam/report/report_npe_word_parser.py</field>
+	        <field name="report_file">sd_contract_vietnam/report/report_npe_word.odt</field>
+	        <field name="tml_source">file</field>
+	        <field name="print_report_name">'%s' % (object.name)</field>
+	    </record>
+
+	<record id="report_ptbf_word" model="ir.actions.report">
+	        <field name="name">report_ptbf_word</field>
+	        <field name="type">ir.actions.report</field>
+	        <field name="model">purchase.contract</field>
+	        <field name="report_name">report_ptbf_word</field>
+	        <field name="report_type">aeroo</field>
+	        <field name="in_format">oo-odt</field>
+	        <field name="out_format" model="report.mimetypes" search="[('code','=','oo-doc'),('compatible_types','=','oo-odt')]"/>
+	        <field name="preview">True</field>
+	        <field name="parser_state">loc</field>
+	        <field name="parser_loc">sd_contract_vietnam/report/report_contract_ptbf_word.py</field>
+	        <field name="report_file">sd_contract_vietnam/report/report_contract_ptbf_word.odt</field>
+	        <field name="tml_source">file</field>
+	        <field name="print_report_name">'%s' % (object.name)</field>
+	    </record>
+
+	<record id="report_ptbf_npe_word" model="ir.actions.report">
+	        <field name="name">report_ptbf_npe_word</field>
+	        <field name="type">ir.actions.report</field>
+	        <field name="model">purchase.contract</field>
+	        <field name="report_name">report_ptbf_npe_word</field>
+	        <field name="report_type">aeroo</field>
+	        <field name="in_format">oo-odt</field>
+	        <field name="out_format" model="report.mimetypes" search="[('code','=','oo-doc'),('compatible_types','=','oo-odt')]"/>
+	        <field name="preview">True</field>
+	        <field name="parser_state">loc</field>
+	        <field name="parser_loc">sd_contract_vietnam/report/report_contract_ptbf_npe_word.py</field>
+	        <field name="report_file">sd_contract_vietnam/report/report_contract_ptbf_npe_word.odt</field>
 	        <field name="tml_source">file</field>
 	        <field name="print_report_name">'%s' % (object.name)</field>
 	    </record>

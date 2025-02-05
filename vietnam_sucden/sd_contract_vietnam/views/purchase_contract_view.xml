@@ -80,10 +80,13 @@
             </xpath>
             <xpath expr="//button[@name='printf_nvp']" position="attributes">
                 <attribute name="attrs">{'invisible': [('origin', '!=', False)]}</attribute>
+                <attribute name="string">Print SVNP PDF</attribute>
             </xpath>
 
             <xpath expr="//button[@name='button_approve']" position="after">
-                <button name="print_nvp_npe" string="Print NVP From NPE" type="object" class="oe_highlight" attrs="{'invisible': [('origin', '=', False)]}"/>
+                <button name="print_nvp_npe" string="Print SVNP From NPE PDF" type="object" class="oe_highlight" attrs="{'invisible': [('origin', '=', False)]}"/>
+                <button name="print_nvp_npe_word" string="Print SVNP From NPE WORDS" type="object" class="oe_highlight" attrs="{'invisible': [('origin', '=', False)]}"/>
+                <button name="print_nvp_word" string="Print SVNP WORDS" type="object" class="oe_highlight" attrs="{'invisible': [('origin', '!=', False)]}"/>
             </xpath>
 
         </field>
@@ -167,6 +170,12 @@
                     </field>
                 </page>
             </xpath>
+            <xpath expr="//button[@name='print_contract_ptbf']" position="attributes">
+                <attribute name="string">Print PTBF PDF</attribute>
+            </xpath>
+            <xpath expr="//button[@name='print_contract_ptbf']" position="after">
+                <button name="print_ptbf_word" string="Print PTBF WORD" type="object" class="oe_highlight"/>
+            </xpath>
         </field>
     </record>
 
@@ -199,6 +208,9 @@
                 <field name="license_2nd_id"/>
             </xpath>
             <xpath expr="//page[@name='invoice']" position="replace">
+            </xpath>
+            <xpath expr="//button[@name='printf_npe']" position="after">
+                <button name="print_npe_word" string="Print NPE WORD" type="object" class="oe_highlight"/>
             </xpath>
         </field>
     </record>
