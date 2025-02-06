@@ -16,7 +16,8 @@
         'views/import_deforestation_view.xml',
         'views/farmer_view.xml',
         'views/res_user_view.xml',
-        'views/product_view.xml'
+        'views/product_view.xml',
+        'views/res_bank_view.xml'
     ],
     'assets': {
         'web.assets_backend': [
