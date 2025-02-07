@@ -380,6 +380,9 @@
             <xpath expr="//field[@name='provisional_amount']" position="after">
                 <field name="users_request_id"/>
             </xpath>
+            <xpath expr="//field[@name='request_amount']" position="attributes">
+                <attribute name="sum">request_amount</attribute>
+            </xpath>
         </field>
     </record>
 </odoo>
