@@ -1262,8 +1262,8 @@ class RequestPayment(models.Model):
 
     def security_approve(self):
         for rec in self:
-            if not rec.note_by_security_gate:
-                raise UserError(_("You must enter security gate note!"))
+            # if not rec.note_by_security_gate:
+            #     raise UserError(_("You must enter security gate note!"))
             self.env['user.process.state'].create({
                 'request_payment_id': rec.id,
                 'user_id': self.env.user.id,
