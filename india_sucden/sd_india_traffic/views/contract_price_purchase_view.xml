@@ -11,6 +11,7 @@
                 	<field name="exchange"/>
                 	<field name="trade_month"/>
                 	<field name="gross_qty"/>
+                	<field name="total_allocated_qty"/>
                 	<field name="currency_id" invisible="1"/>
                 	<field name="open_qty"/>
                 	<field name="outturn_qty"/>
@@ -27,6 +28,7 @@
                 	<field name="price"/>
                 	<field name="premium"/>
                 	<field name="total"/>
+                	<field name="hide_allocation"/>
                 	<field name="state" widget="badge" readonly="1"/>
                 	<button name="action_approve" string="Approve" type="object" states="draft"/>
                 	<button name="action_set_to_draft" string="Set To Draft" type="object" states="approve"/>
