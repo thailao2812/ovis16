@@ -44,6 +44,8 @@ class ContractPricePurchase(models.Model):
 
     gross_qty = fields.Float(string='Gross Qty(SN)', related='contract_id.gross_qty', store=True)
 
+    hide_allocation = fields.Boolean(string='Hide Allocation', related='contract_id.open_qty_check', store=True)
+
     @api.depends('outturn', 'quantity', 'total_allocated_qty', 'gross_qty')
     def compute_outturn_qty(self):
         for rec in self:

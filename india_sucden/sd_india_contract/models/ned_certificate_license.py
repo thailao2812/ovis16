@@ -10,6 +10,8 @@ class NedCertificateLicense(models.Model):
 
     estate_name = fields.Char(string='Estate Name', related='partner_id.estate_name', store=True)
 
+    partner_code = fields.Char(string='Partner Code', related='partner_id.partner_code', store=True)
+
     @api.depends('stock_allocation_ids.contract_id')
     def _compute_allocated_purchase_contract_ids(self):
         for license in self:

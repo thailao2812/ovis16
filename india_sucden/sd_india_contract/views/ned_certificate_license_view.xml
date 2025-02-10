@@ -21,6 +21,7 @@
                         <field name="certificate_id"/>
                         <field name="name"/>
                         <field name="crop_id"/>
+                        <field name="partner_code"/>
                         <field name="partner_id"/>
                         <field name="estate_name"/>
                         <field name="certification_date"/>
