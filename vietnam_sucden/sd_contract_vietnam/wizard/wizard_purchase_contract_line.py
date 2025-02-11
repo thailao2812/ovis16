@@ -33,7 +33,7 @@ class WizardPurchaseContract(models.TransientModel):
         for line in self.contract_line_ids:
             if line.qty_received < line.product_qty + line.open_qty + line.total_qty_fixed:
                 raise UserError('Cannot create a NVP if Qty Received < Fixed + Qty Fix + Open Qty')
-            if line.product_qty == 0:
+            if line.product_qty + line.open_qty == 0:
                 raise UserError(_("Cannot create NVP with quantity = 0"))
             # if line.open_qty > 0:
             #     if line.purchase_contract_id.open_qty - line.open_qty < 0:
