@@ -14,6 +14,7 @@
                     <field name = 'warehouse_id' readonly = '1'/>
                     <field name = 'shipping_id' readonly = '1'/>
                     <field name = 'date_etd' readonly = '1'/>
+                    <field name = 'shipment_date' readonly = '1'/>
                     <field name = 'product_id' readonly = '1'/>
                     <field name = 'grade_id' readonly = '1'/>
                     <field name = 'state' readonly = '1'/>
