@@ -31,7 +31,6 @@
             </xpath>
         </field>
     </record>
-
     <record id="view_nvp_contract_tree_inherit_sd_certificate" model="ir.ui.view">
         <field name="name">view_nvp_contract_tree_inherit_sd_certificate</field>
         <field name="model">purchase.contract</field>
@@ -41,7 +40,17 @@
                 <field name="certificated_ids" widget="many2many_tags"/>
             </xpath>
             <xpath expr="//field[@name='certificate_id']" position="attributes">
-                <attribute name="invisible">1</attribute>
+                <attribute name="invisible">0</attribute>
+            </xpath>
+        </field>
+    </record>
+    <record id="search_nvp_contract_inherit_sd_certificate" model="ir.ui.view">
+        <field name="name">search_nvp_contract_inherit_sd_certificate</field>
+        <field name="model">purchase.contract</field>
+        <field name="inherit_id" ref="sd_purchase_contract.nvp_purchase_contract_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='npe_contract_id']" position="after">
+                <field name="license_id"/>
             </xpath>
         </field>
     </record>
@@ -73,6 +82,16 @@
             <!-- <xpath expr="//field[@name='certificate_id']" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath> -->
+        </field>
+    </record>
+    <record id="search_nvp_contract_allocation_invoiced_inherit_sd_certificate" model="ir.ui.view">
+        <field name="name">search_nvp_contract_allocation_invoiced_inherit_sd_certificate</field>
+        <field name="model">purchase.contract</field>
+        <field name="inherit_id" ref="sd_purchase_contract.purchase_contract_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='npe_contract_id']" position="after">
+                <field name="license_id"/>
+            </xpath>
         </field>
     </record>
 
@@ -108,7 +127,6 @@
             </xpath>
         </field>
     </record>
-
     <record id="view_ptbf_contract_tree_inherit_sd_certificate" model="ir.ui.view">
         <field name="name">view_ptbf_contract_tree_inherit_sd_certificate</field>
         <field name="model">purchase.contract</field>
@@ -118,10 +136,20 @@
                 <field name="certificated_ids" widget="many2many_tags"/>
             </xpath>
             <xpath expr="//field[@name='certificate_id']" position="attributes">
-                <attribute name="invisible">1</attribute>
+                <attribute name="invisible">0</attribute>
             </xpath>
         </field>
     </record>
+    <!-- <record id="search_ptbf_contract_inherit_sd_certificate" model="ir.ui.view">
+        <field name="name">search_ptbf_contract_inherit_sd_certificate</field>
+        <field name="model">purchase.contract</field>
+        <field name="inherit_id" ref="sd_purchase_contract.purchase_contract_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='npe_contract_id']" position="after">
+                <field name="license_id"/>
+            </xpath>
+        </field>
+    </record> -->
 
     <record id="view_consignment_agreement_form_inherit_sd_certificate" model="ir.ui.view">
         <field name="name">view_consignment_agreement_form_inherit_sd_certificate</field>
@@ -166,7 +194,7 @@
                 <field name="license_id"/>
             </xpath>
             <xpath expr="//field[@name='certificate_id']" position="attributes">
-                <attribute name="invisible">1</attribute>
+                <attribute name="invisible">0</attribute>
             </xpath>
         </field>
     </record>
