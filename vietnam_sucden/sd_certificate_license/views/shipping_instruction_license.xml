@@ -6,6 +6,7 @@
             <field name="model">shipping.instruction.license.allocation</field>
             <field name="arch" type="xml">
                 <tree string="SI License Allocations" default_order="id desc">
+                    <field name = 'certificate_id' readonly = '1'/>
                     <field name = 'certificated_ids' readonly = '1' widget="many2many_tags"/>
                     <field name = 'type' readonly = '1'/>
                     <field name = 'license_id' readonly = '1'/>
