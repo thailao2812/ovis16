@@ -1029,7 +1029,7 @@ class RequestPayment(models.Model):
             rec.current_balance = rec.balance - rec.payment_quantity
             if rec.type == 'ptbf':
                 rec.current_balance = rec.balance
-            if rec.current_balance < 0:
+            if 2000 < rec.current_balance < -2000:
                 raise UserError(_("You cannot use more than balance %s") % rec.balance_quantity)
 
     @api.depends('name')
