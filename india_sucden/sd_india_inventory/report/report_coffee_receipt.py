@@ -109,9 +109,9 @@ class Parser(models.AbstractModel):
         if picking:
             first_weight = picking.first_weight
             second_weight = picking.second_weight
-            gross_weight = picking.total_init_qty
+            gross_weight = first_weight - second_weight
             tare_weight = picking.tare_weight
-            net_weight = picking.total_qty
+            net_weight = gross_weight - tare_weight
             bag = picking.total_bag
             warehouse = picking.warehouse_id.name
             if picking.lot_id:
