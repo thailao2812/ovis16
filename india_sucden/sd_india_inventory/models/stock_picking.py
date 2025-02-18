@@ -69,3 +69,6 @@ class StockPicking(models.Model):
                     for ml in record.move_line_ids_without_package:
                         ml.qty_done = basis_qty
         return super(StockPicking, self).button_sd_validate()
+
+    def print_receipt_report(self):
+        return self.env.ref('sd_india_inventory.grn_receipt_report').report_action(self)

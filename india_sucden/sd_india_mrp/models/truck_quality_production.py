@@ -136,6 +136,24 @@ class TruckQualityProduction(models.Model):
 
     moisture_percent = fields.Float(string='Moisture%', digits=(12, 2))
 
+    state = fields.Selection([
+        ('draft', 'Draft'),
+        ('approve', 'Approved'),
+        ('qc_approved', 'QC Approved'),
+    ], string='State', default='draft', tracking=True)
+
+    def action_approve(self):
+        for rec in self:
+            rec.state = 'approve'
+
+    def action_qc_approve(self):
+        for rec in self:
+            rec.state = 'qc_approved'
+
+    def action_draft(self):
+        for rec in self:
+            rec.state = 'draft'
+
     @api.depends('outturn_gram')
     def compute_outturn_percent(self):
         for record in self:
