@@ -95,7 +95,7 @@ class Parser(models.AbstractModel):
             if delivery_registration:
                 name = delivery_registration.name
                 bags = delivery_registration.estimated_bags
-                qty = delivery_registration.approx_quantity
+                qty = '{:,}'.format(int(delivery_registration.approx_quantity))
                 truck = delivery_registration.license_plate
                 supplier = delivery_registration.supplier_id.name
                 estate_name = delivery_registration.estate_name
