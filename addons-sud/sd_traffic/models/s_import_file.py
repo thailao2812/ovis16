@@ -283,8 +283,8 @@ class SImportFile(models.Model):
 
                             if sheet.cell(row, 6).value:
                                 partner_id = partner_obj.search([
-                                    '|', ('name', '=', sheet.cell(row, 6).value),
-                                    ('shortname', '=', sheet.cell(row, 6).value)
+                                    '|', ('name', 'ilike', sheet.cell(row, 6).value),
+                                    ('shortname', 'ilike', sheet.cell(row, 6).value)
                                 ], limit=1)
                                 if not partner_id:
                                     partner_id = import_data_obj.slip_name(sheet.cell(row, 6).value)
