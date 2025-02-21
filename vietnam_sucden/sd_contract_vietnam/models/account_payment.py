@@ -13,7 +13,8 @@ class AccountPayment(models.Model):
         res = super(AccountPayment, self).action_post()
         if self.env.context.get('final_payment') or self.is_final_payment:
             if self.purchase_contract_id:
-                if self.purchase_contract_id.state_final_payment == 'director':
-                    self.purchase_contract_id.state_final_payment = 'paid'
-                    self.purchase_contract_id.button_done()
+                if self.purchase_contract_id.amount_total == 0:
+                    if self.purchase_contract_id.state_final_payment == 'director':
+                        self.purchase_contract_id.state_final_payment = 'paid'
+                        self.purchase_contract_id.button_done()
         return res
