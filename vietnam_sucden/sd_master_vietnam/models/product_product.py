@@ -16,6 +16,7 @@ class ProductTemplate(models.Model):
     @api.model
     def create(self, vals):
         if not self.env.user.has_group('sd_master_vietnam.group_access_product'):
+            print('vao template')
             raise UserError(_("You don't have permission to do that"))
         res = super(ProductTemplate, self).create(vals)
         product_variant = self.env['product.product'].search([
@@ -54,6 +55,7 @@ class ProductProduct(models.Model):
     @api.model
     def create(self, vals):
         if not self.env.user.has_group('sd_master_vietnam.group_access_product'):
+            print('vao product')
             raise UserError(_("You don't have permission to do that"))
         return super(ProductProduct, self).create(vals)
 
