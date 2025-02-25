@@ -21,7 +21,7 @@ services:
       - db
 
   db:
-    image: postgres:16
+    image: postgres:14
     container_name: odoo_db
     environment:
       POSTGRES_USER: odoo
