@@ -6,7 +6,8 @@ USER root
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
     build-essential \
-    libpq-dev \
+    libpq-dev=13.20-0+deb11u1 \
+    libpq5=13.20-0+deb11u1 \
     libxml2-dev \
     libxslt1-dev \
     libldap2-dev \
