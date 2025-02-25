@@ -42,7 +42,7 @@ COPY requirements.txt /tmp/requirements.txt
 RUN pip3.10 install -r /tmp/requirements.txt
 
 # Tạo thư mục /opt/ovis nếu cần cho add-ons hoặc cấu hình sau này
-RUN mkdir -p /opt/ovis && chown -R odoo:odoo /opt/ovis
+# RUN mkdir -p /opt/ovis && chown -R odoo:odoo /opt/ovis
 
 # Chạy với quyền user odoo
-USER odoo
+# USER odoo
