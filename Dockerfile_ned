@@ -4,7 +4,7 @@ FROM odoo:16
 # Cài đặt các gói cần thiết để xây dựng Python 3.10
 USER root
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
+    apt-get install -y --allow-downgrades --no-install-recommends \
     build-essential \
     libpq-dev=13.20-0+deb11u1 \
     libpq5=13.20-0+deb11u1 \
