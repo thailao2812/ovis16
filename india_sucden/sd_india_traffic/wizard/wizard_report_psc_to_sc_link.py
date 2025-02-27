@@ -75,7 +75,7 @@ class WizardReportPSCtoSC(models.TransientModel):
                             'packing_cost': line.s_contract.packing_cost,
                             'certificate_premium': line.s_contract.premium_cert,
                             's_total_price': p.price_unit + line.s_contract.packing_cost + line.s_contract.premium_cert + markup_value + grade_premium,
-                            's_contract_amount': (line.s_contract.total_allocated_sc * (
+                            's_contract_amount': (line.current_allocated * (
                                         p.price_unit + line.s_contract.packing_cost + line.s_contract.premium_cert + markup_value + grade_premium)) / number,
                             'open_position': p.balance_quantity_sc,
                             'open_position_value': (p.balance_quantity_sc * p.price_unit) / number
@@ -99,7 +99,7 @@ class WizardReportPSCtoSC(models.TransientModel):
                                 'packing_cost': line.s_contract.packing_cost,
                                 'certificate_premium': line.s_contract.premium_cert,
                                 's_total_price': p.price_unit + line.s_contract.packing_cost + line.s_contract.premium_cert + markup_value + grade_premium,
-                                's_contract_amount': (line.s_contract.total_allocated_sc * (p.price_unit + line.s_contract.packing_cost + line.s_contract.premium_cert + markup_value + grade_premium)) / number,
+                                's_contract_amount': (line.current_allocated * (p.price_unit + line.s_contract.packing_cost + line.s_contract.premium_cert + markup_value + grade_premium)) / number,
                                 'open_position': p.balance_quantity_sc,
                                 'open_position_value': (p.balance_quantity_sc * p.price_unit) / number
                             }
