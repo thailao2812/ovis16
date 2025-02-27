@@ -130,6 +130,8 @@ class SaleContractIndia(models.Model):
             record.allocated_quantity_sc = sum(i.current_allocated for i in record.sale_contract_factory_ids.filtered(
                 lambda x: x.state_allocate == 'submit'))
             record.balance_quantity_sc = record.total_quantity - record.allocated_quantity_sc
+            if record.balance_quantity_sc < 0:
+                raise UserError(_("You cannot allocate more than PSC Qty, check again!"))
 
     @api.depends('line_ids', 'line_ids.quantity')
     def _compute_quantity(self):
