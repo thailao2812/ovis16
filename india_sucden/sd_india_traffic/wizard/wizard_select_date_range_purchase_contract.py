@@ -25,6 +25,8 @@ class WizardSelectDateRangePurchaseContract(models.TransientModel):
                 ('open_qty_check', '=', False),
                 ('date_order', '>=', self.date_from),
                 ('date_order', '<=', self.date_to),
+                ('fob_management_id', '!=', False),
+                ('state_fob', '=', 'submit'),
             ])
             if sale_contract_india.state in ['draft', 'submit', 'approve']:
                 for pur in purchase_contract:
