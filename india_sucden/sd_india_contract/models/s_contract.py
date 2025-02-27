@@ -49,8 +49,13 @@ class SContract(models.Model):
     def _compute_pss_status(self):
         for rec in self:
             if rec.pss_management_ids:
-                pss_management = max(rec.pss_management_ids, key=lambda x: x.approve_date)
-                rec.pss_status = pss_management.pss_status
+                valid_records = rec.pss_management_ids.filtered(lambda x: x.approve_date)
+                if valid_records:
+                    pss_management = max(valid_records, key=lambda x: x.approve_date)
+                    rec.pss_status = pss_management.pss_status
+                else:
+                    rec.pss_status = 'none'
+
             else:
                 rec.pss_status = 'none'
 
