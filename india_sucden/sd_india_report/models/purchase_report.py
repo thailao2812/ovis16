@@ -79,7 +79,7 @@ class PurchaseReport(models.Model):
                                pc.gross_price as gross_price, 
                                sa.qty_allocation_net * pc.gross_price as gross_value,
                            sp.deduction_qty * pc.gross_price as deduction_value, 
-                           sp.total_qty * pc.gross_price as net_value
+                           sa.qty_allocation * pc.gross_price as net_value
                     from stock_allocation sa
                     join purchase_contract pc on sa.contract_id = pc.id
                     join stock_picking sp on sp.id = sa.picking_id
