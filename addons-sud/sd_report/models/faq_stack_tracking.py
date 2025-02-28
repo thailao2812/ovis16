@@ -53,7 +53,7 @@ class faq_stack_tracking(models.Model):
                                 from stock_picking gip
                                 join request_kcs_line rkl ON gip.id=rkl.picking_id
                                 join stock_lot ss ON gip.lot_id=ss.id
-                                Where gip.picking_type_code='production_out' AND gip.state='done' Group by rkl.stack_id, ss.name) sum_prod) O
+                                Where gip.picking_type_code='production_out' AND gip.state='done' and ss.name not like '%HP%' Group by rkl.stack_id, ss.name) sum_prod) O
                             JOIN (Select sum_prod.stack_id, sum_prod.name, sum_prod.qty_in, 
                                 Case When sum_prod.qty_in=0 Then 0 ELSE round(sum_prod.mc_in/sum_prod.qty_in,2) END AS mc_in, sum_prod.date_in
                                 FROM (select distinct rkl.stack_id, ss.name, sum(Case When itr.total_init_qty=0 then itr.total_init_qty else itr.total_init_qty end) qty_in, 
@@ -63,7 +63,7 @@ class faq_stack_tracking(models.Model):
                                 join request_kcs_line rkl ON itr.id=rkl.picking_id
                                 join stock_lot ss ON itr.lot_id=ss.id
                                 Where itr.picking_type_code='incoming' AND itr.state='done' and (itr.backorder_id is null or grn.picking_type_code='incoming')
-                                    Group by rkl.stack_id, ss.name) sum_prod) I ON O.stack_id=I.stack_id
+                                    and ss.name not like '%HP%' Group by rkl.stack_id, ss.name) sum_prod) I ON O.stack_id=I.stack_id
                             JOIN stock_lot ss ON O.stack_id=ss.id
                             JOIN product_product pp ON ss.product_id=pp.id) -- Lấy các STACK nhập tại Factory
                             UNION ALL
@@ -91,7 +91,8 @@ class faq_stack_tracking(models.Model):
                                 join stock_picking gip on grn.id = gip.backorder_id
                                 JOIN stock_move_line sm ON gip.id = sm.picking_id
                                 LEFT JOIN request_kcs_line rkl ON gip.id = rkl.picking_id
-                                Where grn.picking_type_code='transfer_out' AND gip.state='done' -- and rkl.product_id=1176 And grn.stack_id=41333
+                                join stock_lot ss ON grn.lot_id=ss.id 
+                                Where grn.picking_type_code='transfer_out' AND gip.state='done' and ss.name not like '%HP%' -- and rkl.product_id=1176 And grn.stack_id=41333
                                 Group By grn.lot_id) sum_prod) o ON i.lot_id=o.lot_id
                             JOIN stock_lot ss ON i.lot_id=ss.id
                             JOIN product_product pp ON ss.product_id=pp.id)
@@ -110,14 +111,14 @@ class faq_stack_tracking(models.Model):
                                         from stock_picking gip
                                         join request_kcs_line rkl ON gip.id=rkl.picking_id
                                         join stock_lot ss ON gip.lot_id=ss.id
-                                        Where gip.picking_type_code='production_out' AND gip.state='done' Group by rkl.stack_id, ss.name) -- Get GIP ticket
+                                        Where gip.picking_type_code='production_out' AND gip.state='done' and ss.name not like '%HP%' Group by rkl.stack_id, ss.name) -- Get GIP ticket
                                     UNION ALL
                                     (Select distinct gdn.lot_id, gdn.name, gdn.qty_out, (alc.mc_on_despatch * gdn.qty_out) mc_out, gdn.date_out from 
                                         (select distinct sm.lot_id, ss.name, sum(sm.init_qty) qty_out, Max(gdn.date) date_out
                                         from stock_picking gdn
                                         join stock_move_line sm ON sm.picking_id=gdn.id
                                         join stock_lot ss ON sm.lot_id=ss.id
-                                        Where gdn.picking_type_code='outgoing' AND gdn.state='done' Group by sm.lot_id, ss.name) gdn
+                                        Where gdn.picking_type_code='outgoing' AND gdn.state='done' and ss.name not like '%HP%' Group by sm.lot_id, ss.name) gdn
                                         join (Select stack_id, sum(mc_on_despatch)/count (*) mc_on_despatch From lot_stack_allocation Group by stack_id) alc ON alc.stack_id=gdn.lot_id)) -- Get GDN ticket
                                     sum_prod) O
                             JOIN (Select sum_prod.stack_id, sum_prod.name, sum_prod.qty_in, 
@@ -128,7 +129,7 @@ class faq_stack_tracking(models.Model):
                                 --left join stock_picking grn ON itr.backorder_id=grn.id
                                 join request_kcs_line rkl ON grp.id=rkl.picking_id
                                 join stock_lot ss ON grp.lot_id=ss.id
-                                Where grp.picking_type_code='production_in' AND grp.state='done' Group by rkl.stack_id, ss.name) sum_prod) I ON O.stack_id=I.stack_id
+                                Where grp.picking_type_code='production_in' AND grp.state='done' and ss.name not like '%HP%' Group by rkl.stack_id, ss.name) sum_prod) I ON O.stack_id=I.stack_id
                             JOIN stock_lot ss ON O.stack_id=ss.id
                             JOIN product_product pp ON ss.product_id=pp.id) -- Lấy các STACK nhập Kho từ GRP ra GIP hoặc GDN
                             ) faq_tracking 
