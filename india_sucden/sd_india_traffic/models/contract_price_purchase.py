@@ -46,6 +46,15 @@ class ContractPricePurchase(models.Model):
 
     hide_allocation = fields.Boolean(string='Hide Allocation', related='contract_id.open_qty_check', store=True)
 
+    a_ab_price = fields.Float(string='A /AB Price', compute='_compute_a_ab_price', store=True)
+    validate = fields.Float(string='Validate', compute='_compute_a_ab_price', store=True)
+
+    @api.depends('market_price', 'a_differential', 'ab_differential', 'fob')
+    def _compute_a_ab_price(self):
+        for rec in self:
+            rec.a_ab_price = rec.market_price + rec.a_differential + rec.ab_differential
+            rec.validate = rec.fob - rec.a_ab_price
+
     @api.depends('outturn', 'quantity', 'total_allocated_qty', 'gross_qty')
     def compute_outturn_qty(self):
         for rec in self:
