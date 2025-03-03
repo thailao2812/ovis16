@@ -22,6 +22,8 @@
                 	<field name="a_differential"/>
                 	<field name="ab_differential"/>
                 	<field name="outturn"/>
+                	<field name="a_ab_price"/>
+                	<field name="validate"/>
                 	<field name="partner_id" required="1"/>
                 	<field name="quantity"/>
                 	<field name="certificate_id"/>
