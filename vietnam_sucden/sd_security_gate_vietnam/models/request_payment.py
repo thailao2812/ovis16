@@ -124,6 +124,8 @@ class RequestPayment(models.Model):
     convert_id = fields.Many2one('npe.nvp.relation', string='Contract Convert', ondelete='cascade')
     convert_qty = fields.Float(string='Advance Convert Quantity')
     remain_qty = fields.Float(string='Remaining Qty', related='convert_id.remain_qty' , store=True)
+    display_name = fields.Char(compute='_compute_display_name', store=True)
+
 
     @api.onchange('convert_qty')
     def onchange_convert_qty(self):
@@ -574,6 +576,13 @@ class RequestPayment(models.Model):
         for rec in self:
             result.append((rec.id, 'Payment ' + str(rec.name) + ' at ' + str(self.get_date(str(rec.date)))))
         return result
+
+    @api.depends('name', 'date')
+    def _compute_display_name(self):
+        for rec in self:
+            if rec.name and rec.date:
+                rec.display_name = 'Payment ' + str(rec.name) + ' at ' + str(self.get_date(str(rec.date)))
+
 
     @api.depends('fixation_advance_line_ids', 'fixation_advance_line_ids.quantity_fix', 'type_of_ptbf_payment', 'type',
                  'price_tobe_fix', 'is_converted')
@@ -1296,6 +1305,12 @@ class RequestPayment(models.Model):
 
     def print_minutes_of_closing_price(self):
         return self.env.ref('sd_security_gate_vietnam.report_ptbf_minutes_of_closing_price').report_action(self)
+
+    def print_request_payment_fixation_for_advance(self):
+        print(123)
+
+    def print_fixation_for_advance(self):
+        return self.env.ref('sd_security_gate_vietnam.request_payment_payment_fixation_for_advance').report_action(self)
 
 class StatusGoods(models.Model):
     _name = 'status.goods'
