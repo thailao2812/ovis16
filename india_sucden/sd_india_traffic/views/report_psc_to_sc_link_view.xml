@@ -13,6 +13,7 @@
                     <field name="shipping_instruction_id"/>
                     <field name="s_contract_id"/>
                     <field name="date_allocate"/>
+                    <field name="item_group_id"/>
                     <field name="product_id"/>
                     <field name="s_qty" sum="s_qty"/>
                     <field name="allocated_qty" sum="allocated_qty"/>

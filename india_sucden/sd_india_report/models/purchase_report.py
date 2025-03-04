@@ -35,6 +35,8 @@ class PurchaseReport(models.Model):
     gross_value = fields.Float(string='Gross Value')
     deduction_value = fields.Float(string='Deduction Value')
     net_value = fields.Float(string='Net Value')
+    invoice_number = fields.Char(string='Invoice Number')
+    invoice_date = fields.Date(string='Invoice Date')
 
     def init(self):
         tools.drop_view_if_exists(self.env.cr, 'v_faq_prod')
@@ -79,10 +81,13 @@ class PurchaseReport(models.Model):
                                pc.gross_price as gross_price, 
                                sa.qty_allocation_net * pc.gross_price as gross_value,
                            sp.deduction_qty * pc.gross_price as deduction_value, 
-                           sa.qty_allocation * pc.gross_price as net_value
+                           sa.qty_allocation * pc.gross_price as net_value,
+                           ipc.invoice_number as invoice_number,
+                           ipc.invoice_date as invoice_date
                     from stock_allocation sa
                     join purchase_contract pc on sa.contract_id = pc.id
                     join stock_picking sp on sp.id = sa.picking_id
+                    LEFT JOIN invoice_purchase_contract ipc on ipc.picking_id = sp.id
                     join res_partner rp on rp.id = sa.partner_id
                     join product_product pp on pp.id = sa.product_id
                     join ned_packing np on np.id = sp.packing_id

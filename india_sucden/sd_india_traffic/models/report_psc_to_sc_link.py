@@ -30,3 +30,5 @@ class ReportPSCtoSCLink(models.Model):
     markup_value = fields.Float(string='Markup Value')
     grade_premium = fields.Float(string='Grade Premium')
     date_allocate = fields.Date(string='Date Allocate')
+
+    item_group_id = fields.Many2one('product.group', related='p_number.item_group_id', string='Item Group', store=True)
