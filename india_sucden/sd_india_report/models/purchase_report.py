@@ -87,7 +87,7 @@ class PurchaseReport(models.Model):
                     from stock_allocation sa
                     join purchase_contract pc on sa.contract_id = pc.id
                     join stock_picking sp on sp.id = sa.picking_id
-                    LEFT JOIN invoice_purchase_contract ipc on ipc.picking_id = sp.id
+                    LEFT JOIN invoice_purchase_contract ipc on ipc.picking_id = sp.id and ipc.contract_id = pc.id
                     join res_partner rp on rp.id = sa.partner_id
                     join product_product pp on pp.id = sa.product_id
                     join ned_packing np on np.id = sp.packing_id
