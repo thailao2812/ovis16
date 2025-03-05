@@ -113,5 +113,5 @@ class QCIntakeQuality(models.Model):
                 JOIN product_product pp ON sm.product_id = pp.id
                 LEFT JOIN res_partner rp ON sp.partner_id = rp.id
                 LEFT JOIN res_district rd ON sp.districts_id=rd.id
-                JOIN res_country_state rcs ON rd.state_id = rcs.id;
+                LEFT JOIN res_country_state rcs ON rd.state_id = rcs.id;
             """)
