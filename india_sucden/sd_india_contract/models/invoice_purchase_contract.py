@@ -15,19 +15,6 @@ class InvoicePurchaseContract(models.Model):
     picking_id = fields.Many2one('stock.picking', string='GRN No', required=True)
     grn_date = fields.Datetime(string='GRN Date', related='picking_id.date_done', store=True)
 
-    @api.constrains('picking_id', 'invoice_number')
-    def _constrains_picking_id(self):
-        for obj in self:
-            check = self.env['invoice.purchase.contract'].search([
-                ('picking_id', '=', obj.picking_id.id),
-                ('id', '!=', obj.id),
-            ], limit=1)
-            if check:
-                raise models.ValidationError(
-                    _('Invoice Purchase Contract already exists for GRN No: %s with Invoice number %s') %
-                    (obj.picking_id.name, obj.invoice_number)
-                )
-
 
 
 
