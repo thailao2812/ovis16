@@ -61,7 +61,7 @@ class faq_stack_tracking(models.Model):
                             GROUP BY sm.lot_id) lot_list
                         JOIN stock_lot ss ON lot_list.lot_id=ss.id
                         JOIN product_product pp ON ss.product_id=pp.id
-                        WHERE ss.name NOT LIKE '%HP%'
+                        WHERE ss.name NOT LIKE '%HP%' AND (ss.stack_empty = 'true' OR ss.init_qty=0)
                     """)
 
                         # SELECT row_number() OVER (ORDER BY (faq_tracking.product_name,stack_id,faq_tracking.name, faq_tracking.warehouse_id, faq_tracking.date_in) DESC) AS id, 
