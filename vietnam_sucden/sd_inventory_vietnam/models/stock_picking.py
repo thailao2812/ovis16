@@ -21,6 +21,8 @@ class StockPicking(models.Model):
         index=True, default='draft', tracking=True, )
     tare_weight = fields.Float(string='Tare Weight', related='move_line_ids_without_package.tare_weight', store=True)
 
+    zone_id = fields.Many2one(related='lot_id.zone_id', string='Zone', store=True, tracking=True)
+
     def button_sd_validate(self):
         for record in self:
             if record.picking_type_id.code == 'incoming' and record.picking_type_id.operation == 'factory':
