@@ -67,4 +67,21 @@
 	        <field name="tml_source">file</field>
 	        <field name="print_report_name">(object._get_printed_report_name())</field>
     </record>
+
+	<record id="grn_receipt_report" model="ir.actions.report">
+	        <field name="name">Coffee Receipt Report</field>
+	        <field name="type">ir.actions.report</field>
+	        <field name="model">stock.picking</field>
+	        <field name="binding_model_id" ref="stock.model_stock_picking"/>
+	        <field name="report_name">grn_receipt_report</field>
+	        <field name="report_type">aeroo</field>
+	        <field name="in_format">oo-odt</field>
+	        <field name="out_format" model="report.mimetypes" search="[('code','=','oo-pdf'),('compatible_types','=','oo-odt')]"/>
+	        <field name="preview">True</field>
+	        <field name="parser_state">loc</field>
+	        <field name="parser_loc">sd_india_inventory/report/report_coffee_receipt.py</field>
+	        <field name="report_file">sd_india_inventory/report/report_coffee_receipt.odt</field>
+	        <field name="tml_source">file</field>
+	        <field name="print_report_name">(object._get_printed_report_name())</field>
+    </record>
 </odoo>

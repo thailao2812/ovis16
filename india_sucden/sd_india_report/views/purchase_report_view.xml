@@ -9,6 +9,8 @@
                     <field name = 'purchase_date' readonly="1" />
                     <field name = 'consignment_id' readonly="1" />
                     <field name = 'consignment_date' readonly="1" />
+                    <field name = 'invoice_number' readonly="1" />
+                    <field name = 'invoice_date' readonly="1" />
                     <field name = 'picking_id' readonly="1" />
                     <field name = 'grn_date' readonly="1" />
                     <field name = 'partner_code' readonly="1" />

@@ -69,3 +69,14 @@ class StockPicking(models.Model):
                     for ml in record.move_line_ids_without_package:
                         ml.qty_done = basis_qty
         return super(StockPicking, self).button_sd_validate()
+
+    def print_receipt_report(self):
+        return self.env.ref('sd_india_inventory.grn_receipt_report').report_action(self)
+
+    @api.model
+    def name_search(self, name, args=None, operator='ilike', limit=100):
+        args = args or []
+        if name:
+            args += [('name', operator, name)]
+        picking = self.with_context(from_name_search=True).search(args, limit=limit)
+        return picking.name_get()

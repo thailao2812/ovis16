@@ -1,2 +1,4 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_reject_reason_contract,access_reject_reason_contract,model_reject_purchase_contract,base.group_user,1,1,1,1
+
+access_invoice_purchase_contract,access_invoice_purchase_contract,model_invoice_purchase_contract,base.group_user,1,1,1,1

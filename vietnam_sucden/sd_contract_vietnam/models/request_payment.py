@@ -40,6 +40,8 @@ class RequestPayment(models.Model):
     fixed_qty = fields.Float(string='Fixed Qty', compute='compute_total_qty_fix', store=True)
     remain_fix_qty = fields.Float(string='Remain Fix Qty', compute='compute_total_qty_fix', store=True)
 
+    account_no = fields.Char(related='partner_bank_id.acc_number', string='Account No', required=True, store=True)
+
     @api.depends('payment_quantity', 'fixation_ids', 'fixation_ids.product_qty')
     def compute_total_qty_fix(self):
         for rec in self:

@@ -4,9 +4,10 @@ FROM odoo:16
 # Cài đặt các gói cần thiết để xây dựng Python 3.10
 USER root
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
+    apt-get install -y --allow-downgrades --no-install-recommends \
     build-essential \
-    libpq-dev \
+    libpq-dev=13.20-0+deb11u1 \
+    libpq5=13.20-0+deb11u1 \
     libxml2-dev \
     libxslt1-dev \
     libldap2-dev \
@@ -14,6 +15,7 @@ RUN apt-get update && \
     libffi-dev \
     libssl-dev \
     wget \
+    git \
     zlib1g-dev \
     && rm -rf /var/lib/apt/lists/*
 
@@ -40,7 +42,7 @@ COPY requirements.txt /tmp/requirements.txt
 RUN pip3.10 install -r /tmp/requirements.txt
 
 # Tạo thư mục /opt/ovis nếu cần cho add-ons hoặc cấu hình sau này
-RUN mkdir -p /opt/ovis && chown -R odoo:odoo /opt/ovis
+# RUN mkdir -p /opt/ovis && chown -R odoo:odoo /opt/ovis
 
 # Chạy với quyền user odoo
-USER odoo
+# USER odoo

@@ -13,6 +13,7 @@
             	    <attribute name="required">1</attribute>
                 </xpath>
                 <xpath expr="//button[@name='button_qc_assigned']" position="after">
+                    <button name="print_receipt_report" attrs="{'invisible': [('picking_type_code', '!=', 'incoming')]}" string="Coffee Receipt" type="object" class="oe_highlight"/>
                     <button name="print_grn_india" attrs="{'invisible': [('picking_type_code', '!=', 'incoming')]}" string="Print Invoice" type="object" class="oe_highlight" groups="sd_india_inventory.prinout_grn_with_price"/>
                     <button name="print_grn_india_without_price" attrs="{'invisible': [('picking_type_code', '!=', 'incoming')]}" string="Print GRN" type="object" class="oe_highlight" groups="sd_india_inventory.prinout_grn_without_price"/>
                     <button name="print_grn_bag_in" attrs="{'invisible': ['|', ('template_qc', '!=', 'bag'), ('picking_type_code', '!=', 'material_in')]}" string="Print Bag IN" type="object" class="oe_highlight"/>

@@ -19,6 +19,8 @@ class ResPartner(models.Model):
     @api.model
     def create(self, vals):
         if not self.env.user.has_group('sd_master_vietnam.group_access_res_partner'):
+            print(vals)
+            print('vao partner')
             raise UserError(_("You don't have permission to do that"))
         return super(ResPartner, self).create(vals)
 

@@ -42,7 +42,7 @@ class WizardReportPSCtoSC(models.TransientModel):
                     ])
                     date_allocation = line.date_allocate
                     if not date_allocation:
-                        raise UserError(_("Please input date allocate for PSC to SC link, before generate report!!"))
+                        raise UserError(_("Please input date allocate for PSC to SC link %s, before generate report!!") % line.sale_contract_id.p_number)
                     markup_value = 0
                     grade_premium = 0
                     crop_s_contract = line.s_contract.crop_id
@@ -69,13 +69,13 @@ class WizardReportPSCtoSC(models.TransientModel):
                             's_contract_id': line.s_contract.id,
                             'product_id': line.s_contract.product_id.id,
                             's_qty': line.s_contract.total_qty,
-                            'allocated_qty': line.s_contract.total_allocated_sc,
+                            'allocated_qty': line.current_allocated,
                             'markup_value': markup_value,
                             'grade_premium': grade_premium,
                             'packing_cost': line.s_contract.packing_cost,
                             'certificate_premium': line.s_contract.premium_cert,
                             's_total_price': p.price_unit + line.s_contract.packing_cost + line.s_contract.premium_cert + markup_value + grade_premium,
-                            's_contract_amount': (line.s_contract.total_allocated_sc * (
+                            's_contract_amount': (line.current_allocated * (
                                         p.price_unit + line.s_contract.packing_cost + line.s_contract.premium_cert + markup_value + grade_premium)) / number,
                             'open_position': p.balance_quantity_sc,
                             'open_position_value': (p.balance_quantity_sc * p.price_unit) / number
@@ -93,13 +93,13 @@ class WizardReportPSCtoSC(models.TransientModel):
                                 'shipping_instruction_id': s.id,
                                 'product_id': line.s_contract.product_id.id,
                                 's_qty': line.s_contract.total_qty,
-                                'allocated_qty': line.s_contract.total_allocated_sc,
+                                'allocated_qty': line.current_allocated,
                                 'markup_value': markup_value,
                                 'grade_premium': grade_premium,
                                 'packing_cost': line.s_contract.packing_cost,
                                 'certificate_premium': line.s_contract.premium_cert,
                                 's_total_price': p.price_unit + line.s_contract.packing_cost + line.s_contract.premium_cert + markup_value + grade_premium,
-                                's_contract_amount': (line.s_contract.total_allocated_sc * (p.price_unit + line.s_contract.packing_cost + line.s_contract.premium_cert + markup_value + grade_premium)) / number,
+                                's_contract_amount': (line.current_allocated * (p.price_unit + line.s_contract.packing_cost + line.s_contract.premium_cert + markup_value + grade_premium)) / number,
                                 'open_position': p.balance_quantity_sc,
                                 'open_position_value': (p.balance_quantity_sc * p.price_unit) / number
                             }
