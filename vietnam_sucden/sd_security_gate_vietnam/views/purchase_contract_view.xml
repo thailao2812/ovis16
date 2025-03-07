@@ -484,6 +484,9 @@
         <field name="model">purchase.contract</field>
         <field name="inherit_id" ref="sd_contract_vietnam.view_ptbf_contract_form_inherit_vietnam"/>
         <field name="arch" type="xml">
+            <xpath expr="//div[@class='oe_chatter']" position="attributes">
+                <attribute name="groups"></attribute>
+            </xpath>
             <xpath expr="//field[@name='validity_date']" position="after">
                 <field name="warehouse_id"/>
             </xpath>

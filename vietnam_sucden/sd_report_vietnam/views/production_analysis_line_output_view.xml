@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_production_analysis_line_output_tree" model="ir.ui.view">
+            <field name="name">view_production_analysis_line_output_tree</field>
+            <field name="model">production.analysis.line.output</field>
+            <field name="arch" type="xml">
+                <tree string="Batch Output" default_order="id desc" create="false" edit="false" delete="false">
+                    <field name="batch_id"/>
+                    <field name="stack_id"/>
+                    <field name="date"/>
+                    <field name="picking_id"/>
+                    <field name="product_id"/>
+                    <field name="bag_no"/>
+                    <field name="packing_id"/>
+                    <field name="net_qty" sum="net_qty" string="NW (Mill)"/>
+                    <field name="real_qty" sum="real_qty" string="NW (WH)"/>
+                    <field name="mc"/>
+                    <field name="fm"/>
+                    <field name="bb"/>
+                    <field name="black"/>
+                    <field name="broken"/>
+                    <field name="brown"/>
+                    <field name="mold"/>
+                    <field name="cherry"/>
+                    <field name="excelsa"/>
+                    <field name="screen18"/>
+                    <field name="screen16"/>
+                    <field name="screen13"/>
+                    <field name="screen12"/>
+                    <field name="greatersc12"/>
+                    <field name="exportale"/>
+                    <field name="value_low_grade"/>
+                    <field name="premium_discount"/>
+                    <field name="required_mc"/>
+                    <field name="excess_mc"/>
+                    <field name="mc_discount"/>
+                    <field name="value_output"/>
+                </tree>
+            </field>
+        </record>
+
+    <record id="action_production_analysis_line_output" model="ir.actions.act_window">
+            <field name="name">Batch Output</field>
+            <field name="res_model">production.analysis.line.output</field>
+            <field name="view_mode">tree</field>
+            <field name="context">{}</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+              </p>
+            </field>
+        </record>
+
+    <record id="production_analysis_line_output_search" model="ir.ui.view">
+        <field name="name">production_analysis_line_output_search</field>
+        <field name="model">production.analysis.line.output</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="batch_id"/>
+                <field name="stack_id"/>
+                <field name="picking_id"/>
+                <field name="product_id"/>
+                <field name="packing_id"/>
+                <separator/>
+                <group expand="0" string="Group By">
+                   <filter string="Batch" name="batch_id" context="{'group_by': 'batch_id'}"/>
+                   <filter string="Stack" name="stack_id" context="{'group_by': 'stack_id'}"/>
+                   <filter string="Picking" name="picking_id" context="{'group_by': 'picking_id'}"/>
+                   <filter string="Packing" name="packing_id" context="{'group_by': 'packing_id'}"/>
+               </group>
+            </search>
+        </field>
+    </record>
+
+    <menuitem id="menu_production_analysis_line_output"
+                action="action_production_analysis_line_output"
+                sequence="26"
+                parent="mrp.menu_mrp_reporting"/>
+</odoo>

@@ -10,6 +10,7 @@ class NedPacking(models.Model):
     @api.model
     def create(self, vals):
         if not self.env.user.login == 'tuan.tran@sucden.com' and not self.env.user.login == 'thai.lao@sucden.com' and not self.env.user.login == 'admin':
+            print('vao pac')
             raise UserError(_("You don't have permission to do that"))
         return super(NedPacking, self).create(vals)
 

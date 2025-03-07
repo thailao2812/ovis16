@@ -10,6 +10,7 @@
                         <field name="file" widget="binary" filename="file_name"/>
                 	    <field name="file_name" invisible="1"/>
                         <field name="warehouse_id"/>
+                        <field name="name" string="No of PSS"/>
                         <field name="s_contract_id" domain="[('state', '!=', 'cancel')]" required="1"/>
                         <field name="s_contract_date"/>
                         <field name="shipping_id"/>

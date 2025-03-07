@@ -155,6 +155,8 @@ class NedSecurityGateQueue(models.Model):
                                           states={}, tracking=True)
     arrivial_time = fields.Datetime('Arrival Time', readonly=True)
 
+    product_ids = fields.Many2many(states={'closed': [('readonly', True)], 'reject': [('readonly', True)]}, required=True, tracking=True)
+
     def button_commercial(self):
         for this in self:
             if this.state in ['approved', 'cancel', 'closed', 'reject']:

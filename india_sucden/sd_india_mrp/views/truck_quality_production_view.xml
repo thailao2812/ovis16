@@ -5,6 +5,12 @@
             <field name="model">truck.quality.production</field>
             <field name="arch" type="xml">
                 <form string="Truck Quality Production">
+                    <header>
+                        <button name="action_approve" string="Approve" type="object" states="draft"/>
+                        <button name="action_qc_approve" string="QC Approve" type="object" states="approve"/>
+                        <button name="action_draft" string="Set to draft" type="object" states="approve,qc_approved"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,approve,qc_approved"/>
+                    </header>
                     <sheet>
                         <div class="oe_title">
                             <label for="name"/>
@@ -135,6 +141,7 @@
                     <field name="quantity"/>
                     <field name="wb_slip_number"/>
                     <field name="template_qc"/>
+                    <field name="state" widget="badge"/>
                     <field name="moisture_percent" />
                     <field name="outturn_percent" />
                     <field name="sleeve_6_up_percent"/>
