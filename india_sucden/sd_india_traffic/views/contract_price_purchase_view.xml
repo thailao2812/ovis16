@@ -6,6 +6,7 @@
             <field name="arch" type="xml">
                 <tree string="Contract Price Purchase" editable="top" default_order="id desc">
                 	<field name="contract_id" required="1" domain="[('type', '=', 'purchase'), ('state', '!=', 'cancel')]"/>
+                	<field name="date_price" string="Date Contract"/>
                 	<field name="product_id" required="1"/>
                 	<field name="date_price" required="1"/>
                 	<field name="exchange"/>

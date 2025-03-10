@@ -46,7 +46,6 @@ class PurchaseReport(models.Model):
 
                                 ORDER BY (
                                     pc.id,
-                                    sa.date_picking,
                                     sp.id,
                                     sa.date_picking,
                                     rp.partner_code,
