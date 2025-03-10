@@ -48,6 +48,7 @@ class ContractPricePurchase(models.Model):
 
     a_ab_price = fields.Float(string='A /AB Price', compute='_compute_a_ab_price', store=True)
     validate = fields.Float(string='Validate', compute='_compute_a_ab_price', store=True)
+    state_contract = fields.Selection(related='contract_id.state', string='State', store=True)
 
     @api.depends('market_price', 'a_differential', 'ab_differential', 'fob')
     def _compute_a_ab_price(self):
