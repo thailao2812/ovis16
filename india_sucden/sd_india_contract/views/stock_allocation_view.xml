@@ -48,6 +48,9 @@
                 <field name="qty_received_net" sum="qty_received_net"/>
                 <field name="qty_unreceived_net" sum="qty_unreceived_net"/>
             </xpath>
+            <xpath expr="//field[@name='date_allocation']" position="replace">
+                <field name="create_date"/>
+            </xpath>
         </field>
     </record>
 </odoo>
