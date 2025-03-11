@@ -16,6 +16,8 @@ class faq_stack_tracking(models.Model):
     name = fields.Char(string = 'Stack Name')
     coffee_type = fields.Char(string = 'Coffee Type')
     product_name = fields.Char(string = 'Product Name')
+    production_name = fields.Char(string = 'Production Name')
+    zone_name = fields.Char(string = 'Zone Name')
     date_in = fields.Date(string = 'Date IN')
     qty_in = fields.Float(string = 'Qty IN', digits=(12, 0))
     mc_in = fields.Float(string = 'MC IN', digits=(12, 2))
@@ -38,7 +40,7 @@ class faq_stack_tracking(models.Model):
         self.env.cr.execute("""
                     CREATE OR REPLACE VIEW public.v_faq_stack_tracking AS
                     SELECT row_number() OVER (ORDER BY (ss.warehouse_id, lot_list.lot_id) DESC) AS id,
-                        lot_list.lot_id stack_id, ss.name, ss.warehouse_id, pp.default_code product_name, lot_list.date_in, lot_list.qty_in, lot_list.mc_in, lot_list.date_out, lot_list.qty_out, lot_list.mc_out,
+                        lot_list.lot_id stack_id, ss.name, pr.name production_name, ss.warehouse_id, sz.name zone_name, pp.default_code product_name, lot_list.date_in, lot_list.qty_in, lot_list.mc_in, lot_list.date_out, lot_list.qty_out, lot_list.mc_out,
                         lot_list.date_out - lot_list.date_in AS st_day, lot_list.qty_in-lot_list.qty_out AS loss_kg, (lot_list.qty_in - lot_list.qty_out)/NULLIF(lot_list.qty_in, 0) * 100 loss_percent,
                         Case When lot_list.qty_in = 0 then 0 else NULLIF((lot_list.mc_in - lot_list.mc_out) * lot_list.qty_in/100, 0) end as mc_loss_kg, lot_list.mc_in - lot_list.mc_out loss_mc,
                         Case When lot_list.qty_in = 0 then 0 else NULLIF((lot_list.qty_in - lot_list.qty_out) - ((lot_list.mc_in - lot_list.mc_out) * lot_list.qty_in/100), 0) end as unex_loss_kg,
@@ -61,6 +63,8 @@ class faq_stack_tracking(models.Model):
                             GROUP BY sm.lot_id) lot_list
                         JOIN stock_lot ss ON lot_list.lot_id=ss.id
                         JOIN product_product pp ON ss.product_id=pp.id
+						JOIN stock_zone sz ON sz.id=ss.zone_id
+						JOIN mrp_production pr ON pr.id=ss.production_id
                         WHERE ss.name NOT LIKE '%HP%' AND (ss.stack_empty = 'true' OR ss.init_qty=0)
                     """)
 
