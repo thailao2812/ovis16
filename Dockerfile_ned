@@ -42,6 +42,8 @@ RUN wget https://bootstrap.pypa.io/get-pip.py && \
 COPY requirements.txt /tmp/requirements.txt
 RUN pip3.10 install -r /tmp/requirements.txt
 
+RUN pip3.10 install psycopg2-binary
+
 # Tạo thư mục /opt/ovis nếu cần cho add-ons hoặc cấu hình sau này
 # RUN mkdir -p /opt/ovis && chown -R odoo:odoo /opt/ovis
 
