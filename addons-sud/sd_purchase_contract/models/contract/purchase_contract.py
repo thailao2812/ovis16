@@ -533,6 +533,8 @@ class PurchaseContract(models.Model):
                     contract.qty_unfixed = contract.qty_received - fix
             else:
                 contract.qty_unfixed = received - fix
+            if contract.state == 'done':
+                contract.qty_unfixed = 0
             contract.total_qty_fixed = fix
 
     qty_received = fields.Float(string='Received', digits=(12, 0))
@@ -603,6 +605,9 @@ class PurchaseContract(models.Model):
                     fix += line.quantity
                 order.qty_unfixed = order.total_qty - fix
                 order.total_qty_fixed = fix
+            if order.state == 'done':
+                print('vaoi dayt rofi')
+                order.qty_unfixed = 0
 
     total_qty_fixed = fields.Float(compute='_total_qty_fixed', string='Fixed', digits=(12, 0), store=True)
     qty_unfixed = fields.Float(compute='_total_qty_fixed', string='UnFixed', digits=(12, 0), store=True)

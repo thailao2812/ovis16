@@ -215,7 +215,6 @@ class StockPicking(models.Model):
                                  ('picking_type_id.code', '=', 'incoming'), ('id', 'not in', grn_array),
                                  ('id', 'not in', arr_done), ('product_id', '=', self._context.get('product_id')),
                                  ('state', 'in', ['done']), ('backorder_id', '=', False)]
-                        print(args)
                         backorder = self.search(args + domain, limit=limit)
         return backorder.name_get()
 

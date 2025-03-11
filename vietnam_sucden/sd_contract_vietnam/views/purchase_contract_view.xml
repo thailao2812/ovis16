@@ -212,6 +212,9 @@
             <xpath expr="//button[@name='printf_npe']" position="after">
                 <button name="print_npe_word" string="Print NPE WORD" type="object" class="oe_highlight"/>
             </xpath>
+            <xpath expr="//button[@name='button_draft']" position="after">
+                <button name="action_force_close_npe" class="oe_highlight" string="Force Close" type="object" attrs="{'invisible': [('state', 'in', ['draft', 'done', 'cancel'])]}"/>
+            </xpath>
         </field>
     </record>
 

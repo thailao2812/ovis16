@@ -21,6 +21,7 @@
         'wizard/import_farmer_view.xml',
         'wizard/wizard_report_average_price.xml',
         'wizard/wizard_purchase_contract.xml',
+        'wizard/wizard_reason_force_close_view.xml',
         'report/report_view.xml'
     ],
     'assets': {
