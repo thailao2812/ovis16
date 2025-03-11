@@ -5,8 +5,8 @@ FROM odoo:16
 USER root
 
 # Cấu hình repo PostgreSQL để tránh lỗi libpq-dev
-RUN apt-get update && apt-get install -y wget gnupg2 && \
-    echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list && \
+RUN apt-get update && apt-get install -y wget gnupg2 lsb-release && \
+    echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" | tee /etc/apt/sources.list.d/pgdg.list && \
     wget -qO - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
 
 # Cài đặt các gói cần thiết
