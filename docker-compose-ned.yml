@@ -1,36 +1,36 @@
 version: '3.8'
 
 services:
-  odoo:
+  web:
     build:
       context: .
       dockerfile: Dockerfile_ned
-    container_name: odoo_container
+    depends_on:
+      - db
     ports:
       - "8069:8069"
-    environment:
-      - HOST=db
-      - USER=odoo
-      - PASSWORD=odoo
-      - DATABASE=odoo
-      - DB_PORT=5432
+      - "8072:8072"
     volumes:
       - /opt/ovis16:/opt/ovis
       - /opt/deforestation_layers:/opt/deforestation_layers
-    depends_on:
-      - db
+    restart: always
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_PASSWORD=odoo
+      - POSTGRES_USER=odoo
+      - PGDATA=/var/lib/postgresql/data/pgdata
 
   db:
-    image: postgres:16
-    container_name: odoo_db
+    image: postgres:14
     environment:
-      POSTGRES_USER: odoo
-      POSTGRES_PASSWORD: odoo
-      POSTGRES_DB: odoo
-    ports:
-      - "5432:5432"
+      - POSTGRES_DB=postgres
+      - POSTGRES_PASSWORD=odoo
+      - POSTGRES_USER=odoo
+      - PGDATA=/var/lib/postgresql/data/pgdata
     volumes:
-      - odoo-db-data:/var/lib/postgresql/data
+      - odoo-db-data:/var/lib/postgresql/data/pgdata
+    restart: always
 
 volumes:
+  odoo-web-data:
   odoo-db-data:
