@@ -11,4 +11,4 @@ class StockLot(models.Model):
     _inherit = 'stock.lot'
     _order = 'name, id'
     
-    # area_name_link = fields.Char(related='zone_id.area_name', string='Area', store = True)
+    area_name_link = fields.Char(related='zone_id.area_name', string='Area', store = True)
