@@ -17,6 +17,7 @@ RUN apt-get update && \
     wget \
     git \
     zlib1g-dev \
+    psycopg2 \
     && rm -rf /var/lib/apt/lists/*
 
 # Tải và cài đặt Python 3.10
