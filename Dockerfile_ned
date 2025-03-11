@@ -45,12 +45,14 @@ RUN wget https://www.python.org/ftp/python/3.10.0/Python-3.10.0.tgz && \
 RUN update-alternatives --install /usr/bin/python3 python3 /usr/local/bin/python3.10 1 && \
     update-alternatives --set python3 /usr/local/bin/python3.10
 
-# Cài đặt pip cho Python 3.10
+# Cài đặt pip, setuptools, và wheel để tránh lỗi khi cài đặt các package từ source
 RUN wget https://bootstrap.pypa.io/get-pip.py && \
     python3.10 get-pip.py && \
-    rm get-pip.py
+    rm get-pip.py && \
+    pip3.10 install --upgrade pip setuptools wheel
 
 # Cài đặt các thư viện Python cần thiết
+RUN pip3.10 install --upgrade pip setuptools wheel
 COPY requirements.txt /tmp/requirements.txt
 RUN pip3.10 install -r /tmp/requirements.txt
 RUN pip3.10 install --no-cache-dir \
