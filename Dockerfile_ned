@@ -186,10 +186,11 @@ RUN git clone --depth 1 --branch 16.0 https://github.com/odoo/odoo.git \
 WORKDIR /opt/odoo
 USER odoo
 
-# Cài đặt các phụ thuộc của Odoo với các phiên bản cụ thể
-# Sử dụng gevent phiên bản mới hơn thay vì 21.8.0
-RUN pip install --no-cache-dir -r requirements.txt \
-    && pip install --no-cache-dir "gevent>=22.10.2" psycogreen psycopg2
+# Cài đặt gevent phiên bản mới trước khi cài đặt requirements
+RUN pip install --no-cache-dir "gevent>=22.10.2" \
+    && pip install --no-cache-dir psycogreen psycopg2 \
+    && grep -v "gevent" requirements.txt > requirements_no_gevent.txt \
+    && pip install --no-cache-dir -r requirements_no_gevent.txt
 
 # Cấu hình Odoo
 USER root
