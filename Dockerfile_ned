@@ -52,6 +52,7 @@ RUN wget https://bootstrap.pypa.io/get-pip.py && \
     pip3.10 install --upgrade pip setuptools wheel
 
 # Cài đặt các thư viện Python cần thiết
+RUN pip3.10 install odoo
 RUN pip3.10 install --upgrade pip setuptools wheel
 COPY requirements.txt /tmp/requirements.txt
 RUN pip3.10 install -r /tmp/requirements.txt
