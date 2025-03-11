@@ -37,6 +37,8 @@ class PurchaseContract(models.Model):
         ('paid', 'Paid'),
     ], string='Final Payment State', default='draft', tracking=True)
 
+    state = fields.Selection(tracking=True)
+
     partner_invoice_id = fields.Many2one(required=False)
     partner_shipping_id = fields.Many2one(required=False)
 
@@ -60,7 +62,7 @@ class PurchaseContract(models.Model):
                 ('state', 'not in', ['posted', 'cancel']),
             ], limit=1)
             if payment:
-                raise UserError(_("🚀 Uh-oh! Looks like your final payment is chilling in the ‘to-do’ list. 🛋️ Time to give it a little nudge and check it off! ✅💸✨"))
+                raise UserError(_("Looks like your final payment is chilling in the ‘to-do’ list. Time to give it a little nudge and check it off!"))
             return record.action_request_register_payment()
 
     def action_request_register_payment(self):
@@ -105,6 +107,18 @@ class PurchaseContract(models.Model):
             return self.env.ref(
                 'sd_contract_vietnam.report_ptbf_word').report_action(self)
 
+    def action_force_close_npe(self):
+        return {
+            'name': _('Force Close NPE'),
+            'res_model': 'force.close.npe',
+            'view_mode': 'form',
+            'context': {
+                'active_model': 'purchase.contract',
+                'res_id': self.id,
+            },
+            'target': 'new',
+            'type': 'ir.actions.act_window',
+        }
 
 
 class OpenQtyNPE(models.Model):

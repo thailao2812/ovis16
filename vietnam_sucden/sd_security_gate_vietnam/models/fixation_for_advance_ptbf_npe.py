@@ -31,8 +31,6 @@ class FixationAdvancePTBFNPE(models.Model):
             if rec.name == 'Còn lại/ Remain Payment:':
                 rec.vnd = rec.usd * rec.ex_rate
                 # total_interest = rec.request_payment_id.total_interest_advance_ptbf_npe
-                # print(total_interest, 'total_interest')
-                # print(rec.vnd, 'vnd')
                 rec.total = rec.usd * rec.ex_rate
             if rec.name == 'Total':
                 rec.total = rec.vnd + rec.interest
