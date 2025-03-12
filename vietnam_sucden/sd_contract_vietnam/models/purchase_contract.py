@@ -120,6 +120,70 @@ class PurchaseContract(models.Model):
             'type': 'ir.actions.act_window',
         }
 
+    @api.depends('contract_line.price_total', 'contract_line.price_unit', 'pay_allocation_ids',
+                 'pay_allocation_ids.allocation_amount',
+                 'request_payment_ids', 'request_payment_ids.total_payment', 'payment_ids', 'payment_ids.amount',
+                 'stock_allocation_ids',
+                 'stock_allocation_ids.qty_allocation',
+                 'pay_allocation_ids.allocation_line_ids',
+                 'ptbf_ids',
+                 'ptbf_ids.history_rate_ids.total_amount_vn'
+                 )
+    def _amount_all(self):
+        for contract in self:
+            price_unit = 0.0
+            amount_untaxed = 0
+            amount_tax = 0.0
+
+            amount = 0.0
+            amount_deposit = 0.0
+            sub_rel = 0.0
+
+            if contract.type == 'ptbf':
+                amount_untaxed = 0
+                for i in contract.ptbf_ids:
+                    for j in i.history_rate_ids:
+                        amount_untaxed += j.total_amount_vn
+                        amount_tax = 0
+
+            else:
+                for line in contract.contract_line:
+                    amount_untaxed += line.price_subtotal
+                    amount_tax += line.price_tax
+                    price_unit = line.price_unit
+
+            if not contract.nvp_ids:
+                for stock in contract.stock_allocation_ids:
+                    sub_rel += stock.qty_allocation
+            else:
+                for alls in contract.contract_line:
+                    sub_rel += alls.product_qty
+            if contract.type != 'ptbf':
+                sub_rel = sub_rel * price_unit
+            else:
+                sub_rel = amount_untaxed
+
+            for deposit in contract.pay_allocation_ids:
+                amount_deposit += deposit.allocation_amount or 0.0
+                for interest in deposit.allocation_line_ids:
+                    amount += interest.actual_interest_pay
+
+            for deposit in contract.payment_ids.filtered(lambda x: x.state == 'posted'):
+                amount_deposit += deposit.amount
+
+            amount = abs(amount) * (-1)
+            amount_deposit = abs(amount_deposit) * (-1)
+
+            contract.update({
+                'amount_untaxed': contract.currency_id.round(amount_untaxed),
+                'amount_tax': contract.currency_id.round(amount_tax),
+                'amount_sub_total': amount_untaxed + amount_tax,
+                'amount_total': sub_rel + amount + amount_deposit,
+                'amount_sub_rel_total': sub_rel,
+                'total_interest_pay': abs(amount),
+                'amount_deposit': abs(amount_deposit)
+            })
+
 
 class OpenQtyNPE(models.Model):
     _name = 'open.qty.npe'
