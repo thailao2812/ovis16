@@ -5,6 +5,7 @@
     'category': 'SUCDEN Report Manager',
     'depends': ['sd_india_quality_control', 'sd_india_mrp','sd_india_inventory','sd_india_traffic'],
     'data': [
+            'data/data.xml',
             'security/security.xml',
             'security/ir.model.access.csv',
             'views/production_report_view.xml',
@@ -31,6 +32,7 @@
             'views/fob_weight_franchise.xml',
             'views/report_grn_unallocated.xml',
             'views/report_bag_transfer_view.xml',
+            'views/stock_report_view.xml',
             # 'views/long_short_fob_view.xml',
             # 'views/long_short_fob_v2_view.xml',
             # 'views/long_short_factory_view.xml',

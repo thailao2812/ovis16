@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_stock_report_tree" model="ir.ui.view">
+            <field name="name">view_stock_report_tree</field>
+            <field name="model">stock.report</field>
+            <field name="arch" type="xml">
+                <tree editable="top" create="false" edit="false">
+                    <field name = 'create_date' readonly="1" />
+                    <field name = 'warehouse_id' readonly="1" />
+                    <field name = 'stack_id' readonly="1" />
+                    <field name = 'zone_id' readonly="1" />
+                    <field name = 'packing_id' readonly="1" />
+                    <field name = 'building_id' readonly="1" />
+                    <field name = 'product_id' readonly="1" />
+                    <field name = 'init_qty' readonly="1" />
+                </tree>
+             </field>
+        </record>
+
+        <record id="view_stock_report_search" model="ir.ui.view">
+            <field name="name">view_stock_report_search</field>
+            <field name="model">stock.report</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name = "warehouse_id"/>
+                    <field name = "stack_id"/>
+                    <field name = "zone_id"/>
+                    <field name = "packing_id"/>
+                    <field name = "product_id"/>
+                </search>
+             </field>
+        </record>
+
+        <record id="action_stock_report_india" model="ir.actions.act_window">
+            <field name="name">Stock Report</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">stock.report</field>
+            <field name="view_mode">tree</field>
+        </record>
+</odoo>
