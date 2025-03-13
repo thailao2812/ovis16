@@ -15,6 +15,13 @@
 				            parent="menu_report_purchase"
 				            name="Purchase Report"/>
 
+				<menuitem id="menu_stock_report"
+					name="Stock Report"
+						  parent="menu_report_control_root"
+						  sequence="45"
+						  action="action_stock_report_india"
+				/>
+
             
 	            <!-- Configuration Contracts Top 1-->
 	            <!-- PRODUCTION REPORT -->
