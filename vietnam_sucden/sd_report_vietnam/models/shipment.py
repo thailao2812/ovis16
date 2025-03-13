@@ -15,10 +15,12 @@ class VShipment(models.Model):
     # progress_qty = fields.Float(string='Progress')
     # pending_qty = fields.Float(string='Pending')
     # production_progress = fields.Float(string='QC Approved', digits=(12, 0))
+
     rejected_nestle = fields.Float(string='PSS rejected Nestle', digits=(12, 0))
     approved_nestle = fields.Float(string='PSS Approved Nestle', digits=(12, 0))
     ctract_id = fields.Many2one('s.contract', string='Contract ID',digits=(12, 0))
-    certificated_ids = fields.Many2many(related='ctract_id.certificated_ids', string='Cer Compliant')
+    # certificated_ids = fields.Many2many(related='ctract_id.certificated_ids', string='Cer Compliant', store=True)
+    certificate_list = fields.Char(string='Certificate List')
 
     def init(self):
         self.fun_week_num_year()
@@ -62,7 +64,6 @@ class VShipment(models.Model):
                       pm.approved,
                       pm.rejected
                 ) DESC  
-
             ) AS id,
               sc.name AS s_contract,
               sc.id AS ctract_id,
@@ -111,6 +112,7 @@ class VShipment(models.Model):
               stock_allocation.allocated_qty AS production_progress,
               scline.name AS specification,
               cert.name as certificate,
+              sc.certificate_list,
               pm.approved as pss_approved,
               pm.rejected as pss_rejected,
               pm.rejected_nestle as rejected_nestle,
@@ -162,7 +164,7 @@ class VShipment(models.Model):
                 GROUP BY stock_contract_allocation.shipping_id) stock_allocation ON si.id = stock_allocation.shipping_id
               left join ned_certificate cert on sil.certificate_id = cert.id
             where sc.status = 'Factory' and si.state != 'cancel'
-            GROUP BY scline.name, sc.name, cert.name,pc.id, sc.id, pt.quality_type,
+            GROUP BY scline.name, sc.name, cert.name, sc.certificate_list, pc.id, sc.id, pt.quality_type,
                 CASE
                   WHEN rp.shortname IS NULL THEN rp.name
                   ELSE rp.shortname
