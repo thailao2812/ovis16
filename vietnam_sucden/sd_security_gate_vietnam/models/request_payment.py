@@ -126,6 +126,19 @@ class RequestPayment(models.Model):
     remain_qty = fields.Float(string='Remaining Qty', related='convert_id.remain_qty' , store=True)
     display_name = fields.Char(compute='_compute_display_name', store=True)
 
+    request_user_id = fields.Many2one('res.users', compute='_compute_request_user_id', store=True)
+
+    @api.depends('user_process_ids', 'user_process_ids.user_id', 'user_process_ids.state')
+    def _compute_request_user_id(self):
+        for rec in self:
+            if rec.user_process_ids and rec.user_process_ids.user_id:
+                user = rec.user_process_ids.filtered(lambda x: x.state == 'Request')
+                if user:
+                    rec.request_user_id = user[0].user_id.id
+                else:
+                    rec.request_user_id = False
+            else:
+                rec.request_user_id = False
 
     @api.onchange('convert_qty')
     def onchange_convert_qty(self):
@@ -686,10 +699,12 @@ class RequestPayment(models.Model):
                 request.advance_price = request.request_amount / request.advance_payment_quantity
 
             request.total_remain = request.request_amount - total_payment
-            if request.total_remain == 0.0:
+            if request.total_remain <= 0.0:
                 if total_payment != 0:
                     if request.state != 'paid':
                         request.state = 'paid'
+            else:
+                request.state = 'approved_director'
 
     def _create_stock_moves(self, picking, picking_type):
         moves = self.env['stock.move.line']
