@@ -5,7 +5,7 @@
             <field name="model">stock.report</field>
             <field name="arch" type="xml">
                 <tree editable="top" create="false" edit="false">
-                    <field name = 'create_date' readonly="1" />
+                    <field name = 'create_date' string="Stock Date" readonly="1" />
                     <field name = 'warehouse_id' readonly="1" />
                     <field name = 'stack_id' readonly="1" />
                     <field name = 'zone_id' readonly="1" />
