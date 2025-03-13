@@ -126,7 +126,7 @@ class PurchaseContract(models.Model):
                  'stock_allocation_ids',
                  'stock_allocation_ids.qty_allocation',
                  'pay_allocation_ids.allocation_line_ids',
-                 'ptbf_ids',
+                 'ptbf_ids', 'state',
                  'ptbf_ids.history_rate_ids.total_amount_vn'
                  )
     def _amount_all(self):
