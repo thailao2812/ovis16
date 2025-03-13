@@ -992,6 +992,7 @@ class PurchaseContract(models.Model):
             if contract.type == 'ptbf':
                 contract.write({'state': 'done'})
                 return 1
+            contract._amount_all()
             if contract.amount_total != 0:
                 raise UserError(_('Payable must be 0!'))
             if contract.type != 'purchase':
