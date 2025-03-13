@@ -386,6 +386,9 @@
             <xpath expr="//field[@name='request_amount']" position="attributes">
                 <attribute name="sum">request_amount</attribute>
             </xpath>
+            <xpath expr="//field[@name='users_request_id']" position="replace">
+                <field name="request_user_id"/>
+            </xpath>
         </field>
     </record>
 </odoo>
