@@ -39,15 +39,41 @@ class PurchaseReportConsignment(models.Model):
 
     @api.model
     def cron_action_create_purchase_report_consignment(self):
+        # Clear existing data with direct SQL query
         self.env.cr.execute("DELETE FROM purchase_report_consignment")
 
-        stock_allocation = self.env['stock.allocation'].search([
+        # Fetch all consignment stock allocations in a single query
+        stock_allocations = self.env['stock.allocation'].search([
             ('contract_id.type', '=', 'consign'),
         ])
-        for stock in stock_allocation:
-            value = {
-                'consignment_id': stock.contract_id.id,
-                'consignment_date': stock.contract_id.date_order,
+
+        # Prefetch related records to reduce database queries
+        contract_ids = stock_allocations.mapped('contract_id')
+
+        # Create a dictionary of invoice numbers keyed by contract_id for faster lookups
+        contract_invoice_map = {}
+        all_npe_contract_ids = contract_ids.mapped('npe_ids.contract_id')
+        invoice_purchases = self.env['invoice.purchase.contract'].search([
+            ('contract_id', 'in', all_npe_contract_ids.ids),
+        ])
+
+        for invoice in invoice_purchases:
+            if invoice.contract_id.id not in contract_invoice_map:
+                contract_invoice_map[invoice.contract_id.id] = {
+                    'invoice_number': invoice.invoice_number,
+                    'invoice_date': invoice.invoice_date
+                }
+
+        # Prepare values for bulk creation
+        report_values = []
+
+        for stock in stock_allocations:
+            contract_cs = stock.contract_id
+
+            # Base values common to all records for this stock allocation
+            base_value = {
+                'consignment_id': contract_cs.id,
+                'consignment_date': contract_cs.date_order,
                 'picking_id': stock.picking_id.id,
                 'grn_date': stock.picking_id.date_done,
                 'partner_code': stock.partner_id.partner_code,
@@ -55,29 +81,45 @@ class PurchaseReportConsignment(models.Model):
                 'estate_name': stock.partner_id.estate_name,
                 'default_code': stock.product_id.default_code,
                 'product_id': stock.product_id.id,
-                'certificate_id': stock.contract_id.certificate_id.id,
-                'crop_id': stock.contract_id.crop_id.id,
-                'packing_id': stock.contract_id.packing_id.id,
+                'certificate_id': contract_cs.certificate_id.id,
+                'crop_id': contract_cs.crop_id.id,
+                'packing_id': contract_cs.packing_id.id,
                 'total_bag': stock.picking_id.total_bag,
             }
-            contract_cs = stock.contract_id
+
+            # Process each related purchase contract
             for cr in contract_cs.npe_ids.mapped('contract_id'):
-                invoice_number = self.env['invoice.purchase.contract'].search([
-                    ('contract_id', '=', cr.id),
-                ], limit=1)
+                value = dict(base_value)  # Create a copy of base values
+
+                # Calculate values once to avoid repeated calculations
+                gross_qty = cr.gross_qty
+                quality_deduction = cr.quality_deduction
+                net_qty = gross_qty - quality_deduction
+                relation_price_unit = cr.relation_price_unit
+                premium = cr.premium
+                gross_price = relation_price_unit + premium
+
+                # Get invoice information from the map
+                invoice_info = contract_invoice_map.get(cr.id, {})
+
                 value.update({
                     'purchase_contract_id': cr.id,
                     'purchase_date': cr.date_order,
-                    'gross_qty': cr.gross_qty,
-                    'quality_deduction': cr.quality_deduction,
-                    'net_qty': cr.gross_qty - cr.quality_deduction,
-                    'net_price': cr.relation_price_unit,
-                    'premium': cr.premium,
-                    'gross_price': cr.relation_price_unit + cr.premium,
-                    'gross_value': cr.gross_qty * (cr.relation_price_unit + cr.premium),
-                    'deduction_value': cr.quality_deduction * (cr.relation_price_unit + cr.premium),
-                    'net_value': (cr.gross_qty - cr.quality_deduction) * (cr.relation_price_unit + cr.premium),
-                    'invoice_number': invoice_number.invoice_number if invoice_number else False,
-                    'invoice_date': invoice_number.invoice_date if invoice_number else False,
+                    'gross_qty': gross_qty,
+                    'quality_deduction': quality_deduction,
+                    'net_qty': net_qty,
+                    'net_price': relation_price_unit,
+                    'premium': premium,
+                    'gross_price': gross_price,
+                    'gross_value': gross_qty * gross_price,
+                    'deduction_value': quality_deduction * gross_price,
+                    'net_value': net_qty * gross_price,
+                    'invoice_number': invoice_info.get('invoice_number', False),
+                    'invoice_date': invoice_info.get('invoice_date', False),
                 })
-                self.env['purchase.report.consignment'].create(value)
+
+                report_values.append(value)
+
+        # Create all records in a single operation
+        if report_values:
+            self.env['purchase.report.consignment'].create(report_values)
