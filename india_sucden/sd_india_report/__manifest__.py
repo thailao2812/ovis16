@@ -43,6 +43,12 @@
 
             'report/report_view.xml',
             ],
+    "assets": {
+        "web.assets_backend": [
+            "sd_india_report/static/src/xml/list_view.xml",
+            "sd_india_report/static/src/js/list_view.js"
+        ]
+    },
     'installable': True,
     'auto_install': False,
     'author': 'Sucden Vietnam Ltd',

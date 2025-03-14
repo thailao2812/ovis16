@@ -4,7 +4,7 @@
             <field name="name">view_purchase_report_cs_tree</field>
             <field name="model">purchase.report.consignment</field>
             <field name="arch" type="xml">
-                <tree editable="top" create="false" edit="false">
+                <tree editable="top" create="false" edit="false" delete="false">
                     <field name = 'purchase_contract_id' readonly="1" />
                     <field name = 'purchase_date' readonly="1" />
                     <field name = 'consignment_id' readonly="1" />
