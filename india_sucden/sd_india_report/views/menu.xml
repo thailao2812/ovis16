@@ -13,7 +13,11 @@
 					<menuitem id="menu_purchase_report_india"
 				            action="sd_india_report.action_purchase_report_india" sequence="1"
 				            parent="menu_report_purchase"
-				            name="Purchase Report"/>
+				            name="Purchase Report - Regular"/>
+					<menuitem id="menu_purchase_report_cs_india"
+				            action="sd_india_report.action_purchase_report_cs_india" sequence="2"
+				            parent="menu_report_purchase"
+				            name="Purchase Report - Consignment"/>
 
 				<menuitem id="menu_stock_report"
 					name="Stock Report"

@@ -21,5 +21,5 @@ from . import report_grn_unallocated
 # from . import cash_book
 from . import long_short_fob_v2
 from . import report_bag_transfer
-from . import purchase_report
+from . import purchase_report, purchase_report_consignment
 from . import stock_report
