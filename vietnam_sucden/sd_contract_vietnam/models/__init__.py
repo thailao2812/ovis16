@@ -13,3 +13,4 @@ from . import npe_nvp_relation
 from . import s_contract
 from . import account_payment
 from . import sequence_mixin
+from . import offset_debt
