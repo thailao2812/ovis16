@@ -64,8 +64,8 @@ class faq_stack_tracking(models.Model):
                         JOIN stock_lot ss ON lot_list.lot_id=ss.id
                         JOIN product_product pp ON ss.product_id=pp.id
 						JOIN stock_zone sz ON sz.id=ss.zone_id
-						JOIN mrp_production pr ON pr.id=ss.production_id
-                        WHERE ss.name NOT LIKE '%HP%' AND (ss.stack_empty = 'true' OR ss.init_qty=0)
+						LEFT JOIN mrp_production pr ON pr.id=ss.production_id
+                        WHERE ss.name NOT LIKE '%HP%'; --AND (ss.stack_empty = 'true' OR ss.init_qty=0)
                     """)
 
                         # SELECT row_number() OVER (ORDER BY (faq_tracking.product_name,stack_id,faq_tracking.name, faq_tracking.warehouse_id, faq_tracking.date_in) DESC) AS id, 
