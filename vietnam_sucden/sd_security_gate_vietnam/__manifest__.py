@@ -20,6 +20,7 @@
         'views/delivery_place_view.xml',
         'views/data.xml',
         'report/report_view.xml',
+        'views/delivery_registration_exstore_view.xml',
         'wizard/wizard_reason_refuse_view.xml',
     ],
     'assets': {
