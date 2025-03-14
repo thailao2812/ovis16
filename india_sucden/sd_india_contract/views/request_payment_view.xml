@@ -44,7 +44,7 @@
                 <attribute name="sum">invoice_amount</attribute>
             </xpath>
             <xpath expr="//field[@name='users_request_id']" position="after">
-                <field name="purchase_quantity"/>
+                <field name="purchase_quantity" sum="purchase_quantity"/>
             </xpath>
         </field>
     </record>

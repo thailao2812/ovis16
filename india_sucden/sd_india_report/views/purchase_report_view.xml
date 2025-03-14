@@ -7,8 +7,6 @@
                 <tree editable="top" create="false" edit="false">
                     <field name = 'purchase_contract_id' readonly="1" />
                     <field name = 'purchase_date' readonly="1" />
-                    <field name = 'consignment_id' readonly="1" />
-                    <field name = 'consignment_date' readonly="1" />
                     <field name = 'invoice_number' readonly="1" />
                     <field name = 'invoice_date' readonly="1" />
                     <field name = 'picking_id' readonly="1" />
@@ -41,7 +39,6 @@
             <field name="arch" type="xml">
                 <search>
                     <field name = "purchase_contract_id"/>
-                    <field name = "consignment_id"/>
                     <field name = "picking_id"/>
                     <field name = "partner_code"/>
                     <field name = "partner_id"/>
