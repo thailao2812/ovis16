@@ -42,6 +42,8 @@ class PurchaseContract(models.Model):
     partner_invoice_id = fields.Many2one(required=False)
     partner_shipping_id = fields.Many2one(required=False)
 
+    offset_debt_ids = fields.One2many('offset.debt', 'purchase_contract_id')
+
     def button_request_final_payment(self):
         for record in self:
             record.state_final_payment = 'request'
@@ -127,8 +129,7 @@ class PurchaseContract(models.Model):
                  'stock_allocation_ids.qty_allocation',
                  'pay_allocation_ids.allocation_line_ids',
                  'ptbf_ids', 'state',
-                 'ptbf_ids.history_rate_ids.total_amount_vn'
-                 )
+                 'ptbf_ids.history_rate_ids.total_amount_vn', 'offset_debt_ids', 'offset_debt_ids.amount')
     def _amount_all(self):
         for contract in self:
             price_unit = 0.0
@@ -178,7 +179,7 @@ class PurchaseContract(models.Model):
                 'amount_untaxed': contract.currency_id.round(amount_untaxed),
                 'amount_tax': contract.currency_id.round(amount_tax),
                 'amount_sub_total': amount_untaxed + amount_tax,
-                'amount_total': sub_rel + amount + amount_deposit,
+                'amount_total': sub_rel + amount + amount_deposit - sum(contract.offset_debt_ids.mapped('amount')),
                 'amount_sub_rel_total': sub_rel,
                 'total_interest_pay': abs(amount),
                 'amount_deposit': abs(amount_deposit)

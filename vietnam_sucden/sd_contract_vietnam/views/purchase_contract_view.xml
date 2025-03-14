@@ -77,6 +77,16 @@
                         </tree>
                     </field>
                 </page>
+                <page name="offset_debt" string="Offset Debt">
+                    <field name="offset_debt_ids">
+                        <tree editable="top">
+                            <field name="reason" required="1"/>
+                            <field name="amount"/>
+                            <field name="create_uid"/>
+                            <field name="create_date"/>
+                        </tree>
+                    </field>
+                </page>
             </xpath>
             <xpath expr="//button[@name='printf_nvp']" position="attributes">
                 <attribute name="attrs">{'invisible': [('origin', '!=', False)]}</attribute>
@@ -166,6 +176,16 @@
                             <field name="total_amount"/>
                             <field name="tax"/>
                             <field name="total_amount_tax"/>
+                        </tree>
+                    </field>
+                </page>
+                <page name="offset_debt" string="Offset Debt">
+                    <field name="offset_debt_ids">
+                        <tree editable="top">
+                            <field name="reason" required="1"/>
+                            <field name="amount"/>
+                            <field name="create_uid"/>
+                            <field name="create_date"/>
                         </tree>
                     </field>
                 </page>
