@@ -491,142 +491,148 @@ class WeighbridgeApiService(Component):
             return mess
         
         gate_id = request.env['ned.security.gate.queue'].sudo().browse(gate_id)
-
-        if not gate_id.picking_ids:
-                for _do in gate_id.delivery_id:
-                    if _do:
-                        if _do.type == 'Sale':
-                            picking_type_id = 0
-                            if _do.contract_id.type != 'local':
-                                picking_type_id = warehouse_id.out_type_id
-                            else:
-                                picking_type_id = warehouse_id.out_type_local_id
-
-                            if not picking_type_id:
-                                mess = {
-                                    'status_code': 'SUD23-204',
-                                    'message': 'Need to define Picking Type for this transaction',
-                                    }
-                                return mess                                
-
-                            if not _do.picking_id:
-                                var = {'name': '/',
-                                        'picking_type_id': picking_type_id.id or False,
-                                        'scheduled_date': dtime.now().strftime(DATETIME_FORMAT),
-                                        'origin': _do.name,
-                                        'partner_id': _do.partner_id.id or False,
-                                        'picking_type_code': picking_type_id.code or False,
-                                        'location_id': picking_type_id.default_location_src_id.id or False,
-                                        'vehicle_no': _do.trucking_no or '',
-                                        'trucking_id': gate_id.trucking_id.id or False,
-                                        'location_dest_id': picking_type_id.default_location_dest_id.id or False,
-                                        'delivery_id': _do.id,
-                                        'security_gate_id': gate_id.id,
-                                       # 'min_date': dtime.now().strftime(DATETIME_FORMAT)
-                                       }
-                                picking_id = request.env['stock.picking'].with_user(weight_user_id).create(var)
-                                _do.picking_id = picking_id.id
-                            else:
-                                picking_id = _do.picking_id.with_user(weight_user_id).update({
-                                        'security_gate_id': gate_id.id,
-                                        'vehicle_no': _do.trucking_no or '',
-                                        'trucking_id': gate_id.trucking_id.id or False,
-                                    })
-        
-        if gate_id.picking_ids.state not in ['draft', 'waiting']:
-            mess = {
-                'status_code': 'SUD23-404',
-                'message': gate_id.picking_ids.name + ' state had been Done/Ready',
-                }
-            return mess
-
+        # Cập nhật thông tin vào security_gate_queue
         gate_id.license_plate = vehicle_no
         gate_id.first_weight = first_weight
         gate_id.estimated_bags = bag_no
         gate_id.tare_weight = tare_weight
-
-        if gate_id.picking_ids:
-            gate_id.picking_ids.weight_scale_id = weight_scale_id
-
-        if second_weight == 0 and first_weight > 0 and not gate_id.time_in: 
+        gate_id.second_weight = second_weight
+        gate_id.net_weight = net_weight
+        if flag == u'False': # TH cân lần 1
             gate_id.time_in = dtime.now()
-            
-        mess = {
-            'status_code': 'SUD23-200',
-            'message': 'First weight update successfully',
-            # 'picking_id':gate_id.picking_ids.id,
-            }
-
-        #Update vehicle_no if change
-        if not gate_id.license_plate == vehicle_no:
-            for item in gate_id.nvs_nls_id:
-                do_item = request.env['delivery.order'].sudo().search([('security_gate_id','=',gate_id.id),('contract_id','=',item.id)],limit =1)
-                if do_item:
-                    do_item.trucking_no = vehicle_no
-                    for pick in do_item.picking_id:
-                        pick.vehicle_no = vehicle_no
-                        # print(pick.vehicle_no,do_item.trucking_no)
-
-        if second_weight > 0:
-            gate_id.estimated_bags = bag_no
-            gate_id.tare_weight = tare_weight
-            gate_id.second_weight = second_weight
-            gate_id.net_weight = net_weight
+            mess = {
+                'status_code': 'SUD23-200',
+                'message': 'First weight update successfully',
+                # 'picking_id':gate_id.picking_ids.id,
+                }
+        elif flag == u'True': # TH cân lần 2
             gate_id.time_out = dtime.now()
 
-        lot_allocations = []
-        for p in gate_id.delivery_id:
-            lot_allocations.append(p.id)
-        lot_allocate = request.env['lot.stack.allocation'].sudo().search([('delivery_id','in',lot_allocations)])
-        sum_lot_allocation = sum(lot_allocate.mapped('quantity')) or 0
-        # print(sum_lot_allocation)
-        
-        allocation_dict = {}
-        if gate_id.picking_ids and second_weight > 0 and net_weight > 0: 
-            for do_id in gate_id.delivery_id:
-                do_id.with_user(weight_user_id).update({
-                                'trucking_no': vehicle_no,
-                            })
-                for pick in do_id.picking_id:
-                    pick.with_user(weight_user_id).update({
-                                    'vehicle_no': vehicle_no,
-                                })
-                    allocation_obj = request.env['lot.stack.allocation'].sudo().search([('delivery_id','=',do_id.id)], order="id asc")
-                    # print(allocation_obj)
-                    if not allocation_obj:
-                        mess = {
-                                'status_code': 'SUD23-204',
-                                'message': 'Please check Product line of ' + pick.name + ' and Lot Allocation maybe not allocated yet',
-                                }
-                        return mess
-                    elif len(pick.move_line_ids_without_package) != len(allocation_obj):
-                        mess = {
-                                'status_code': 'SUD23-204',
-                                'message': 'Please check Product line of ' + pick.name + ' and Lot Allocation line of ' + allocation_obj.delivery_id.name,
-                                }
-                        return mess
+        # TH nếu chưa có picking_id thì tạo mới
+        if not gate_id.picking_ids:
+            for _do in gate_id.delivery_id:
+                if _do and _do.type == 'Sale':
+                    picking_type_id = 0
+                    if _do.contract_id.type != 'local':
+                        picking_type_id = warehouse_id.out_type_id
                     else:
-                        for line in pick.move_line_ids_without_package:
-                            for item in allocation_obj.filtered(lambda x: x.stack_id.id == line.lot_id.id and x.no_of_bag==line.bag_no):
-                                line.with_user(weight_user_id).update({
-                                    'init_qty': net_weight * (item.quantity/sum_lot_allocation),
-                                    'tare_weight': tare_weight * (item.quantity/sum_lot_allocation) or 0,
-                                    'description_picking': reweighing_reason,
-                                })
-                    pick.with_user(weight_user_id).update({
+                        picking_type_id = warehouse_id.out_type_local_id
+
+                    if not picking_type_id:
+                        mess = {
+                            'status_code': 'SUD23-204',
+                            'message': 'Need to define Picking Type for this transaction',
+                            }
+                        return mess                                
+                    # Kiểm tra DO đã có picking_id chưa, nếu chưa thì tạo mới
+                    if not _do.picking_id:
+                        var = {'name': '/',
+                                'picking_type_id': picking_type_id.id or False,
+                                'scheduled_date': dtime.now().strftime(DATETIME_FORMAT),
+                                'origin': _do.name,
+                                'partner_id': _do.partner_id.id or False,
+                                'picking_type_code': picking_type_id.code or False,
+                                'location_id': picking_type_id.default_location_src_id.id or False,
+                                'vehicle_no': _do.trucking_no or '',
+                                'trucking_id': gate_id.trucking_id.id or False,
+                                'location_dest_id': picking_type_id.default_location_dest_id.id or False,
+                                'delivery_id': _do.id,
+                                'security_gate_id': gate_id.id,
+                                # 'min_date': dtime.now().strftime(DATETIME_FORMAT)
+                                }
+                        picking_id = request.env['stock.picking'].with_user(weight_user_id).create(var)
+                        _do.picking_id = picking_id.id
+                    else:
+                        picking_id = _do.picking_id.with_user(weight_user_id).update({
+                                'security_gate_id': gate_id.id,
+                                'vehicle_no': vehicle_no or '',
+                                'trucking_id': gate_id.trucking_id.id or False,
+                            })
+        else:
+            # Tính tổng lượng phân bổ trên các GDN của các DO tương ứng
+            lot_allocate = request.env['lot.stack.allocation'].sudo().search([('delivery_id','in',gate_id.delivery_id.ids),('state','=','approve')]).mapped('quantity')
+            # print('Tính tổng lượng phân bổ trên các GDN ',sum(lot_allocate))
+
+            for do_item in gate_id.delivery_id:
+                do_item.trucking_no = vehicle_no
+                # Cập nhật biển số xe vào Post shipment
+                for ps in request.env['post.shipment'].sudo().search([('do_id','=',do_item.id)]):
+                    ps.truck_plate = vehicle_no
+                # ps = request.env['post.shipment'].sudo().search([('do_id','=',do_item.id)])
+                # if ps:
+                for pick in do_item.picking_id:
+                    # Nếu GDN đã Done thì return
+                    if pick.state not in ['draft', 'waiting']:
+                        mess = {
+                            'status_code': 'SUD23-404',
+                            'message': pick.name + ' state had been Done/Ready',
+                            }
+                        return mess
+                    pick.weight_scale_id = weight_scale_id
+                    pick.vehicle_no = vehicle_no
+
+                    if flag == u'True':
+                        allocation_obj = request.env['lot.stack.allocation'].sudo().search([('delivery_id','=',do_item.id),('state','=','approve')], order="id asc")
+                        if not allocation_obj:
+                            mess = {
+                                    'status_code': 'SUD23-204',
+                                    'message': 'Please check Product line of ' + pick.name + ' and Lot Allocation maybe not allocated yet',
+                                    }
+                            return mess
+                        elif len(pick.move_line_ids_without_package) != len(allocation_obj):
+                            mess = {
+                                    'status_code': 'SUD23-204',
+                                    'message': 'Please check Product line of ' + pick.name + ' and Lot Allocation line of ' + allocation_obj.delivery_id.name,
+                                    }
+                            return mess
+                        else:
+                            for line in pick.move_line_ids_without_package:
+                                for item in allocation_obj.filtered(lambda x: x.stack_id.id == line.lot_id.id and x.no_of_bag==line.bag_no):
+                                    line.with_user(weight_user_id).update({
+                                        'init_qty': net_weight * (item.quantity/sum(lot_allocate)) or 0,
+                                        'tare_weight': tare_weight * (item.quantity/sum(lot_allocate)) or 0,
+                                        'description_picking': reweighing_reason,
+                                    })
+
+                        # #Xét tồn kho so với lượng phân bổ, nếu > tồn thì cập nhật lại lượng phân bổ = tồn kho.
+                        # sql = '''SELECT DISTINCT lot_id, sum(init_qty) FROM stock_move_line WHERE picking_id=%s GROUP BY lot_id;'''%(pick.id) # Sum Stack qty trong GDN hiện tại
+                        # records = request.cr.execute(sql)
+                        # result = request.env.cr.dictfetchall()
+                        # for item in result:
+                        #     print(pick.move_line_ids_without_package.filtered(lambda x: x.lot_id.id == item['lot_id']).lot_id.mapped('init_qty'))
+                        #     if item['sum'] > pick.move_line_ids_without_package.filtered(lambda x: x.lot_id.id == item['lot_id']).lot_id.mapped('init_qty'):
+                        #         for line in pick.move_line_ids_without_package.filtered(lambda x: x.lot_id.id == item['lot_id']):
+                        #             # print(line[0].mapped('init_qty') - (item['sum'] - pick.move_line_ids_without_package.filtered(lambda x: x.lot_id.id == item['lot_id']).lot_id.mapped('init_qty')))
+                        #             line[0].with_user(weight_user_id).update({
+                        #                 'init_qty': line[0].mapped('init_qty') - (item['sum'] - pick.move_line_ids_without_package.filtered(lambda x: x.lot_id.id == item['lot_id']).lot_id.mapped('init_qty')),
+                        #             })
+                        #             break
+                        pick.with_user(weight_user_id).update({
                                                             'date_done': dtime.now().strftime(DATETIME_FORMAT)
                                                             })
-                        
-                    # pick.button_qc_assigned()
-            gate_id.state ='closed'
-
+                            
+                        # pick.button_qc_assigned()
+                    gate_id.state ='closed'
             mess = {
                 'status_code': 'SUD23-200',
                 'message': 'Second weight update successfully',
                 # 'picking_id':gate_id.delivery_id.picking_id.id,
                 }
+            return mess
 
-        return mess
+            # lot_allocations = []
+            # for p in gate_id.delivery_id:
+            #     lot_allocations.append(p.id)
+            # lot_allocate = request.env['lot.stack.allocation'].sudo().search([('delivery_id','in',lot_allocations)])
+            # sum_lot_allocation = sum(lot_allocate.mapped('quantity')) or 0
+            # # print(sum_lot_allocation)
+            
+            # allocation_dict = {}
+            # if flag == u'True':
+            #     for do_id in gate_id.delivery_id:
+            #         for pick in do_id.picking_id:
+
+
 
 ### UPDATE DR ###
     def _input_dr_schema(self):
