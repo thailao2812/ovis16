@@ -32,6 +32,7 @@
             </xpath>
             <xpath expr="//field[@name='trucking_no']" position="attributes">
                 <attribute name="string">Truck Number</attribute>
+                <attribute name="required">1</attribute>
             </xpath>
             <xpath expr="//button[@name='button_approve']" position="after">
                 <button name="button_cancel" string="Cancel" attrs="{'invisible': [('state', 'in', ['approve', 'cancel'])]}" type="object" confirm="Do you want to Cancel this DO?" groups="sd_india_master.group_admin_india"/>
