@@ -46,6 +46,9 @@
             <xpath expr="//field[@name='users_request_id']" position="after">
                 <field name="purchase_quantity" sum="purchase_quantity"/>
             </xpath>
+            <xpath expr="//field[@name='provisional_amount']" position="replace">
+
+            </xpath>
         </field>
     </record>
     <record id="view_request_payment_form_inherit_india" model="ir.ui.view">
