@@ -89,12 +89,14 @@ class RequestPayment(models.Model):
             for rate in line.rate_ids:
                 amount  += rate.provisional_rate or 0.0
             line.provisional_amount = amount
-    
+
+    @api.depends('request_payment_ids', 'request_payment_ids.state',
+                 'request_payment_ids.payment_refunded', 'request_payment_ids.open_advance')
     def _compute_refunded(self):
         for line in self:
             if line.purchase_contract_id.type =='consign':
                 payment_refunded = open_advance = 0.0
-                for payment in line.request_payment_ids:
+                for payment in line.request_payment_ids.filtered(lambda x: x.state == 'posted'):
                     payment_refunded  += payment.payment_refunded or 0.0
                     open_advance  += payment.open_advance or 0.0
                 line.payment_refunded = payment_refunded or 0.0
