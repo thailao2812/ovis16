@@ -19,7 +19,7 @@ class StockReport(models.Model):
 
     @api.model
     def cron_action_create_stock_report(self):
-        self.env['stock.report'].search([]).unlink()
+        # self.env['stock.report'].search([]).unlink()
         for lot in self.env['stock.lot'].search([
             ('init_qty', '>', 0)
         ]):
