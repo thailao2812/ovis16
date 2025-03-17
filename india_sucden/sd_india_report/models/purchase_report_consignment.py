@@ -84,7 +84,6 @@ class PurchaseReportConsignment(models.Model):
                 'certificate_id': contract_cs.certificate_id.id,
                 'crop_id': contract_cs.crop_id.id,
                 'packing_id': contract_cs.packing_id.id,
-                'total_bag': stock.picking_id.total_bag,
             }
 
             # Process each related purchase contract
@@ -116,6 +115,7 @@ class PurchaseReportConsignment(models.Model):
                     'net_value': net_qty * gross_price,
                     'invoice_number': invoice_info.get('invoice_number', False),
                     'invoice_date': invoice_info.get('invoice_date', False),
+                    'total_bag': cr.number_of_bags,
                 })
 
                 report_values.append(value)
