@@ -277,7 +277,7 @@ class PurchaseContract(models.Model):
                     ('name', '=', con.strip())
                 ])
                 if cs_contract:
-                    total_bag = cs_contract.number_of_bags
+                    total_bag = self.number_of_bags
                     other_contract = self.env['npe.nvp.relation'].search([
                         ('npe_contract_id', '=', cs_contract.id),
                         ('contract_id', '!=', self.id)
