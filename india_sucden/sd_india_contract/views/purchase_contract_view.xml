@@ -596,7 +596,9 @@
             <xpath expr="//field[@name='certificate_id']" position="after">
                 <field name="remark_note_done" attrs="{'readonly': [('state', '=', 'done')]}"/>
             </xpath>
-
+            <xpath expr="//field[@name='stock_allocation_ids']/tree/field[@name='picking_id']" position="attributes">
+               <attribute name="context">{'stock_allocation_india': True, 'contract_id': parent.id}</attribute>
+            </xpath>
         </field>
     </record>
 
