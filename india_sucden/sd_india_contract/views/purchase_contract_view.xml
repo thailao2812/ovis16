@@ -55,7 +55,7 @@
             	<attribute name="attrs">{'readonly': [('parent.state', 'in', ['director', 'approved', 'done', 'cancel'])]}</attribute>
             </xpath>
             <xpath expr="//field[@name='contract_line']/tree/field[@name='packing_id']" position="attributes">
-            	<attribute name="attrs">{'readonly': [('parent.state', 'in', ['director', 'approved', 'done', 'cancel'])]}</attribute>
+            	<attribute name="attrs">{'readonly': [('parent.state', 'in', ['director', 'approved', 'done', 'cancel'])], 'required': True}</attribute>
             </xpath>
             <xpath expr="//field[@name='delivery_place_id']" position="attributes">
                 <attribute name="attrs">{'readonly': [('state', 'in', ['director', 'approved', 'done', 'cancel'])]}</attribute>
@@ -424,7 +424,7 @@
             	<attribute name="attrs">{'readonly': [('parent.state', 'in', ['director', 'approved', 'done', 'cancel'])]}</attribute>
             </xpath>
             <xpath expr="//field[@name='contract_line']/tree/field[@name='packing_id']" position="attributes">
-            	<attribute name="attrs">{'readonly': [('parent.state', 'in', ['director', 'approved', 'done', 'cancel'])]}</attribute>
+            	<attribute name="attrs">{'readonly': [('parent.state', 'in', ['director', 'approved', 'done', 'cancel'])], 'required': True}</attribute>
             </xpath>
             <xpath expr="//field[@name='delivery_place_id']" position="attributes">
                 <attribute name="attrs">{'readonly': [('state', 'in', ['director', 'approved', 'done', 'cancel'])]}</attribute>
