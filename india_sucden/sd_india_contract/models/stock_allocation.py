@@ -102,6 +102,9 @@ class StockAllocation(models.Model):
                 raise UserError(_("You don't need to allocate into this contract, because it converted from CS already!!!"))
             if allocation.qty_allocation_net == 0:
                 raise UserError(_("Please input Qty Allocation (Net Qty) before approve this Allocation!!!"))
+            if allocation.contract_id.type == 'consign':
+                if allocation.qty_allocation_net != allocation.contract_id.total_qty:
+                    raise UserError(_("You can't approve this allocation, because Qty Allocation (Gross Qty) is not equal to Total Qty!!!"))
             allocation.state = 'approved'
             allocation.contract_id.qty_received = allocation.contract_id.qty_received + allocation.qty_allocation
             allocation._compute_qty_net()
