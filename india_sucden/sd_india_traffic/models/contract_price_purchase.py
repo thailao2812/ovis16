@@ -36,7 +36,7 @@ class ContractPricePurchase(models.Model):
         ('draft', 'Draft'),
         ('approve', 'Approved'),
     ], string='State', default='draft')
-    outturn = fields.Float(string='Outturn %', readonly=False)
+    outturn = fields.Float(string='Outturn %', compute='compute_outturn', store=True, readonly=False)
     open_qty = fields.Float(string='Open Qty', related='contract_id.open_qty', store=True)
     outturn_qty = fields.Float(string='OT Qty', compute='compute_outturn_qty', store=True)
     total_allocated_qty = fields.Float(string='Total Allocated', related='contract_id.total_allocated_qty', store=True)
