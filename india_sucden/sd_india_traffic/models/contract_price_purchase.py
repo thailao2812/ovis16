@@ -65,7 +65,14 @@ class ContractPricePurchase(models.Model):
     @api.depends('product_id', 'product_id.outturn')
     def compute_outturn(self):
         for rec in self:
-            rec.outturn = rec.product_id.outturn
+            outturn = rec.outturn
+            if outturn > 0:
+                rec.outturn = outturn
+            else:
+                if rec.product_id.outturn > 0:
+                    rec.outturn = rec.product_id.outturn
+                else:
+                    rec.outturn = 0
 
     @api.depends('price', 'premium')
     def compute_total(self):
