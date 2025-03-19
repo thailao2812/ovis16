@@ -270,21 +270,21 @@ class PurchaseContract(models.Model):
             raise UserError(_("You have to input Certificate and License before submit"))
         # if self.origin and self.gross_qty <= 0:
         #     raise UserError(_("You have to input Gross Qty (SN) before submit"))
-        if self.type == 'purchase' and self.origin:
-            origin_contract = [o.strip() for o in self.origin.split(';') if o.strip()]
-            for con in origin_contract:
-                cs_contract = self.env['purchase.contract'].search([
-                    ('name', '=', con.strip())
-                ])
-                if cs_contract:
-                    total_bag = self.number_of_bags
-                    other_contract = self.env['npe.nvp.relation'].search([
-                        ('npe_contract_id', '=', cs_contract.id),
-                        ('contract_id', '!=', self.id)
-                    ]).mapped('contract_id')
-                    total_bag += sum(other_contract.mapped('number_of_bags'))
-                    if total_bag > cs_contract.number_of_bags:
-                        raise UserError(_("Total bag of all Regular contract need to be lower than or equal %s") % cs_contract.number_of_bags)
+        # if self.type == 'purchase' and self.origin:
+        #     origin_contract = [o.strip() for o in self.origin.split(';') if o.strip()]
+        #     for con in origin_contract:
+        #         cs_contract = self.env['purchase.contract'].search([
+        #             ('name', '=', con.strip())
+        #         ])
+        #         if cs_contract:
+        #             total_bag = self.number_of_bags
+        #             other_contract = self.env['npe.nvp.relation'].search([
+        #                 ('npe_contract_id', '=', cs_contract.id),
+        #                 ('contract_id', '!=', self.id)
+        #             ]).mapped('contract_id')
+        #             total_bag += sum(other_contract.mapped('number_of_bags'))
+        #             if total_bag > cs_contract.number_of_bags:
+        #                 raise UserError(_("Total bag of all Regular contract need to be lower than or equal %s") % cs_contract.number_of_bags)
 
         if sum(self.contract_line.mapped('bag_no')) <= 0:
             raise UserError(_("You have to input Bag No, please check again"))
