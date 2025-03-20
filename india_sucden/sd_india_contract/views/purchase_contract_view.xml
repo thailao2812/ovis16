@@ -37,7 +37,7 @@
         <field name="inherit_id" ref="sd_purchase_contract.view_purchase_contract_form"/>
         <field name="arch" type="xml">
 			 <xpath expr="//field[@name='contract_line']/tree/field[@name='product_uom']" position="after">
-            	<field name="bag_no" attrs="{'readonly': [('parent.state', 'in', ['director', 'approved', 'done', 'cancel'])]}"/>
+            	<field name="bag_no"/>
             </xpath>
             <xpath expr="//field[@name='origin']" position="attributes">
             	<attribute name="attrs">{'readonly': [('state', 'in', ['director', 'approved', 'done', 'cancel'])]}</attribute>
@@ -55,7 +55,7 @@
             	<attribute name="attrs">{'readonly': [('parent.state', 'in', ['director', 'approved', 'done', 'cancel'])]}</attribute>
             </xpath>
             <xpath expr="//field[@name='contract_line']/tree/field[@name='packing_id']" position="attributes">
-            	<attribute name="attrs">{'readonly': [('parent.state', 'in', ['director', 'approved', 'done', 'cancel'])], 'required': True}</attribute>
+            	<attribute name="attrs">{'required': True}</attribute>
             </xpath>
             <xpath expr="//field[@name='delivery_place_id']" position="attributes">
                 <attribute name="attrs">{'readonly': [('state', 'in', ['director', 'approved', 'done', 'cancel'])]}</attribute>
@@ -233,6 +233,9 @@
                 <field name="gross_qty" attrs="{'invisible': [('origin', '=', False)], 'required': [('origin', '!=', False)]}"/>
                 <field name="quality_deduction" attrs="{'invisible': [('origin', '=', False)], 'required': [('origin', '!=', False)]}"/>
                 <field name="remark"/>
+            </xpath>
+            <xpath expr="//field[@name='license_id']" position="attributes">
+                <attribute name="domain">[]</attribute>
             </xpath>
         </field>
     </record>
@@ -414,6 +417,9 @@
             <xpath expr="//field[@name='partner_id']" position="after">
                 <field name="estate_name"/>
             </xpath>
+            <xpath expr="//field[@name='license_id']" position="attributes">
+                <attribute name="domain">[]</attribute>
+            </xpath>
             <xpath expr="//field[@name='contract_line']/tree/field[@name='product_id']" position="attributes">
             	<attribute name="attrs">{'readonly': [('parent.state', 'in', ['director', 'approved', 'done', 'cancel'])]}</attribute>
             </xpath>
@@ -424,7 +430,7 @@
             	<attribute name="attrs">{'readonly': [('parent.state', 'in', ['director', 'approved', 'done', 'cancel'])]}</attribute>
             </xpath>
             <xpath expr="//field[@name='contract_line']/tree/field[@name='packing_id']" position="attributes">
-            	<attribute name="attrs">{'readonly': [('parent.state', 'in', ['director', 'approved', 'done', 'cancel'])], 'required': True}</attribute>
+            	<attribute name="attrs">{'required': True}</attribute>
             </xpath>
             <xpath expr="//field[@name='delivery_place_id']" position="attributes">
                 <attribute name="attrs">{'readonly': [('state', 'in', ['director', 'approved', 'done', 'cancel'])]}</attribute>
@@ -478,7 +484,7 @@
                 <field name="use_payment_for" required="1"/>
             </xpath>
 			 <xpath expr="//field[@name='contract_line']/tree/field[@name='product_uom']" position="after">
-            	<field name="bag_no" attrs="{'readonly': [('parent.state', 'in', ['director', 'approved', 'done', 'cancel'])]}"/>
+            	<field name="bag_no"/>
             </xpath>
             <xpath expr="//field[@name='name']" position="attributes">
                 <attribute name="readonly">1</attribute>
