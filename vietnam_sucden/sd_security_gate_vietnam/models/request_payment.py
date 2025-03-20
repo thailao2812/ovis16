@@ -703,8 +703,8 @@ class RequestPayment(models.Model):
                 if total_payment != 0:
                     if request.state != 'paid':
                         request.state = 'paid'
-            else:
-                request.state = 'approved_director'
+            # else:
+            #     request.state = 'approved_director'
 
     def _create_stock_moves(self, picking, picking_type):
         moves = self.env['stock.move.line']
