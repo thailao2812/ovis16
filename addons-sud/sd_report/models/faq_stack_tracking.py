@@ -42,7 +42,7 @@ class faq_stack_tracking(models.Model):
                     SELECT row_number() OVER (ORDER BY (ss.warehouse_id, lot_list.lot_id) DESC) AS id,
                         lot_list.lot_id stack_id, ss.name, pr.name production_name, ss.warehouse_id, sz.name zone_name, pp.default_code product_name, lot_list.date_in, lot_list.qty_in, lot_list.mc_in, lot_list.date_out, lot_list.qty_out, lot_list.mc_out,
                         lot_list.date_out - lot_list.date_in AS st_day, lot_list.qty_in-lot_list.qty_out AS loss_kg, (lot_list.qty_in - lot_list.qty_out)/NULLIF(lot_list.qty_in, 0) * 100 loss_percent,
-                        Case When lot_list.qty_in = 0 then 0 else NULLIF((lot_list.mc_in - lot_list.mc_out) * lot_list.qty_in/100, 0) end as mc_loss_kg, lot_list.mc_in - lot_list.mc_out loss_mc,
+                        Case When lot_list.qty_in = 0 then 0 else NULLIF((lot_list.mc_in - lot_list.mc_out) * lot_list.qty_in/100 * 1.15, 0) end as mc_loss_kg, lot_list.mc_in - lot_list.mc_out loss_mc,
                         Case When lot_list.qty_in = 0 then 0 else NULLIF((lot_list.qty_in - lot_list.qty_out) - ((lot_list.mc_in - lot_list.mc_out) * lot_list.qty_in/100), 0) end as unex_loss_kg,
                         Case When lot_list.qty_in = 0 or (lot_list.qty_in - lot_list.qty_out)=0 then 0 else NULLIF(((lot_list.qty_in - lot_list.qty_out)/lot_list.qty_in * 100) - (lot_list.mc_in - lot_list.mc_out), 0) end as unex_loss,
                         Case When pp.default_code = 'FAQ' Then 'FAQ' Else 'Non-FAQ' End As coffee_type
