@@ -7,19 +7,19 @@
             <field name="model">v.faq.stack.tracking</field>
             <field name="arch" type="xml">
                 <tree >
+                    <field name = 'warehouse_id' string="Warehouse" />
                     <field name = 'name' string="Stack Name" />
                     <field name = 'coffee_type' string="Coffee Type" />
                     <field name = 'product_name' string="Product Name" />
                     <field name = 'production_name' string="Production" />
-                    <field name = 'warehouse_id' string="Warehouse" />
                     <field name = 'zone_name' string="Zone" />
                     <field name = 'date_in' string="Date In" />
-                    <field name = 'qty_in' sum='Qty. Out Total' string="Qty. In" />
-                    <field name = 'mc_in' string="MC In" />
                     <field name = 'date_out' string="Date Out" />
-                    <field name = 'qty_out' sum='Qty. Out Total' string="Qty. Out" />
-                    <field name = 'mc_out' string="MC Out" />
                     <field name = 'st_day' string="Storing Days" />
+                    <field name = 'qty_in' sum='Qty. Out Total' string="Qty. In" />
+                    <field name = 'qty_out' sum='Qty. Out Total' string="Qty. Out" />
+                    <field name = 'mc_in' string="MC In" />
+                    <field name = 'mc_out' string="MC Out" />
                     <field name = 'loss_kg' sum='Storing Los Total' string="Storing loss (kg)" />
                     <field name = 'loss_percent' string="Storing Loss (%)" />
                     <field name = 'mc_loss_kg' avg = 'MC Los Total' string = 'MC Loss (kg)' readonly='1'/>
