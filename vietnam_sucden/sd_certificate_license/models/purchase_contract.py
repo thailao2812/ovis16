@@ -28,6 +28,13 @@ class PurchaseContract(models.Model):
                 record.certificate_list = certificated_name
             else:
                 record.certificate_list = ''
+
+    @api.constrains('license_id')
+    def _check_license_id(self):
+        for record in self:
+            if record.license_id:
+                if record.license_id.available_amount < 0:
+                    raise UserError(_('The License is not available'))
             
     # @api.depends('license_id')
     # def _compute_certificated_ids(self):

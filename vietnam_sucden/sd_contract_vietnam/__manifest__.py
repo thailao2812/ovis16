@@ -22,6 +22,7 @@
         'wizard/wizard_report_average_price.xml',
         'wizard/wizard_purchase_contract.xml',
         'wizard/wizard_reason_force_close_view.xml',
+        'wizard/wizard_generate_bank_account_view.xml',
         'report/report_view.xml'
     ],
     'assets': {
