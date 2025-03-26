@@ -45,7 +45,7 @@ class faq_stack_tracking(models.Model):
                         Case When lot_list.qty_in = 0 then 0 else NULLIF((lot_list.mc_in - lot_list.mc_out) * lot_list.qty_in/100 * 1.15, 0) end as mc_loss_kg, lot_list.mc_in - lot_list.mc_out loss_mc,
                         Case When lot_list.qty_in = 0 then 0 else NULLIF((lot_list.qty_in - lot_list.qty_out) - ((lot_list.mc_in - lot_list.mc_out) * lot_list.qty_in/100), 0) end as unex_loss_kg,
                         Case When lot_list.qty_in = 0 or (lot_list.qty_in - lot_list.qty_out)=0 then 0 else NULLIF(((lot_list.qty_in - lot_list.qty_out)/lot_list.qty_in * 100) - (lot_list.mc_in - lot_list.mc_out), 0) end as unex_loss,
-                        Case When pp.default_code = 'FAQ' Then 'FAQ' Else 'Non-FAQ' End As coffee_type
+                        Case When pp.default_code = 'FAQ' Then 'FAQ' Else 'Non-FAQ' End As coffee_type, pro.production_id
                         FROM(SELECT sm.lot_id,
                             MIN(Case When sm.code NOT LIKE '%out%' then sm.date else null end) date_in,
                             SUM(Case When sm.code NOT LIKE '%out%' then sm.init_qty else 0 end) qty_in,
@@ -61,10 +61,16 @@ class faq_stack_tracking(models.Model):
                                 LEFT JOIN (SELECT stack_id, sum(mc_on_despatch)/count (*) mc_on_despatch From lot_stack_allocation Group by stack_id) alc ON alc.stack_id=sp.lot_id
                                 WHERE spt.code in ('incoming','production_in','transfer_in','outgoing','production_out','transfer_out') AND sp.state='done') sm
                             GROUP BY sm.lot_id) lot_list
+						LEFT JOIN (SELECT sml.lot_id, CASE WHEN sp.production_id isnull THEN null ELSE sp.production_id END AS production_id
+							FROM stock_move_line sml
+							JOIN stock_picking sp ON sml.picking_id=sp.id
+							JOIN stock_picking_type spt ON spt.id=sp.picking_type_id
+							WHERE sp.production_id notnull AND spt.code='production_out' --AND sml.lot_id=99836--
+							GROUP BY sml.lot_id, CASE WHEN sp.production_id isnull THEN null ELSE sp.production_id END) pro ON pro.lot_id=lot_list.lot_id
                         JOIN stock_lot ss ON lot_list.lot_id=ss.id
-                        JOIN product_product pp ON ss.product_id=pp.id
-						JOIN stock_zone sz ON sz.id=ss.zone_id
-						LEFT JOIN mrp_production pr ON pr.id=ss.production_id
+                        LEFT JOIN product_product pp ON ss.product_id=pp.id
+						LEFT JOIN stock_zone sz ON sz.id=ss.zone_id
+						LEFT JOIN mrp_production pr ON pr.id=pro.production_id
                         WHERE ss.name NOT LIKE '%HP%'; --AND (ss.stack_empty = 'true' OR ss.init_qty=0)
                     """)
 
