@@ -106,6 +106,9 @@ class RequestPayment(models.Model):
     #     for rec in self:
     #         rec.balance_quantity = rec.quantity_contract - rec.paid_quantity
 
+    def action_open_generate_bank_account(self):
+        return self.env.ref('sd_contract_vietnam.action_generate_bank_account').read()[0]
+
 
 class DeliveryKatoen(models.Model):
     _name = 'delivery.katoen'
