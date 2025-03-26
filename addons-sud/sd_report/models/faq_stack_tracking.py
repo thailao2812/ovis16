@@ -26,7 +26,7 @@ class faq_stack_tracking(models.Model):
     mc_out = fields.Float(string = 'MC OUT', digits=(12, 2))
     warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse')
 
-    st_day = fields.Char(string = 'Storing days', digits=(12, 0))
+    st_day = fields.Integer(string = 'Storing days', digits=(12, 0))
     loss_kg = fields.Float(string = 'Storing loss (kg)', digits=(12, 0))
     loss_percent = fields.Float(string = 'Storing Loss (%)', digits=(12, 2))
     loss_mc = fields.Float(string = 'MC Loss (%)', digits=(12, 2))
@@ -44,8 +44,8 @@ class faq_stack_tracking(models.Model):
                         DATE_PART('day',to_char(lot_list.date_out, 'YYYY-MM-DD')::timestamp - to_char(lot_list.date_in, 'YYYY-MM-DD')::timestamp) AS st_day, lot_list.qty_in-lot_list.qty_out AS loss_kg, 
                         (lot_list.qty_in - lot_list.qty_out)/NULLIF(lot_list.qty_in, 0) * 100 loss_percent,
                         Case When lot_list.qty_in = 0 then 0 else NULLIF((lot_list.mc_in - lot_list.mc_out) * lot_list.qty_in/100 * 1.15, 0) end as mc_loss_kg, lot_list.mc_in - lot_list.mc_out loss_mc,
-                        Case When lot_list.qty_in = 0 then 0 else NULLIF((lot_list.qty_in - lot_list.qty_out) - ((lot_list.mc_in - lot_list.mc_out) * lot_list.qty_in/100), 0) end as unex_loss_kg,
-                        Case When lot_list.qty_in = 0 or (lot_list.qty_in - lot_list.qty_out)=0 then 0 else NULLIF(((lot_list.qty_in - lot_list.qty_out)/lot_list.qty_in * 100) - (lot_list.mc_in - lot_list.mc_out), 0) end as unex_loss,
+                        Case When lot_list.qty_in = 0 then 0 else NULLIF((lot_list.qty_in - lot_list.qty_out) - ((lot_list.mc_in - lot_list.mc_out) * lot_list.qty_in/100 * 1.15), 0) end as unex_loss_kg,
+                        Case When lot_list.qty_in = 0 or (lot_list.qty_in - lot_list.qty_out)=0 then 0 else NULLIF((lot_list.qty_in - lot_list.qty_out) - ((lot_list.mc_in - lot_list.mc_out) * lot_list.qty_in/100 * 1.15), 0)/NULLIF(lot_list.qty_in, 0) * 100 end as unex_loss,
                         Case When pp.default_code = 'FAQ' Then 'FAQ' Else 'Non-FAQ' End As coffee_type, pro.production_id
                         FROM(SELECT sm.lot_id,
                             MIN(Case When sm.code NOT LIKE '%out%' then sm.date else null end) date_in,
