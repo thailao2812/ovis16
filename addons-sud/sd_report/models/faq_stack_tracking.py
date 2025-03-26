@@ -41,7 +41,8 @@ class faq_stack_tracking(models.Model):
                     CREATE OR REPLACE VIEW public.v_faq_stack_tracking AS
                     SELECT row_number() OVER (ORDER BY (ss.warehouse_id, lot_list.lot_id) DESC) AS id,
                         lot_list.lot_id stack_id, ss.name, pr.name production_name, ss.warehouse_id, sz.name zone_name, pp.default_code product_name, lot_list.date_in, lot_list.qty_in, lot_list.mc_in, lot_list.date_out, lot_list.qty_out, lot_list.mc_out,
-                        lot_list.date_out - lot_list.date_in AS st_day, lot_list.qty_in-lot_list.qty_out AS loss_kg, (lot_list.qty_in - lot_list.qty_out)/NULLIF(lot_list.qty_in, 0) * 100 loss_percent,
+                        DATE_PART('day',to_char(lot_list.date_out, 'YYYY-MM-DD')::timestamp - to_char(lot_list.date_in, 'YYYY-MM-DD')::timestamp) AS st_day, lot_list.qty_in-lot_list.qty_out AS loss_kg, 
+                        (lot_list.qty_in - lot_list.qty_out)/NULLIF(lot_list.qty_in, 0) * 100 loss_percent,
                         Case When lot_list.qty_in = 0 then 0 else NULLIF((lot_list.mc_in - lot_list.mc_out) * lot_list.qty_in/100 * 1.15, 0) end as mc_loss_kg, lot_list.mc_in - lot_list.mc_out loss_mc,
                         Case When lot_list.qty_in = 0 then 0 else NULLIF((lot_list.qty_in - lot_list.qty_out) - ((lot_list.mc_in - lot_list.mc_out) * lot_list.qty_in/100), 0) end as unex_loss_kg,
                         Case When lot_list.qty_in = 0 or (lot_list.qty_in - lot_list.qty_out)=0 then 0 else NULLIF(((lot_list.qty_in - lot_list.qty_out)/lot_list.qty_in * 100) - (lot_list.mc_in - lot_list.mc_out), 0) end as unex_loss,
@@ -64,8 +65,9 @@ class faq_stack_tracking(models.Model):
 						LEFT JOIN (SELECT sml.lot_id, CASE WHEN sp.production_id isnull THEN null ELSE sp.production_id END AS production_id
 							FROM stock_move_line sml
 							JOIN stock_picking sp ON sml.picking_id=sp.id
+							JOIN product_product pp ON sp.product_id=pp.id
 							JOIN stock_picking_type spt ON spt.id=sp.picking_type_id
-							WHERE sp.production_id notnull AND spt.code='production_out' --AND sml.lot_id=99836--
+							WHERE sp.production_id notnull AND spt.code='production_out' AND pp.default_code = 'FAQ'
 							GROUP BY sml.lot_id, CASE WHEN sp.production_id isnull THEN null ELSE sp.production_id END) pro ON pro.lot_id=lot_list.lot_id
                         JOIN stock_lot ss ON lot_list.lot_id=ss.id
                         LEFT JOIN product_product pp ON ss.product_id=pp.id
