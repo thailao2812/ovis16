@@ -72,6 +72,7 @@ def synchronize_data_by_fields(self, new_model, domain_set, extend_action="write
     if extend_action == "write":
         self.synchronize_data_write(new_model, domain_set, doall)
     if extend_action == "create":
+        print(domain_set)
         self.synchronize_data_create(new_model, domain_set, doall)
 
 
@@ -123,7 +124,8 @@ def synchronize_data_create(self, new_model, domain_set, doall=True):
     if not url:
         return
     sync_domain = self.get_doall_domain_model(doall)
-    sync_domain += self.get_sync_domain_model(new_model)
+    if new_model != 'account.account':
+        sync_domain += self.get_sync_domain_model(new_model)
     for r in self.with_context(active_test=False).search(sync_domain, limit=1):
         values = {'sync_id': r.id}
         for a, b in domain_set:
