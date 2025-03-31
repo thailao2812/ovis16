@@ -502,7 +502,7 @@ class PurchaseContract(models.Model):
 
                 for line in contract.nvp_ids:
                     received += line.product_qty
-                if contract.state == 'done':
+                if contract.state in ['done', 'cancel']:
                     contract.qty_unreceived = 0
                 else:
                     contract.qty_unreceived = contract.total_qty - received
@@ -512,7 +512,7 @@ class PurchaseContract(models.Model):
                 for line in contract.stock_allocation_ids:
                     if line.state == 'approved':
                         received += line.qty_allocation or 0.0
-                if contract.state == 'done':
+                if contract.state in ['done', 'cancel']:
                     contract.qty_unreceived = 0
                 else:
                     contract.qty_unreceived = contract.total_qty - received
@@ -533,7 +533,7 @@ class PurchaseContract(models.Model):
                     contract.qty_unfixed = contract.qty_received - fix
             else:
                 contract.qty_unfixed = received - fix
-            if contract.state == 'done':
+            if contract.state in ['done', 'cancel']:
                 contract.qty_unfixed = 0
             contract.total_qty_fixed = fix
 
