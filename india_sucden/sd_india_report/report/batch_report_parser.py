@@ -411,7 +411,7 @@ class Parser(models.AbstractModel):
             FROM batch_report_output bo
                 JOIN product_product pp ON pp.id = bo.product_id
                 JOIN product_category pc ON pc.id = bo.categ_id
-            WHERE batch_id = %s and (pp.default_code between '13000' AND '14299' and pp.default_code not in ('14101', '14102', '14103', '14104'))
+            WHERE batch_id = %s and (pp.default_code between '13000' AND '14299' and pp.default_code not in ('14101', '14102', '14103', '14104','14107'))
             GROUP BY pp.display_wb,
                     pc.code
             ORDER BY pp.display_wb
@@ -436,7 +436,7 @@ class Parser(models.AbstractModel):
             FROM batch_report_output bo
                 JOIN product_product pp ON pp.id = bo.product_id
                 JOIN product_category pc ON pc.id = bo.categ_id
-            WHERE batch_id = %s and pp.default_code in ('14101','14102','14103','14104')
+            WHERE batch_id = %s and pp.default_code in ('14101','14102','14103','14104','14107')
             GROUP BY pp.display_wb,
                     pc.code
             ORDER BY pp.display_wb
