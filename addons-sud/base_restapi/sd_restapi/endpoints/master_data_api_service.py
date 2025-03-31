@@ -135,7 +135,7 @@ class MasterDataApiService(Component):
         auth="api_key",
     )
     def partners_list(self):
-        partners = self.env["res.partner"].search([("is_supplier_coffee", "=", "True"),("is_customer_coffee", "=", "True"),("shortname", "!=", False)])
+        partners = self.env["res.partner"].search(["|",("is_supplier_coffee", "=", "True"),("is_customer_coffee", "=", "True"),("shortname", "!=", False)])
         return [{"id": p.id, "name": p.name, "short_name": p.shortname} for p in partners]
 
     @restapi.method(

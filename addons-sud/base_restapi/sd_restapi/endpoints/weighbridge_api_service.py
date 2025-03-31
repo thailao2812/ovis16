@@ -193,7 +193,9 @@ class WeighbridgeApiService(Component):
                 "stack_id": {"type": "integer"},
                 "building_id": {"type": "integer"},
                 "total_weight_of_bag": {"type": "float", "required": False},
-                "real_weight": {"type": "float", "required": False}
+                "real_weight": {"type": "float", "required": False},
+                "pallet_qty": {"type": "float", "required": False},
+                "pallet_weight": {"type": "float", "required": False},
                 }
         
     def _output_picking_schema(self):
@@ -456,7 +458,15 @@ class WeighbridgeApiService(Component):
         net_weight = params.get('real_weight') or 0
         if net_weight and isinstance(net_weight, str):
             net_weight = float(params.get('real_weight'))
-        
+
+        pallet_qty = params.get('pallet_qty') or 0
+        if pallet_qty and isinstance(pallet_qty, str):
+            pallet_qty = float(params.get('pallet_qty'))
+
+        pallet_weight = params.get('pallet_weight') or 0
+        if pallet_weight and isinstance(pallet_weight, str):
+            pallet_weight = float(params.get('pallet_weight'))
+
         weight_scale_id = params.get('weight_scale_id')
         
         weight_user_id = params.get('weight_user_id')
@@ -468,6 +478,7 @@ class WeighbridgeApiService(Component):
         weight_scale_id = request.env['res.users'].sudo().search([('login','=',weight_scale_id)])
 
         flag = params.get('wb_flag')
+        shift_name = params.get('shift_name')
                                 
         warehouse_id = params.get('warehouse_id')
         if warehouse_id and isinstance(warehouse_id, str):
@@ -558,8 +569,6 @@ class WeighbridgeApiService(Component):
                 # Cập nhật biển số xe vào Post shipment
                 for ps in request.env['post.shipment'].sudo().search([('do_id','=',do_item.id)]):
                     ps.truck_plate = vehicle_no
-                # ps = request.env['post.shipment'].sudo().search([('do_id','=',do_item.id)])
-                # if ps:
                 for pick in do_item.picking_id:
                     # Nếu GDN đã Done thì return
                     if pick.state not in ['draft', 'waiting']:
@@ -586,6 +595,39 @@ class WeighbridgeApiService(Component):
                                     }
                             return mess
                         else:
+                            # Lấy tổng lượng phân bổ trên cùng 1 DO
+                            sum_do_allocated = sum(allocation_obj.mapped('quantity')) or 0
+                            print(sum_do_allocated)
+                            # TH 1 stock_picking ghi nhận dòng cân mới
+                            if not pick.scale_ids:
+                                # Khởi tạo line cân trên tab Weigh Scale
+                                scale_line = {'product_id': gate_id.product_id.id,
+                                            'packing_id': gate_id.packing_id.id,
+                                            'weight_scale': (net_weight + tare_weight) * (sum_do_allocated/sum(lot_allocate)) or 0,
+                                            'bag_no': sum(allocation_obj.mapped('no_of_bag')) or 0,
+                                            'tare_weight': (tare_weight - pallet_weight) * (sum_do_allocated/sum(lot_allocate)) or 0,
+                                            'net_weight': net_weight * (sum_do_allocated/sum(lot_allocate)) or 0,
+                                            'usr_api_create': weight_user_id,
+                                            'create_date': dtime.now(),
+                                            'shift_name': shift_name,
+                                            'pallet_weight': pallet_weight * (sum_do_allocated/sum(lot_allocate)) or 0,
+                                            'picking_scale_id': pick.id,
+                                            'scale_no': gate_id.id,
+                                            }
+                                odoo_scale_id = request.env['mrp.operation.result.scale'].with_user(weight_user_id).create(scale_line)
+                            else:   # TH 2 stock_picking cập nhật lại dòng cân
+                                for move in pick.scale_ids:
+                                    move.sudo().update({
+                                            'packing_id': gate_id.packing_id.id,
+                                            'weight_scale': (net_weight + tare_weight) * (sum_do_allocated/sum(lot_allocate)) or 0,
+                                            'bag_no': sum(allocation_obj.mapped('no_of_bag')) or 0,
+                                            'tare_weight': (tare_weight - pallet_weight) * (sum_do_allocated/sum(lot_allocate)) or 0,
+                                            'net_weight': net_weight * (sum_do_allocated/sum(lot_allocate)) or 0,
+                                            'pallet_weight': pallet_weight * (sum_do_allocated/sum(lot_allocate)) or 0,
+                                            'picking_scale_id': pick.id,
+                                            'scale_no': gate_id.id,
+                                        })
+
                             for line in pick.move_line_ids_without_package:
                                 for item in allocation_obj.filtered(lambda x: x.stack_id.id == line.lot_id.id and x.no_of_bag==line.bag_no):
                                     line.with_user(weight_user_id).update({
@@ -594,45 +636,17 @@ class WeighbridgeApiService(Component):
                                         'description_picking': reweighing_reason,
                                     })
 
-                        # #Xét tồn kho so với lượng phân bổ, nếu > tồn thì cập nhật lại lượng phân bổ = tồn kho.
-                        # sql = '''SELECT DISTINCT lot_id, sum(init_qty) FROM stock_move_line WHERE picking_id=%s GROUP BY lot_id;'''%(pick.id) # Sum Stack qty trong GDN hiện tại
-                        # records = request.cr.execute(sql)
-                        # result = request.env.cr.dictfetchall()
-                        # for item in result:
-                        #     print(pick.move_line_ids_without_package.filtered(lambda x: x.lot_id.id == item['lot_id']).lot_id.mapped('init_qty'))
-                        #     if item['sum'] > pick.move_line_ids_without_package.filtered(lambda x: x.lot_id.id == item['lot_id']).lot_id.mapped('init_qty'):
-                        #         for line in pick.move_line_ids_without_package.filtered(lambda x: x.lot_id.id == item['lot_id']):
-                        #             # print(line[0].mapped('init_qty') - (item['sum'] - pick.move_line_ids_without_package.filtered(lambda x: x.lot_id.id == item['lot_id']).lot_id.mapped('init_qty')))
-                        #             line[0].with_user(weight_user_id).update({
-                        #                 'init_qty': line[0].mapped('init_qty') - (item['sum'] - pick.move_line_ids_without_package.filtered(lambda x: x.lot_id.id == item['lot_id']).lot_id.mapped('init_qty')),
-                        #             })
-                        #             break
                         pick.with_user(weight_user_id).update({
                                                             'date_done': dtime.now().strftime(DATETIME_FORMAT)
                                                             })
-                            
                         # pick.button_qc_assigned()
-                    gate_id.state ='closed'
+                        gate_id.state ='closed'
             mess = {
                 'status_code': 'SUD23-200',
                 'message': 'Second weight update successfully',
                 # 'picking_id':gate_id.delivery_id.picking_id.id,
                 }
             return mess
-
-            # lot_allocations = []
-            # for p in gate_id.delivery_id:
-            #     lot_allocations.append(p.id)
-            # lot_allocate = request.env['lot.stack.allocation'].sudo().search([('delivery_id','in',lot_allocations)])
-            # sum_lot_allocation = sum(lot_allocate.mapped('quantity')) or 0
-            # # print(sum_lot_allocation)
-            
-            # allocation_dict = {}
-            # if flag == u'True':
-            #     for do_id in gate_id.delivery_id:
-            #         for pick in do_id.picking_id:
-
-
 
 ### UPDATE DR ###
     def _input_dr_schema(self):
