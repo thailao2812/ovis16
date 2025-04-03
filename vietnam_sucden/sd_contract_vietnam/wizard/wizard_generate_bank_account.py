@@ -9,6 +9,7 @@ class WizardGenerateBankAccount(models.TransientModel):
 
     journal_ids = fields.Many2many('account.journal', string='Journals')
     request_payment_ids = fields.Many2many('request.payment', string='Requests')
+    payment_ids = fields.Many2many('account.payment', string='Payments')
     journal_id = fields.Many2one('account.journal', string='Journal', required=True)
     name = fields.Text(string='Name')
 
@@ -34,10 +35,12 @@ class WizardGenerateBankAccount(models.TransientModel):
                 res['name'] = '\n'.join(error_messages)
             else:
                 all_journals = self.env['account.journal']
+                account_payment = self.env['account.payment']
                 for req in request_payment:
                     draft_lines = req.request_payment_ids.filtered(lambda line: line.state == 'draft')
+                    account_payment |= draft_lines
                     all_journals |= draft_lines.mapped('journal_id')
-
+                res['payment_ids'] = [(6, 0, account_payment.ids)]
                 res['journal_ids'] = [(6, 0, all_journals.ids)]
 
         return res
