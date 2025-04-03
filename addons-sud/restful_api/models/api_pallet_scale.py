@@ -2,7 +2,6 @@
 
 from datetime import datetime, timedelta
 from odoo import api, http, fields, models, _
-import openerp.addons.decimal_precision as dp
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tools import append_content_to_html, float_is_zero, float_compare, DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools.float_utils import float_compare, float_round
