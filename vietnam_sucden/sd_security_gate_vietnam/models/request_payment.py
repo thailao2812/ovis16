@@ -53,7 +53,7 @@ class RequestPayment(models.Model):
     request_amount = fields.Float(string='Request Amount', digits=(12, 0), compute='_compute_request_amount',
                                   store=True, readonly=False)
     mirror_request_amount = fields.Float(string='Request Amount', compute='compute_payment_quantity', store=True, digits=(12, 0))
-    is_dr_request = fields.Boolean(string='Is Dr Request', compute='compute_dr_request', store=True)
+    is_dr_request = fields.Boolean(string='Is Dr Request', default=False)
 
     state = fields.Selection(selection='_get_new_state', string='State', readonly=False, copy=False, index=True, default='draft')
 
@@ -858,13 +858,13 @@ class RequestPayment(models.Model):
             })
             rec.state = 'request'
 
-    @api.depends('delivery_70_ids', 'delivery_array')
-    def compute_dr_request(self):
-        for rec in self:
-            if rec.delivery_70_ids:
-                rec.is_dr_request = True
-            else:
-                rec.is_dr_request = False
+    # @api.depends('delivery_70_ids', 'delivery_array')
+    # def compute_dr_request(self):
+    #     for rec in self:
+    #         if rec.delivery_70_ids:
+    #             rec.is_dr_request = True
+    #         else:
+    #             rec.is_dr_request = False
 
     @api.depends('payment_quantity', 'fix_price', 'liquidation_amount', 'deposit_amount', 'advance_payment_converted', 'payment_quantity',
                  'total_interest', 'is_converted', 'type', 'type_of_ptbf_payment', 'final_price_vnd', 'total_advance_payment_usd',
