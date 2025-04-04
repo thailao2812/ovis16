@@ -105,7 +105,7 @@ class NedSecurityGateQueue(models.Model):
                                       states={'draft': [('readonly', False)]})
     state = fields.Selection([("draft", "Draft"),("pur_approved", "Purchase"),("qc_approved", "QC"),("wh_approved", "WH"),("logistics_confirm", "Logistics Confirm"),
                             ("sec_confirm", "Sec Confirm"),("approved", "Approved"),("cancel", "Cancelled"),("closed", "Closed"),("reject", "Reject")], string="Status", 
-                             readonly=True, copy=False, index=True, default='draft',)
+                             readonly=True, copy=False, index=True, default='draft', tracking= True)
     date_approve = fields.Date(string='Approval Date', readonly=True, copy=False)
     user_approve = fields.Many2one('res.users', string='User Approve', readonly=True, copy=False)
     parking_order = fields.Integer('Parking Order',readonly = True)

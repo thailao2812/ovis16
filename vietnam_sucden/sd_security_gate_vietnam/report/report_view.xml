@@ -115,7 +115,7 @@
 
 
 
-	<record id="request_payment_ptbf_fixation_advance_report" model="ir.actions.report">
+	<!-- <record id="request_payment_ptbf_fixation_advance_report" model="ir.actions.report">
 	        <field name="name">Request Payment Pay Fix PTBF</field>
 	        <field name="type">ir.actions.report</field>
 	        <field name="model">request.payment</field>
@@ -130,7 +130,7 @@
 	        <field name="report_file">sd_security_gate_vietnam/report/request_payment_pay_fix_ptbf.ods</field>
 	        <field name="tml_source">file</field>
 	        <field name="print_report_name">(object._get_printed_report_name())</field>
-	    </record>
+	    </record> -->
 
 	<record id="request_payment_payment_fixation_for_advance" model="ir.actions.report">
 	        <field name="name">Request Payment Fixation For Advance</field>

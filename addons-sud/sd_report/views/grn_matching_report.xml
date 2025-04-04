@@ -10,25 +10,29 @@
                     <field name = 'vehicle_no' readonly = '1'/>
                     <field name = 'shortname' string="Partner" readonly = '1'/>
 
-                    <field name = 'grn_branch' string="GRN Branch" readonly = '1'/>
+                    <field name = 'grn_branch' string="GRN Br." readonly = '1'/>
                     <field name = 'branch_date_received' readonly = '1'/>
-                    <field name = 'grn_factory' string="GRN Factory" readonly = '1'/>
+                    <field name = 'grn_factory' string="GRN FA." readonly = '1'/>
                     <field name = 'truck_com' string="Trucking Co." readonly = '1'/>
                     <field name = 'factory_date_received' readonly = '1'/>
                     <field name = 'product' readonly = '1'/>
                     <field name = 'deficit' invisible="1"/>
                     
-                    <field name = 'deduction_branch' avg = 'Deduction at Branch Avg.' readonly = '1'/>
-                    <field name = 'deduction_factory' avg = 'Deduction at Factory Avg.' readonly = '1'/>
+                    <field name = 'deduction_branch' avg = 'Deduction at Br. Avg.' readonly = '1'/>
+                    <field name = 'deduction_factory' avg = 'Deduction at FA. Avg.' readonly = '1'/>
                     <field name = 'brn_fac' avg = 'Deduction Difference Avg.' readonly = '1'/>
 
-                    <field name = 'net_weight_branch' sum='Branch Net total' readonly = '1'/>
-                    <field name = 'net_weight_factory' sum='Factory Net total' readonly = '1'/>
+                    <field name = 'gross_weight_branch' sum='Br. Net total' readonly = '1'/>
+                    <field name = 'gross_weight_factory' sum='FA. Net total' readonly = '1'/>
+                    <field name = 'gross_weight_deficit' sum='NW Variance total' readonly = '1'/>
+
+                    <field name = 'net_weight_branch' sum='Br. Net total' readonly = '1'/>
+                    <field name = 'net_weight_factory' sum='FA. Net total' readonly = '1'/>
                     <field name = 'net_weight_deficit' sum='NW Variance total' readonly = '1'/>
                     <field name = 'net_var' avg = 'Net Variance' readonly = '1'/>
 
-                    <field name = 'basis_weight_branch' sum='Branch Weight total' readonly = '1'/>
-                    <field name = 'basis_weight_factory' sum='Factory Weight total' readonly = '1'/>
+                    <field name = 'basis_weight_branch' sum='Br. Weight total' readonly = '1'/>
+                    <field name = 'basis_weight_factory' sum='FA. Weight total' readonly = '1'/>
                     <field name = 'basis_weight_deficit' sum='BW Variance total' readonly = '1'/>
                     <field name = 'basis_var' avg = 'Basis Variance' readonly = '1'/>
                     <field name="x_inspectator"/>
@@ -63,6 +67,7 @@
                         <group name="group_bottom" col = '3'>
                            <group name="group_left">
                                 <field name="deduction_branch" readonly="1"/>
+                                <field name="gross_weight_branch" readonly="1"/>
                                 <field name="net_weight_branch" readonly="1"/>
                                 <field name="basis_weight_branch" readonly="1"/>
                                 <field name="mc_branch" readonly="1"/>
@@ -86,6 +91,7 @@
                            </group>
                            <group name = "group_center">
                             <field name="brn_fac" readonly="1"/>
+                            <field name = 'gross_weight_deficit' readonly = '1'/>
                             <field name = 'net_weight_deficit' readonly = '1'/>
                             <field name = 'basis_weight_deficit' readonly = '1'/>
                             <field name = "mc_var" readonly = '1'/>
@@ -108,6 +114,7 @@
                            </group>
                             <group name="group_right">
                                 <field name="deduction_factory" readonly="1"/>
+                                <field name="gross_weight_factory" readonly="1"/>
                                 <field name="net_weight_factory" readonly="1"/>
                                 <field name="basis_weight_factory" readonly="1"/>
                                 <field name="mc_factory" readonly="1"/>
