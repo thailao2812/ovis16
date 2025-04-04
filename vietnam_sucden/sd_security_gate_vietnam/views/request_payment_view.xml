@@ -31,10 +31,10 @@
                     <button name="action_refuse" string="Reject" type="object" class="oe_highlight" states="accounting_2"
                             confirm="🚨 Are you absolutely sure you want to reject this request?" groups="sd_security_gate_vietnam.group_director_request_payment"/>
 
-                    <button name="security_approve" string="Security" type="object"
-                            attrs="{'invisible': ['|', ('is_dr_request', '!=', True), ('state', '!=', 'request')]}"
-                            class="oe_highlight"
-                            groups="sd_security_gate_vietnam.group_security_request_payment"/>
+<!--                    <button name="security_approve" string="Security" type="object"-->
+<!--                            attrs="{'invisible': ['|', ('is_dr_request', '!=', True), ('state', '!=', 'request')]}"-->
+<!--                            class="oe_highlight"-->
+<!--                            groups="sd_security_gate_vietnam.group_security_request_payment"/>-->
                     <button name="approve_purchasing" string="Confirm" type="object"
                             attrs="{'invisible': ['|', ('is_dr_request', '=', True), ('state', '!=', 'request')]}" class="oe_highlight"
                             groups="sd_security_gate_vietnam.group_confirm_request_payment" confirm="💸 Are you really, really sure you want to confirm this payment request? "/>
