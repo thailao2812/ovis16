@@ -9,4 +9,4 @@ access_properties_polygon,access_properties_polygon,model_properties_polygon,bas
 access_wizard_export_error,access_wizard_export_error,model_wizard_export_error,base.group_user,1,1,1,1
 access_wizard_export_geojson,access_wizard_export_geojson,model_wizard_export_geojson,base.group_user,1,1,1,1
 
-access_edur_configuration,access_edur_configuration,model_edur_configuration,base.group_user,1,1,1,1
+access_eudr_configuration,access_eudr_configuration,model_eudr_configuration,base.group_user,1,1,1,1

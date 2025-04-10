@@ -1,7 +1,7 @@
 <odoo>
     <record id="view_edur_configuration" model="ir.ui.view">
         <field name="name">view_edur_configuration</field>
-        <field name="model">edur.configuration</field>
+        <field name="model">eudr.configuration</field>
         <field name="arch" type="xml">
             <form string="EUDR Configuration" create="0" delete="0">
                 <sheet>
@@ -19,14 +19,14 @@
     </record>
 
     <data noupdate="0">
-        <record id="edur_configuration" model="edur.configuration">
+        <record id="eudr_configuration" model="eudr.configuration">
             <field name="deforestation_percentage">5</field>
         </record>
     </data>
 
     <record id="action_eudr_configuration" model="ir.actions.act_window">
         <field name="name">EUDR Configuration</field>
-        <field name="res_model">edur.configuration</field>
+        <field name="res_model">eudr.configuration</field>
         <field name="view_mode">form</field>
         <field name="target">current</field>
         <field name="res_id" eval="ref('edur_configuration')" />
