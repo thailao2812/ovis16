@@ -37,5 +37,15 @@
 							action="sd_master_ned.action_wizard_export_geojson"
 							sequence="1"
 							parent="menu_report_geojson"/>
+				<menuitem id="menu_root_edur_configuration"
+		            name="Configuration"
+		            parent="menu_eudr_root"
+		            sequence="4"/>
+					<menuitem name="EDUR Configuration"
+							id="menu_edur_configuration"
+							action="sd_master_ned.action_eudr_configuration"
+							sequence="1"
+							parent="menu_root_edur_configuration"/>
+
 
 </odoo>

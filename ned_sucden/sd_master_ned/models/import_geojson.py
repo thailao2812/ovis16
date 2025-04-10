@@ -122,6 +122,8 @@ class ImportGeoJson(models.Model):
 
     def import_file(self):
         """Import GeoJSON file and process geometries."""
+        eudr_configuration = self.env['eudr.configuration'].sudo().search([], limit=1)
+        percentage_allow = eudr_configuration.deforestation_percentage
         if not self.file:
             return
 
@@ -209,9 +211,9 @@ class ImportGeoJson(models.Model):
                     'decimal_precision': check_decimal,
                     'is_duplicate_partial': False,
                     'is_overlapping': is_duplicate,
-                    'deforestation_percentage': deforestation_percent if deforestation_percent > 5 else 0,
+                    'deforestation_percentage': deforestation_percent,
                     'state_check': 'red' if (
-                                not coordinates_path or less_4_point or check_spike or un_close or is_duplicate or check_decimal or deforestation_percent > 5) else 'green',
+                                not coordinates_path or less_4_point or check_spike or un_close or is_duplicate or check_decimal or deforestation_percent > percentage_allow) else 'green',
                     'import_id': self.id,
                     'properties_data': json.dumps(properties),
                     'data': json_string
