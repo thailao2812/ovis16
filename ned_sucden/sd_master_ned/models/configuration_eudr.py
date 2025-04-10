@@ -3,7 +3,7 @@ from odoo import fields, models, api, _
 
 
 class ConfigurationEDUR(models.Model):
-    _name = 'edur.configuration'
+    _name = 'eudr.configuration'
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = "Configuration EUDR"
 
