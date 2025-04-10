@@ -18,6 +18,7 @@
         'views/res_partner_view.xml',
         'views/partner_multiple_point_view.xml',
         'views/supplier_master_data.xml',
+        'views/eudr_configuration_view.xml',
         'views/menu.xml',
 
         'report/report.xml',
