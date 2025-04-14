@@ -203,6 +203,7 @@
                 <field name="product_id"/>
                 <field name="price"/>
                 <field name="purchase_quantity"/>
+                <field name="interest_amount"/>
             </xpath>
             <xpath expr="//field[@name='request_payment_ids']/form/group/group[1]/field[@name='type_payment']" position="attributes">
                 <attribute name="readonly">1</attribute>

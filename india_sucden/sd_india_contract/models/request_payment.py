@@ -46,12 +46,19 @@ class RequestPayment(models.Model):
     purchase_date = fields.Date(string='Purchase Date')
 
     purchase_quantity = fields.Float(string='Purchase Quantity')
+    interest_amount = fields.Float(string='Interest Amount', compute='compute_interest_amount', store=True)
 
     # @api.constrains('purchase_quantity')
     # def constrains_purchase_quantity(self):
     #     for rec in self:
     #         if rec.purchase_quantity <= 0:
     #             raise UserError('Purchase Quantity must be greater than 0')
+
+    @api.depends('purchase_contract_id.interest_amount', 'purchase_contract_id.state', 'state',
+                 'purchase_contract_id.pay_allocation_ids', 'purchase_contract_id.pay_allocation_ids.total_interest_pay')
+    def compute_interest_amount(self):
+        for rec in self:
+            rec.interest_amount = rec.purchase_contract_id.interest_amount
 
     @api.depends('request_amount', 'tds_amount', 'tds_assessable_value', 'financial_year_id')
     def compute_net_payment(self):
