@@ -23,6 +23,7 @@
             <xpath expr="//field[@name='payment_quantity']" position="after">
                 <field name="price"/>
                 <field name="invoice_amount"/>
+                <field name="interest_amount"/>
             </xpath>
             <xpath expr="//field[@name='purchase_contract_id']" position="before">
                 <field name="use_payment_for"/>
