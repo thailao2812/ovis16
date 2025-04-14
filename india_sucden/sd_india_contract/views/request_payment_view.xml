@@ -86,6 +86,9 @@
             <xpath expr="//field[@name='date']" position="attributes">
                 <attribute name="readonly">1</attribute>
             </xpath>
+            <xpath expr="//field[@name='payment_quantity']" position="after">
+                <field name="interest_amount"/>
+            </xpath>
         </field>
     </record>
 

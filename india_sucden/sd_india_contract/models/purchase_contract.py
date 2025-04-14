@@ -69,6 +69,14 @@ class PurchaseContract(models.Model):
     crop_id = fields.Many2one('ned.crop', string='Crop', required=True, readonly=False, default=_default_crop_id,
                               states={})
 
+    interest_amount = fields.Float(string='Interest Amount', compute='_compute_interest_amount', store=True)
+
+    @api.depends('pay_allocation_ids', 'pay_allocation_ids.total_interest_pay', 'pay_allocation_ids.allocation_amount',
+                 'state')
+    def _compute_interest_amount(self):
+        for rec in self:
+            rec.interest_amount = sum(rec.pay_allocation_ids.mapped('total_interest_pay'))
+
     @api.depends('gross_qty', 'total_qty', 'origin')
     def compute_quality_deduction(self):
         for rec in self:
