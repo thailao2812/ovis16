@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+            <!-- QCCCCCCCCCCCCC REPORT Menu-->
+	        <menuitem id="menu_action_v_faq_stack_tracking_qc_report" 
+	            action="sd_report.action_v_faq_stack_tracking" 
+	            parent="sd_quality.quality_control_report_root_menu" 
+	            name="Storing Loss Analysis"
+	            groups="sd_quality.group_kcs_user,sd_quality.group_kcs_manager"
+	            sequence="180"/>
+
+	        <menuitem id="menu_action_v_lot_allocation_bonded_qc_report" 
+	            action="action_v_lot_allocation_bonded" 
+	            parent="sd_quality.quality_control_report_root_menu" 
+	            name="Lot Allocation Bonded"
+	            groups="sd_quality.group_kcs_user,sd_quality.group_kcs_manager"
+	            sequence="190"/>
+
+					<menuitem id="menu_action_v_lot_allocation_bonded_traffic_report"
+                        action="action_v_lot_allocation_bonded"
+                        parent="sd_traffic.menu_menu_traffic_management"
+	            		name="Lot Allocation Bonded"
+                        sequence="9"/>
+
+</odoo>

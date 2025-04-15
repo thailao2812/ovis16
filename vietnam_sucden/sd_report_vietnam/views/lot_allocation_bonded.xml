@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+   
+        <record id="view_v_lot_allocation_bonded_tree" model="ir.ui.view">
+            <field name="name">view.v.lot.allocation.bonded.tree</field>
+            <field name="model">v.lot.allocation.bonded</field>
+            <field name="arch" type="xml">
+                <tree  string="Lot Allocation Bonded" create="false" edit="false" delete="false">
+                    <field name="name"/>
+                    <field name="warehouse_id"/>
+                    <field name="partner_id"/>
+                    <field name="shipment_date"/>
+                    <field name="shipment_no"/>
+                    <field name="p_contract_id"/>
+                    <field name="stack_id"/>
+                    <field name="wr_no"/>
+                    <field name="real_stack_export"/>
+                    <field name="shipper_id"/>
+                    <field name="product_id"/>
+                    <field name="quality"/>
+                    <field name="gdn_name"/>
+                    <field name="scertificate_id"/>
+                    <field name="p_qty" sum="p_qty" string="P Qty"/>
+                    <field name="allocate_qty" sum="allocate_qty" string="Allocate Qty"/>
+                    <field name="bag_allocate" sum="bag_allocate" string="Bag Allocate"/>
+                    <field name="balance_qty" sum="balance_qty" string="Balance Qty"/>
+                    <field name="balance_bag" sum="balance_bag" string="Balance Bag"/>
+                    <field name="real_qty" sum="real_qty" string="Real Qty"/>
+                    <field name="inspection_qty" sum="inspection_qty" string="Inspection Qty"/>
+                    <field name="state"/>
+                </tree>
+             </field>
+        </record>
+
+        <record id="search_v_lot_allocation_bonded" model="ir.ui.view">
+            <field name="name">search.v.lot.allocation.bonded</field>
+            <field name="model">v.lot.allocation.bonded</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name = "name"/>
+                    <field name = "shipment_no"/>
+                    <field name = "p_contract_id"/>
+                    <field name = "stack_id"/>
+                    <field name = "gdn_name"/>
+                    
+                    <group expand="1" string="Group By">
+                        <filter string="Warehouse" domain="[]" name="filter_warehouse_id" context="{'group_by':'warehouse_id'}"/>
+                        <filter string="Stack" domain="[]" name="filter_stack_id" context="{'group_by':'stack_id'}"/>
+                        <filter string="Product" domain="[]" name="filter_product_id" context="{'group_by':'product_id'}"/>
+                        <filter string="Shipment No." domain="[]" name="filter_shipment_no" context="{'group_by':'shipment_no'}"/>
+                        <filter string="P Contract" domain="[]" name="filter_p_contract_id" context="{'group_by':'p_contract_id'}"/>
+                        <filter string="Buyer" domain="[]" name="filter_partner_id" context="{'group_by':'partner_id'}"/>
+                    </group>
+                </search>
+             </field>
+        </record>
+                      
+        <record id="action_v_lot_allocation_bonded" model="ir.actions.act_window">
+            <field name="name">Lot Allocation Bonded</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">v.lot.allocation.bonded</field>
+            <field name="view_mode">tree</field>
+            <field name="context">{'search_by_field_date': ['shipment_date']}</field>
+        </record>
+        
+    </data>
+</odoo>
