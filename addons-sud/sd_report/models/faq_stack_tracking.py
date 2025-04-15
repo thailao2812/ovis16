@@ -54,13 +54,23 @@ class faq_stack_tracking(models.Model):
                             MAX(Case When sm.code LIKE '%out%' then sm.date else null end) date_out,
                             SUM(Case When sm.code LIKE '%out%' then sm.init_qty else 0 end) qty_out,
                             NULLIF(SUM(Case When sm.code LIKE '%out%' then sm.mc else 0 end), 0)/NULLIF(SUM(Case When sm.code LIKE '%out%' then sm.init_qty else 0 end), 0) mc_out
-                            FROM (SELECT sml.lot_id, sml.init_qty, spt.code, CASE WHEN rkl.mc isnull THEN alc.mc_on_despatch * sml.init_qty ELSE rkl.mc * sml.init_qty END AS mc, sml.date
+                            FROM (SELECT sml.lot_id, sml.init_qty, spt.code, 
+									CASE WHEN fob_m.mc_fob is not null THEN fob_m.mc_fob * sml.init_qty
+										 WHEN alc.mc_on_despatch is not null THEN alc.mc_on_despatch * sml.init_qty
+										 ELSE rkl.mc * sml.init_qty END AS mc, sml.date
                                 FROM stock_move_line sml
                                 JOIN stock_picking sp ON sml.picking_id=sp.id
                                 JOIN stock_picking_type spt ON spt.id=sp.picking_type_id
                                 LEFT JOIN request_kcs_line rkl ON sp.id = rkl.picking_id
                                 LEFT JOIN (SELECT stack_id, sum(mc_on_despatch)/count (*) mc_on_despatch From lot_stack_allocation Group by stack_id) alc ON alc.stack_id=sp.lot_id
-                                WHERE spt.code in ('incoming','production_in','transfer_in','outgoing','production_out','transfer_out') AND sp.state='done') sm
+								LEFT JOIN (
+									SELECT scd.stack_id, x_fob.s_contract_id , sum(fob.mc)/count (*) mc_fob
+									From fob_management fob
+									JOIN x_fob_management_s_contract_rel x_fob ON x_fob.fob_management_id=fob.id
+									JOIN sale_contract_deatail scd ON scd.p_contract_id=x_fob.s_contract_id
+									-- WHERE x_fob.s_contract_id=15293
+									Group by x_fob.s_contract_id, scd.stack_id) fob_m ON fob_m.stack_id=sp.lot_id
+                                WHERE spt.code in ('incoming','production_in','transfer_in','outgoing','production_out','transfer_out') AND sp.state='done') sm  --AND sml.lot_id=98263
                             GROUP BY sm.lot_id) lot_list
 						LEFT JOIN (SELECT sml.lot_id, CASE WHEN sp.production_id isnull THEN null ELSE sp.production_id END AS production_id
 							FROM stock_move_line sml
@@ -73,7 +83,7 @@ class faq_stack_tracking(models.Model):
                         LEFT JOIN product_product pp ON ss.product_id=pp.id
 						LEFT JOIN stock_zone sz ON sz.id=ss.zone_id
 						LEFT JOIN mrp_production pr ON pr.id=pro.production_id
-                        WHERE ss.name NOT LIKE '%HP%'; --AND (ss.stack_empty = 'true' OR ss.init_qty=0)
+                        WHERE ss.name NOT LIKE '%HP%' AND (ss.stack_empty = 'true' OR ss.init_qty=0)
                     """)
 
                         # SELECT row_number() OVER (ORDER BY (faq_tracking.product_name,stack_id,faq_tracking.name, faq_tracking.warehouse_id, faq_tracking.date_in) DESC) AS id, 
