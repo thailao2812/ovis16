@@ -50,9 +50,9 @@ class AccountPayment(models.Model):
                 for i in self.purchase_contract_id.interest_move_id.line_ids:
                     i.date = date_final_payment
                 
-                if self.purchase_contract_id.type != 'purchase':
-                    self.purchase_contract_id.write({'state':'done'})
-                    return res
+                # if self.purchase_contract_id.type != 'purchase':
+                #     self.purchase_contract_id.write({'state':'done'})
+                #     return res
                 
                 if self.purchase_contract_id.interest_move_entries_id:
                     return res
