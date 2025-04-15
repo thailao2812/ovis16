@@ -26,9 +26,9 @@ class AccountPayment(models.Model):
         
         if self.purchase_contract_id:
             if not self.request_payment_id:
-                if self.purchase_contract_id.type != 'purchase':
-                    self.purchase_contract_id.write({'state':'done'})
-                    return res
+                # if self.purchase_contract_id.type != 'purchase':
+                #     self.purchase_contract_id.write({'state':'done'})
+                #     return res
                 
                 self.purchase_contract_id.write({
                     'date_payment_final': self.date or False
