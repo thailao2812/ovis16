@@ -6,6 +6,7 @@ class MrpProduction(models.Model):
     _inherit = 'mrp.production'
 
     transaction_no = fields.Char(string='Transaction No.')
+    allocated_gross_quantity = fields.Float(string='Allocated Gross Quantity')
 
     def button_mark_done(self):
         # Kiet hàm check lại thông tin

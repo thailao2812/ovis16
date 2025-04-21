@@ -73,6 +73,8 @@ class Parser(models.AbstractModel):
             'get_data_analysis': self.get_data_analysis,
             'get_mill_analysis': self.get_mill_analysis,
             'get_qc_analysis': self.get_qc_analysis,
+            'get_processing_loss': self.get_processing_loss,
+            'get_instore_loss': self.get_instore_loss
         })
         return localcontext
     
@@ -384,8 +386,8 @@ class Parser(models.AbstractModel):
             per_qty += total_qty and (line['sum_qty']/total_qty)*100 if line['sum_qty'] != None else 0.0
         return total_qty, per_qty
 
-    def total_out_qty_down(self, batch_id):
-        total_qty = per_qty = 0
+    def total_out_qty_down(self, batch_id, total_qty):
+        total_qty_down = per_qty = 0
         sql = '''
                             SELECT pp.display_wb,
                                     sum(net_qty) sum_qty
@@ -398,8 +400,11 @@ class Parser(models.AbstractModel):
                         ''' % (batch_id)
         self.env.cr.execute(sql)
         for tot in self.env.cr.dictfetchall():
-            total_qty += tot['sum_qty']
-        return total_qty
+            total_qty_down += tot['sum_qty']
+        self.env.cr.execute(sql)
+        for line in self.env.cr.dictfetchall():
+            per_qty += total_qty and (line['sum_qty'] / total_qty) * 100 if line['sum_qty'] != None else 0.0
+        return total_qty_down, per_qty
 
 
     def get_total_out_qty_up(self, batch_id, total_qty):
@@ -859,3 +864,21 @@ class Parser(models.AbstractModel):
             return total_quality / total_qty
         return 0
 
+    def get_processing_loss(self, batch):
+        if batch:
+            production_id = batch.production_id
+            finish_line = production_id.move_line_finished_good_ids.filtered(lambda x: x.product_id.default_code == '16001')
+            if finish_line:
+                return finish_line[0].product_id.display_wb, finish_line[0].init_qty
+            else:
+                return '', ''
+
+    def get_instore_loss(self, batch):
+        if batch:
+            allocated_gross_qty = batch.production_id.allocated_gross_quantity
+            total_real_qty = batch.total_real_qty
+            if allocated_gross_qty <= 0:
+                raise UserError(_("Please check your data Allocated Gross Quantity in MO!!"))
+            return total_real_qty - allocated_gross_qty, ((total_real_qty - allocated_gross_qty) / allocated_gross_qty) * 100
+        else:
+            return 0, 0
