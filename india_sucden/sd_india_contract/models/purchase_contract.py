@@ -71,6 +71,13 @@ class PurchaseContract(models.Model):
 
     interest_amount = fields.Float(string='Interest Amount', compute='_compute_interest_amount', store=True)
 
+    allocation_amount = fields.Float(string='Allocation Amount', compute='_compute_allocation_amount', store=True)
+
+    @api.depends('pay_allocation_ids', 'pay_allocation_ids.allocation_amount', 'state')
+    def _compute_allocation_amount(self):
+        for rec in self:
+            rec.allocation_amount = sum(rec.pay_allocation_ids.mapped('allocation_amount'))
+
     @api.depends('pay_allocation_ids', 'pay_allocation_ids.total_interest_pay', 'pay_allocation_ids.allocation_amount',
                  'state')
     def _compute_interest_amount(self):
