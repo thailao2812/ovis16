@@ -55,11 +55,14 @@ class faq_stack_tracking(models.Model):
                             SUM(Case When sm.code LIKE '%out%' then sm.init_qty else 0 end) qty_out,
                             NULLIF(SUM(Case When sm.code LIKE '%out%' then sm.mc else 0 end), 0)/NULLIF(SUM(Case When sm.code LIKE '%out%' then sm.init_qty else 0 end), 0) mc_out
                             FROM (SELECT sml.lot_id, sml.init_qty, spt.code, 
-									CASE WHEN fob_m.mc_fob is not null THEN fob_m.mc_fob * sml.init_qty
-										 WHEN alc.mc_on_despatch is not null THEN alc.mc_on_despatch * sml.init_qty
-										 ELSE rkl.mc * sml.init_qty END AS mc, sml.date
+									CASE WHEN spt.code NOT LIKE '%out%' THEN rkl.mc * sml.init_qty ELSE 
+										(CASE WHEN alc.mc_on_despatch is not null THEN alc.mc_on_despatch * sml.init_qty
+										WHEN fob_m.mc_fob is not null THEN fob_m.mc_fob * sml.init_qty
+										WHEN rkl.mc is not null THEN rkl.mc * sml.init_qty
+										ELSE link_back.mc_trf_out * sml.init_qty END) END AS mc, sml.date
                                 FROM stock_move_line sml
                                 JOIN stock_picking sp ON sml.picking_id=sp.id
+								LEFT JOIN (SELECT sp_b.backorder_id, rkl_b.mc mc_trf_out FROM stock_picking sp_b LEFT JOIN request_kcs_line rkl_b ON sp_b.id = rkl_b.picking_id WHERE sp_b.backorder_id IS NOT NULL) link_back on sp.id = link_back.backorder_id
                                 JOIN stock_picking_type spt ON spt.id=sp.picking_type_id
                                 LEFT JOIN request_kcs_line rkl ON sp.id = rkl.picking_id
                                 LEFT JOIN (SELECT stack_id, sum(mc_on_despatch)/count (*) mc_on_despatch From lot_stack_allocation Group by stack_id) alc ON alc.stack_id=sp.lot_id
@@ -70,7 +73,7 @@ class faq_stack_tracking(models.Model):
 									JOIN sale_contract_deatail scd ON scd.p_contract_id=x_fob.s_contract_id
 									-- WHERE x_fob.s_contract_id=15293
 									Group by x_fob.s_contract_id, scd.stack_id) fob_m ON fob_m.stack_id=sp.lot_id
-                                WHERE spt.code in ('incoming','production_in','transfer_in','outgoing','production_out','transfer_out') AND sp.state='done') sm  --AND sml.lot_id=98263
+                                WHERE spt.code in ('incoming','production_in','transfer_in','outgoing','production_out','transfer_out') AND sp.state='done') sm  --AND sml.lot_id=99519
                             GROUP BY sm.lot_id) lot_list
 						LEFT JOIN (SELECT sml.lot_id, CASE WHEN sp.production_id isnull THEN null ELSE sp.production_id END AS production_id
 							FROM stock_move_line sml
