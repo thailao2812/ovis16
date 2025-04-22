@@ -42,8 +42,8 @@ class StockAllocation(models.Model):
                 order.qty_received = 0
                 order.qty_unreceived = 0
             
-            if order.qty_unreceived < 0:
-                raise UserError(_('unReceived > 0'))
+            # if order.qty_unreceived < 0:
+            #     raise UserError(_('unReceived > 0'))
     
 
     contract_id = fields.Many2one('purchase.contract', string='Contract')
