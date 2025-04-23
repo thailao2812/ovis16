@@ -26,5 +26,6 @@ services:
       - /opt/filestore/india16_pro:/var/lib/odoo/filestore/india16_pro
     ports:
       - "8069:8069"
+      - "8072:8072"
     links:
       - db
