@@ -29,7 +29,7 @@
         <field name="res_model">eudr.configuration</field>
         <field name="view_mode">form</field>
         <field name="target">current</field>
-        <field name="res_id" eval="ref('edur_configuration')" />
+        <field name="res_id" eval="ref('sd_master_ned.eudr_configuration')" />
     </record>
 
 
