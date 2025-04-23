@@ -29,8 +29,10 @@ class faq_stack_tracking(models.Model):
     st_day = fields.Integer(string = 'Storing days', digits=(12, 0))
     loss_kg = fields.Float(string = 'Storing loss (kg)', digits=(12, 0))
     loss_percent = fields.Float(string = 'Storing Loss (%)', digits=(12, 2))
-    loss_mc = fields.Float(string = 'MC Loss (%)', digits=(12, 2))
+    loss_mc = fields.Float(string = 'MC Loss (%)', digits=(12, 4))
+    loss_mc2 = fields.Float(string = 'MC Loss 2(%)', digits=(12, 4))
     mc_loss_kg = fields.Float(string = 'MC Loss (kg)', digits=(12, 0))
+    mc_loss_kg2 = fields.Float(string = 'MC Loss 2 (kg)', digits=(12, 0))
 
     unex_loss = fields.Float(string = 'Unexplainable loss (%)', digits=(12, 2))
     unex_loss_kg = fields.Float(string = 'Unexplainable loss (Kg)', digits=(12, 0))
@@ -43,7 +45,9 @@ class faq_stack_tracking(models.Model):
                         lot_list.lot_id stack_id, ss.name, pr.name production_name, ss.warehouse_id, sz.name zone_name, pp.default_code product_name, lot_list.date_in, lot_list.qty_in, lot_list.mc_in, lot_list.date_out, lot_list.qty_out, lot_list.mc_out,
                         DATE_PART('day',to_char(lot_list.date_out, 'YYYY-MM-DD')::timestamp - to_char(lot_list.date_in, 'YYYY-MM-DD')::timestamp) AS st_day, lot_list.qty_in-lot_list.qty_out AS loss_kg, 
                         (lot_list.qty_in - lot_list.qty_out)/NULLIF(lot_list.qty_in, 0) * 100 loss_percent,
-                        Case When lot_list.qty_in = 0 then 0 else NULLIF((lot_list.mc_in - lot_list.mc_out) * lot_list.qty_in/100 * 1.15, 0) end as mc_loss_kg, lot_list.mc_in - lot_list.mc_out loss_mc,
+                        Case When lot_list.qty_in = 0 then 0 else NULLIF((lot_list.mc_in - lot_list.mc_out) * lot_list.qty_in/100 * 1.15, 0) end as mc_loss_kg,
+                        Case When lot_list.qty_in = 0 then 0 else NULLIF(((100 - lot_list.mc_out) / (100 - lot_list.mc_in) - 1) * lot_list.qty_in, 0) end as mc_loss_kg2, 
+                            (lot_list.mc_in - lot_list.mc_out) * 1.15 loss_mc, NULLIF(((100 - lot_list.mc_out) / (100 - lot_list.mc_in) - 1) * 100, 0) loss_mc2,
                         Case When lot_list.qty_in = 0 then 0 else NULLIF((lot_list.qty_in - lot_list.qty_out) - ((lot_list.mc_in - lot_list.mc_out) * lot_list.qty_in/100 * 1.15), 0) end as unex_loss_kg,
                         Case When lot_list.qty_in = 0 or (lot_list.qty_in - lot_list.qty_out)=0 then 0 else NULLIF((lot_list.qty_in - lot_list.qty_out) - ((lot_list.mc_in - lot_list.mc_out) * lot_list.qty_in/100 * 1.15), 0)/NULLIF(lot_list.qty_in, 0) * 100 end as unex_loss,
                         Case When pp.default_code = 'FAQ' Then 'FAQ' Else 'Non-FAQ' End As coffee_type, pro.production_id
