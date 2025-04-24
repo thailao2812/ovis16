@@ -153,7 +153,7 @@ class NedSecurityGateQueue(models.Model):
     license_plate = fields.Char(string='Vehicle No.', required=True, states={}, tracking=True)
     change_warehouse_id = fields.Many2one('stock.warehouse', 'Change Warehouse', readonly=False,
                                           states={}, tracking=True)
-    arrivial_time = fields.Datetime('Arrival Time', readonly=False)
+    arrivial_time = fields.Datetime('Arrival Time', readonly=True)
 
     product_ids = fields.Many2many(states={'closed': [('readonly', True)], 'reject': [('readonly', True)]}, required=True, tracking=True)
 
