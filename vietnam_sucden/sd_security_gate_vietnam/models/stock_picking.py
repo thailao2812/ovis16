@@ -2,6 +2,8 @@
 from odoo import api, fields, models, tools, _, SUPERUSER_ID
 from odoo.exceptions import ValidationError, UserError
 from odoo.osv import expression
+from datetime import datetime, timedelta, time
+import pytz
 
 
 class StockPicking(models.Model):
@@ -66,17 +68,17 @@ class StockPicking(models.Model):
             backorder = self.search(args, limit=limit)
             return backorder.name_get()
         else:
+            args = []
+            domain = []
+            check = []
+            args += ['|', ('name', operator, name), ('description_name', operator, name)]
+            backorder = self.search(args + domain, limit=limit)
             if self._context.get('grn_fot_allocation') and 'request_payment' not in self._context:
                 if name:
                     args += ['|', ('name', operator, name), ('description_name', operator, name)]
                 domain = args
                 backorder = self.search(args + domain, limit=limit)
                 return backorder.name_get()
-            args = []
-            domain = []
-            check = []
-            args += ['|', ('name', operator, name), ('description_name', operator, name)]
-            backorder = self.search(args + domain, limit=limit)
             if self._context.get('back_order'):
                 domain = [('picking_type_id.code', '=', 'incoming'),
                           ('picking_type_id.operation', '=', 'factory'),
@@ -216,6 +218,28 @@ class StockPicking(models.Model):
                                  ('id', 'not in', arr_done), ('product_id', '=', self._context.get('product_id')),
                                  ('state', 'in', ['done']), ('backorder_id', '=', False)]
                         backorder = self.search(args + domain, limit=limit)
+
+            if self._context.get('picking_sample_ids'):
+                domain = [('picking_type_id.code', '=', 'incoming'),
+                          ('picking_type_id.operation', '=', 'factory'),
+                          ('partner_id', '=', self._context.get('partner_id')),
+                          ('use_sample','=', True),
+                          ('kcs_sample_ids', '=', False), ('state_kcs', '=', 'draft'),
+                          ('product_id', '=', self._context.get('product_id'))]
+
+                user_tz = pytz.timezone(self.env.context.get('tz') or 'UTC')
+                date = self._context.get('date')
+                if date:
+                    date = datetime.strptime(date, "%Y-%m-%d").date()
+                    # Tạo datetime tại 00:00 và 23:59 trong TZ của user
+                    local_start = user_tz.localize(datetime.combine(date, time.min))
+                    local_end = user_tz.localize(datetime.combine(date + timedelta(days=1), time.min))
+
+                    # Chuyển về UTC để so sánh với database
+                    start_utc = local_start.astimezone(pytz.UTC)
+                    end_utc = local_end.astimezone(pytz.UTC)
+                    domain += [('date_done', '>=', start_utc), ('date_done', '<', end_utc)]
+                backorder = self.search(args + domain, limit=limit)
         return backorder.name_get()
 
     @api.model

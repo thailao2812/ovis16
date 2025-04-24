@@ -63,10 +63,7 @@ class BatchReport(models.Model):
                     if self.env['stock.picking'].search([('id','=',line['id'])]).categ_id.code != 'Loss':
                         self.env['batch.report.output'].create(val)
             self.create_instore()
-        
-        self.input_ids.refresh()
-        self.outputs_ids.refresh()
-        self.instore_ids.refresh()
+
         
         
         self.compute_ins_qc()

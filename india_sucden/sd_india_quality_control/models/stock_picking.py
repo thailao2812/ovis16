@@ -92,7 +92,6 @@ class StockPicking(models.Model):
                     'name': i.id
                 })
             if pick.picking_type_id.code == 'production_out':
-                pick.kcs_line.refresh()
                 pick.load_qc_gip()
 
     def btt_approved(self):
