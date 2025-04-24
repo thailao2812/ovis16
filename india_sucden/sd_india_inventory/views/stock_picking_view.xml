@@ -111,6 +111,9 @@
             	    <field name="partner_id" string="Supplier/Delivery To"/>
                     <field name="vehicle_no"/>
                 </xpath>
+                <xpath expr="//field[@name='product_id']" position="after">
+                    <field name="total_bag"/>
+                </xpath>
 
             </field>
     </record>
