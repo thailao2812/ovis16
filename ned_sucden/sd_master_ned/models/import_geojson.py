@@ -197,9 +197,11 @@ class ImportGeoJson(models.Model):
                 check_spike = self.check_angle(new_polygon, 1)
                 less_4_point = len(coordinates_path) < 4
                 un_close = coordinates_path and coordinates_path[0] != coordinates_path[-1]
-                check_decimal = any(
-                    self.count_decimal_places(coord[0]) < 6 or self.count_decimal_places(coord[1]) < 6 for coord in
-                    coordinates_path)
+
+                coordinates_path = [
+                    [round(coord[0], 6), round(coord[1], 6)] for coord in coordinates_path
+                ]
+                check_decimal = False
 
                 line_entry = {
                     'name': f'Polygon number {count_polygon}',
@@ -208,12 +210,12 @@ class ImportGeoJson(models.Model):
                     'spike': check_spike,
                     'points_check': less_4_point,
                     'is_unclose': un_close,
-                    'decimal_precision': check_decimal,
+                    # 'decimal_precision': check_decimal,
                     'is_duplicate_partial': False,
                     'is_overlapping': is_duplicate,
                     'deforestation_percentage': deforestation_percent,
                     'state_check': 'red' if (
-                                not coordinates_path or less_4_point or check_spike or un_close or is_duplicate or check_decimal or deforestation_percent > percentage_allow) else 'green',
+                                not coordinates_path or less_4_point or check_spike or un_close or is_duplicate or deforestation_percent > percentage_allow) else 'green',
                     'import_id': self.id,
                     'properties_data': json.dumps(properties),
                     'data': json_string
