@@ -29,8 +29,10 @@ class faq_stack_tracking(models.Model):
     st_day = fields.Integer(string = 'Storing days', digits=(12, 0))
     loss_kg = fields.Float(string = 'Storing loss (kg)', digits=(12, 0))
     loss_percent = fields.Float(string = 'Storing Loss (%)', digits=(12, 2))
-    loss_mc = fields.Float(string = 'MC Loss (%)', digits=(12, 2))
+    loss_mc = fields.Float(string = 'MC Loss (%)', digits=(12, 4))
+    loss_mc2 = fields.Float(string = 'MC Loss 2(%)', digits=(12, 4))
     mc_loss_kg = fields.Float(string = 'MC Loss (kg)', digits=(12, 0))
+    mc_loss_kg2 = fields.Float(string = 'MC Loss 2 (kg)', digits=(12, 0))
 
     unex_loss = fields.Float(string = 'Unexplainable loss (%)', digits=(12, 2))
     unex_loss_kg = fields.Float(string = 'Unexplainable loss (Kg)', digits=(12, 0))
@@ -43,7 +45,9 @@ class faq_stack_tracking(models.Model):
                         lot_list.lot_id stack_id, ss.name, pr.name production_name, ss.warehouse_id, sz.name zone_name, pp.default_code product_name, lot_list.date_in, lot_list.qty_in, lot_list.mc_in, lot_list.date_out, lot_list.qty_out, lot_list.mc_out,
                         DATE_PART('day',to_char(lot_list.date_out, 'YYYY-MM-DD')::timestamp - to_char(lot_list.date_in, 'YYYY-MM-DD')::timestamp) AS st_day, lot_list.qty_in-lot_list.qty_out AS loss_kg, 
                         (lot_list.qty_in - lot_list.qty_out)/NULLIF(lot_list.qty_in, 0) * 100 loss_percent,
-                        Case When lot_list.qty_in = 0 then 0 else NULLIF((lot_list.mc_in - lot_list.mc_out) * lot_list.qty_in/100 * 1.15, 0) end as mc_loss_kg, lot_list.mc_in - lot_list.mc_out loss_mc,
+                        Case When lot_list.qty_in = 0 then 0 else NULLIF((lot_list.mc_in - lot_list.mc_out) * lot_list.qty_in/100 * 1.15, 0) end as mc_loss_kg,
+                        Case When lot_list.qty_in = 0 then 0 else NULLIF(((100 - lot_list.mc_out) / (100 - lot_list.mc_in) - 1) * lot_list.qty_in, 0) end as mc_loss_kg2, 
+                            (lot_list.mc_in - lot_list.mc_out) * 1.15 loss_mc, NULLIF(((100 - lot_list.mc_out) / (100 - lot_list.mc_in) - 1) * 100, 0) loss_mc2,
                         Case When lot_list.qty_in = 0 then 0 else NULLIF((lot_list.qty_in - lot_list.qty_out) - ((lot_list.mc_in - lot_list.mc_out) * lot_list.qty_in/100 * 1.15), 0) end as unex_loss_kg,
                         Case When lot_list.qty_in = 0 or (lot_list.qty_in - lot_list.qty_out)=0 then 0 else NULLIF((lot_list.qty_in - lot_list.qty_out) - ((lot_list.mc_in - lot_list.mc_out) * lot_list.qty_in/100 * 1.15), 0)/NULLIF(lot_list.qty_in, 0) * 100 end as unex_loss,
                         Case When pp.default_code = 'FAQ' Then 'FAQ' Else 'Non-FAQ' End As coffee_type, pro.production_id
@@ -55,11 +59,14 @@ class faq_stack_tracking(models.Model):
                             SUM(Case When sm.code LIKE '%out%' then sm.init_qty else 0 end) qty_out,
                             NULLIF(SUM(Case When sm.code LIKE '%out%' then sm.mc else 0 end), 0)/NULLIF(SUM(Case When sm.code LIKE '%out%' then sm.init_qty else 0 end), 0) mc_out
                             FROM (SELECT sml.lot_id, sml.init_qty, spt.code, 
-									CASE WHEN fob_m.mc_fob is not null THEN fob_m.mc_fob * sml.init_qty
-										 WHEN alc.mc_on_despatch is not null THEN alc.mc_on_despatch * sml.init_qty
-										 ELSE rkl.mc * sml.init_qty END AS mc, sml.date
+									CASE WHEN spt.code NOT LIKE '%out%' THEN rkl.mc * sml.init_qty ELSE 
+										(CASE WHEN alc.mc_on_despatch is not null THEN alc.mc_on_despatch * sml.init_qty
+										WHEN fob_m.mc_fob is not null THEN fob_m.mc_fob * sml.init_qty
+										WHEN rkl.mc is not null THEN rkl.mc * sml.init_qty
+										ELSE link_back.mc_trf_out * sml.init_qty END) END AS mc, sml.date
                                 FROM stock_move_line sml
                                 JOIN stock_picking sp ON sml.picking_id=sp.id
+								LEFT JOIN (SELECT sp_b.backorder_id, rkl_b.mc mc_trf_out FROM stock_picking sp_b LEFT JOIN request_kcs_line rkl_b ON sp_b.id = rkl_b.picking_id WHERE sp_b.backorder_id IS NOT NULL) link_back on sp.id = link_back.backorder_id
                                 JOIN stock_picking_type spt ON spt.id=sp.picking_type_id
                                 LEFT JOIN request_kcs_line rkl ON sp.id = rkl.picking_id
                                 LEFT JOIN (SELECT stack_id, sum(mc_on_despatch)/count (*) mc_on_despatch From lot_stack_allocation Group by stack_id) alc ON alc.stack_id=sp.lot_id
@@ -70,7 +77,7 @@ class faq_stack_tracking(models.Model):
 									JOIN sale_contract_deatail scd ON scd.p_contract_id=x_fob.s_contract_id
 									-- WHERE x_fob.s_contract_id=15293
 									Group by x_fob.s_contract_id, scd.stack_id) fob_m ON fob_m.stack_id=sp.lot_id
-                                WHERE spt.code in ('incoming','production_in','transfer_in','outgoing','production_out','transfer_out') AND sp.state='done') sm  --AND sml.lot_id=98263
+                                WHERE spt.code in ('incoming','production_in','transfer_in','outgoing','production_out','transfer_out') AND sp.state='done') sm  --AND sml.lot_id=99519
                             GROUP BY sm.lot_id) lot_list
 						LEFT JOIN (SELECT sml.lot_id, CASE WHEN sp.production_id isnull THEN null ELSE sp.production_id END AS production_id
 							FROM stock_move_line sml
