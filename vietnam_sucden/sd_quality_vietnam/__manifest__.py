@@ -12,6 +12,7 @@
         'security/ir.model.access.csv',
         'views/stock_contract_allocation_view.xml',
         'views/pss_management_view.xml',
+        'views/kcs_sample_view.xml',
         'views/menu.xml',
     ],
     'assets': {
