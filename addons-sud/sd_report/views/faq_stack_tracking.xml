@@ -8,11 +8,11 @@
             <field name="arch" type="xml">
                 <tree >
                     <field name = 'warehouse_id' string="Warehouse" />
-                    <field name = 'name' string="Stack Name" />
                     <field name = 'coffee_type' string="Coffee Type" />
                     <field name = 'product_name' string="Product Name" />
                     <field name = 'production_name' string="Production" />
                     <field name = 'zone_name' string="Zone" />
+                    <field name = 'name' string="Stack Name" />
                     <field name = 'date_in' string="Date In" />
                     <field name = 'date_out' string="Date Out" />
                     <field name = 'st_day' string="Storing Days" />
@@ -22,10 +22,10 @@
                     <field name = 'mc_out' string="MC Out" />
                     <field name = 'loss_kg' sum='Storing Loss Total' string="Storing loss (kg)" />
                     <field name = 'loss_percent' string="Storing Loss (%)" />
-                    <field name = 'loss_mc' string="MC Loss (%)" />
-                    <field name = 'loss_mc2' string="MC Loss 2(%)" />
-                    <field name = 'mc_loss_kg' avg = 'MC Loss Total' string = 'MC Loss (kg)' readonly='1'/>
-                    <field name = 'mc_loss_kg2' avg = 'MC Loss Total' string = 'MC Loss 2 (kg)' readonly='1'/>
+                    <field name = 'loss_mc' string="MC Loss % (Coef.)" />
+                    <field name = 'loss_mc2' string="MC Loss % (Eq.)" />
+                    <field name = 'mc_loss_kg' avg = 'MC Loss Total' string = 'MC Loss kg (Coef.)' readonly='1'/>
+                    <field name = 'mc_loss_kg2' avg = 'MC Loss Total' string = 'MC Loss Kg (Eq.)' readonly='1'/>
 
                     <field name = 'unex_loss_kg' sum = 'Unex. Total Loss (Kg)' string="Unexplainable loss (Kg)" />
                     <field name = 'unex_loss' avg = 'Unex. Total Loss (%)' string="Unexplainable loss (%)" />

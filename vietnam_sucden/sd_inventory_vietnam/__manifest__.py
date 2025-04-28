@@ -16,6 +16,7 @@
         'views/request_material_view.xml',
         'report/report.xml',
         'wizard/wizard_report_stack_merge_view.xml',
+        'wizard/in_out_stack_quantity.xml',
     ],
     'assets': {
 
