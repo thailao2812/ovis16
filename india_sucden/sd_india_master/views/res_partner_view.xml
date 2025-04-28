@@ -7,7 +7,6 @@
         <field name="arch" type="xml">
 			 <xpath expr="//field[@name='ref']" position="after">
             	<field name="pan_number"/>
-            	<field name="with_declaration"/>
             	<field name="agent"/>
             	<field name="forwarding_agent_check"/>
             	<field name="shipping_customer"/>
