@@ -38,7 +38,7 @@ class RequestPayment(models.Model):
     source_document_contract = fields.Char(string='Source Document', related='purchase_contract_id.origin', store=True)
     invoice_amount = fields.Float(string='Invoice Amount', compute='compute_invoice_amount', store=True)
     state = fields.Selection(selection='_get_new_state', string='State', readonly=False, copy=False, index=True, default='request')
-    tds_assessable_value = fields.Float(string='TDS Assessable Value')
+    tds_assessable_value = fields.Float(string='TDS Assessable Value', compute='_compute_tds_assessable_value', store=True)
     tds_amount = fields.Float(string='TDS Amount', compute='compute_tds_amount', store=True)
     final_request_payment = fields.Float(string='Net Payment', compute='compute_net_payment', store=True)
     financial_year_id = fields.Many2one('financial.year', string='Financial year')
@@ -47,6 +47,22 @@ class RequestPayment(models.Model):
 
     purchase_quantity = fields.Float(string='Purchase Quantity')
     interest_amount = fields.Float(string='Interest Amount', compute='compute_interest_amount', store=True)
+    total_purchase_value = fields.Float(string='Total Purchase Value', compute='_compute_total_purchase_value', store=True)
+
+    @api.depends('request_amount', 'request_amount_temp', 'interest_amount')
+    def _compute_total_purchase_value(self):
+        for rec in self:
+            rec.total_purchase_value = rec.request_amount + rec.interest_amount
+
+    @api.depends('purchase_date', 'financial_year_id', 'total_purchase_value', 'request_amount', 'request_amount_temp')
+    def _compute_tds_assessable_value(self):
+        for rec in self:
+            max_value = rec.financial_year_id.max_value
+            tds_assessable_value = rec.total_purchase_value + rec.request_amount - max_value
+            if tds_assessable_value > max_value:
+                rec.tds_assessable_value = tds_assessable_value
+            else:
+                rec.tds_assessable_value = 0
 
     # @api.constrains('purchase_quantity')
     # def constrains_purchase_quantity(self):
@@ -81,6 +97,8 @@ class RequestPayment(models.Model):
                     rec.tds_amount = self.custom_round(rec.tds_assessable_value * (financial_year.percent_for_pan / 100))
                 else:
                     rec.tds_amount = self.custom_round(rec.tds_assessable_value * (financial_year.percent_unpan / 100))
+            if rec.partner_id.with_declaration:
+                rec.tds_amount = 0
 
     @api.model
     def _get_new_state(self):
