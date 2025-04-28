@@ -17,6 +17,7 @@ class ResPartner(models.Model):
     #     ('expense', 'Expense')
     # ], string='Accounting Type', required=False)
     farm_id = fields.Text(string='Farm ID')
+    with_declaration = fields.Boolean(string='With Declaration')
 
     @api.model
     def create(self, vals):
