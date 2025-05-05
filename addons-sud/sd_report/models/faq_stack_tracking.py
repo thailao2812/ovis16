@@ -66,7 +66,8 @@ class faq_stack_tracking(models.Model):
 										ELSE link_back.mc_trf_out * sml.init_qty END) END AS mc, sml.date
                                 FROM stock_move_line sml
                                 JOIN stock_picking sp ON sml.picking_id=sp.id
-								LEFT JOIN (SELECT sp_b.backorder_id, rkl_b.mc mc_trf_out FROM stock_picking sp_b LEFT JOIN request_kcs_line rkl_b ON sp_b.id = rkl_b.picking_id WHERE sp_b.backorder_id IS NOT NULL) link_back on sp.id = link_back.backorder_id
+								LEFT JOIN (SELECT sp_b.backorder_id, sum(rkl_b.mc)/Count(*) mc_trf_out FROM stock_picking sp_b LEFT JOIN request_kcs_line rkl_b 
+                                            ON sp_b.id = rkl_b.picking_id Group by sp_b.backorder_id) link_back on sp.id = link_back.backorder_id
                                 JOIN stock_picking_type spt ON spt.id=sp.picking_type_id
                                 LEFT JOIN request_kcs_line rkl ON sp.id = rkl.picking_id
                                 LEFT JOIN (SELECT stack_id, sum(mc_on_despatch)/count (*) mc_on_despatch From lot_stack_allocation Group by stack_id) alc ON alc.stack_id=sp.lot_id
