@@ -62,7 +62,8 @@ class faq_stack_tracking(models.Model):
 									CASE WHEN spt.code NOT LIKE '%out%' THEN rkl.mc * sml.init_qty ELSE 
 										(CASE WHEN alc.mc_on_despatch is not null THEN alc.mc_on_despatch * sml.init_qty
 										WHEN fob_m.mc_fob is not null THEN fob_m.mc_fob * sml.init_qty
-										ELSE link_back.mc_trf_out * sml.init_qty END) END AS mc, sml.date, alc.mc_on_despatch
+                                        WHEN rkl.mc is not null THEN rkl.mc * sml.init_qty
+										ELSE link_back.mc_trf_out * sml.init_qty END) END AS mc, sml.date
                                 FROM stock_move_line sml
                                 JOIN stock_picking sp ON sml.picking_id=sp.id
 								LEFT JOIN (SELECT sp_b.backorder_id, sum(rkl_b.mc)/Count(*) mc_trf_out FROM stock_picking sp_b LEFT JOIN request_kcs_line rkl_b 
