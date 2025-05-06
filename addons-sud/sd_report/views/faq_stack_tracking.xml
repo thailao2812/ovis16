@@ -39,6 +39,7 @@
             <field name="arch" type="xml">
                 <search>
                     <field name = "name" string="Stack Name"/>
+                    <field name = "product_name" string="Product Name"/>
                     <field name = "production_name" string="Production"/>
                     <filter icon="terp-go-month" string="Storing loss (kg) > 0" name="loss_kg" domain="[('loss_kg','!=','0')]" />
                     <filter icon="terp-go-month" string="Prev 2 Month"
@@ -47,6 +48,7 @@
                     	 />
                     <group expand="1" string="Group By">
                         <filter string="Coffee Type" domain="[]" name = "group_coffee_type" context="{'group_by':'coffee_type'}"/>
+                        <filter string="Product Name" domain="[]" name = "group_product_name" context="{'group_by':'product_name'}"/>
                         <filter string="Production" domain="[]" name = "group_production_name" context="{'group_by':'production_name'}"/>
                         <filter string="Warehouse" domain="[]" name = "group_warehouse_id" context="{'group_by':'warehouse_id'}"/>
                         <filter string="Date Out" domain="[]" name="filter_date_out" context="{'group_by':'date_out'}"/>
