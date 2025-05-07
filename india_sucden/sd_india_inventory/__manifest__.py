@@ -23,6 +23,7 @@
         'views/building_to_building.xml',
         'views/import_stack_view.xml',
         'views/stock_zone_view.xml',
+        'views/stock_move_line_view.xml',
         'views/request_material_view.xml',
     ],
     'installable': True,

@@ -39,7 +39,7 @@ class PurchaseReport(models.Model):
     invoice_date = fields.Date(string='Invoice Date')
 
     def init(self):
-        tools.drop_view_if_exists(self.env.cr, 'v_faq_prod')
+        tools.drop_view_if_exists(self.env.cr, 'purchase_report')
         self.env.cr.execute("""
                     CREATE OR REPLACE VIEW public.purchase_report AS
                     select row_number() OVER (
