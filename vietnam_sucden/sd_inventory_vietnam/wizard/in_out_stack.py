@@ -191,6 +191,7 @@ class wizradInOutStack(models.TransientModel):
                 move_id = self.env['stock.move.line'].create(spl_val)
 
                 create_picking.btt_loads()
+                create_picking.load_qc_gip_merge()
                 create_picking.button_qc_assigned()
                 create_picking.btt_approved()
                 create_picking.button_sd_validate()
