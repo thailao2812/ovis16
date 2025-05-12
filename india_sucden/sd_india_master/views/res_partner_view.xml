@@ -21,6 +21,26 @@
             <xpath expr="//field[@name='category_id']" position="after">
                 <field name="farm_id"/>
             </xpath>
+            <xpath expr="//page[@name='contact_addresses']" position="after">
+                <page string="Pan Number Detail" name="pan_number_detail">
+                    <field name="pan_number_line_ids">
+                        <tree editable="top">
+                            <field name="pan_number"/>
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                        </tree>
+                    </field>
+                </page>
+                <page string="Declaration Detail" name="declaration_detail">
+                    <field name="declaration_line_ids">
+                        <tree editable="top">
+                            <field name="with_declaration"/>
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
 
         </field>
     </record>
@@ -65,6 +85,7 @@
                     <field name="vat" string="GSTIN"/>
                     <field name="ref"/>
                     <field name="pan_number"/>
+                    <field name="with_declaration"/>
                     <field name="transfer"/>
                     <field name="agent"/>
                     <field name="forwarding_agent_check"/>

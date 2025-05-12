@@ -21,7 +21,7 @@
 					<menuitem id="menu_tds_report_india"
 				            action="sd_india_report.action_tds_report_india" sequence="3"
 				            parent="menu_report_purchase"
-				            name="TDS Report"/>
+				            name="TDS Report" active="False"/>
 
 				<menuitem id="menu_stock_report"
 					name="Stock Report"

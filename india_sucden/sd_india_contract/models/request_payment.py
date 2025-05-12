@@ -81,6 +81,8 @@ class RequestPayment(models.Model):
                     rec.tds_amount = self.custom_round(rec.tds_assessable_value * (financial_year.percent_for_pan / 100))
                 else:
                     rec.tds_amount = self.custom_round(rec.tds_assessable_value * (financial_year.percent_unpan / 100))
+            if rec.partner_id.with_declaration:
+                rec.tds_amount = 0
 
     @api.model
     def _get_new_state(self):
