@@ -11,7 +11,7 @@ class AccountPayment(models.Model):
 
     def action_post(self):
         res = super(AccountPayment, self).action_post()
-        if self.env.context.get('final_payment') or self.is_final_payment:
+        if self.env.context.get('final_payment') and self.is_final_payment:
             if self.purchase_contract_id:
                 self.purchase_contract_id._amount_all()
                 if self.purchase_contract_id.amount_total == 0:
