@@ -39,6 +39,10 @@
 			 <xpath expr="//field[@name='contract_line']/tree/field[@name='product_uom']" position="after">
             	<field name="bag_no" attrs="{'readonly': [('parent.state', 'in', ['director', 'approved', 'done', 'cancel'])]}"/>
             </xpath>
+            <xpath expr="//button[@name='button_cancel']" position="attributes">
+                <attribute name="states"></attribute>
+                <attribute name="groups">sd_india_master.group_admin_india</attribute>
+            </xpath>
             <xpath expr="//field[@name='origin']" position="attributes">
             	<attribute name="attrs">{'readonly': [('state', 'in', ['director', 'approved', 'done', 'cancel'])]}</attribute>
             </xpath>
