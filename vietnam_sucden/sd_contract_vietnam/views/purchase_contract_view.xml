@@ -98,7 +98,12 @@
                 <button name="print_nvp_npe_word" string="Print SVNP From NPE WORDS" type="object" class="oe_highlight" attrs="{'invisible': [('origin', '=', False)]}"/>
                 <button name="print_nvp_word" string="Print SVNP WORDS" type="object" class="oe_highlight" attrs="{'invisible': [('origin', '!=', False)]}"/>
             </xpath>
-
+            <xpath expr="//button[@name='button_draft']" position="attributes">
+                <attribute name="groups">sd_contract_vietnam.group_administrator_purchase_contract</attribute>
+            </xpath>
+            <xpath expr="//button[@name='button_cancel']" position="attributes">
+                <attribute name="groups">sd_contract_vietnam.group_administrator_purchase_contract</attribute>
+            </xpath>
         </field>
     </record>
     <record id="view_ptbf_contract_form_inherit_vietnam" model="ir.ui.view">
@@ -106,6 +111,12 @@
         <field name="model">purchase.contract</field>
         <field name="inherit_id" ref="sd_purchase_contract.view_ptbf_contract_form"/>
         <field name="arch" type="xml">
+            <xpath expr="//button[@name='button_draft']" position="attributes">
+                <attribute name="groups">sd_contract_vietnam.group_administrator_purchase_contract</attribute>
+            </xpath>
+            <xpath expr="//button[@name='button_cancel']" position="attributes">
+                <attribute name="groups">sd_contract_vietnam.group_administrator_purchase_contract</attribute>
+            </xpath>
 			 <xpath expr="//page[@name='information']" position="after">
             	<page name="farmer" string="Farmer Information">
                     <field name="list_farmer" readonly="1">
@@ -204,6 +215,12 @@
         <field name="model">purchase.contract</field>
         <field name="inherit_id" ref="sd_purchase_contract.view_consignment_agreement_form"/>
         <field name="arch" type="xml">
+             <xpath expr="//button[@name='button_draft']" position="attributes">
+                <attribute name="groups">sd_contract_vietnam.group_administrator_purchase_contract</attribute>
+            </xpath>
+            <xpath expr="//button[@name='button_cancel']" position="attributes">
+                <attribute name="groups">sd_contract_vietnam.group_administrator_purchase_contract</attribute>
+            </xpath>
 			 <xpath expr="//page[@name='information']" position="after">
             	<page name="farmer" string="Farmer Information">
                     <field name="list_farmer" readonly="1">
