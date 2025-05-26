@@ -31,12 +31,10 @@ class BatchReport(models.Model):
                 
     def load_data(self):
         for this in self:
+            self.env.cr.execute('DELETE FROM batch_report_input WHERE batch_id = %s', (this.id,))
+            self.env.cr.execute('DELETE FROM batch_report_output WHERE batch_id = %s', (this.id,))
+            self.env.cr.execute('DELETE FROM batch_report_instore WHERE batch_id = %s', (this.id,))
             sql ='''
-                DELETE FROM batch_report_input where batch_id = %s ;
-                DELETE FROM batch_report_output where batch_id = %s ;
-                DELETE FROM batch_report_instore where batch_id = %s ;
-                
-                
                 SELECT spt.code as picking_type_code,
                         sp.id,
                         sml.lot_id as stack_id,
@@ -64,8 +62,7 @@ class BatchReport(models.Model):
                         self.env['batch.report.output'].create(val)
             self.create_instore()
 
-        
-        
+        self.env.cr.commit()
         self.compute_ins_qc()
         self.compute_in_qc()
         self.compute_out_qc()
