@@ -44,6 +44,8 @@ class PurchaseContract(models.Model):
 
     offset_debt_ids = fields.One2many('offset.debt', 'purchase_contract_id')
 
+    diff_price = fields.Float(tracking=True)
+
     def button_request_final_payment(self):
         for record in self:
             record.state_final_payment = 'request'
