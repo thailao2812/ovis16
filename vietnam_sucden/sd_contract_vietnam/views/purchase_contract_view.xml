@@ -113,6 +113,18 @@
             <xpath expr="//field[@name='contract_line']//tree//field[@name='diff_price']" position="attributes">
                 <attribute name="attrs">{'readonly': [('parent.state', '!=', 'draft')]}</attribute>
             </xpath>
+            <xpath expr="//field[@name='contract_line']//tree//field[@name='product_qty']" position="attributes">
+                <attribute name="attrs">{'readonly': [('parent.state', '!=', 'draft')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='contract_line']//tree//field[@name='premium']" position="attributes">
+                <attribute name="attrs">{'readonly': [('parent.state', '!=', 'draft')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='contract_line']//tree//field[@name='price_unit']" position="attributes">
+                <attribute name="attrs">{'readonly': [('parent.state', '!=', 'draft')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='contract_line']//tree//field[@name='product_uom']" position="attributes">
+                <attribute name="attrs">{'readonly': [('parent.state', '!=', 'draft')]}</attribute>
+            </xpath>
         </field>
     </record>
     <record id="view_ptbf_contract_form_inherit_vietnam" model="ir.ui.view">
@@ -120,6 +132,18 @@
         <field name="model">purchase.contract</field>
         <field name="inherit_id" ref="sd_purchase_contract.view_ptbf_contract_form"/>
         <field name="arch" type="xml">
+            <xpath expr="//field[@name='contract_line']//tree//field[@name='product_qty']" position="attributes">
+                <attribute name="attrs">{'readonly': [('parent.state', '!=', 'draft')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='contract_line']//tree//field[@name='premium']" position="attributes">
+                <attribute name="attrs">{'readonly': [('parent.state', '!=', 'draft')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='contract_line']//tree//field[@name='price_unit']" position="attributes">
+                <attribute name="attrs">{'readonly': [('parent.state', '!=', 'draft')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='contract_line']//tree//field[@name='product_uom']" position="attributes">
+                <attribute name="attrs">{'readonly': [('parent.state', '!=', 'draft')]}</attribute>
+            </xpath>
             <xpath expr="//field[@name='contract_line']//tree//field[@name='product_id']" position="attributes">
                 <attribute name="attrs">{'readonly': [('parent.state', '!=', 'draft')]}</attribute>
             </xpath>
@@ -233,6 +257,18 @@
         <field name="model">purchase.contract</field>
         <field name="inherit_id" ref="sd_purchase_contract.view_consignment_agreement_form"/>
         <field name="arch" type="xml">
+            <xpath expr="//field[@name='contract_line']//tree//field[@name='product_qty']" position="attributes">
+                <attribute name="attrs">{'readonly': [('parent.state', '!=', 'draft')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='contract_line']//tree//field[@name='premium']" position="attributes">
+                <attribute name="attrs">{'readonly': [('parent.state', '!=', 'draft')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='contract_line']//tree//field[@name='price_unit']" position="attributes">
+                <attribute name="attrs">{'readonly': [('parent.state', '!=', 'draft')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='contract_line']//tree//field[@name='product_uom']" position="attributes">
+                <attribute name="attrs">{'readonly': [('parent.state', '!=', 'draft')]}</attribute>
+            </xpath>
             <xpath expr="//field[@name='contract_line']//tree//field[@name='product_id']" position="attributes">
                 <attribute name="attrs">{'readonly': [('parent.state', '!=', 'draft')]}</attribute>
             </xpath>
