@@ -3,26 +3,26 @@
     <data>
         <!-- Đặt menu vào dưới Inventory -->
         <menuitem 
-            name="Device Profiles"
+            name="IoTThinks Device Profiles"
             id="menu_action_iotthinks_device_profile_inventory"
             action="action_iotthinks_device_profile"
             parent="sd_inventory.menu_action_other_notes"
             sequence="110"/>
 
         <menuitem 
-            name="Telemetry Data"
+            name="IoTThinks Telemetry Data"
             id="menu_action_iotthinks_device_telemetry_inventory"
             action="action_iotthinks_device_telemetry"
             parent="sd_inventory.menu_action_other_notes"
             sequence="120"/>
 
         <!-- MRP -->
-	    <menuitem 
-            name="Device Profiles" 
+	    <!-- <menuitem 
+            name="IoTThinks Device Profiles" 
 	    	id="menu_action_iotthinks_device_profile_mrp"
 	        action="action_iotthinks_device_profile"
 	        parent="mrp.mrp_planning_menu_root"
-	        sequence="170"/>
+	        sequence="170"/> -->
 	
     </data>
 </odoo>
