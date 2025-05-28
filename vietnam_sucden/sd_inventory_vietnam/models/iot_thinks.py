@@ -127,6 +127,7 @@ class DeviceTelemetry(models.Model):
     value = fields.Float(string="Value")
     datetime_display = fields.Char(string="Timestamp (Date & Time)",)
     country_id = fields.Many2one('res.country', string="Country", related='device_profile_id.country_id', store=True, readonly=True, ondelete='restrict')
+    description = fields.Text(string="Description", related='device_profile_id.description', store=True, readonly=True)
 
     @api.model
     def fetch_and_store_telemetry_for_device_id(self, device_profiles, device_id, keys, start_ts, end_ts, token=None):
