@@ -30,6 +30,7 @@ class LotAllocationBonded(models.Model):
     bag_allocate = fields.Float(string = 'Bag Allocate', digits=(12, 0))
     balance_qty = fields.Float(string = 'Balance Qty', digits=(12, 0))
     balance_bag = fields.Float(string = 'Balance Bags', digits=(12, 0))
+    mc_on_despatch = fields.Float(string = 'Mc On Despatch')
     real_qty = fields.Float(string = 'Real Qty', digits=(12, 0))
     inspection_qty = fields.Float(string = 'Inspection Qty', digits=(12, 0))
     state = fields.Selection([('draft', 'Draft'), ('approve', 'Approve')], string='Status')
@@ -43,7 +44,7 @@ class LotAllocationBonded(models.Model):
                         scd.stack_id, scd.code_stack AS wr_no, scd.stack_on_hand AS real_stack_export, 
                         scd.shipper_id, sc.product_id, scd.name AS quality, sp.name AS gdn_name, 
                         scd.scertificate_id, sctr.p_qty, scd.tobe_qty AS allocate_qty, sc.partner_id,
-                        scd.tobe_bag AS bag_allocate, scd.balance_qty, scd.x_bag_qty AS balance_bag, 
+                        scd.tobe_bag AS bag_allocate, scd.balance_qty, scd.x_bag_qty AS balance_bag, scd.mc_on_despatch,
                         scd.allocated_qty AS real_qty, scd.x_gd_qty AS inspection_qty, scd.state
                         FROM sale_contract_deatail scd
                         JOIN sale_contract sc ON sc.id=scd.sp_id

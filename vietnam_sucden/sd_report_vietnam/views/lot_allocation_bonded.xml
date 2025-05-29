@@ -27,6 +27,7 @@
                     <field name="balance_qty" sum="balance_qty" string="Balance Qty"/>
                     <field name="balance_bag" sum="balance_bag" string="Balance Bag"/>
                     <field name="real_qty" sum="real_qty" string="Real Qty"/>
+                    <field name="mc_on_despatch" string="Mc On Despatch"/>
                     <field name="inspection_qty" sum="inspection_qty" string="Inspection Qty"/>
                     <field name="state"/>
                 </tree>

@@ -58,11 +58,12 @@ class faq_stack_tracking(models.Model):
                             MAX(Case When sm.code LIKE '%out%' then sm.date else null end) date_out,
                             SUM(Case When sm.code LIKE '%out%' then sm.init_qty else 0 end) qty_out,
                             NULLIF(SUM(Case When sm.code LIKE '%out%' then sm.mc else 0 end), 0)/NULLIF(SUM(Case When sm.code LIKE '%out%' then sm.init_qty else 0 end), 0) mc_out
-                            FROM (SELECT sml.lot_id, sml.init_qty, spt.code, 
+                            FROM (SELECT sp.name, sml.lot_id, sml.init_qty, spt.code, 
 									CASE WHEN spt.code NOT LIKE '%out%' THEN rkl.mc * sml.init_qty ELSE 
 										(CASE WHEN alc.mc_on_despatch is not null THEN alc.mc_on_despatch * sml.init_qty
 										WHEN fob_m.mc_fob is not null THEN fob_m.mc_fob * sml.init_qty
-                                        WHEN rkl.mc is not null THEN rkl.mc * sml.init_qty
+										WHEN rkl.mc is not null THEN rkl.mc * sml.init_qty
+										WHEN spt.code LIKE 'transfer_out' THEN ss.mc * sml.init_qty
 										ELSE link_back.mc_trf_out * sml.init_qty END) END AS mc, sml.date
                                 FROM stock_move_line sml
                                 JOIN stock_picking sp ON sml.picking_id=sp.id
@@ -72,12 +73,13 @@ class faq_stack_tracking(models.Model):
                                 LEFT JOIN request_kcs_line rkl ON sml.lot_id=rkl.stack_id AND sp.id = rkl.picking_id
                                 LEFT JOIN (SELECT gdn_id, stack_id, sum(mc_on_despatch)/count (*) mc_on_despatch From lot_stack_allocation Group by gdn_id, stack_id) alc ON alc.stack_id=sml.lot_id AND sp.id=alc.gdn_id
 								LEFT JOIN (
-									SELECT scd.stack_id, x_fob.s_contract_id , sum(fob.mc)/count (*) mc_fob
+									SELECT scd.stack_id, x_fob.s_contract_id, sum(CASE WHEN scd.mc_on_despatch isnull THEN fob.mc ELSE scd.mc_on_despatch END)/count (*) mc_fob
 									From fob_management fob
 									JOIN x_fob_management_s_contract_rel x_fob ON x_fob.fob_management_id=fob.id
 									JOIN sale_contract_deatail scd ON scd.p_contract_id=x_fob.s_contract_id
 									-- WHERE x_fob.s_contract_id=15293
 									Group by x_fob.s_contract_id, scd.stack_id) fob_m ON fob_m.stack_id=sp.lot_id
+								JOIN stock_lot ss ON sml.lot_id=ss.id
                                 WHERE spt.code in ('incoming','production_in','transfer_in','outgoing','production_out','transfer_out') AND sp.state='done') sm  --AND sml.lot_id=99519
                             GROUP BY sm.lot_id) lot_list
 						LEFT JOIN (SELECT sml.lot_id, CASE WHEN sp.production_id isnull THEN null ELSE sp.production_id END AS production_id
