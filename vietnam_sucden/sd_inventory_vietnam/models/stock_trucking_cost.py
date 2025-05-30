@@ -23,5 +23,5 @@ class StockTruckingCost(models.Model):
         for record in self:
             record.name = ''
             if record.date_from and record.date_to and record.place:
-                record.name = record.place + '('+ str(record.date_from) + str(record.date_to) + ')'
+                record.name = record.place + '('+ str(record.date_from) + ' --> ' + str(record.date_to) + ')'
 
