@@ -622,8 +622,17 @@ class SImportFile(models.Model):
                                 contract_id = contract_obj.create(vals)
 
                         except Exception as e:
-                            #   Note error on line number
-                            lst_errors.append('\n ' + 'Row  %s : %s' % (str(nrow), str(e)))
+                            col_errors = []
+                            for col_idx in range(sheet.ncols):
+                                try:
+                                    # Thử truy cập value để trigger lỗi nếu có
+                                    value = sheet.cell(row, col_idx).value
+                                except Exception as col_e:
+                                    col_errors.append(f"Col {col_idx+1}: {col_e}")
+                            if col_errors:
+                                lst_errors.append('\n Row %s: %s | Lỗi ở: %s' % (str(nrow), str(e), ', '.join(col_errors)))
+                            else:
+                                lst_errors.append('\n Row %s: %s' % (str(nrow), str(e)))
 
                         # self.env['s.contract.line'].create({
                         #     'product_id': prod_id,
