@@ -20,6 +20,7 @@
         'views/device_profile_menu.xml',
         # 'views/device_telemetry_wizard.xml',
         'views/device_telemetry.xml',
+        'views/stock_trucking_cost_view.xml',
         'views/menu.xml',
     ],
     'assets': {
