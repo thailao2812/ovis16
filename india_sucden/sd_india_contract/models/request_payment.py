@@ -179,6 +179,17 @@ class RequestPayment(models.Model):
                 if request.total_remain == request.tds_amount:
                     request.state = 'paid'
 
+    def print_cs_detail(self):
+        if self.purchase_contract_id.npe_ids:
+            return self.env.ref('sd_india_contract.contract_consignment_detail_india_report').report_action(self)
+        return True
+
+    def print_cr_detail(self):
+        if self.purchase_contract_id.nvp_ids:
+            print('vao day')
+            return self.env.ref('sd_india_contract.contract_regular_detail_india_report').report_action(self)
+        return True
+
 
 
 
