@@ -232,7 +232,7 @@
             </xpath>
             <xpath expr="//button[@name='printf_nvp']" position="replace">
                 <button name="print_cr" string="Print CR" type="object" class="oe_highlight"/>
-<!--                <button name="print_cr_detail" string="Print Invoice" type="object" class="oe_highlight" attrs="{'invisible': [('state', '!=', 'approved')]}"/>-->
+                <button name="print_cr_detail" string="Print Invoice" type="object" class="oe_highlight" attrs="{'invisible': [('state', '!=', 'approved')]}"/>
             </xpath>
             <xpath expr="//field[@name='date_fix']" position="after">
                 <field name="gross_qty" attrs="{'invisible': [('origin', '=', False)], 'required': [('origin', '!=', False)]}"/>
@@ -558,7 +558,7 @@
             </xpath>
             <xpath expr="//button[@name='printf_npe']" position="replace">
                 <button name="print_cs" string="Print CS" type="object" class="oe_highlight"/>
-<!--                <button name="print_cs_detail" string="Print Invoice" type="object" class="oe_highlight" attrs="{'invisible': [('state', '!=', 'approved')]}"/>-->
+                <button name="print_cs_detail" string="Print Invoice" type="object" class="oe_highlight" attrs="{'invisible': [('state', '!=', 'approved')]}"/>
             </xpath>
             <xpath expr="//field[@name='songay']" position="after">
                 <field name="agent_id" domain="[('agent', '=', True)]" options="{'no_create': True}"/>

@@ -37,8 +37,8 @@
 	<record id="contract_consignment_detail_india_report" model="ir.actions.report">
 	        <field name="name">Consignment Contract Detail</field>
 	        <field name="type">ir.actions.report</field>
-	         <field name="model">request.payment</field>
-	        <field name="binding_model_id" ref="sd_purchase_contract.model_request_payment"/>
+	         <field name="model">purchase.contract</field>
+	        <field name="binding_model_id" ref="sd_purchase_contract.model_purchase_contract"/>
 	        <field name="report_name">contract_consignment_detail_india_report</field>
 	        <field name="report_type">aeroo</field>
 	        <field name="in_format">oo-odt</field>
@@ -54,8 +54,8 @@
 	<record id="contract_regular_detail_india_report" model="ir.actions.report">
 	        <field name="name">Regular Contract Detail</field>
 	        <field name="type">ir.actions.report</field>
-	         <field name="model">request.payment</field>
-	        <field name="binding_model_id" ref="sd_purchase_contract.model_request_payment"/>
+	         <field name="model">purchase.contract</field>
+	        <field name="binding_model_id" ref="sd_purchase_contract.model_purchase_contract"/>
 	        <field name="report_name">contract_regular_detail_india_report</field>
 	        <field name="report_type">aeroo</field>
 	        <field name="in_format">oo-odt</field>
