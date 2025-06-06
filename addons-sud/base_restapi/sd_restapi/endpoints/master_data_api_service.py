@@ -94,7 +94,7 @@ class StackShortInfo(Datamodel):
     init_qty = fields.Float(load_default=0.0)
     zone_id = fields.Integer()
     zone_name = fields.String()
-    create_date = fields.DateTime()
+    create_date = fields.String()
     product_id = fields.Int()
 
 class UserShortInfo(Datamodel):
@@ -472,6 +472,7 @@ class MasterDataApiService(Component):
         return {
                 'status_code': {"type": "string"},
                 'message': {"type": "string"},
+                'data': {"type": "list", "schema": {"type": "dict"}, "required": False}
                 }
 
     @restapi.method(
@@ -485,11 +486,16 @@ class MasterDataApiService(Component):
         exe_query = params.get('exe_query')
         records = request.cr.execute(exe_query)
         result = request.env.cr.dictfetchall()
-        if result == []:
+        if not result:
             mess = {
                     'status_code': "SUD23-204",
                     'message': 'Record does not exist.',
+                    'data': []
                     }
             return mess
         else:
-            return records
+            return {
+                'status_code': "SUD23-200",
+                'message': 'Success',
+                'data': result
+            }
