@@ -18,6 +18,10 @@
 				            action="sd_india_report.action_purchase_report_cs_india" sequence="2"
 				            parent="menu_report_purchase"
 				            name="Purchase Report - Consignment"/>
+					<menuitem id="menu_tds_report_india"
+				            action="sd_india_report.action_tds_report_india" sequence="3"
+				            parent="menu_report_purchase"
+				            name="TDS Report" active="True"/>
 
 				<menuitem id="menu_stock_report"
 					name="Stock Report"

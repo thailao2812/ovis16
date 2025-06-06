@@ -69,7 +69,7 @@ class SContract(models.Model):
     @api.depends('shipping_ids', 'shipping_ids.total_line_qty', 'shipping_ids.no_of_bag', 'contract_ids.delivery_ids',
                  'contract_ids.delivery_ids.bagsfactory', 'contract_ids.delivery_ids.weightfactory', 'contract_ids.delivery_ids.state',
                  'contract_ids.delivery_ids.picking_id', 'contract_ids.total_qty', 'contract_ids', 'contract_ids.no_of_bags',
-                 'total_qty', 'no_of_pack')
+                 'total_qty', 'no_of_pack', 'state')
     def _compute_allocated_qty_india(self):
         for record in self:
             qty_allocated_si = record.qty_allocated_si = sum(record.shipping_ids.filtered(lambda x: x.state != 'cancel').mapped('total_line_qty'))
@@ -86,6 +86,16 @@ class SContract(models.Model):
             qty_allocated_do = record.qty_allocated_do = sum(record.contract_ids.mapped('delivery_ids').filtered(lambda x: x.state != 'cancel').mapped('total_qty'))
             record.qty_tobe_allocated_do = record.total_qty - qty_allocated_do
             record.bag_tobe_allocated_do = record.no_of_pack - bag_allocated_do
+
+            if record.state == 'done':
+                record.qty_tobe_allocated_si = 0
+                record.bag_tobe_allocated_si = 0
+
+                record.qty_tobe_allocated_so = 0
+                record.bag_tobe_allocated_so = 0
+
+                record.qty_tobe_allocated_do = 0
+                record.bag_tobe_allocated_do = 0
 
 
     @api.depends('psc_to_sc_ids', 'psc_to_sc_ids.state_allocate', 'psc_to_sc_ids.current_allocated', 'total_qty')

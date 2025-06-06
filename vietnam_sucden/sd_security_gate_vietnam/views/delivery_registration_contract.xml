@@ -17,6 +17,8 @@
                     <field name="supplier_id" string="Supplier" />
 <!--                    <field name="parking_order" />-->
                     <field name="product_ids" widget="many2many_tags"/>
+                    <field name="estimated_bags"/>
+                    <field name="approx_quantity"/>
                     <field name="picking_ktn_id" string="GRN Link"/>
 <!--                    <field name="packing_id"/>-->
 <!--                    <field name="remarks" />-->

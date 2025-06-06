@@ -31,13 +31,11 @@ class BatchReport(models.Model):
                 
     def load_data(self):
         for this in self:
-            sql ='''
-                DELETE FROM batch_report_input where batch_id = %s ;
-                DELETE FROM batch_report_output where batch_id = %s ;
-                DELETE FROM batch_report_instore where batch_id = %s ;
-                
-                
-                SELECT spt.code as picking_type_code,
+            self.env.cr.execute('DELETE FROM batch_report_input WHERE batch_id = %s', (this.id,))
+            self.env.cr.execute('DELETE FROM batch_report_output WHERE batch_id = %s', (this.id,))
+            self.env.cr.execute('DELETE FROM batch_report_instore WHERE batch_id = %s', (this.id,))
+            sql ="""
+            SELECT spt.code as picking_type_code,
                         sp.id,
                         sml.lot_id as stack_id,
                         DATE(timezone('UTC', sp.date_done::timestamp)) date_done
@@ -46,8 +44,7 @@ class BatchReport(models.Model):
                 WHERE (sml.finished_id = %s or sml.material_id = %s)
                     AND spt.code in ('production_in','production_out')
                     AND sp.state ='done'
-            '''%(this.id,this.id,this.id, this.production_id.id, this.production_id.id)
-            print(sql)
+            """ % (this.production_id.id, this.production_id.id)
             self.env.cr.execute(sql)
             for line in self.env.cr.dictfetchall():
                 
@@ -64,8 +61,7 @@ class BatchReport(models.Model):
                         self.env['batch.report.output'].create(val)
             self.create_instore()
 
-        
-        
+        self.env.cr.commit()
         self.compute_ins_qc()
         self.compute_in_qc()
         self.compute_out_qc()
