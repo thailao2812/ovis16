@@ -13,6 +13,7 @@
         'views/stock_contract_allocation_view.xml',
         'views/pss_management_view.xml',
         'views/kcs_sample_view.xml',
+        'views/lot_kcs.xml',
         'views/menu.xml',
     ],
     'assets': {

@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="inherit_view_lot_kcs_search" model="ir.ui.view">
+        <field name="name">inherit_view_lot_kcs_search</field>
+        <field name="model">lot.kcs</field>
+        <field name="inherit_id" ref="sd_quality.view_lot_kcs_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="nvs_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="inherit_view_lot_kcs_tree" model="ir.ui.view">
+        <field name="name">inherit_view_lot_kcs_tree</field>
+        <field name="model">lot.kcs</field>
+        <field name="inherit_id" ref="sd_quality.view_lot_kcs_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='get_qc']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//button[@name='btt_confirm']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//button[@name='btt_draft']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+            <xpath expr="//tree" position="attributes">
+                <attribute name="editable" delete="1"/>
+            </xpath>
+
+            <xpath expr="//field[@name='file']" position="before">
+                <field name="state"/>
+            </xpath>
+            <xpath expr="//field[@name='state']" position="replace">
+                <field name="state" widget="badge"
+                    decoration-danger="state != 'draft'"
+                    decoration-info="state == 'draft'"
+                    optional="show"/>
+            </xpath>
+            <xpath expr="//field[@name='x_ex_warehouse_id']" position="replace">
+                <field name="warehouse_id"/>
+            </xpath>
+
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="delivery_id" required="1" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+            </xpath>
+
+            <!-- <xpath expr="//field[@name='fixed_mc']" position="replace">
+                <field name="fixed_mc" readonly="1"/>
+            </xpath>
+            <xpath expr="//field[@name='fixed_mc_on_despatch']" position="replace">
+                <field name="fixed_mc_on_despatch" readonly="1"/>
+            </xpath>
+            <xpath expr="//field[@name='mc']" position="replace">
+                <field name="mc" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='mc_on_despatch']" position="replace">
+                <field name="mc_on_despatch" invisible="1"/>
+            </xpath> -->
+
+        </field>
+    </record>
+
+    <record id="inherit_view_lot_kcs_form" model="ir.ui.view">
+        <field name="name">inherit_view_lot_kcs_form</field>
+        <field name="model">lot.kcs</field>
+        <field name="inherit_id" ref="sd_quality.view_lot_kcs_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="attributes">
+                <attribute name="delete">false</attribute>
+            </xpath>
+            <xpath expr="//sheet" position="before">
+                <header>
+                    <!-- <button name="get_qc" string="Load" class="oe_highlight" type="object" 
+                            attrs="{'invisible': [('state','!=','draft')]}" 
+                            groups="sd_quality.group_kcs_manager,sd_quality.group_kcs_user"/> -->
+                    <button name="btt_confirm" string="Approve" class="oe_highlight" type="object"
+                            attrs="{'invisible': [('state','!=','draft')]}" 
+                            groups="sd_quality.group_kcs_manager,sd_quality.group_kcs_user"/>
+                    <button name="btt_draft" string="S.T.Draft" type="object" class="oe_highlight"
+                            attrs="{'invisible': [('state','!=','approve')]}" 
+                            groups="sd_quality.group_kcs_manager"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+            </xpath>
+            <xpath expr="//sheet" position="replace">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button type="object" name="action_view_picking" class="oe_stat_button" icon="fa-truck">
+                            <field name="picking_count"  widget="statinfo" string="Delivery" help="Delivery"/>
+                        </button>
+                    </div>
+
+                    <div class="oe_title">
+                        <h1>
+                            <label for="name" string="Lot No." style="margin-right: 8px; font-weight: normal;"/>
+                            <field name="name" force_save="1" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group class="row">
+                        <group string="Contract info" class="col-lg-4" colspan="4"> <!-- <group col="6"> -->
+                            <field name="warehouse_id" options="{'no_create_edit': True}" required="1" attrs="{'readonly': [('state','=','approve')]}"/>
+                            <field name="shipping_id" force_save="1" required="1" options="{'no_create_edit': True}" attrs="{'readonly': [('state','=','approve')]}"/>
+                            <!-- <field name="nvs_nls_ids" force_save="1" readonly="1"/>
+                            <field name="delivery_ids" force_save="1" readonly="1"/> -->
+                            <label for="nvs_nls_ids"/>
+                            <div name="nvs_nls_ids" class="o_row">
+                                <field name="nvs_nls_ids" widget="many2many_tags" options="{'no_create': True, 'no_open': True}" class="oe_inline"
+                                            domain="([('shipping_id','=',shipping_id)])"/>
+                            </div>
+
+                            <label for="delivery_ids"/>
+                            <div name="delivery_ids" class="o_row">
+                                <field name="delivery_ids" widget="many2many_tags" options="{'no_create': True, 'no_open': True}" class="oe_inline"
+                                        domain="([('shipping_id','=',shipping_id)])"/>
+                            </div>
+
+                            <!-- <field name="gate_id"/> -->
+                            <field name="partner_id"/>
+					        <!-- <field name="x_pod_id" readonly="1"/> -->
+                        </group>
+                        <group string='Product QTY.' class="col-lg-4" colspan="4">
+                            <field name="product_id"/>
+                            <field name="x_packing_id" readonly="1"/>
+                            <field name="si_qty"/>
+                            <field name="lot_quantity"/>
+                        </group>
+                        <group string='Container Info' class="col-lg-4" colspan="4">
+                            <!-- <separator string="Container Info" colspan="4"/> -->
+                            <field name="vehicle_no" force_save="1" readonly="1"/>
+                            <field name="trucking_id" force_save="1" readonly="1"/>
+                            <field name="first_cont" force_save="1" readonly="1"/>
+                            <field name="last_cont" force_save="1" readonly="1"/>
+                            <field name="seal"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Allocated" name="gnd">
+                            <field name="los_ids" attrs="{'readonly': [('state', '=', 'approve')]}"
+                                    context="{'default_warehouse_id': warehouse_id, 'parent_warehouse_id': warehouse_id}">  <!--  -->
+                                <tree editable="top">
+                                    <field name="delivery_id" required="0" invisible="1" />
+                                    <field name="product_id"  required="1" options="{'no_create': True}"/>
+                                    <field name="zone_id" readonly="1" />
+                                    <field name="stack_id" required="1"
+                                        domain="[('lock','=',False),('product_id','=',product_id),('init_qty','&gt;',0.0),('warehouse_id','=',parent.warehouse_id)]"/>
+                                    <field name="no_of_bag" sum="no_of_bag"/>
+                                    <field name="quantity" sum="quantity" required="1" />
+                                    <!-- <field name="mc_on_despatch" />
+                                    <field name="defects" />
+                                    <field name="defects_tcvn"/>
+                                    <field name="cuptaste"/> -->
+                                    <field name="gdn_id" invisible="0"/>
+                                    <button name="btt_confirm" string="Confirm" type="object" invisible="1"/>
+                                </tree>
+                            </field>
+                        
+                            <button name="get_qc" string="Load" class="oe_highlight" type="object" 
+                                attrs="{'invisible': [('state','!=','draft')]}" 
+                                groups="sd_quality.group_kcs_manager,sd_quality.group_kcs_user"/>
+
+                            <group class="row">
+                                <group string='QC Fixed' class="col-lg-4" colspan="4">
+                                    <field name="mc"/>
+                                    <field name="fixed_mc_on_despatch" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                                    <field name="fixed_fm" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                                    <field name="fixed_black" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                                    <field name="fixed_broken" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                                    <field name="fixed_brown" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                                    <field name="fixed_mold" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                                    <field name="fixed_cherry" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                                    <field name="fixed_screen20" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                                    <field name="fixed_screen19" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                                </group>
+                                <group string="QC Fixed" class="col-lg-4" colspan="4">
+                                    <field name="fixed_screen18" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                                    <field name="fixed_screen17" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                                    <field name="fixed_screen16" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                                    <field name="fixed_screen15" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                                    <field name="fixed_screen14" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                                    <field name="fixed_screen13" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                                    <field name="fixed_greatersc12" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                                    <field name="fixed_screen12" string="Below screen12" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                                    <field name="fixed_burn" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                                    <field name="fixed_immature" string="Immature" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                                </group>
+                                <group string="QC Fixed" class="col-lg-4" colspan="4">
+                                    <field name="fixed_excelsa" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                                    <field name="fixed_eaten" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                                    <field name="defects" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                                    <field name="x_bulk_density" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                                    <field name="cup_test" attrs="{'readonly': [('state','=','approve')]}"/>
+                                    <field name="lot_ned" attrs="{'readonly': [('state','=','approve')]}"/>
+                                    <field name="supervisor" attrs="{'readonly': [('state','=','approve')]}" string="Inspected/Samples"/>
+                                    <field name="sampler" attrs="{'readonly': [('state','=','approve')]}" string="Supervisor"/>
+                                    <field name="file" widget="binary" filename="file_name" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                                    <field name="lot_date" force_save="1" readonly="1"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                    <!-- <group string="QC Fixed" class="col-lg-4" colspan="4">
+                            <field name="fixed_screen20"/>
+                            <field name="fixed_screen19"/>
+                            <field name="fixed_screen18"/>
+                            <field name="fixed_screen16"/>
+                            <field name="fixed_screen13"/>
+                            <field name="fixed_greatersc12"/>
+                            <field name="fixed_screen12" string="Below screen12"/> -->
+                            <!-- <separator string="Delivery Registration" colspan="4"/>
+                            <field name="trucking_id"/>
+                            <field name="vehicle_no"/>
+                            <field name="first_cont"/>
+                            <field name="last_cont"/> -->
+                    <!-- </group> -->
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </xpath>
+
+        </field>
+    </record>
+</odoo>
