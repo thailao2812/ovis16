@@ -93,18 +93,18 @@ class WeighbridgeApiService(Component):
         SecurityGateShortInfo = self.env.datamodels["security.gate.short.info"]
         if security_gate_search_param.country == 'vietnam':
             for p in self.env["ned.security.gate.queue"].search(domain):
-                get_timeout = None if p.time_out == False else dtime.strptime(str(p.time_out), "%Y-%m-%d %H:%M:%S.%f").strftime(DATETIME_FORMAT)
+                get_timeout = None if p.time_out == False else dtime.strptime(str(p.time_out), "%Y-%m-%d %H:%M:%S").strftime(DATETIME_FORMAT)
                 res.append(SecurityGateShortInfo(id=p.id, name=p.name, warehouse_id=p.warehouse_id, supplier_id=p.supplier_id, customer_id=p.customer_id, 
                                                 vehicle=p.license_plate, first_cont='' if p.first_cont == False else p.first_cont, last_cont='' if p.last_cont == False 
                                                 else p.last_cont, estimated_bags=p.estimated_bags,
                                                 parking_order=p.parking_order, code=p.picking_type_id.code, picking_name=p.picking_type_id.name, 
                                                 state=p.state, default_code=p.product_ids.default_code, product_id=p.product_ids.id, type_transfer=p.type_transfer,
                                                 districts_id=p.districts_id, packing_id=p.packing_id, approx_quantity=p.approx_quantity,
-                                                arrival_time=None if p.arrivial_time == False else dtime.strptime(str(p.arrivial_time), "%Y-%m-%d %H:%M:%S.%f").strftime(DATETIME_FORMAT),
+                                                arrival_time=None if p.arrivial_time == False else dtime.strptime(str(p.arrivial_time), "%Y-%m-%d %H:%M:%S").strftime(DATETIME_FORMAT),
                                                 time_out=get_timeout, block_request=p.block_request, weigh_block=p.weigh_block))
         else: # Thêm estate_name cho riêng India
             for p in self.env["ned.security.gate.queue"].search(domain):
-                get_timeout = None if p.time_out == False else dtime.strptime(str(p.time_out), "%Y-%m-%d %H:%M:%S.%f").strftime(DATETIME_FORMAT)
+                get_timeout = None if p.time_out == False else dtime.strptime(str(p.time_out), "%Y-%m-%d %H:%M:%S").strftime(DATETIME_FORMAT)
                 res.append(SecurityGateShortInfo(id=p.id, name=p.name, warehouse_id=p.warehouse_id, supplier_id=p.supplier_id, customer_id=p.customer_id, 
                                                 vehicle=p.license_plate, first_cont='' if p.first_cont == False else p.first_cont, last_cont='' if p.last_cont == False 
                                                 else p.last_cont, estimated_bags=p.estimated_bags,
