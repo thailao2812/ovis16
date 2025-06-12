@@ -1,0 +1,49 @@
+/* Định dạng chung cho badge */
+.my_state_badge {
+    border-radius: 3px !important;
+    padding: 2px 8px !important;
+    display: inline-block !important;
+    font-weight: bold !important;
+}
+
+/* Màu mặc định nếu không rơi vào trường hợp nào */
+.my_state_badge span {
+    background-color: rgba(253, 251, 251, 0) !important;
+    color: #040404 !important;
+    padding: 2px 8px !important;
+    border-radius: 3px !important;
+    display: inline-block !important;
+}
+
+/* Màu theo trạng thái dựa vào raw-value của span */
+.my_state_badge span[raw-value="draft"] {
+    background-color: #fafaad !important;
+    color: #040404 !important;
+    padding: 2px 8px !important;
+    border-radius: 3px !important;
+    display: inline-block !important;
+}
+
+.my_state_badge span[raw-value="approve"] {
+    background-color: #28a745 !important;
+    color: #fff !important;
+    padding: 2px 8px !important;
+    border-radius: 3px !important;
+    display: inline-block !important;
+}
+
+.my_state_badge span[raw-value="cancel"] {
+    background-color: #636262 !important;
+    color: #fff !important;
+    padding: 2px 8px !important;
+    border-radius: 3px !important;
+    display: inline-block !important;
+}
+
+.my_state_badge span[raw-value="ready"] {
+    background-color: #17a2b8 !important;
+    color: #fff !important;
+    padding: 2px 8px !important;
+    border-radius: 3px !important;
+    display: inline-block !important;
+}
