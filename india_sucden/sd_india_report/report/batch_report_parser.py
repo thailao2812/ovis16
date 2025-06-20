@@ -871,7 +871,7 @@ class Parser(models.AbstractModel):
             if finish_line:
                 return finish_line[0].product_id.display_wb, finish_line[0].init_qty
             else:
-                return '', ''
+                return '', 0
 
     def get_instore_loss(self, batch):
         if batch:
