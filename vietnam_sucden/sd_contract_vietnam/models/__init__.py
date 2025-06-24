@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from . import account_tax
 from . import purchase_contract, purchase_contract_line
 from . import list_farmer
 from . import shipping_instruction
@@ -11,7 +12,7 @@ from . import average_price_contract
 from . import request_payment
 from . import npe_nvp_relation
 from . import s_contract
-from . import account_payment, account_move, account_tax
+from . import account_payment, account_move
 from . import sequence_mixin
 from . import offset_debt
 from . import product_category
