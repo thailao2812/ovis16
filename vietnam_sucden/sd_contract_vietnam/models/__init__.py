@@ -15,5 +15,5 @@ from . import account_payment, account_move, account_tax
 from . import sequence_mixin
 from . import offset_debt
 from . import product_category
-from . import res_company
+# from . import res_company
 from . import purchase_contract_invoice
