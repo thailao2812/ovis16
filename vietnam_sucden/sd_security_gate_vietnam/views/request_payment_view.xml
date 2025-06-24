@@ -47,9 +47,11 @@
                             groups="sd_security_gate_vietnam.group_approve_2st_accounting_request_payment"/>
                     <button name="approve_by_director" string="Approve by Director" type="object" states="accounting_2" class="oe_highlight"
                             groups="sd_security_gate_vietnam.group_director_request_payment"/>
-                    	<button states="approved_director" name="action_request_register_payment" type="object"
-                                class="oe_highlight" context="{'dont_redirect_to_payments': True}"
-                                string="Register Payment" data-hotkey="g" groups="account.group_account_invoice"/>
+                    <button states="approved_director" name="%(sd_security_gate_vietnam.action_create_multiple_payment)d" type="action"
+                                class="oe_highlight" string="Register Payment" groups="account.group_account_invoice"/>
+<!--                    	<button states="approved_director" name="action_request_register_payment" type="object"-->
+<!--                                class="oe_highlight" context="{'dont_redirect_to_payments': True}"-->
+<!--                                string="Register Payment" data-hotkey="g" groups="account.group_account_invoice"/>-->
 
                     <!--for NVP-->
                     <button name="print_printout_payment_npv" string="Print Request Payment SVNP" type="object" class="oe_highlight" attrs="{'invisible': [('type', '!=', 'purchase')]}"/>
@@ -183,6 +185,8 @@
                             <field name="deposit_amount" readonly="1" attrs="{'invisible': [('is_converted', '=', True)]}" groups="sd_security_gate_vietnam.group_request_payment_seeing_money_value"/>
                             <field name="liquidation_amount" readonly="1" groups="sd_security_gate_vietnam.group_request_payment_seeing_money_value"/>
                             <field name="request_amount" readonly="1" class="bold-text" decoration-danger="request_amount > 0" groups="sd_security_gate_vietnam.group_request_payment_seeing_money_value"/>
+                            <field name="tax_id" groups="sd_security_gate_vietnam.group_request_payment_seeing_money_value"/>
+                            <field name="amount_invoice" groups="sd_security_gate_vietnam.group_request_payment_seeing_money_value"/>
                             <field name="amount_in_text" readonly="1" class="bold-text" groups="sd_security_gate_vietnam.group_request_payment_seeing_money_value"/>
                             <field name="partner_bank_id" readonly="1" domain="[('partner_id','=',partner_id)]" required="1"/>
                             <field name="account_no" readonly="1"/>
@@ -212,6 +216,15 @@
                             </field>
                         </group>
                     </group>
+                    <separator string="Invoice Allocation"/>
+                    <field name="invoice_ids" readonly="1">
+                        <tree string="Invoice">
+                            <field name="invoice_id" required="1"/>
+                            <field name="paid_amount"/>
+                            <field name="allocate_amount"/>
+                            <field name="remaining_amount"/>
+                        </tree>
+                    </field>
                     <separator string="Delivery Registration KTN" attrs="{'invisible': [('have_dr_ktn', '=', False)]}"/>
                     <field name="delivery_70_ktn_ids" readonly="1" attrs="{'invisible': [('have_dr_ktn', '=', False)]}">
                         <tree editable="bottom">

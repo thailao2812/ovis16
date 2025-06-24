@@ -127,6 +127,16 @@ class RequestPayment(models.Model):
     display_name = fields.Char(compute='_compute_display_name', store=True)
 
     request_user_id = fields.Many2one('res.users', compute='_compute_request_user_id', store=True)
+    invoice_ids = fields.One2many('request.payment.invoice', 'request_payment_id')
+
+    amount_invoice = fields.Float(string='Amount Invoice', compute='_compute_amount_invoice', store=True)
+    tax_id = fields.Many2one('account.tax', string='Tax', related='purchase_contract_id.vat_id', store=True)
+
+    @api.depends('invoice_ids', 'invoice_ids.allocate_amount', 'request_amount', 'state')
+    def _compute_amount_invoice(self):
+        self.amount_invoice = 0
+        if self.invoice_ids:
+            self.amount_invoice = sum(self.invoice_ids.mapped('allocate_amount'))
 
     @api.depends('user_process_ids', 'user_process_ids.user_id', 'user_process_ids.state')
     def _compute_request_user_id(self):
@@ -590,11 +600,11 @@ class RequestPayment(models.Model):
             result.append((rec.id, 'Payment ' + str(rec.name) + ' at ' + str(self.get_date(str(rec.date)))))
         return result
 
-    @api.depends('name', 'date')
+    @api.depends('name', 'date', 'purchase_contract_id')
     def _compute_display_name(self):
         for rec in self:
             if rec.name and rec.date:
-                rec.display_name = 'Payment ' + str(rec.name) + ' at ' + str(self.get_date(str(rec.date)))
+                rec.display_name = 'Payment ' + str(rec.name) + ' at ' + str(self.get_date(str(rec.date))) + ' of ' + rec.purchase_contract_id.name
 
 
     @api.depends('fixation_advance_line_ids', 'fixation_advance_line_ids.quantity_fix', 'type_of_ptbf_payment', 'type',
@@ -856,6 +866,8 @@ class RequestPayment(models.Model):
                 'date': datetime.today(),
                 'state': 'Request'
             })
+            if self.amount_invoice != self.request_amount:
+                raise UserError(_("Total amount Invoice is not equal to Request Amount, please check again!"))
             rec.state = 'request'
 
     # @api.depends('delivery_70_ids', 'delivery_array')

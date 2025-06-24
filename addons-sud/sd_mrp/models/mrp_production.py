@@ -49,8 +49,8 @@ class MrpProduction(models.Model):
         if self.state == 'done':
             raise UserError(_('The Other is Done, cannot cancel'))
         # Trường hợp đã tạo git rùi thì ko có tạo phiếu Cancel
-        if self.request_count > 0:
-            raise UserError(_('You have Request Material for this MO, cannot Cancel it!'))
+        if self.move_line_material_ids.filtered(lambda d:d.state != 'cancel') or self.move_line_finished_good_ids.filtered(lambda d:d.state != 'cancel'):
+            raise UserError(_('You cannot Cancel MO because you have material/finished product that not cancel yet!'))
 
         self.state = 'cancel'
         # self._action_cancel()

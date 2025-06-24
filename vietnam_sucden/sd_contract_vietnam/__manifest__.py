@@ -10,9 +10,13 @@
     """,
     'data': [
         'security/ir.model.access.csv',
+        'wizard/wizard_create_invoice_view.xml',
         'security/request_final_payment_security.xml',
         'data/group.xml',
         'views/purchase_contract_view.xml',
+        'views/account_tax_view.xml',
+        'views/res_company_view.xml',
+        'views/account_move_view.xml',
         'views/shipping_instruction_view.xml',
         'views/diff_configuration_view.xml',
         'views/stock_allocation_view.xml',

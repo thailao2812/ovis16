@@ -46,6 +46,25 @@ class PurchaseContract(models.Model):
 
     diff_price = fields.Float(tracking=True)
 
+    provisional_price = fields.Float(string='Provisional Price')
+
+    invoice_qty = fields.Float(string="Invoice Qty", compute='_compute_invoice_qty', store=True, digits=(16,0))
+    invoice_qty_remain = fields.Float(string="Invoice Qty Remain", compute='_compute_invoice_qty', store=True, digits=(16,0))
+
+    invoice_ids = fields.One2many('account.move', 'purchase_contract_id', string='Invoice')
+    vat_id = fields.Many2one('account.tax', string='VAT', related='contract_line.vat_id', store=True)
+
+    invoice_amount = fields.Float(string='Invoice Paid Amount', compute='_amount_all', store=True)
+    different_amount = fields.Float(string='Different Amount', compute='_amount_all', store=True)
+
+    purchase_contract_invoice_ids = fields.One2many('purchase.contract.invoice', 'purchase_contract_id')
+
+    @api.depends('invoice_ids', 'invoice_ids.state', 'invoice_ids.total_qty', 'state', 'total_qty')
+    def _compute_invoice_qty(self):
+        for record in self:
+            record.invoice_qty = sum(record.invoice_ids.filtered(lambda x: x.state != 'cancel').mapped('total_qty'))
+            record.invoice_qty_remain = record.total_qty - sum(record.invoice_ids.filtered(lambda x: x.state != 'cancel').mapped('total_qty'))
+
     def button_request_final_payment(self):
         for record in self:
             record.state_final_payment = 'request'
@@ -127,33 +146,51 @@ class PurchaseContract(models.Model):
     @api.depends('contract_line.price_total', 'contract_line.price_unit', 'pay_allocation_ids',
                  'pay_allocation_ids.allocation_amount',
                  'request_payment_ids', 'request_payment_ids.total_payment', 'payment_ids', 'payment_ids.amount',
-                 'stock_allocation_ids',
+                 'stock_allocation_ids', 'type', 'npe_ids', 'nvp_ids',
                  'stock_allocation_ids.qty_allocation',
-                 'pay_allocation_ids.allocation_line_ids',
-                 'ptbf_ids', 'state',
-                 'ptbf_ids.history_rate_ids.total_amount_vn', 'offset_debt_ids', 'offset_debt_ids.amount')
+                 'pay_allocation_ids.allocation_line_ids', 'purchase_contract_invoice_ids', 'purchase_contract_invoice_ids.quantity',
+                 'purchase_contract_invoice_ids.amount_allocated_untaxed', 'purchase_contract_invoice_ids.amount_allocated_tax',
+                 'purchase_contract_invoice_ids.amount_allocated_total',
+                 'ptbf_ids', 'state', 'total_qty', 'vat_id', 'provisional_price', 'invoice_ids', 'invoice_qty', 'invoice_qty_remain',
+                 'invoice_ids.state', 'invoice_ids.payment_state', 'ptbf_ids.history_rate_ids.total_amount_vn', 'offset_debt_ids', 'offset_debt_ids.amount')
     def _amount_all(self):
         for contract in self:
             price_unit = 0.0
             amount_untaxed = 0
             amount_tax = 0.0
-
+            tax_id = contract.vat_id
             amount = 0.0
             amount_deposit = 0.0
             sub_rel = 0.0
+            invoice_ids = self.invoice_ids.filtered(lambda x: x.state == 'posted' and x.payment_state in ['paid', 'partial'])
+            amount_payment = 0
+            for move in invoice_ids:
+                if move.state == 'posted' and move.is_invoice(include_receipts=True):
+                    reconciled_partials = move._get_all_reconciled_invoice_partials()
+                    for reconciled_partial in reconciled_partials:
+                        counterpart_line = reconciled_partial['aml']
+                        payment_id = counterpart_line.payment_id
+                        amount_payment += payment_id.amount
+            contract.invoice_amount = amount_payment
 
             if contract.type == 'ptbf':
                 amount_untaxed = 0
                 for i in contract.ptbf_ids:
                     for j in i.history_rate_ids:
                         amount_untaxed += j.total_amount_vn
-                        amount_tax = 0
+                amount_tax = amount_untaxed * (tax_id.amount/100)
 
-            else:
+            if contract.type == 'consign':
+                total_qty = contract.total_qty
+                provisional_price = price_unit = contract.provisional_price
+                amount_untaxed = total_qty * provisional_price
+                amount_tax = amount_untaxed * (tax_id.amount/100)
+            if contract.type == 'purchase':
                 for line in contract.contract_line:
                     amount_untaxed += line.price_subtotal
-                    amount_tax += line.price_tax
                     price_unit = line.price_unit
+
+                amount_tax = amount_untaxed * (tax_id.amount/100)
 
             if not contract.nvp_ids:
                 for stock in contract.stock_allocation_ids:
@@ -176,16 +213,24 @@ class PurchaseContract(models.Model):
 
             amount = abs(amount) * (-1)
             amount_deposit = abs(amount_deposit) * (-1)
-
             contract.update({
                 'amount_untaxed': contract.currency_id.round(amount_untaxed),
                 'amount_tax': contract.currency_id.round(amount_tax),
                 'amount_sub_total': amount_untaxed + amount_tax,
-                'amount_total': sub_rel + amount + amount_deposit - sum(contract.offset_debt_ids.mapped('amount')),
+                'amount_total': sub_rel + amount + amount_deposit - sum(contract.offset_debt_ids.mapped('amount')) + amount_tax,
                 'amount_sub_rel_total': sub_rel,
                 'total_interest_pay': abs(amount),
                 'amount_deposit': abs(amount_deposit)
             })
+            if contract.type == 'consign':
+                contract.amount_total = amount_untaxed + amount_tax + amount_deposit
+                contract.different_amount = contract.amount_total - contract.invoice_amount
+            if contract.purchase_contract_invoice_ids:
+                contract.amount_untaxed = sum(contract.purchase_contract_invoice_ids.mapped('amount_allocated_untaxed'))
+                contract.amount_tax = sum(contract.purchase_contract_invoice_ids.mapped('amount_allocated_tax'))
+                contract.amount_sub_total = sum(contract.purchase_contract_invoice_ids.mapped('amount_allocated_total'))
+                contract.amount_sub_rel_total = sum(contract.purchase_contract_invoice_ids.mapped('amount_allocated_total'))
+                contract.amount_total = sum(contract.purchase_contract_invoice_ids.mapped('amount_allocated_total')) + amount + amount_deposit - sum(contract.offset_debt_ids.mapped('amount'))
 
 
 class OpenQtyNPE(models.Model):

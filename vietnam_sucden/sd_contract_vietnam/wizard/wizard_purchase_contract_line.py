@@ -26,9 +26,49 @@ class WizardPurchaseContractLine(models.TransientModel):
 class WizardPurchaseContract(models.TransientModel):
     _inherit = 'wizard.purchase.contract'
 
+    invoice_ids = fields.Many2many('account.move', string='Invoice')
+    invoice_purchase_line_ids = fields.One2many('invoice.purchase.line', 'wizard_id', string='Invoice Purchase Line')
+    amount_allocated_untaxed = fields.Float(string='Amount Allocated (Untaxed)', compute='_compute_amount_allocated',
+                                            store=True)
+    amount_allocated_tax = fields.Float(string='Amount Allocated (Tax)', compute='_compute_amount_allocated',
+                                        store=True)
+    amount_allocated_total = fields.Float(string='Amount Allocated (Total)', compute='_compute_amount_allocated',
+                                          store=True)
+
+    @api.depends('invoice_purchase_line_ids', 'invoice_purchase_line_ids.quantity',
+                 'invoice_purchase_line_ids.invoice_id')
+    def _compute_amount_allocated(self):
+        for rec in self:
+            untaxed = tax = total = 0.0
+            for line in rec.invoice_purchase_line_ids:
+                invoice = line.invoice_id
+                if invoice and invoice.amount_total and invoice.amount_untaxed and invoice.invoice_line_ids:
+                    total_qty = sum(invoice.invoice_line_ids.mapped('quantity'))
+                    if total_qty > 0:
+                        ratio = line.quantity / total_qty
+                        untaxed += ratio * invoice.amount_untaxed
+                        total += ratio * invoice.amount_total
+            tax = total - untaxed
+            rec.amount_allocated_untaxed = untaxed
+            rec.amount_allocated_tax = tax
+            rec.amount_allocated_total = total
+
+    @api.model
+    def default_get(self, fields):
+        res = super(WizardPurchaseContract, self).default_get(fields)
+        purchase_contract_id = self.env['purchase.contract'].browse(self._context.get('active_ids'))
+        res['invoice_ids'] = [(6, 0, purchase_contract_id.invoice_ids.ids)]
+        return res
+
     def button_convert(self):
         npe_nvp_relation = self.env['npe.nvp.relation']
         convert_line = self.env['open.qty.npe']
+        if not self.invoice_purchase_line_ids:
+            raise UserError(_("You need input invoice line and allocate it with quantity"))
+        if self.contract_line_ids and self.invoice_purchase_line_ids:
+            if sum(self.invoice_purchase_line_ids.mapped('quantity')) != sum(self.contract_line_ids.mapped('product_qty')) + sum(
+                    self.contract_line_ids.mapped('open_qty')):
+                raise UserError(_("The sum of the quantity of the invoices and the contract lines must be equal"))
 
         for line in self.contract_line_ids:
             if line.qty_received < line.product_qty + line.open_qty + line.total_qty_fixed:
@@ -111,4 +151,52 @@ class WizardPurchaseContract(models.TransientModel):
             result['context'] = {}
             result['views'] = [(res and res.id or False, 'form')]
             result['res_id'] = new_id.ids[0] or False
+        for inv in self.invoice_purchase_line_ids:
+            value = {
+                'move_id': inv.invoice_id.id,
+                'purchase_contract_id': new_id.id,
+                'date': datetime.now().date(),
+                'quantity': inv.quantity,
+                'amount_allocated_untaxed': inv.amount_allocated_untaxed,
+                'amount_allocated_tax': inv.amount_allocated_tax,
+                'amount_allocated_total': inv.amount_allocated_total,
+            }
+            self.env['purchase.contract.invoice'].create(value)
         return result
+
+class InvoicePurchaseLine(models.TransientModel):
+    _name = 'invoice.purchase.line'
+
+    wizard_id = fields.Many2one('wizard.purchase.contract', string='Wizard')
+    invoice_id = fields.Many2one('account.move', string='Invoice')
+    quantity_invoice = fields.Float(string='Quantity Invoice', compute='_compute_quantity_invoice', store=True)
+    quantity = fields.Float(string='Quantity')
+    amount_allocated_untaxed = fields.Float(string='Amount Allocated (Untaxed)', compute='_compute_amount_allocated',
+                                            store=True)
+    amount_allocated_tax = fields.Float(string='Amount Allocated (Tax)', compute='_compute_amount_allocated',
+                                        store=True)
+    amount_allocated_total = fields.Float(string='Amount Allocated (Total)', compute='_compute_amount_allocated',
+                                          store=True)
+
+    @api.depends('invoice_id', 'quantity')
+    def _compute_quantity_invoice(self):
+        for rec in self:
+            rec.quantity_invoice = 0
+            if rec.invoice_id:
+                rec.quantity_invoice = sum(rec.invoice_id.invoice_line_ids.mapped('quantity'))
+
+    @api.depends('invoice_id', 'quantity')
+    def _compute_amount_allocated(self):
+        for rec in self:
+            untaxed = tax = total = 0.0
+            invoice = rec.invoice_id
+            if invoice and invoice.amount_total and invoice.amount_untaxed and invoice.invoice_line_ids:
+                total_qty = sum(invoice.invoice_line_ids.mapped('quantity'))
+                if total_qty > 0:
+                    ratio = rec.quantity / total_qty
+                    untaxed += ratio * invoice.amount_untaxed
+                    total += ratio * invoice.amount_total
+            tax = total - untaxed
+            rec.amount_allocated_untaxed = untaxed
+            rec.amount_allocated_tax = tax
+            rec.amount_allocated_total = total

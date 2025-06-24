@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="e_invoicing_form_inherit_account_move_inherit_sd_contract_vietnam" model="ir.ui.view">
+        <field name="name">e_invoicing_form_inherit_account_move_inherit_sd_contract_vietnam</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="sd_electronic.e_invoicing_form_inherit_account_move"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='origin']" position="after">
+                <field name="purchase_contract_id" readonly="1"/>
+            </xpath>
+            <xpath expr="//field[@name='origin']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//page[@name='aml_tab']" position="after">
+                <page string="Purchase Allocate" name="purchase_allocate">
+                    <field name="purchase_contract_invoice_ids" readonly="1">
+                        <tree>
+                            <field name="purchase_contract_id"/>
+                            <field name="date"/>
+                            <field name="amount_allocated_untaxed"/>
+                            <field name="amount_allocated_tax"/>
+                            <field name="amount_allocated_total"/>
+                            <field name="create_uid"/>
+                            <field name="create_date"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+            <xpath expr="//notebook" position="before">
+                <group string="Allocated Amount Information">
+                    <group>
+                        <field name="total_quantity"/>
+                        <field name="allocated_untaxed_amount"/>
+                        <field name="allocated_taxed_amount"/>
+                        <field name="allocated_total_amount"/>
+                    </group>
+                    <group>
+                        <field name="remain_quantity"/>
+                        <field name="remain_untaxed_amount"/>
+                        <field name="remain_taxed_amount"/>
+                        <field name="remain_total_amount"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

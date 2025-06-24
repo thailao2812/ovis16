@@ -11,6 +11,9 @@ from . import average_price_contract
 from . import request_payment
 from . import npe_nvp_relation
 from . import s_contract
-from . import account_payment
+from . import account_payment, account_move, account_tax
 from . import sequence_mixin
 from . import offset_debt
+from . import product_category
+from . import res_company
+from . import purchase_contract_invoice
