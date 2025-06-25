@@ -18,6 +18,9 @@
                         <field name = 'invoice_qty' string="Invoice Qty" readonly = '1' sum="invoice_qty"/>
                         <field name = 'franchise_qty' string="Franchise Qty" readonly = '1' sum="franchise_qty"/>
                         <field name = 'franchise' string="Franchise %" readonly = '1'/>
+                        <field name = 'weight_claim' readonly = '1' sum="weight_claim"/>
+                        <field name = 'amount_claim' readonly = '1' sum="amount_claim"/>
+                        <field name = 'reason' readonly = '1'/>
                     </tree>
                 </xpath>
             </field>

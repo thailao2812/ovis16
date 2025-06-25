@@ -22,7 +22,10 @@ class FOB_Franchise(models.Model):
     ex_store_qty = fields.Float(string='Ex-stored Qty')
     invoice_qty = fields.Float(string='Invoice Qty')
     franchise_qty = fields.Float(string='Franchise Kg')
-
+    weight_claim = fields.Float(string='Weight Claim', default=0.0)
+    amount_claim = fields.Float('Amount Claim', default=0.0)
+    reason = fields.Text(string='Reason')
+    
     def init(self):
         tools.drop_view_if_exists(self.env.cr, 'v_fob_weight_franchise')
         self.env.cr.execute('''
@@ -54,6 +57,9 @@ class FOB_Franchise(models.Model):
                 rp.id AS partner_id,
                 pp.id AS product_id,
                 sil.name AS description,
+                si.weight_claim,
+                si.amount_claim,
+                si.reason,
                 MAX(si.total_line_qty) AS qty_si,
                 MAX(si.gdn_qty) AS ex_store_qty,
                 MAX(si.invoice_qty) AS invoice_qty,
@@ -75,7 +81,7 @@ class FOB_Franchise(models.Model):
                 shipping_instruction_line sil ON si.id = sil.shipping_id
             WHERE si.gdn_qty > 0 and si.factory_etd is not Null
             GROUP BY
-                si.id, sw.id, rp.id, pp.id, sil.name
+                si.id, sw.id, rp.id, pp.id, sil.name, si.weight_claim, si.amount_claim, si.reason
                 ''')
 
 
