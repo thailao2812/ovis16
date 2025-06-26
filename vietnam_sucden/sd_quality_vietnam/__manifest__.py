@@ -9,10 +9,12 @@
     'description': """
     """,
     'data': [
+        'security/quality_manager_security.xml',
         'security/ir.model.access.csv',
         'views/stock_contract_allocation_view.xml',
         'views/pss_management_view.xml',
         'views/kcs_sample_view.xml',
+        'views/stock_picking_view_kcs.xml',
         'views/lot_kcs.xml',
         'views/lot_allocation.xml',
         'views/menu.xml',

@@ -11,4 +11,18 @@
 
 		</field>
 	</record>
+
+    <record id="view_shipping_instruction_form_inherit_sd_vietnam" model="ir.ui.view">
+		<field name="name">view_shipping_instruction_form_inherit_sd_vietnam</field>
+		<field name="model">shipping.instruction</field>
+		<field name="inherit_id" ref="sd_sale_contract.view_shipping_instruction_form"/>
+		<field name="arch" type="xml">
+			<xpath expr="//field[@name='status']" position="after">
+				<field name="weight_claim"/>
+				<field name="amount_claim"/>
+				<field name="reason"/>
+			</xpath>
+		</field>
+	</record>
+
 </odoo>

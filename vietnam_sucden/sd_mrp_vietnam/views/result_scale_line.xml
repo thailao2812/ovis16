@@ -31,6 +31,7 @@
                     <field name="batch_name"/>
                     <field name="form_name"/>
                     <field name="product_id"/>
+                    <field name="lot_id"/>
                     <field name="packing_id"/>
                     <field name="weight_scale" string="Gross Weight" sum="weight_scale" />
                     <field name="bag_no" sum="bag_no" />
