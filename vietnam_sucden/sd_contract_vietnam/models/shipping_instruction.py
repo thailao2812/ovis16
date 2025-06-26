@@ -20,6 +20,10 @@ class ShippingInstruction(models.Model):
 
     gdn_qty = fields.Float(string='GDN Qty', compute='_compute_gdn_qty', store=True)
 
+    weight_claim = fields.Float(string='Weight Claim', default=0.0)
+    amount_claim = fields.Float('Amount Claim', default=0.0)
+    reason = fields.Text(string='Reason')
+
     @api.depends('delivery_order_ids', 'delivery_order_ids.state', 'delivery_order_ids.picking_id', 'delivery_order_ids.picking_id.state',
                  'delivery_order_ids.weightfactory')
     def _compute_gdn_qty(self):
