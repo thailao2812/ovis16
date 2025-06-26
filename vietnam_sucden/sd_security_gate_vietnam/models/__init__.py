@@ -15,3 +15,4 @@ from . import fixation_for_advance_npe_total
 from . import delivery_place
 from . import npe_nvp_relation
 from . import ptbf_fixprice
+# from . import shipping_instruction
