@@ -47,7 +47,11 @@
                             groups="sd_security_gate_vietnam.group_approve_2st_accounting_request_payment"/>
                     <button name="approve_by_director" string="Approve by Director" type="object" states="accounting_2" class="oe_highlight"
                             groups="sd_security_gate_vietnam.group_director_request_payment"/>
-                    <button states="approved_director" name="%(sd_security_gate_vietnam.action_create_multiple_payment)d" type="action"
+                    <button name="action_request_register_payment" type="object"
+                                class="oe_highlight" context="{'dont_redirect_to_payments': True}" attrs="{'invisible': ['|', ('state', '!=', 'approved_director'), ('invoice_ids', '=', False)]}"
+                                string="Register Payment" data-hotkey="g" groups="account.group_account_invoice"/>
+                    <button name="%(sd_security_gate_vietnam.action_create_multiple_payment)d" type="action"
+                            attrs="{'invisible': ['|', ('state', '!=', 'approved_director'), ('invoice_ids', '=', False)]}"
                                 class="oe_highlight" string="Register Payment" groups="account.group_account_invoice"/>
 <!--                    	<button states="approved_director" name="action_request_register_payment" type="object"-->
 <!--                                class="oe_highlight" context="{'dont_redirect_to_payments': True}"-->

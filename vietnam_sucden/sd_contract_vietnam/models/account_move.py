@@ -9,6 +9,7 @@ class AccountMove(models.Model):
 
     purchase_contract_id = fields.Many2one('purchase.contract')
     purchase_contract_invoice_ids = fields.One2many('purchase.contract.invoice', 'move_id')
+    user_approve = fields.Many2one('res.users', string='Approve By', compute='_compute_user_approve', store=True, readonly=False)
 
     allocated_untaxed_amount = fields.Float(string='Allocated Amount', compute='_compute_allocated_amount', store=True)
     allocated_taxed_amount = fields.Float(string='Allocated Amount', compute='_compute_allocated_amount', store=True)
@@ -18,6 +19,28 @@ class AccountMove(models.Model):
     remain_total_amount = fields.Float(string='Remain Amount', compute='_compute_allocated_amount', store=True)
     total_quantity = fields.Float(string='Total Quantity', compute='_compute_total_quantity', store=True)
     remain_quantity = fields.Float(string='Remain Quantity', compute='_compute_total_quantity', store=True)
+
+    state = fields.Selection(
+        selection=[
+            ('draft', 'Draft'),
+            ('approved', 'Approved'),
+            ('posted', 'Posted'),
+            ('cancel', 'Cancelled'),
+        ],
+        string='Status',
+        required=True,
+        readonly=True,
+        copy=False,
+        tracking=True,
+        default='draft',
+    )
+
+    @api.depends('purchase_contract_id')
+    def _compute_user_approve(self):
+        for rec in self:
+            rec.user_approve = False
+            if rec.purchase_contract_id:
+                rec.user_approve = rec.purchase_contract_id.user_approve.id if rec.purchase_contract_id.user_approve else False
 
     @api.depends('purchase_contract_invoice_ids.quantity', 'purchase_contract_invoice_ids.amount_allocated_untaxed', 'purchase_contract_id',
                  'purchase_contract_id.state', 'purchase_contract_id.type', 'amount_untaxed', 'amount_tax', 'amount_total',
@@ -61,6 +84,20 @@ class AccountMove(models.Model):
                 self.env.add_to_compute(move.line_ids._fields['date'], move.line_ids)
                 # might be protected because `_get_accounting_date` requires the `name`
                 # self.env.add_to_compute(self._fields['name'], move)
+
+    def name_get(self):
+        result = []
+        for rec in self:
+            if rec.purchase_contract_id:
+                name = rec.purchase_contract_id.name + "/"+ rec.name
+                result.append((rec.id, name))
+            else:
+                result.append((rec.id, rec.name))
+        return result
+
+    def action_approve(self):
+        for rec in self:
+            rec.state = 'approved'
 
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'

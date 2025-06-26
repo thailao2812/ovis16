@@ -19,7 +19,7 @@
                 <field name="invoice_ids" invisible="1"/>
                 <field name="invoice_purchase_line_ids">
                     <tree editable="bottom">
-                        <field name="invoice_id" options="{'no_create': True}" domain="[('id', 'in', parent.invoice_ids), ('remain_quantity', '>', 0), ('state', '=', 'posted'), ('payment_state', '=', 'paid')]"/>
+                        <field name="invoice_id" options="{'no_create': True}" domain="[('id', 'in', parent.invoice_ids), ('remain_quantity', '>', 0), ('state', '=', 'posted')]"/>
                         <field name="quantity_invoice" sum="quantity_invoice"/>
                         <field name="quantity" sum="quantity"/>
                         <field name="amount_allocated_untaxed" sum="amount_allocated_untaxed"/>

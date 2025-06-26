@@ -19,6 +19,7 @@ class WizardCreateInvoice(models.TransientModel):
     quantity = fields.Float(string='Quantity', digits=(16,0))
     journal_id = fields.Many2one('account.journal', string='Journal', default=_default_journal)
     invoice_number = fields.Char(string='Invoice Number')
+    date = fields.Date(string='Invoice Date')
     price_unit = fields.Float(string='Price Unit')
     paid_amount = fields.Float(string='Paid Amount')
 
@@ -48,6 +49,9 @@ class WizardCreateInvoice(models.TransientModel):
 
 
     def action_confirm(self):
+        if self.contract_id.type == 'consign':
+            if self.invoice_ids:
+                raise UserError(_("You already have invoice for this NPE"))
         if self.quantity > 0:
             remain_qty = self.contract_id.invoice_qty_remain
             if self.quantity > remain_qty:
@@ -58,7 +62,7 @@ class WizardCreateInvoice(models.TransientModel):
                         'origin': self.contract_id.name,
                         'partner_id': self.contract_id.partner_id.id,
                         'move_type': 'in_invoice',
-                        'invoice_date': datetime.now().date() or False,
+                        'invoice_date': self.date or False,
                         'currency_id': self.contract_id.currency_id.id or False,
                         'narration': '',
                         'company_id': 1,

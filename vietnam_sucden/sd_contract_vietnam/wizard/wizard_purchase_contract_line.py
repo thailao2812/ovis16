@@ -66,9 +66,26 @@ class WizardPurchaseContract(models.TransientModel):
         if not self.invoice_purchase_line_ids:
             raise UserError(_("You need input invoice line and allocate it with quantity"))
         if self.contract_line_ids and self.invoice_purchase_line_ids:
-            if sum(self.invoice_purchase_line_ids.mapped('quantity')) != sum(self.contract_line_ids.mapped('product_qty')) + sum(
-                    self.contract_line_ids.mapped('open_qty')):
-                raise UserError(_("The sum of the quantity of the invoices and the contract lines must be equal"))
+            errors = []
+            for contract in self.contract_line_ids:
+                related_invoices = self.invoice_purchase_line_ids.filtered(
+                    lambda l: l.invoice_id.purchase_contract_id.id == contract.purchase_contract_id.id
+                )
+                total_allocated = sum(related_invoices.mapped('quantity'))
+                expected_quantity = contract.product_qty + contract.open_qty
+                if total_allocated != expected_quantity:
+                    contract_name = (
+                        contract.contract_id.display_name
+                        if hasattr(contract.contract_id, 'display_name')
+                        else contract.contract_id.name
+                    )
+                    errors.append(
+                        _("For contract '%s', allocated quantity in invoices (%s) does not match contract quantity (%s + %s = %s).") % (
+                            contract_name, total_allocated, contract.product_qty, contract.open_qty, expected_quantity
+                        )
+                    )
+            if errors:
+                raise UserError('\n'.join(errors))
 
         for line in self.contract_line_ids:
             if line.qty_received < line.product_qty + line.open_qty + line.total_qty_fixed:

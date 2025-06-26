@@ -7,6 +7,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='origin']" position="after">
                 <field name="purchase_contract_id" readonly="1"/>
+                <field name="user_approve" options="{'no_create': True}" domain="[('trader', '=', True)]"/>
             </xpath>
             <xpath expr="//field[@name='origin']" position="attributes">
                 <attribute name="invisible">1</attribute>
@@ -41,6 +42,13 @@
                         <field name="remain_total_amount"/>
                     </group>
                 </group>
+            </xpath>
+            <xpath expr="//button[@name='action_post']" position="after">
+                <button name="action_approve" string="Approve" attrs="{'invisible': &quot;['|', ('user_approve', '!=', uid), ('state', '!=', 'draft')]&quot;}" type="object" class="oe_highlight"/>
+            </xpath>
+            <xpath expr="//button[@name='action_post'][2]" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', ('move_type', '=', 'entry'), ('state','!=', 'approved')]}</attribute>
+                <attribute name="states"></attribute>
             </xpath>
         </field>
     </record>

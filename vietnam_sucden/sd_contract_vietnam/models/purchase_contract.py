@@ -225,12 +225,6 @@ class PurchaseContract(models.Model):
             if contract.type == 'consign':
                 contract.amount_total = amount_untaxed + amount_tax + amount_deposit
                 contract.different_amount = contract.amount_total - contract.invoice_amount
-            if contract.purchase_contract_invoice_ids:
-                contract.amount_untaxed = sum(contract.purchase_contract_invoice_ids.mapped('amount_allocated_untaxed'))
-                contract.amount_tax = sum(contract.purchase_contract_invoice_ids.mapped('amount_allocated_tax'))
-                contract.amount_sub_total = sum(contract.purchase_contract_invoice_ids.mapped('amount_allocated_total'))
-                contract.amount_sub_rel_total = sum(contract.purchase_contract_invoice_ids.mapped('amount_allocated_total'))
-                contract.amount_total = sum(contract.purchase_contract_invoice_ids.mapped('amount_allocated_total')) + amount + amount_deposit - sum(contract.offset_debt_ids.mapped('amount'))
 
 
 class OpenQtyNPE(models.Model):
