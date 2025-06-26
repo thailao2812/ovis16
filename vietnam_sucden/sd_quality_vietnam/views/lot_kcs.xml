@@ -169,8 +169,8 @@
                             <field name="security_gate_id" options="{'no_create_edit': True}"
                                 attrs="{'readonly': [('state','=','approve')]}"
                                 domain="[('shipping_id','=',si_id), ('shipping_id','!=',False), ('state','not in',['draft','cancel','closed'])]"/>
-                            <field name="partner_id"/>
-					        <!-- <field name="x_pod_id" readonly="1"/> -->
+                            <field name="partner_id" force_save="1"/>
+					        <field name="x_pod_id" force_save="1" invisible="1"/>
                         </group>
                         <group string='Product QTY.' class="col-lg-4" colspan="4">
                             <field name="contract_id" force_save="1" invisible="1"/>
