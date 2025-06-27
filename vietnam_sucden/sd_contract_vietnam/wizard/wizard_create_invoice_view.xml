@@ -10,6 +10,7 @@
 					<field name="type" invisible="1"/>
 					<field name="journal_id" readonly="1"/>
 					<field name="invoice_number" required="1"/>
+					<field name="invoice_denominator" required="1"/>
 					<field name="date" required="1"/>
 					<field name="price_unit" attrs="{'invisible': [('type', '=', 'purchase')]}"/>
 					<field name="quantity"/>

@@ -116,6 +116,7 @@ class AccountMove(models.Model):
             'invoice_origin': self.origin or '',
             'commercial_name': self.commercial_name or '',
             'payment_reference': self.payment_reference or '',
+            'invoice_denominator': self.invoice_denominator or ''
             # ------------------------------------------------------
             # 'rate_type': self.move_id and self.move_id.line_ids[0].rate_type or '',
         }

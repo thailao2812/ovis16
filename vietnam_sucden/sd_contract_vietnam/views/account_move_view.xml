@@ -27,6 +27,9 @@
                     </field>
                 </page>
             </xpath>
+            <xpath expr="//field[@name='ref']" position="after">
+                <field name="invoice_denominator" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+            </xpath>
             <xpath expr="//notebook" position="before">
                 <group string="Allocated Amount Information">
                     <group>

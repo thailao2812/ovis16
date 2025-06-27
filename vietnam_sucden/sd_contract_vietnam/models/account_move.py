@@ -9,7 +9,9 @@ class AccountMove(models.Model):
 
     purchase_contract_id = fields.Many2one('purchase.contract')
     purchase_contract_invoice_ids = fields.One2many('purchase.contract.invoice', 'move_id')
-    user_approve = fields.Many2one('res.users', string='Approve By', compute='_compute_user_approve', store=True, readonly=False)
+    user_approve = fields.Many2one('res.users', string='Approve By', compute='_compute_user_approve', store=True,
+                                   readonly=True, states={'draft': [('readonly', False)]})
+    invoice_denominator = fields.Char(string='Invoice Denominator')
 
     allocated_untaxed_amount = fields.Float(string='Allocated Amount', compute='_compute_allocated_amount', store=True)
     allocated_taxed_amount = fields.Float(string='Allocated Amount', compute='_compute_allocated_amount', store=True)
