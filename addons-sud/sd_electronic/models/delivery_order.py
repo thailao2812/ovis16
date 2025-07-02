@@ -279,7 +279,7 @@ class DeliveyOrder(models.Model):
                 "InternalCommand": self.name or "",
                 "JournalMemo": self.reason or "",
                 "StockOutLegalName": self.trucking_no or "",
-                "StockOutAddress": u"Lô đất CN2-1. CN2-2, CN2-3 – Cụm công nghiệp Tân An 2 – TP Buôn Ma Thuột – Tỉnh DăkLăk",
+                "StockOutAddress": u"Lô đất CN2-1, CN2-2, CN2-3 - Cụm Công nghiệp Tân An 2, Phường Tân An, Tỉnh Đăk Lăk, Việt Nam",
                 "TransporterName": self.trucking_no or "",
                 "StockOutFullName": self.from_warehouse_id.name or "Factory-BMT",
                 "StockInAddress": self.partner_id.name or null,
