@@ -282,7 +282,7 @@ class DeliveyOrder(models.Model):
                 "StockOutAddress": u"Lô đất CN2-1, CN2-2, CN2-3 - Cụm Công nghiệp Tân An 2, Phường Tân An, Tỉnh Đăk Lăk, Việt Nam",
                 "TransporterName": self.trucking_no or "",
                 "StockOutFullName": self.from_warehouse_id.name or "Factory-BMT",
-                "StockInAddress": self.partner_id.name or null,
+                "StockInAddress": self.delivery_place_id and self.delivery_place_id.name or null,
                 "Transport": "Xe Container",
                 "ContractDate": str(self.date) or str(datetime.date.today())
             },
