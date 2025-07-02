@@ -59,6 +59,19 @@ class PurchaseContract(models.Model):
 
     purchase_contract_invoice_ids = fields.One2many('purchase.contract.invoice', 'purchase_contract_id')
 
+    invoice_price = fields.Float(string='Invoice Price', compute='_compute_invoice_price', store=True)
+
+    @api.depends('invoice_ids', 'invoice_ids.state', 'type', 'state')
+    def _compute_invoice_price(self):
+        for record in self:
+            if record.type == 'consign':
+                if record.invoice_ids:
+                    record.invoice_price = record.invoice_ids[0].price_unit
+                else:
+                    record.invoice_price = 0
+            else:
+                record.invoice_price = 0
+
     @api.depends('invoice_ids', 'invoice_ids.state', 'invoice_ids.total_qty', 'state', 'total_qty')
     def _compute_invoice_qty(self):
         for record in self:

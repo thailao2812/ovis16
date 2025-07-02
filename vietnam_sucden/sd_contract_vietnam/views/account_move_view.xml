@@ -53,6 +53,24 @@
                 <attribute name="attrs">{'invisible': ['|', ('move_type', '=', 'entry'), ('state','!=', 'approved')]}</attribute>
                 <attribute name="states"></attribute>
             </xpath>
+            <xpath expr="//button[@name='button_draft']" position="after">
+                <button name="button_draft" string="Reject" type="object" groups="account.group_account_invoice" attrs="{'invisible': [('state', '!=', 'approved')]}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_invoice_tree_inherit_sd_contract_vietnam" model="ir.ui.view">
+        <field name="name">view_invoice_tree_inherit_sd_contract_vietnam</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_invoice_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='invoice_date']" position="after">
+                <field name="product_id"/>
+                <field name="price_unit"/>
+            </xpath>
+            <xpath expr="//field[@name='invoice_date']" position="before">
+                <field name="purchase_contract_id"/>
+            </xpath>
         </field>
     </record>
 </odoo>

@@ -436,6 +436,9 @@
         <field name="arch" type="xml">
 			 <xpath expr="//field[@name='product_id']" position="after">
                  <field name="interest"/>
+                 <field name="invoice_price"/>
+                 <field name="invoice_qty"/>
+                 <field name="invoice_qty_remain"/>
             </xpath>
 
         </field>
@@ -455,6 +458,10 @@
             <xpath expr="//field[@name='diff_price']" position="after">
                 <field name="difams"/>
             </xpath>
+            <xpath expr="//field[@name='product_id']" position="after">
+                <field name="invoice_qty"/>
+                <field name="invoice_qty_remain"/>
+            </xpath>
 
         </field>
     </record>
@@ -472,6 +479,10 @@
             </xpath>
             <xpath expr="//field[@name='diff_price']" position="after">
                 <field name="difams"/>
+            </xpath>
+            <xpath expr="//field[@name='product_id']" position="after">
+                <field name="invoice_qty"/>
+                 <field name="invoice_qty_remain"/>
             </xpath>
 
         </field>
