@@ -24,7 +24,7 @@ class DeliveyOrder(models.Model):
     
     def get_connect(self, info_config=1):
         try:
-            result = requests.post('%s/auth/token' % ('https://api.meinvoice.vn/api/v3'), params={}, data=json.dumps({"appid": "FC772F5F-FC65-47F6-8240-4D10518797C6", "taxcode": "6000706357", "username": "0917185518", "password": "P@ssw0rd17588"}), headers={'content-type': 'application/json'})
+            result = requests.post('%s/auth/token' % ('https://api.meinvoice.vn/api/v3'), params={}, data=json.dumps({"appid": "FC772F5F-FC65-47F6-8240-4D10518797C6", "taxcode": "6000706357", "username": "0388806689", "password": "P@ssw0rd17588"}), headers={'content-type': 'application/json'})
             if result.status_code == 200 and result.json().get('Data'):
                 token = result.json().get('Data')
                 return token
