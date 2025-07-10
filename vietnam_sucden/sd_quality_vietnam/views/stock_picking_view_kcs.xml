@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="view_stock_kcs_form_inherit_vietnam" model="ir.ui.view">
+        <field name="name">view_stock_kcs_form_inherit_vietnam</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="sd_quality.view_stock_kcs_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='state_kcs']" position="attributes">
+                <attribute name="statusbar_visible">draft,confirmed,approved,rejected</attribute>
+            </xpath>
+            <xpath expr="//button[@name='btt_approved']" position="before">
+                <button name="button_qc_confirm" string="QC Confirm" type="object" class="oe_highlight" attrs="{'invisible': [('state_kcs', '!=', 'draft')]}"/>
+                <field name ="state" invisible="1"/>
+            </xpath>
+            <xpath expr="//button[@name='btt_approved']" position="attributes">
+                <attribute name="string">Approve</attribute>
+                <attribute name="attrs">{'invisible': [('state_kcs','!=','confirmed')]}</attribute>
+                <attribute name="groups">sd_quality_vietnam.group_quality_assurance_manager</attribute>
+            </xpath>
+            <xpath expr="//button[@name='btt_reject']" position="attributes">
+                <attribute name="attrs">{'invisible': [('state_kcs', 'not in', ['draft', 'confirmed'])]}</attribute>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>
