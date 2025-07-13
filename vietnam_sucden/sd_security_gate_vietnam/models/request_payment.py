@@ -866,9 +866,6 @@ class RequestPayment(models.Model):
                 'date': datetime.today(),
                 'state': 'Request'
             })
-            if self.invoice_ids:
-                if self.amount_invoice != self.request_amount:
-                    raise UserError(_("Total amount Invoice is not equal to Request Amount, please check again!"))
             rec.state = 'request'
 
     # @api.depends('delivery_70_ids', 'delivery_array')

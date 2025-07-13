@@ -239,6 +239,9 @@ class PurchaseContract(models.Model):
                 contract.amount_total = amount_untaxed + amount_tax + amount_deposit
                 contract.different_amount = contract.amount_total - contract.invoice_amount
 
+    def create_invoice_adjustment(self):
+        print(123)
+
 
 class OpenQtyNPE(models.Model):
     _name = 'open.qty.npe'

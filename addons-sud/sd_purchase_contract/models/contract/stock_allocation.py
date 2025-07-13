@@ -177,13 +177,13 @@ class StockAllocation(models.Model):
             #kiet: Im NPE
             else:
                 if allocation.picking_id.to_picking_type_id:
-                    if not allocation.picking_id.to_picking_type_id.picking_type_npe_id:
-                        raise UserError(_('You cannot approve, You must define Picking type for NPE'))
-                    picking_type = allocation.picking_id.to_picking_type_id.picking_type_npe_id
+                    if not allocation.picking_id.to_picking_type_id.picking_type_nvp_id:
+                        raise UserError(_('You cannot approve, You must define Picking type for Factory (NVP)'))
+                    picking_type = allocation.picking_id.to_picking_type_id.picking_type_nvp_id
                 else:
-                    if not allocation.picking_id.picking_type_id.picking_type_npe_id:
-                        raise UserError(_('You cannot approve, You must define Picking type for NPE'))
-                    picking_type = allocation.picking_id.picking_type_id.picking_type_npe_id
+                    if not allocation.picking_id.picking_type_id.picking_type_nvp_id:
+                        raise UserError(_('You cannot approve, You must define Picking type for Factory (NVP)'))
+                    picking_type = allocation.picking_id.picking_type_id.picking_type_nvp_id
                 #kiet: Trương hợp trại kho chính
             
             var = {

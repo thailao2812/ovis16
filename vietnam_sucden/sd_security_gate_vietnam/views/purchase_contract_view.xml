@@ -74,14 +74,14 @@
                             <field name="date" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                         </group>
                     </group>
-                    <separator string="Invoice Allocation"/>
-                    <field name="invoice_ids" options="{'no_create': True}">
-                        <tree string="Invoice" editable="top">
-                            <field name="invoice_id" domain="[('purchase_contract_id', '=', parent.purchase_contract_id)]" required="1"/>
-                            <field name="remaining_amount"/>
-                            <field name="allocate_amount"/>
-                        </tree>
-                    </field>
+<!--                    <separator string="Invoice Allocation"/>-->
+<!--                    <field name="invoice_ids" options="{'no_create': True}">-->
+<!--                        <tree string="Invoice" editable="top">-->
+<!--                            <field name="invoice_id" domain="[('purchase_contract_id', '=', parent.purchase_contract_id)]" required="1"/>-->
+<!--                            <field name="remaining_amount"/>-->
+<!--                            <field name="allocate_amount"/>-->
+<!--                        </tree>-->
+<!--                    </field>-->
                     <separator string="Payment Information"/>
                     <group attrs="{'readonly': [('state', '!=', 'draft')]}">
                         <group>
@@ -323,14 +323,14 @@
                             <field name="date" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                         </group>
                     </group>
-                    <separator string="Invoice Allocation"/>
-                    <field name="invoice_ids" options="{'no_create': True}">
-                        <tree string="Invoice" editable="top">
-                            <field name="invoice_id" domain="[('purchase_contract_id', '=', parent.purchase_contract_id)]" required="1"/>
-                            <field name="remaining_amount"/>
-                            <field name="allocate_amount"/>
-                        </tree>
-                    </field>
+<!--                    <separator string="Invoice Allocation"/>-->
+<!--                    <field name="invoice_ids" options="{'no_create': True}">-->
+<!--                        <tree string="Invoice" editable="top">-->
+<!--                            <field name="invoice_id" domain="[('purchase_contract_id', '=', parent.purchase_contract_id)]" required="1"/>-->
+<!--                            <field name="remaining_amount"/>-->
+<!--                            <field name="allocate_amount"/>-->
+<!--                        </tree>-->
+<!--                    </field>-->
                     <separator string="Payment Information"/>
                     <group>
                         <group attrs="{'readonly': [('state', '!=', 'draft')]}">
@@ -576,14 +576,14 @@
                             <field name="type" invisible="1"/>
                         </group>
                     </group>
-                    <separator string="Invoice Allocation"/>
-                    <field name="invoice_ids" options="{'no_create': True}">
-                        <tree string="Invoice" editable="top">
-                            <field name="invoice_id" domain="[('purchase_contract_id', '=', parent.purchase_contract_id)]" required="1"/>
-                            <field name="remaining_amount"/>
-                            <field name="allocate_amount"/>
-                        </tree>
-                    </field>
+<!--                    <separator string="Invoice Allocation"/>-->
+<!--                    <field name="invoice_ids" options="{'no_create': True}">-->
+<!--                        <tree string="Invoice" editable="top">-->
+<!--                            <field name="invoice_id" domain="[('purchase_contract_id', '=', parent.purchase_contract_id)]" required="1"/>-->
+<!--                            <field name="remaining_amount"/>-->
+<!--                            <field name="allocate_amount"/>-->
+<!--                        </tree>-->
+<!--                    </field>-->
                     <separator string="Fixation Information" attrs="{'invisible': [('type_of_ptbf_payment', '!=', 'fixation')]}"/>
                     <group attrs="{'invisible': [('type_of_ptbf_payment', '!=', 'fixation')], 'readonly': [('state', '!=', 'draft')]}">
                         <group>

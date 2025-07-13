@@ -6,14 +6,18 @@
         <field name="arch" type="xml">
              <form string="Create Invoice">
                 <group>
-					<field name="contract_id" readonly="1"/>
+					<field name="is_converted" invisible="1"/>
+					<field name="invoice_converted_ids" widget="many2many_tags" invisible="1"/>
+					<field name="invoice_origin_id" options="{'no_create': True}" attrs="{'invisible': [('is_converted', '=', False)], 'required': [('is_converted', '=', True)]}" domain="[('id', 'in', invoice_converted_ids)]"/>
+					<field name="contract_id" invisible="1" readonly="1"/>
 					<field name="type" invisible="1"/>
 					<field name="journal_id" readonly="1"/>
 					<field name="invoice_number" required="1"/>
 					<field name="invoice_denominator" required="1"/>
 					<field name="date" required="1"/>
+					<field name="amount_different" attrs="{'invisible': [('is_converted', '=', False)]}"/>
 					<field name="price_unit" attrs="{'invisible': [('type', '=', 'purchase')]}"/>
-					<field name="quantity"/>
+					<field name="quantity" attrs="{'invisible': [('is_converted', '=', True)]}"/>
                 </group>
                 <group>
                 </group>

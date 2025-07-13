@@ -104,10 +104,10 @@ class AccountPayment(models.Model):
                 
                 if request.purchase_contract_id.type not in ('purchase','ptbf'):
                     rec['extend_payment'] = 'payment'
-                    rec['ref'] = u'Tạm ứng theo ' + request.purchase_contract_id.name
+                    rec['ref'] = request.purchase_contract_id.name + u' được tạm ứng'
                 else:
                     rec['extend_payment'] = 'payment'
-                    rec['ref'] = u'Thanh toán tiền theo ' + request.purchase_contract_id.name
+                    rec['ref'] = request.purchase_contract_id.name + u' được thanh toán tiền'
                     
                     
                 # if request.purchase_contract_id.type !='purchase':
@@ -125,7 +125,7 @@ class AccountPayment(models.Model):
                 rec['payment_type'] = 'outbound'
                 rec['partner_id'] = contract_id.partner_id.id
                 rec['purchase_contract_id'] = contract_id.id
-                rec['ref'] = u'Thanh toán tiền theo ' + contract_id.name
+                rec['ref'] = contract_id.name + u' được thanh toán tiền'
                 rec['extend_payment'] = 'payment'
                 rec['amount'] = contract_id.amount_total
             
@@ -135,7 +135,7 @@ class AccountPayment(models.Model):
                 rec['payment_type'] = 'outbound'
                 rec['partner_id'] = contract_id.partner_id.id
                 rec['purchase_contract_id'] = contract_id.id
-                rec['communication'] = u'Nhận đặt cọc tiền theo ' + contract_id.name
+                rec['communication'] = contract_id.name + u' được nhận đặt cọc tiền'
                 rec['extend_payment'] = 'payment'
                 rec['amount'] = contract_id.amount_total
                 
