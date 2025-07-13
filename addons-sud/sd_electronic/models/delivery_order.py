@@ -24,7 +24,7 @@ class DeliveyOrder(models.Model):
     
     def get_connect(self, info_config=1):
         try:
-            result = requests.post('%s/auth/token' % ('https://api.meinvoice.vn/api/v3'), params={}, data=json.dumps({"appid": "FC772F5F-FC65-47F6-8240-4D10518797C6", "taxcode": "6000706357", "username": "0917185518", "password": "P@ssw0rd17588"}), headers={'content-type': 'application/json'})
+            result = requests.post('%s/auth/token' % ('https://api.meinvoice.vn/api/v3'), params={}, data=json.dumps({"appid": "FC772F5F-FC65-47F6-8240-4D10518797C6", "taxcode": "6000706357", "username": "0388806689", "password": "P@ssw0rd17588"}), headers={'content-type': 'application/json'})
             if result.status_code == 200 and result.json().get('Data'):
                 token = result.json().get('Data')
                 return token
@@ -279,10 +279,10 @@ class DeliveyOrder(models.Model):
                 "InternalCommand": self.name or "",
                 "JournalMemo": self.reason or "",
                 "StockOutLegalName": self.trucking_no or "",
-                "StockOutAddress": u"Lô đất CN2-1. CN2-2, CN2-3 – Cụm công nghiệp Tân An 2 – TP Buôn Ma Thuột – Tỉnh DăkLăk",
+                "StockOutAddress": u"Lô đất CN2-1, CN2-2, CN2-3 - Cụm Công nghiệp Tân An 2, Phường Tân An, Tỉnh Đăk Lăk, Việt Nam",
                 "TransporterName": self.trucking_no or "",
                 "StockOutFullName": self.from_warehouse_id.name or "Factory-BMT",
-                "StockInAddress": self.partner_id.name or null,
+                "StockInAddress": self.delivery_place_id and self.delivery_place_id.name or null,
                 "Transport": "Xe Container",
                 "ContractDate": str(self.date) or str(datetime.date.today())
             },
