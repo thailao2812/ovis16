@@ -9,17 +9,26 @@
             <xpath expr="//field[@name='state_kcs']" position="attributes">
                 <attribute name="statusbar_visible">draft,confirmed,approved,rejected</attribute>
             </xpath>
+            <xpath expr="//field[@name='picking_type_id']" position="after">
+                <field name="picking_type_code"/>
+            </xpath>
+            <xpath expr="//button[@name='btt_approved']" position="replace">
+                <button name="btt_approved" type="object" class="oe_highlight"
+                    string="Approve"
+                    attrs="{'invisible': [('state_kcs','!=','confirmed'), ('picking_type_code','!=','incoming')]}"
+                    groups="sd_quality_vietnam.group_quality_assurance_manager"/>
+            </xpath>
             <xpath expr="//button[@name='btt_approved']" position="before">
                 <button name="button_qc_confirm" string="QC Confirm" type="object" class="oe_highlight" attrs="{'invisible': [('state_kcs', '!=', 'draft')]}"/>
                 <field name ="state" invisible="1"/>
             </xpath>
-            <xpath expr="//button[@name='btt_approved']" position="attributes">
-                <attribute name="string">Approve</attribute>
-                <attribute name="attrs">{'invisible': [('state_kcs','!=','confirmed')]}</attribute>
-                <attribute name="groups">sd_quality_vietnam.group_quality_assurance_manager</attribute>
+            <xpath expr="//button[@name='btt_approved']" position="after">
+                <button name="btt_approved" type="object" class="oe_highlight"
+                    string="QC Approve"
+                    attrs="{'invisible': [('state_kcs','!=','draft'),('picking_type_code','=','incoming')]}"/>
             </xpath>
             <xpath expr="//button[@name='btt_reject']" position="attributes">
-                <attribute name="attrs">{'invisible': [('state_kcs', 'not in', ['draft', 'confirmed'])]}</attribute>
+                <attribute name="attrs">{'invisible': [('state_kcs', 'not in', ['draft', 'confirmed']),('picking_type_code','=','incoming')]}</attribute>
             </xpath>
 
         </field>
