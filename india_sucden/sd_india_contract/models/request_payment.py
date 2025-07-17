@@ -179,7 +179,5 @@ class RequestPayment(models.Model):
                 if request.total_remain == request.tds_amount:
                     request.state = 'paid'
 
-
-
-
-
+    def print_paymentrequest_invoice(self):
+        return self.env.ref('sd_india_contract.payment_request_invoice_india_report').report_action(self)
