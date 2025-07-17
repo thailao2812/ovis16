@@ -90,6 +90,10 @@
             <xpath expr="//field[@name='payment_quantity']" position="after">
                 <field name="interest_amount"/>
             </xpath>
+            <xpath expr="//button[@name='print_payment_request']" position="after">
+                <button name="print_paymentrequest_invoice" string="Print Invoice" type="object" class="oe_highlight" attrs="{'invisible': [('state', '!=', 'paid')]}"/>
+            </xpath>
+
         </field>
     </record>
 
