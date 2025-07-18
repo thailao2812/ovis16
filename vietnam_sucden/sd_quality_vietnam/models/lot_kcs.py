@@ -255,6 +255,7 @@ class LotKcsInherit(models.Model):
                         'product_id': lot.product_id.id or False,
                         'product_uom_id': lot.product_id.uom_id.id or False,
                         'init_qty': lot.quantity or 0.0,
+                        'qty_done': lot.quantity or 0.0,
                         'bag_no': lot.no_of_bag or 0,
                         'price_unit': 0.0,
                         'picking_type_id': picking_type_id.id or False,
