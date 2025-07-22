@@ -2,3 +2,8 @@ id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_reject_reason_contract,access_reject_reason_contract,model_reject_purchase_contract,base.group_user,1,1,1,1
 
 access_invoice_purchase_contract,access_invoice_purchase_contract,model_invoice_purchase_contract,base.group_user,1,1,1,1
+,,,,,,,
+supplier_adjustment_user,supplier_adjustment_user,model_purchase_contract,base.group_user,1,0,0,0
+supplier_adjustment_purchase_user,supplier_adjustment_purchase_user,model_supplier_adjustment,sd_purchase_contract.group_purchase_contract_user,1,1,1,1
+supplier_adjustment_purchase_manager,supplier_adjustment_purchase_manager,model_supplier_adjustment,sd_purchase_contract.group_purchase_contract_manager,1,1,1,1
+,,,,,,,
