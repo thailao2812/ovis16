@@ -25,6 +25,7 @@
         'views/stock_allocation_view.xml',
         'views/nvp_npe_relation_view.xml',
         'views/invoice_purchase_contract_view.xml',
+        'views/supplier_adjustment_view.xml',
         'report/report.xml',
     ],
     'installable': True,

@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <menuitem
+            id="menu_action_supplier_adjustment"
+            name="Supplier Adjustment"
+            action="action_supplier_adjustment"
+            parent="sd_purchase_contract.purchase_contract_lv_1_menu"
+            groups="sd_purchase_contract.group_purchase_contract_user,sd_purchase_contract.group_purchase_contract_manager"/>
+            sequence="29"/>
+
+        <record id="view_supplier_adjustment_tree" model="ir.ui.view">
+            <field name="name">view.supplier.adjustment.tree</field>
+            <field name="model">supplier.adjustment</field>
+            <field name="arch" type="xml">
+                <tree string="Supplier Adjustment" default_order="id desc" decoration-info="state == 'draft'" decoration-muted="state in ('cancel','done','rejected')" decoration-danger="state in ('approved','validate')">
+                    <field name="current_supplier_id"/>
+                    <field name="state" string="Status" optional="show"/>
+
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_supplier_adjustment_form" model="ir.ui.view">
+            <field name="name">supplier.adjustment.form</field>
+            <field name="model">supplier.adjustment</field>
+            <field name="arch" type="xml">
+                <form string="Supplier Adjustment">
+	                <header>
+	                	<button name="action_validate" type="object" states="draft" string="Validate" class="oe_highlight"/>
+	                	<button name="action_approved" type="object" states="validated"
+                                groups="sd_india_master.group_accounting_india"
+                                string="Approval" class="oe_highlight"/>
+	                	<button name="action_done" type="object" states="approved" string="Done"
+                                groups="sd_india_master.group_director_india"
+                                class="oe_highlight"/>
+	                    <button name="action_cancel" states="draft,validated" string="Cancel" type="object" confirm="Are you sure want to cancel this request?" class="oe_highlight"/>
+	                    <button name="action_draft" states="validated" string="Set Draft" type="object" confirm="Are you sure want to set to draft?" class="oe_highlight"/>
+	                    <button name="action_reject" states="approved,validated" string="Reject" type="object" confirm="Are you sure want to reject this request?"
+                                groups="sd_india_master.group_director_india"
+                                class="oe_highlight"/>
+
+	                    <field name="state" widget="statusbar" statusbar_visible="draft,validated,approved,done"/>
+	                </header>
+                    <sheet>
+                        <div class="oe_title">
+	                        <h1>
+	                            <field name="name" readonly="0"/>
+	                        </h1>
+	                    </div>
+                        <group>
+                            <field name="contract_type" widget="radio" attrs="{'readonly': [('state','!=','draft')]}"/>
+                            <field name="available_contract_ids" invisible="1"/>
+                            <field name="contract_ids" domain="[('id', 'in', available_contract_ids)]"
+                                   options="{'no_create': True, 'no_create_edit': True}" attrs="{'readonly': [('state','!=','draft')]}">
+                                <tree>
+                                    <field name="name"/>
+                                    <field name="partner_id"/>
+                                    <field name="date_order"/>
+                                    <field name="product_id"/>
+                                    <field name="total_qty"/>
+                                    <button name="button_submit_fob_link" invisible="1"/>
+                                </tree>
+                            </field>
+                            <field name="current_supplier_id" force_save="1" readonly="1"/>
+                            <field name="new_supplier_id" attrs="{'readonly': [('state','!=','draft')]}"/>
+                        </group>
+                        <notebook>
+	                    	<page string="GRN Allocated" name="grn_allocated_page">
+	                    		<field name="picking_ids" mode="tree,kanban" attrs="{'readonly': True}" force_save="1">
+                                    <tree>
+                                        <field name="name"/>
+                                        <field name="partner_id"/>
+                                        <field name="product_id"/>
+                                        <field name="date_done"/>
+                                        <field name="allocated_qty"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Request Payment" name="request_payment_page">
+	                    		<field name="request_payment_ids" mode="tree,kanban" attrs="{'readonly': True}" force_save="1">
+                                    <tree>
+                                        <field name="name" string="Request No."/>
+                                        <field name="partner_id"/>
+                                        <field name="date"/>
+                                        <field name="partner_bank_id"/>
+                                        <field name="payment_quantity"/>
+                                        <field name="request_amount"/>
+                                        <field name="total_payment"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Stock Allocation" name="stock_allocation_page">
+	                    		<field name="allocation_ids" mode="tree,kanban" attrs="{'readonly': True}" force_save="1">
+                                    <tree>
+                                        <field name="create_date"/>
+                                        <field name="partner_id"/>
+                                        <field name="picking_id"/>
+                                        <field name="contract_id"/>
+
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="CS Convert CR" name="consignment_convert_page">
+	                    		<field name="npe_contract_ids" mode="tree,kanban" attrs="{'readonly': True}" force_save="1">
+                                    <tree>
+                                        <field name="name"/>
+                                        <field name="partner_id"/>
+                                        <field name="date_order"/>
+                                        <field name="total_qty"/>
+                                        <field name="qty_received"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_supplier_adjustment" model="ir.actions.act_window">
+            <field name="name">Supplier Adjustment</field>
+            <field name="res_model">supplier.adjustment</field>
+            <field name="view_mode">tree,form</field>
+    <!--        <field name="domain">[('type','=','purchase'),('cert_type','=','normal'),('is_temp_quota', '=', False)]</field>-->
+    <!--        <field name="context">{'default_type':'purchase', 'default_cert_type': 'normal'}</field>-->
+    <!--        <field name="search_view_id" ref="nvp_supplier_adjustment_search"/>-->
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Create new Supplier Adjustment, the first step of a new Adjustment.
+                </p>
+            </field>
+        </record>
+
+        <record id="action_view_supplier_adjustment_tree"
+            model="ir.actions.act_window.view">
+            <field eval="200" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_supplier_adjustment_tree"/>
+            <field name="act_window_id" ref="action_supplier_adjustment"/>
+        </record>
+
+        <record id="action_view_supplier_adjustment_form"
+            model="ir.actions.act_window.view">
+            <field eval="205" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_supplier_adjustment_form"/>
+            <field name="act_window_id" ref="action_supplier_adjustment"/>
+        </record>
+    </data>
+</odoo>
