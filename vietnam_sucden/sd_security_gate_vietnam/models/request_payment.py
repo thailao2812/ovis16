@@ -78,6 +78,7 @@ class RequestPayment(models.Model):
         ('fixation_advance', 'Fixation For Advance'),
         ('fixation_advance_ptbf_npe', 'Fixation For Advance NPE'),
     ], string='Type Of PTBF Payment', default='fixation')
+    payment_tax = fields.Boolean(string='Payment Tax')
     price_tobe_fix = fields.Many2one('ptbf.fixprice', string='PTBF Fix Price No.', ondelete='cascade')
     quantity_of_price_tobe_fix = fields.Float(string='Quantity Price To Be Fix', related='price_tobe_fix.quantity', store=True)
     price_usd = fields.Float(string='Price USD', related='price_tobe_fix.price_fix', store=True, digits=(12, 2))

@@ -30,6 +30,15 @@
             <xpath expr="//field[@name='ref']" position="after">
                 <field name="invoice_denominator" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
             </xpath>
+            <xpath expr="//field[@name='ref']" position="attributes">
+                <attribute name="attrs">{'readonly': [('state', '!=', 'draft')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='payment_reference']" position="attributes">
+                <attribute name="attrs">{'readonly': [('state', '!=', 'draft')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='reference_description']" position="attributes">
+                <attribute name="attrs">{'readonly': [('state', '!=', 'draft')]}</attribute>
+            </xpath>
             <xpath expr="//notebook" position="before">
                 <group string="Allocated Amount Information">
                     <group>

@@ -18,7 +18,7 @@ class WizardCreateInvoice(models.TransientModel):
 
     contract_id = fields.Many2one('purchase.contract', string='Purchase Contract')
     type = fields.Selection(related='contract_id.type', string='Type', readonly=True)
-    quantity = fields.Float(string='Quantity', digits=(16,0))
+    quantity = fields.Float(string='Quantity', digits=(16,0), compute='_compute_quantity', store=True, readonly=False)
     journal_id = fields.Many2one('account.journal', string='Journal', default=_default_journal)
     invoice_number = fields.Char(string='Invoice Number')
     invoice_denominator = fields.Char(string='Invoice Denominator')
@@ -26,11 +26,59 @@ class WizardCreateInvoice(models.TransientModel):
     price_unit = fields.Float(string='Price Unit')
     paid_amount = fields.Float(string='Paid Amount')
 
+    type_invoice = fields.Selection([
+        ('normal', 'Normal'),
+        ('adjust_increase', 'Adjust Increase'),
+        ('adjust_decrease', 'Adjust Decrease'),
+    ], string='Type Invoice', default='normal')
+
     # Convert contract
     is_converted = fields.Boolean(string='Is Converted')
     invoice_converted_ids = fields.Many2many('account.move', string='Invoice Converted')
     invoice_origin_id = fields.Many2one('account.move', string='Invoice Origin')
     amount_different = fields.Float(string='Amount Different')
+
+    # PTBF Contract
+    ptbf_fix_price_id = fields.Many2one('ptbf.fixprice', string='Fix Price Time')
+    line_ptbf_fix_price_id = fields.Many2one('history.rate', string='Detail Fix Price')
+
+    @api.depends('ptbf_fix_price_id', 'line_ptbf_fix_price_id', 'type_invoice', 'type', 'is_converted')
+    def _compute_quantity(self):
+        for rec in self:
+            if rec.type == 'ptbf' and not rec.is_converted:
+                if rec.ptbf_fix_price_id and rec.line_ptbf_fix_price_id:
+                    rec.quantity = rec.line_ptbf_fix_price_id.remain_qty_invoice
+            if rec.type == 'ptbf' and rec.is_converted:
+                rec.quantity = 1
+            if rec.type == 'consign':
+                rec.quantity = rec.contract_id.invoice_qty_remain
+            if rec.type == 'purchase' and not rec.is_converted:
+                rec.quantity = rec.contract_id.invoice_qty_remain
+            if rec.type == 'purchase' and rec.is_converted:
+                rec.quantity = 1
+
+    @api.onchange('quantity')
+    def onchange_quantity(self):
+        if self.type == 'ptbf' and self.is_converted:
+            if self.quantity > 1:
+                raise UserError(_("You cannot input quantity more than 1"))
+        if self.type == 'ptbf' and not self.is_converted:
+            if self.ptbf_fix_price_id and self.line_ptbf_fix_price_id:
+                if self.quantity > self.ptbf_fix_price_id.remain_qty_invoice:
+                    raise UserError(_("You cannot input quantity more than remain invoice quantity"))
+        if self.type == 'consign':
+            if self.quantity > self.contract_id.invoice_qty_remain:
+                raise UserError(_("You cannot input quantity more than remain invoice quantity"))
+        if self.type == 'purchase' and not self.is_converted:
+            if self.quantity > self.contract_id.invoice_qty_remain:
+                raise UserError(_("You cannot input quantity more than remain invoice quantity"))
+        if self.type == 'purchase' and self.is_converted:
+            if self.quantity > 1:
+                raise UserError(_("You cannot input quantity more than 1"))
+        if self.type == 'purchase' and self.is_converted:
+            if self.quantity > 1:
+                raise UserError(_("You cannot input quantity more than 1"))
+
 
     @api.model
     def default_get(self, fields):
@@ -39,10 +87,15 @@ class WizardCreateInvoice(models.TransientModel):
         purchase_contract = self.env['purchase.contract'].browse(active_id)
         if purchase_contract:
             res['contract_id'] = purchase_contract.id
-            res['quantity'] = purchase_contract.invoice_qty_remain
-            if purchase_contract.type == 'purchase' and purchase_contract.purchase_contract_invoice_ids and purchase_contract.origin and purchase_contract.nvp_ids:
+            if purchase_contract.type == 'consign':
+                if purchase_contract.invoice_ids:
+                    res['price_unit'] = purchase_contract.invoice_price
+            if purchase_contract.type in ['purchase', 'ptbf'] and purchase_contract.purchase_contract_invoice_ids and purchase_contract.origin and purchase_contract.nvp_ids:
                 res['is_converted'] = True
                 res['invoice_converted_ids'] = purchase_contract.purchase_contract_invoice_ids.mapped('move_id')
+            if purchase_contract.type in ['consign', 'ptbf', 'purchase'] and not purchase_contract.origin and not purchase_contract.nvp_ids and not purchase_contract.npe_ids and not purchase_contract.purchase_contract_invoice_ids:
+                res['is_converted'] = False
+                res['invoice_converted_ids'] = purchase_contract.mapped('invoice_ids')
         return res
 
     def _prepare_invoice_line(self, move_line, invoice_id, invoice_vals, price_unit):
@@ -75,7 +128,6 @@ class WizardCreateInvoice(models.TransientModel):
         self.ensure_one()
         new_moves = self.env['account.move']
         for move in self.invoice_origin_id.with_context(include_business_fields=True): #copy sale/purchase links
-            print(move)
             default_values = self._prepare_default_values(move)
             new_move = move.copy(default=default_values)
             company_id = self.env.user.company_id
@@ -179,48 +231,98 @@ class WizardCreateInvoice(models.TransientModel):
         }
 
     def action_confirm(self):
-        if self.contract_id.type == 'consign':
-            if self.contract_id.invoice_ids:
-                raise UserError(_("You already have invoice for this NPE"))
-        if self.quantity > 0:
-            remain_qty = self.contract_id.invoice_qty_remain
-            if self.quantity > remain_qty:
-                raise UserError(_("You cannot input quantity more than remain invoice quantity of contract"))
-        if self.contract_id.type == 'purchase' and self.is_converted:
-            price_contract = self.contract_id.relation_price_unit
-            price_contact_npe = self.invoice_origin_id.price_unit
-            if self.amount_different <= 0:
-                raise UserError(_("Amount different must be greater than 0"))
-            if price_contract > price_contact_npe:
-                return self.create_debit()
-            if price_contract < price_contact_npe:
-                return self.create_credit()
         invoice = self.env['account.move']
         invoice_line = self.env['account.move.line']
-        invoice_vals = {'name': 'Draft',
-                        'origin': self.contract_id.name,
-                        'partner_id': self.contract_id.partner_id.id,
-                        'move_type': 'in_invoice',
-                        'invoice_date': self.date or False,
-                        'currency_id': self.contract_id.currency_id.id or False,
-                        'narration': '',
-                        'company_id': 1,
-                        'user_id': self.env.uid,
-                        'partner_bank_id': False,
-                        'ref': self.invoice_number or False,
-                        'reference_description': self.invoice_number or False,
-                        'invoice_denominator': self.invoice_denominator or False,
-                        'journal_id': self.journal_id.id or False,
-                        'payment_reference': self.invoice_number or False,
-                        'trans_type': 'local',
-                        'purchase_contract_id': self.contract_id.id or False}
+        if self.invoice_number:
+            check_invoice_number = self.env['account.move'].search([
+                ('ref', '=', self.invoice_number),
+                ('move_type', '=', 'in_invoice')
+            ], limit=1)
+            if check_invoice_number:
+                raise UserError(_("Invoice number already exists, please check again"))
+        if self.type == 'consign':
+            if self.contract_id.invoice_ids:
+                if self.price_unit != self.contract_id.invoice_price:
+                    raise UserError(_("Price unit must be equal to invoice price"))
+        if self.type == 'ptbf' and self.is_converted:
+            if self.quantity > 1:
+                raise UserError(_("You cannot input quantity more than 1"))
+        if self.type == 'ptbf' and not self.is_converted:
+            if self.ptbf_fix_price_id and self.line_ptbf_fix_price_id:
+                if self.quantity > self.ptbf_fix_price_id.remain_qty_invoice:
+                    raise UserError(_("You cannot input quantity more than remain invoice quantity"))
+        if self.type == 'consign':
+            if self.quantity > self.contract_id.invoice_qty_remain:
+                raise UserError(_("You cannot input quantity more than remain invoice quantity"))
+        if self.type == 'purchase' and not self.is_converted:
+            if self.quantity > self.contract_id.invoice_qty_remain:
+                raise UserError(_("You cannot input quantity more than remain invoice quantity"))
+        if self.type == 'purchase' and self.is_converted:
+            if self.quantity > 1:
+                raise UserError(_("You cannot input quantity more than 1"))
+        if self.type == 'purchase' and self.is_converted:
+            if self.quantity > 1:
+                raise UserError(_("You cannot input quantity more than 1"))
 
-        invoice_id = invoice.create(invoice_vals)
-        if self.contract_id.type in ['consign', 'ptbf']:
-            for line in self.contract_id.contract_line:
-                vals = self._prepare_invoice_line(line, invoice_id, invoice_vals, price_unit=self.price_unit)
-                invoice_line.create(vals)
-        if self.contract_id.type == 'purchase':
-            for line in self.contract_id.contract_line:
-                vals = self._prepare_invoice_line(line, invoice_id, invoice_vals, price_unit=line.price_unit)
-                invoice_line.create(vals)
+        if self.is_converted:
+            if self.type in ['purchase', 'ptbf']:
+                if self.amount_different <= 0:
+                    raise UserError(_("Amount different must be greater than 0"))
+                if self.type_invoice == 'normal':
+                    raise UserError(_("You cannot choose normal invoice type when convert invoice"))
+                if self.type_invoice == 'adjust_increase':
+                    if self.invoice_origin_id.price_unit != self.contract_id.relation_price_unit:
+                        return self.create_debit()
+                    else:
+                        raise UserError(_("Price of Invoice Origin and price of contract must be different"))
+                if self.type_invoice == 'adjust_decrease':
+                    if self.invoice_origin_id.price_unit != self.contract_id.relation_price_unit:
+                        return self.create_credit()
+                    else:
+                        raise UserError(_("Price of Invoice Origin and price of contract must be different"))
+        else:
+            if self.type_invoice == 'normal':
+                invoice_vals = {'name': 'Draft',
+                                'origin': self.contract_id.name,
+                                'partner_id': self.contract_id.partner_id.id,
+                                'move_type': 'in_invoice',
+                                'invoice_date': self.date or False,
+                                'currency_id': self.contract_id.currency_id.id or False,
+                                'narration': '',
+                                'company_id': 1,
+                                'user_id': self.env.uid,
+                                'partner_bank_id': False,
+                                'ref': self.invoice_number or False,
+                                'reference_description': self.invoice_number or False,
+                                'invoice_denominator': self.invoice_denominator or False,
+                                'journal_id': self.journal_id.id or False,
+                                'payment_reference': self.invoice_number or False,
+                                'trans_type': 'local',
+                                'purchase_contract_id': self.contract_id.id or False,
+                                'history_rate_id': self.line_ptbf_fix_price_id.id if self.line_ptbf_fix_price_id else False,
+                                'ptbf_fixprice_id': self.ptbf_fix_price_id.id if self.ptbf_fix_price_id else False,}
+
+                invoice_id = invoice.create(invoice_vals)
+                if self.contract_id.type in ['consign']:
+                    for line in self.contract_id.contract_line:
+                        vals = self._prepare_invoice_line(line, invoice_id, invoice_vals, price_unit=self.price_unit)
+                        invoice_line.create(vals)
+                if self.contract_id.type in ['ptbf']:
+                    for line in self.contract_id.contract_line:
+                        vals = self._prepare_invoice_line(line, invoice_id, invoice_vals, price_unit=self.line_ptbf_fix_price_id.final_price_vn)
+                        invoice_line.create(vals)
+                if self.contract_id.type == 'purchase':
+                    for line in self.contract_id.contract_line:
+                        vals = self._prepare_invoice_line(line, invoice_id, invoice_vals, price_unit=line.price_unit)
+                        invoice_line.create(vals)
+
+            if self.type_invoice == 'adjust_increase':
+                if self.invoice_origin_id.price_unit != self.line_ptbf_fix_price_id.final_price_vn:
+                    return self.create_debit()
+                else:
+                    raise UserError(_("Price of Invoice Origin and price of contract must be different"))
+            if self.type_invoice == 'adjust_decrease':
+                if self.invoice_origin_id.price_unit != self.line_ptbf_fix_price_id.final_price_vn:
+                    return self.create_credit()
+                else:
+                    raise UserError(_("Price of Invoice Origin and price of contract must be different"))

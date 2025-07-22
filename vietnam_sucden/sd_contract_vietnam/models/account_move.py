@@ -40,6 +40,9 @@ class AccountMove(models.Model):
     price_unit = fields.Float(string='Price Unit', related='invoice_line_ids.price_unit', store=True)
     product_id = fields.Many2one('product.product', related='invoice_line_ids.product_id', store=True)
 
+    history_rate_id = fields.Many2one('history.rate')
+    ptbf_fixprice_id = fields.Many2one('ptbf.fixprice')
+
     @api.depends('purchase_contract_id')
     def _compute_user_approve(self):
         for rec in self:

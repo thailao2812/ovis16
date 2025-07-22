@@ -60,6 +60,17 @@ class PurchaseContract(models.Model):
     purchase_contract_invoice_ids = fields.One2many('purchase.contract.invoice', 'purchase_contract_id')
 
     invoice_price = fields.Float(string='Invoice Price', compute='_compute_invoice_price', store=True)
+    have_invoice_adjust = fields.Boolean(string='Have Invoice Adjustment?', compute='_compute_invoice_adjustment', store=True)
+
+    @api.depends('invoice_ids', 'invoice_ids.state', 'invoice_ids.total_qty',
+                 'state', 'total_qty', 'origin', 'purchase_contract_invoice_ids')
+    def _compute_invoice_adjustment(self):
+        for record in self:
+            if record.origin or record.purchase_contract_invoice_ids:
+                if not record.invoice_ids:
+                    record.have_invoice_adjust = False
+                else:
+                    record.have_invoice_adjust = True
 
     @api.depends('invoice_ids', 'invoice_ids.state', 'type', 'state')
     def _compute_invoice_price(self):
@@ -72,11 +83,15 @@ class PurchaseContract(models.Model):
             else:
                 record.invoice_price = 0
 
-    @api.depends('invoice_ids', 'invoice_ids.state', 'invoice_ids.total_qty', 'state', 'total_qty')
+    @api.depends('invoice_ids', 'invoice_ids.state', 'invoice_ids.total_qty', 'state', 'total_qty', 'origin', 'purchase_contract_invoice_ids')
     def _compute_invoice_qty(self):
         for record in self:
-            record.invoice_qty = sum(record.invoice_ids.filtered(lambda x: x.state != 'cancel').mapped('total_qty'))
-            record.invoice_qty_remain = record.total_qty - sum(record.invoice_ids.filtered(lambda x: x.state != 'cancel').mapped('total_qty'))
+            if record.purchase_contract_invoice_ids:
+                record.invoice_qty = sum(record.purchase_contract_invoice_ids.mapped('quantity'))
+                record.invoice_qty_remain = 0
+            else:
+                record.invoice_qty = sum(record.invoice_ids.filtered(lambda x: x.state != 'cancel').mapped('total_qty'))
+                record.invoice_qty_remain = record.total_qty - sum(record.invoice_ids.filtered(lambda x: x.state != 'cancel' and x.move_type != 'in_refund').mapped('total_qty'))
 
     def button_request_final_payment(self):
         for record in self:

@@ -19,6 +19,7 @@ class PTBFFixPrice(models.Model):
     def name_get(self):
         result = []
         for rec in self:
-            name = "No " + rec.no + " Date: " + rec.date_fix.strftime(DATE_FORMAT)
-            result.append((rec.id, name))
+            if rec.no and rec.date_fix:
+                name = "No " + rec.no + " Date: " + rec.date_fix.strftime(DATE_FORMAT)
+                result.append((rec.id, name))
         return result

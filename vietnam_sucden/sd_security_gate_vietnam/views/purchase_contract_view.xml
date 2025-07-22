@@ -53,6 +53,7 @@
                     <separator string="Contract Information"/>
                     <group attrs="{'readonly': [('state', '!=', 'draft')]}">
                         <group>
+                            <field name="payment_tax"/>
                             <field name="partner_id" readonly="1"/>
                             <field name="warehouse_id" readonly="1"/>
                             <field name="product_id" invisible="1"/>
@@ -302,6 +303,7 @@
                     <separator string="Contract Information"/>
                     <group>
                         <group>
+                            <field name="payment_tax"/>
                             <field name="partner_id" readonly="1"/>
                             <field name="warehouse_id" readonly="1"/>
                             <field name="product_id" invisible="1"/>
@@ -547,6 +549,7 @@
                     <separator string="Contract Information"/>
                     <group>
                         <group attrs="{'readonly': [('state', '!=', 'draft')]}">
+                            <field name="payment_tax"/>
                             <field name="type_of_ptbf_payment" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             <field name="price_tobe_fix" options="{'no_create': True}" domain="[('contract_id', '=', parent_id_purchase_contract), ('remain_qty', '>', 0)]"
                                    attrs="{'required': [('type_of_ptbf_payment', 'in', ['fixation', 'fixation_advance', 'fixation_advance_ptbf_npe'])],

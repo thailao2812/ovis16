@@ -18,3 +18,4 @@ from . import offset_debt
 from . import product_category
 from . import res_company
 from . import purchase_contract_invoice
+from . import history_rate

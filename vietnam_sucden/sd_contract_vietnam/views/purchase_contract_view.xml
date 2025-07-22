@@ -134,7 +134,24 @@
             </xpath>
             <xpath expr="//page[@name='product']" position="after">
                 <page string="Invoice" name="invoice_supplier">
-                    <field name="invoice_ids" readonly="1"/>
+                    <field name="invoice_ids">
+                        <tree create="false" delete="false">
+                            <field name="name"/>
+                            <field name="invoice_date"/>
+                            <field name="currency_id" column_invisible="True"/>
+                            <field name="purchase_contract_id"/>
+                            <field name="ref" string="Invoice Number"/>
+                            <field name="invoice_denominator"/>
+                            <field name="product_id"/>
+                            <field name="price_unit"/>
+                            <field name="total_quantity"/>
+                            <field name="amount_untaxed"/>
+                            <field name="amount_tax"/>
+                            <field name="amount_total"/>
+                            <field name="payment_state" widget="badge" decoration-danger="payment_state == 'not_paid'" decoration-warning="payment_state in ('partial', 'in_payment')" decoration-success="payment_state in ('paid', 'reversed')"/>
+                            <field name="state" widget="badge" decoration-success="state == 'posted'" decoration-info="state == 'draft'"/>
+                        </tree>
+                    </field>
                 </page>
                 <page string="Invoice Allocated" name="invoice_allocate">
                     <field name="purchase_contract_invoice_ids" readonly="1">
@@ -286,7 +303,24 @@
             </xpath>
             <xpath expr="//page[@name='product']" position="after">
                 <page string="Invoice" name="invoice_supplier">
-                    <field name="invoice_ids" readonly="1"/>
+                    <field name="invoice_ids">
+                        <tree create="false" delete="false">
+                            <field name="name"/>
+                            <field name="currency_id" column_invisible="True"/>
+                            <field name="invoice_date"/>
+                            <field name="purchase_contract_id"/>
+                             <field name="ref" string="Invoice Number"/>
+                            <field name="invoice_denominator"/>
+                            <field name="product_id"/>
+                            <field name="price_unit"/>
+                            <field name="total_quantity"/>
+                            <field name="amount_untaxed"/>
+                            <field name="amount_tax"/>
+                            <field name="amount_total"/>
+                            <field name="payment_state" widget="badge" decoration-danger="payment_state == 'not_paid'" decoration-warning="payment_state in ('partial', 'in_payment')" decoration-success="payment_state in ('paid', 'reversed')"/>
+                            <field name="state" widget="badge" decoration-success="state == 'posted'" decoration-info="state == 'draft'"/>
+                        </tree>
+                    </field>
                 </page>
                 <page string="Invoice Allocated" name="invoice_allocate">
                     <field name="purchase_contract_invoice_ids" readonly="1">
@@ -304,6 +338,12 @@
             </xpath>
             <xpath expr="//button[@name='button_approve']" position="after">
                 <button name="%(action_create_invoice)d" string="Create Invoice" type="action" states="approved"/>
+            </xpath>
+            <xpath expr="//field[@name='ptbf_ids']/tree/field[@name='quantity']" position="after">
+                <field name="remain_qty_invoice"/>
+            </xpath>
+            <xpath expr="//field[@name='ptbf_ids']/form//field[@name='history_rate_ids']/tree/field[@name='qty_receive']" position="after">
+                <field name="remain_qty_invoice"/>
             </xpath>
         </field>
     </record>
@@ -381,7 +421,24 @@
             </xpath>
             <xpath expr="//page[@name='product']" position="after">
                 <page string="Invoice" name="invoice_supplier">
-                    <field name="invoice_ids" readonly="1"/>
+                    <field name="invoice_ids">
+                        <tree create="false" delete="false">
+                            <field name="name"/>
+                            <field name="currency_id" column_invisible="True"/>
+                            <field name="invoice_date"/>
+                            <field name="purchase_contract_id"/>
+                             <field name="ref" string="Invoice Number"/>
+                            <field name="invoice_denominator"/>
+                            <field name="product_id"/>
+                            <field name="price_unit"/>
+                            <field name="total_quantity"/>
+                            <field name="amount_untaxed"/>
+                            <field name="amount_tax"/>
+                            <field name="amount_total"/>
+                            <field name="payment_state" widget="badge" decoration-danger="payment_state == 'not_paid'" decoration-warning="payment_state in ('partial', 'in_payment')" decoration-success="payment_state in ('paid', 'reversed')"/>
+                            <field name="state" widget="badge" decoration-success="state == 'posted'" decoration-info="state == 'draft'"/>
+                        </tree>
+                    </field>
                 </page>
 <!--                <page string="Invoice Allocated" name="invoice_allocate">-->
 <!--                    <field name="purchase_contract_invoice_ids" readonly="1">-->
@@ -462,7 +519,10 @@
                 <field name="invoice_qty"/>
                 <field name="invoice_qty_remain"/>
             </xpath>
-
+            <xpath expr="//field[@name='amount_sub_total']" position="before">
+                <field name="amount_untaxed"/>
+                <field name="amount_tax"/>
+            </xpath>
         </field>
     </record>
 
@@ -485,6 +545,17 @@
                  <field name="invoice_qty_remain"/>
             </xpath>
 
+        </field>
+    </record>
+
+    <record id="nvp_purchase_contract_search_inherit_vietnam" model="ir.ui.view">
+        <field name="name">nvp_purchase_contract_search_inherit_vietnam</field>
+        <field name="model">purchase.contract</field>
+        <field name="inherit_id" ref="sd_purchase_contract.nvp_purchase_contract_search"/>
+        <field name="arch" type="xml">
+			 <xpath expr="//filter[@name='filter_state_draft']" position="before">
+                 <filter name="filter_not_invoice_adjust" string="Not Have Invoice Adjust" domain="[('have_invoice_adjust','=', False), ('origin', '!=', '')]"/>
+            </xpath>
         </field>
     </record>
 </odoo>
