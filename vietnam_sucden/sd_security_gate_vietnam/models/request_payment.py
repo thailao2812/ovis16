@@ -879,7 +879,7 @@ class RequestPayment(models.Model):
 
     @api.depends('payment_quantity', 'fix_price', 'liquidation_amount', 'deposit_amount', 'advance_payment_converted', 'payment_quantity',
                  'total_interest', 'is_converted', 'type', 'type_of_ptbf_payment', 'final_price_vnd', 'total_advance_payment_usd',
-                 'rate', 'qty_advance_fix', 'fixation_advance_line_ids', 'fixation_advance_line_ids.request_amount',
+                 'rate', 'qty_advance_fix', 'fixation_advance_line_ids', 'fixation_advance_line_ids.request_amount', 'advance_price_usd',
                  'request_deposit', 'fixation_advance_ptbf_npe_ids', 'fixation_advance_ptbf_npe_ids.total', 'fixation_advance_ptbf_npe_total_ids',
                  'fixation_advance_ptbf_npe_total_ids.total', 'fixation_advance_ptbf_npe_total_ids.name')
     def _compute_request_amount(self):
@@ -895,11 +895,8 @@ class RequestPayment(models.Model):
                 if rec.type_of_ptbf_payment == 'fixation':
                     rec.request_amount = (rec.payment_quantity * rec.final_price_vnd) - rec.liquidation_amount
                 if rec.type_of_ptbf_payment == 'advance':
-                    rec.request_amount = self.custom_round(rec.total_advance_payment_usd * rec.rate)
-                    if rec.payment_quantity > 0:
-                        rec.advance_price_vnd = self.custom_round(rec.request_amount / rec.payment_quantity)
-                    else:
-                        rec.advance_price_vnd = 0
+                    rec.advance_price_vnd = rec.advance_price_usd * rec.rate
+                    rec.request_amount = self.custom_round(rec.advance_price_usd * rec.rate * rec.payment_quantity)
                 if rec.type_of_ptbf_payment == 'fixation_advance':
                     rec.total_contract_value = (rec.final_price_vnd * rec.qty_advance_fix)
                     advance_remain_line = rec.fixation_advance_line_ids.filtered(lambda x: x.name == 'PHẦN CÒN LẠI/ REMAIN PAYMENT:')
