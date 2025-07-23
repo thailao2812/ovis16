@@ -8,7 +8,7 @@
                 <group>
 					<field name="is_converted" invisible="1"/>
                     <field name="type_invoice" attrs="{'invisible': [('is_converted', '=', False)], 'required': [('is_converted', '=', True)]}"/>
-                    <field name="type_invoice" attrs="{'invisible': [('type', '!=', 'ptbf')], 'required': [('type', '=', 'ptbf')]}"/>
+                    <field name="type_invoice" attrs="{'invisible': ['|', ('is_converted', '=', True), ('type', '!=', 'ptbf')], 'required': [('type', '=', 'ptbf')]}"/>
                     <field name="advance_normal" attrs="{'invisible': ['|', ('type', '!=', 'ptbf'), ('type_invoice', '!=', 'normal')]}"/>
 					<field name="invoice_converted_ids" widget="many2many_tags" invisible="1"/>
 					<field name="invoice_origin_id" options="{'no_create': True}" attrs="{'invisible': [('is_converted', '=', False)], 'required': [('is_converted', '=', True)]}" domain="[('id', 'in', invoice_converted_ids)]"/>
