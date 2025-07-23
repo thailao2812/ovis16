@@ -90,7 +90,7 @@ class PurchaseContract(models.Model):
                 record.invoice_qty = sum(record.purchase_contract_invoice_ids.mapped('quantity'))
                 record.invoice_qty_remain = 0
             else:
-                record.invoice_qty = sum(record.invoice_ids.filtered(lambda x: x.state != 'cancel').mapped('total_qty'))
+                record.invoice_qty = sum(record.invoice_ids.filtered(lambda x: x.state != 'cancel' and x.move_type != 'in_refund').mapped('total_qty'))
                 record.invoice_qty_remain = record.total_qty - sum(record.invoice_ids.filtered(lambda x: x.state != 'cancel' and x.move_type != 'in_refund').mapped('total_qty'))
 
     def button_request_final_payment(self):
