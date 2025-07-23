@@ -48,11 +48,11 @@
                     <button name="approve_by_director" string="Approve by Director" type="object" states="accounting_2" class="oe_highlight"
                             groups="sd_security_gate_vietnam.group_director_request_payment"/>
                     <button name="action_request_register_payment" type="object"
-                                class="oe_highlight" context="{'dont_redirect_to_payments': True}" attrs="{'invisible': ['|', ('state', '!=', 'approved_director'), ('invoice_ids', '=', False)]}"
+                                class="oe_highlight" context="{'dont_redirect_to_payments': True}" attrs="{'invisible': [('state', '!=', 'approved_director')]}"
                                 string="Register Payment" data-hotkey="g" groups="account.group_account_invoice"/>
-                    <button name="%(sd_security_gate_vietnam.action_create_multiple_payment)d" type="action"
-                            attrs="{'invisible': ['|', ('state', '!=', 'approved_director'), ('invoice_ids', '=', False)]}"
-                                class="oe_highlight" string="Register Payment" groups="account.group_account_invoice"/>
+<!--                    <button name="%(sd_security_gate_vietnam.action_create_multiple_payment)d" type="action"-->
+<!--                            attrs="{'invisible': ['|', ('state', '!=', 'approved_director'), ('invoice_ids', '=', False)]}"-->
+<!--                                class="oe_highlight" string="Register Payment" groups="account.group_account_invoice"/>-->
 <!--                    	<button states="approved_director" name="action_request_register_payment" type="object"-->
 <!--                                class="oe_highlight" context="{'dont_redirect_to_payments': True}"-->
 <!--                                string="Register Payment" data-hotkey="g" groups="account.group_account_invoice"/>-->
@@ -220,15 +220,15 @@
                             </field>
                         </group>
                     </group>
-                    <separator string="Invoice Allocation"/>
-                    <field name="invoice_ids" readonly="1">
-                        <tree string="Invoice">
-                            <field name="invoice_id" required="1"/>
-                            <field name="paid_amount"/>
-                            <field name="allocate_amount"/>
-                            <field name="remaining_amount"/>
-                        </tree>
-                    </field>
+<!--                    <separator string="Invoice Allocation"/>-->
+<!--                    <field name="invoice_ids" readonly="1">-->
+<!--                        <tree string="Invoice">-->
+<!--                            <field name="invoice_id" required="1"/>-->
+<!--                            <field name="paid_amount"/>-->
+<!--                            <field name="allocate_amount"/>-->
+<!--                            <field name="remaining_amount"/>-->
+<!--                        </tree>-->
+<!--                    </field>-->
                     <separator string="Delivery Registration KTN" attrs="{'invisible': [('have_dr_ktn', '=', False)]}"/>
                     <field name="delivery_70_ktn_ids" readonly="1" attrs="{'invisible': [('have_dr_ktn', '=', False)]}">
                         <tree editable="bottom">
