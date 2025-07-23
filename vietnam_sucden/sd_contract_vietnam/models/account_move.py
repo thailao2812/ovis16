@@ -109,6 +109,13 @@ class AccountMove(models.Model):
             #     raise UserError(_('You cannot approve this Invoice. Please select another person in your team.'))
             rec.state = 'approved'
 
+    def unlink(self):
+        for rec in self:
+            if rec.state != 'draft':
+                raise UserError(_('You cannot delete invoice.'))
+        invoice = super(AccountMove, self).unlink()
+        return invoice
+
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
 

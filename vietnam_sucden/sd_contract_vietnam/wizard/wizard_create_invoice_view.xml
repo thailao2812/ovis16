@@ -15,7 +15,7 @@
 					<field name="invoice_origin_id" options="{'no_create': True}" attrs="{'invisible': ['|', ('is_converted', '=', True), ('type_invoice', 'not in', ['adjust_increase', 'adjust_decrease'])], 'required': [('is_converted', '=', False), ('type_invoice', 'in', ['adjust_increase', 'adjust_decrease'])]}" domain="[('id', 'in', invoice_converted_ids)]"/>
 					<field name="contract_id" invisible="1" readonly="1"/>
 					<field name="type" invisible="1"/>
-                    <field name="ptbf_fix_price_id" options="{'no_create': True}" attrs="{'invisible': ['|', ('advance_normal', '=', True), ('type', '!=', 'ptbf')]}" domain="[('contract_id', '=', contract_id)]"/>
+                    <field name="ptbf_fix_price_id" options="{'no_create': True}" attrs="{'invisible': ['|', '|', ('type_invoice', '!=', 'normal'), ('advance_normal', '=', True), ('type', '!=', 'ptbf')]}" domain="[('contract_id', '=', contract_id)]"/>
                     <field name="line_ptbf_fix_price_id" options="{'no_create': True}" attrs="{'invisible': ['|', ('ptbf_fix_price_id', '=', False), ('type', '!=', 'ptbf')], 'required': [('ptbf_fix_price_id', '!=', False)]}" domain="[('history_id', '=', ptbf_fix_price_id)]"/>
 					<field name="journal_id" readonly="1"/>
 					<field name="invoice_number" required="1"/>
