@@ -89,9 +89,9 @@ class WizardPurchaseContract(models.TransientModel):
 
         for line in self.contract_line_ids:
             if line.qty_received < line.product_qty + line.open_qty + line.total_qty_fixed:
-                raise UserError('Cannot create a NVP if Qty Received < Fixed + Qty Fix + Open Qty')
+                raise UserError('Cannot create a SVNP if Qty Received < Fixed + Qty Fix + Open Qty')
             if line.product_qty + line.open_qty == 0:
-                raise UserError(_("Cannot create NVP with quantity = 0"))
+                raise UserError(_("Cannot create SVNP with quantity = 0"))
             # if line.open_qty > 0:
             #     if line.purchase_contract_id.open_qty - line.open_qty < 0:
             #         raise UserError(_("You cannot input Qty No Advance more than you setting in NPE"))
@@ -110,7 +110,7 @@ class WizardPurchaseContract(models.TransientModel):
                 # else:
                 for pay in npe.request_payment_ids:
                     if not pay.rate_ids:
-                        raise UserError('You need to input interest before convert to NVP')
+                        raise UserError('You need to input interest before convert to SVNP')
                     for rate in pay.rate_ids:
                         if not rate.date or not rate.date_end:
                             raise UserError('You need to input interest and date from - date to before convert to NVP')
@@ -186,11 +186,22 @@ class WizardPurchaseContract(models.TransientModel):
 
         for line in self.contract_line_ids:
             if line.qty_received < line.product_qty + line.total_qty_fixed:
-                raise UserError('Cannot create a NVP if Qty Received > Fixed + Qty Fix')
+                raise UserError('Cannot create a PTBF if Qty Received > Fixed + Qty Fix')
         origin = ''
+
         for line in self._context.get('active_ids'):
             origin += self.env['purchase.contract'].browse(line).name
             origin += ';'
+            # Ràng buộc diều kiện lãi
+            for line in self._context.get('active_ids'):
+                for npe in self.env['purchase.contract'].browse(line):
+                    for pay in npe.request_payment_ids:
+                        if not pay.rate_ids:
+                            raise UserError('You need to input interest before convert to PTBF')
+                        for rate in pay.rate_ids:
+                            if not rate.date or not rate.date_end:
+                                raise UserError(
+                                    'You need to input interest and date from - date to before convert to PTBF')
 
         active_id = self._context.get('active_id')
         company = self.env.user.company_id.id
