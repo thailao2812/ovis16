@@ -31,6 +31,7 @@ class WizardCreateInvoice(models.TransientModel):
         ('adjust_increase', 'Adjust Increase'),
         ('adjust_decrease', 'Adjust Decrease'),
     ], string='Type Invoice', default='normal')
+    advance_normal = fields.Boolean(string='Advance Normal')
 
     # Convert contract
     is_converted = fields.Boolean(string='Is Converted')
@@ -308,9 +309,16 @@ class WizardCreateInvoice(models.TransientModel):
                         vals = self._prepare_invoice_line(line, invoice_id, invoice_vals, price_unit=self.price_unit)
                         invoice_line.create(vals)
                 if self.contract_id.type in ['ptbf']:
-                    for line in self.contract_id.contract_line:
-                        vals = self._prepare_invoice_line(line, invoice_id, invoice_vals, price_unit=self.line_ptbf_fix_price_id.final_price_vn)
-                        invoice_line.create(vals)
+                    if self.advance_normal:
+                        for line in self.contract_id.contract_line:
+                            vals = self._prepare_invoice_line(line, invoice_id, invoice_vals, price_unit=self.price_unit)
+                            invoice_line.create(vals)
+                    else:
+                        if not self.line_ptbf_fix_price_id:
+                            raise UserError(_("You must choose detail fix price time"))
+                        for line in self.contract_id.contract_line:
+                            vals = self._prepare_invoice_line(line, invoice_id, invoice_vals, price_unit=self.line_ptbf_fix_price_id.final_price_vn)
+                            invoice_line.create(vals)
                 if self.contract_id.type == 'purchase':
                     for line in self.contract_id.contract_line:
                         vals = self._prepare_invoice_line(line, invoice_id, invoice_vals, price_unit=line.price_unit)
