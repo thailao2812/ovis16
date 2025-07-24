@@ -5,8 +5,8 @@
             <field name="model">tds.report</field>
             <field name="arch" type="xml">
                 <tree editable="top" create="false" edit="false">
-                    <field name = 'financial_year_id' readonly="1" />
-                    <field name = 'partner_id' readonly="1" />
+                    <field name = 'financial_year_name' readonly="1" />
+                    <field name = 'partner_name' readonly="1" />
                     <field name = 'partner_code' readonly="1" />
                     <field name = 'pan_number' readonly="1" />
                     <field name = 'pan_status' readonly="1" />
@@ -30,8 +30,8 @@
             <field name="model">tds.report</field>
             <field name="arch" type="xml">
                 <search>
-                    <field name = "financial_year_id"/>
-                    <field name = "partner_id"/>
+                    <field name = "financial_year_name"/>
+                    <field name = "partner_name"/>
                 </search>
              </field>
         </record>
