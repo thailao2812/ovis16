@@ -1,105 +1,82 @@
 # -*- coding: utf-8 -*-
 import datetime
-import werkzeug
 from collections import OrderedDict
 from dateutil.relativedelta import relativedelta
-
+from werkzeug.exceptions import NotFound
 from odoo import http
-from odoo.exceptions import AccessError, MissingError, ValidationError
-from odoo.fields import Command
 from odoo.http import request
 from odoo.tools.translate import _
-from odoo.tools.misc import format_date
-from odoo.tools.date_utils import get_timedelta
-from odoo.addons.payment.controllers import portal as payment_portal
-from odoo.addons.payment import utils as payment_utils
-from odoo.addons.portal.controllers.portal import pager as portal_pager
-from odoo.addons.sale.controllers import portal as sale_portal
+
+#from odoo.addons.payment.controllers.portal import PaymentProcessing
+from odoo.addons.portal.controllers.portal import get_records_pager, pager as portal_pager, CustomerPortal
 
 
-class CustomerPortal(payment_portal.PaymentPortal):
+class CustomerPortal(CustomerPortal):
 
     def _get_subscription_domain(self, partner):
         return [
-            ('partner_id', 'in', [partner.id, partner.commercial_partner_id.id]),
-            ('stage_category', 'in', ['progress', 'closed']),
-            ('is_subscription', '=', True)
+            ('partner_id.id', 'in', [partner.id, partner.commercial_partner_id.id]),
         ]
 
-    def _prepare_home_portal_values(self, counters):
+    def _prepare_portal_layout_values(self):
         """ Add subscription details to main account page """
-        values = super()._prepare_home_portal_values(counters)
-        if 'subscription_count' in counters:
-            if request.env['sale.order'].check_access_rights('read', raise_exception=False):
-                partner = request.env.user.partner_id
-                values['subscription_count'] = request.env['sale.order'].search_count(self._get_subscription_domain(partner))
-            else:
-                values['subscription_count'] = 0
+        values = super(CustomerPortal, self)._prepare_portal_layout_values()
+        partner = request.env.user.partner_id
+        sub_ids = request.env['sale.subscription'].search(self._get_subscription_domain(partner)).ids
+        values['subscription_count'] = len(sub_ids)
+        values['sub_ids'] = sub_ids
         return values
-
-    def _get_subscription(self, access_token, order_id):
-        logged_in = not request.env.user.sudo()._is_public()
-        order_sudo = request.env['sale.order']
-        try:
-            order_sudo = self._document_check_access('sale.order', order_id, access_token)
-        except AccessError:
-            if not logged_in:
-                subscription_url = '/my/subscription/%d' % order_id
-                return order_sudo, werkzeug.utils.redirect('/web/login?redirect=%s' % werkzeug.urls.url_quote(subscription_url))
-            else:
-                raise werkzeug.exceptions.NotFound()
-        except MissingError:
-            return order_sudo, request.redirect('/my')
-        return order_sudo, None
 
     @http.route(['/my/subscription', '/my/subscription/page/<int:page>'], type='http', auth="user", website=True)
     def my_subscription(self, page=1, date_begin=None, date_end=None, sortby=None, filterby=None, **kw):
         values = self._prepare_portal_layout_values()
         partner = request.env.user.partner_id
-        Order = request.env['sale.order']
+        SaleSubscription = request.env['sale.subscription']
 
         domain = self._get_subscription_domain(partner)
 
+        archive_groups = self._get_archive_groups('sale.subscription', domain)
         if date_begin and date_end:
             domain += [('create_date', '>', date_begin), ('create_date', '<=', date_end)]
 
         searchbar_sortings = {
             'date': {'label': _('Newest'), 'order': 'create_date desc, id desc'},
-            'name': {'label': _('Name'), 'order': 'name asc, id asc'},
-            'stage_id': {'label': _('Status'), 'order': 'stage_id asc, to_renew desc, id desc'}
+            'name': {'label': _('Name'), 'order': 'name asc, id asc'}
         }
         searchbar_filters = {
             'all': {'label': _('All'), 'domain': []},
-            'open': {'label': _('In Progress'), 'domain': [('stage_category', '=', 'progress')]},
+            'open': {'label': _('In Progress'), 'domain': [('in_progress', '=', True)]},
             'pending': {'label': _('To Renew'), 'domain': [('to_renew', '=', True)]},
-            'close': {'label': _('Closed'), 'domain': [('stage_category', '=', 'closed')]},
+            'close': {'label': _('Closed'), 'domain': [('in_progress', '=', False)]},
         }
 
         # default sort by value
         if not sortby:
-            sortby = 'stage_id'
+            sortby = 'date'
         order = searchbar_sortings[sortby]['order']
         # default filter by value
         if not filterby:
             filterby = 'all'
         domain += searchbar_filters[filterby]['domain']
+        domain += [('id', 'in', values['sub_ids'])]
 
         # pager
-        order_count = Order.search_count(domain)
-        pager = portal_pager(
-            url="/my/subscription",
-            url_args={'date_begin': date_begin, 'date_end': date_end, 'sortby': sortby, 'filterby': filterby},
-            total=order_count,
-            page=page,
-            step=self._items_per_page
-        )
-        orders = Order.search(domain, order=order, limit=self._items_per_page, offset=pager['offset'])
-        request.session['my_subscriptions_history'] = orders.ids[:100]
+        account_count = SaleSubscription.sudo().search_count(domain)
+        pager = 1 # portal_pager(
+        #     url="/my/subscription",
+        #     url_args={'date_begin': date_begin, 'date_end': date_end, 'sortby': sortby, 'filterby': filterby},
+        #     total=account_count,
+        #     page=page,
+        #     step=self._items_per_page
+        # )
+        accounts = SaleSubscription.sudo().search(domain, order=order, limit=self._items_per_page, offset=pager['offset'])
+        request.session['my_subscriptions_history'] = accounts.ids[:100]
 
         values.update({
-            'subscriptions': orders,
+            'accounts': accounts,
             'page_name': 'subscription',
             'pager': pager,
+            'archive_groups': archive_groups,
             'default_url': '/my/subscription',
             'searchbar_sortings': searchbar_sortings,
             'sortby': sortby,
@@ -108,227 +85,172 @@ class CustomerPortal(payment_portal.PaymentPortal):
         })
         return request.render("sale_subscription.portal_my_subscriptions", values)
 
-    @http.route(['/my/subscription/<int:order_id>', '/my/subscription/<int:order_id>/<access_token>'],
-                type='http', auth='public', website=True)
-    def subscription(self, order_id, access_token=None, message='', message_class='', report_type=None, download=False, **kw):
-        order_sudo, redirection = self._get_subscription(access_token, order_id)
-        if redirection:
-            return redirection
-        if report_type in ('html', 'pdf', 'text'):
-            return self._show_report(model=order_sudo, report_type=report_type, report_ref='sale.action_report_saleorder', download=download)
 
-        providers_sudo = request.env['payment.provider'].sudo()._get_compatible_providers(
-            order_sudo.company_id.id,
-            order_sudo.partner_id.id,
-            order_sudo.amount_total,
-            currency_id=order_sudo.currency_id.id,
-            is_validation=not order_sudo.to_renew,
-            sale_order_id=order_id,
-        )  # In sudo mode to read the fields of providers and partner (if not logged in)
-        # The tokens are filtered based on the partner hierarchy to allow managing tokens of any
-        # sibling partners. As a result, a partner can manage any token belonging to partners of its
-        # own company from a subscription.
-        logged_in = not request.env.user.sudo()._is_public()
-        tokens = request.env['payment.token'].search([
-            ('provider_id', 'in', providers_sudo.ids),
-            ('partner_id', 'child_of', order_sudo.partner_id.commercial_partner_id.id),
-        ]) if logged_in else request.env['payment.token']
+class sale_subscription(http.Controller):
 
-        # Make sure that the partner's company matches the subscription's company.
-        if not payment_portal.PaymentPortal._can_partner_pay_in_company(
-                order_sudo.partner_id, order_sudo.company_id
-        ):
-            providers_sudo = request.env['payment.provider'].sudo()
-            tokens = request.env['payment.token']
+    @http.route(['/my/subscription/<int:account_id>/',
+                 '/my/subscription/<int:account_id>/<string:uuid>'], type='http', auth="public", website=True)
+    def subscription(self, account_id, uuid='', message='', message_class='', **kw):
+        account_res = request.env['sale.subscription']
+        if uuid:
+            account = account_res.sudo().browse(account_id)
+            if uuid != account.uuid:
+                raise NotFound()
+            if request.uid == account.partner_id.user_id.id:
+                account = account_res.browse(account_id)
+        else:
+            account = account_res.browse(account_id)
 
-        fees_by_provider = {
-            provider: provider._compute_fees(
-                order_sudo.amount_total,
-                order_sudo.currency_id,
-                order_sudo.partner_id.country_id
-            ) for provider in providers_sudo.filtered('fees_active')
-        }
-        active_plan_sudo = order_sudo.sale_order_template_id.sudo()
-        display_close = active_plan_sudo.user_closable and order_sudo.stage_category == 'progress'
-        is_follower = request.env.user.partner_id in order_sudo.message_follower_ids.partner_id
-        periods = {'day': 'days', 'week': 'weeks', 'month': 'months', 'year': 'years'}
-        # Calculate the duration when the customer can reopen his subscription
-        missing_periods = 1
-        if order_sudo.next_invoice_date:
-            rel_period = relativedelta(datetime.datetime.today(), order_sudo.next_invoice_date)
-            missing_periods = getattr(rel_period, periods[order_sudo.recurrence_id.unit]) + 1
-        action = request.env.ref('sale_subscription.sale_subscription_action')
+        acquirers = request.env['payment.acquirer'].search([
+            ('state', 'in', ['enabled', 'test']),
+            ('registration_view_template_id', '!=', False),
+            ('token_implemented', '=', True),
+            ('company_id', '=', account.company_id.id)])
+        acc_pm = account.payment_token_id
+        part_pms = account.partner_id.payment_token_ids.filtered(lambda pms: pms.acquirer_id.company_id == account.company_id)
+        display_close = account.template_id.sudo().user_closable and account.in_progress
+        is_follower = request.env.user.partner_id.id in [follower.partner_id.id for follower in account.message_follower_ids]
+        active_plan = account.template_id.sudo()
+        periods = {'daily': 'days', 'weekly': 'weeks', 'monthly': 'months', 'yearly': 'years'}
+        if account.recurring_rule_type != 'weekly':
+            rel_period = relativedelta(datetime.datetime.today(), account.recurring_next_date)
+            missing_periods = getattr(rel_period, periods[account.recurring_rule_type]) + 1
+        else:
+            delta = datetime.date.today() - account.recurring_next_date
+            missing_periods = delta.days / 7
+        dummy, action = request.env['ir.model.data'].get_object_reference('sale_subscription', 'sale_subscription_action')
         values = {
-            'page_name': 'subscription',
-            'subscription': order_sudo,
-            'template': order_sudo.sale_order_template_id.sudo(),
+            'account': account,
+            'template': account.template_id.sudo(),
             'display_close': display_close,
             'is_follower': is_follower,
-            'close_reasons': request.env['sale.order.close.reason'].search([]),
+            'close_reasons': request.env['sale.subscription.close.reason'].search([]),
             'missing_periods': missing_periods,
+            'payment_mode': active_plan.payment_mode,
             'user': request.env.user,
-            'is_salesman': request.env.user.has_group('sales_team.group_sale_salesman'),
+            'acquirers': list(acquirers),
+            'acc_pm': acc_pm,
+            'part_pms': part_pms,
+            'is_salesman': request.env['res.users'].with_user(request.uid).has_group('sales_team.group_sale_salesman'),
             'action': action,
             'message': message,
             'message_class': message_class,
-            'pricelist': order_sudo.pricelist_id.sudo(),
-            'renew_url': f'/my/subscription/{order_sudo.id}/renew?access_token={order_sudo.access_token}',
+            'change_pm': kw.get('change_pm') != None,
+            'pricelist': account.pricelist_id.sudo(),
+            'submit_class':'btn btn-primary mb8 mt8 float-right',
+            'submit_txt':'Pay Subscription',
+            'bootstrap_formatting':True,
+            'return_url':'/my/subscription/' + str(account_id) + '/' + str(uuid),
         }
-        payment_values = {
-            'providers': providers_sudo,
-            'tokens': tokens,
-            'default_token_id': order_sudo.payment_token_id.id,
-            'fees_by_provider': fees_by_provider,
-            'show_tokenize_input': self._compute_show_tokenize_input_mapping(
-                providers_sudo, logged_in=logged_in, sale_order_id=order_sudo.id
-            ),
-            'amount': None,  # Determined by the generated invoice
-            'currency': order_sudo.pricelist_id.currency_id,
-            'partner_id': order_sudo.partner_id.id,
-            'access_token': order_sudo.access_token,
-            'transaction_route': f'/my/subscription/transaction/{order_sudo.id}',
-            'is_subscription': True,
-            # Operation-dependent values are defined in the view
-        }
-        values.update(payment_values)
 
-        values = self._get_page_view_values(
-            order_sudo, access_token, values, 'my_subscriptions_history', False)
+        history = request.session.get('my_subscriptions_history', [])
+        #values.update(get_records_pager(history, account))
+        values['acq_extra_fees'] = acquirers.get_acquirer_extra_fees(account.recurring_amount_total, account.currency_id, account.partner_id.country_id)
 
         return request.render("sale_subscription.subscription", values)
 
-    @http.route(['/my/subscription/<int:order_id>/close'], type='http', methods=["POST"], auth="public", website=True)
-    def close_account(self, order_id, access_token=None, **kw):
-        order_sudo, redirection = self._get_subscription(access_token, order_id)
-        if redirection:
-            return redirection
-        if order_sudo.sale_order_template_id.user_closable:
-            close_reason = request.env['sale.order.close.reason'].browse(int(kw.get('close_reason_id')))
-            order_sudo.close_reason_id = close_reason
+    payment_succes_msg = 'message=Thank you, your payment has been validated.&message_class=alert-success'
+    payment_fail_msg = 'message=There was an error with your payment, please try with another payment method or contact us.&message_class=alert-danger'
+
+    @http.route(['/my/subscription/payment/<int:account_id>/',
+                 '/my/subscription/payment/<int:account_id>/<string:uuid>'], type='http', auth="public", methods=['POST'], website=True)
+    def payment(self, account_id, uuid=None, **kw):
+        account_res = request.env['sale.subscription']
+        invoice_res = request.env['account.move']
+        get_param = ''
+        if uuid:
+            account = account_res.sudo().browse(account_id)
+            if uuid != account.uuid:
+                raise NotFound()
+        else:
+            account = account_res.browse(account_id)
+
+        # no change
+        if int(kw.get('pm_id', 0)) > 0:
+            account.payment_token_id = int(kw['pm_id'])
+
+        # if no payment has been selected for this account, then we display redirect to /my/subscription with an error message
+        if len(account.payment_token_id) == 0:
+            get_param = 'message=No payment method have been selected for this subscription.&message_class=alert-danger'
+            return request.redirect('/my/subscription/%s/%s?%s' % (account.id, account.uuid, get_param))
+
+        # we can't call _recurring_invoice because we'd miss 3DS, redoing the whole payment here
+        payment_token = account.payment_token_id
+        if payment_token:
+            invoice_values = account.sudo()._prepare_invoice()
+            new_invoice = invoice_res.sudo().create(invoice_values)
+            tx = account.sudo().with_context(off_session=False)._do_payment(payment_token, new_invoice)[0]
+            #PaymentProcessing.add_payment_transaction(tx)
+            if tx.html_3ds:
+                return tx.html_3ds
+            get_param = self.payment_succes_msg if tx.renewal_allowed else self.payment_fail_msg
+            if tx.renewal_allowed:
+                account.send_success_mail(tx, new_invoice)
+                msg_body = 'Manual payment succeeded. Payment reference: <a href=# data-oe-model=payment.transaction data-oe-id=%d>%s</a>; Amount: %s. Invoice <a href=# data-oe-model=account.move data-oe-id=%d>View Invoice</a>.' % (tx.id, tx.reference, tx.amount, new_invoice.id)
+                account.message_post(body=msg_body)
+            elif tx.state != 'pending':
+                # a pending status might indicate that the customer has to authenticate, keep the invoice for post-processing
+                # NOTE: this might cause a lot of draft invoices to stay alive; i'm afraid this can't be helped
+                #       since the payment flow is divided in 2 in that case and the draft invoice must survive after the request
+                new_invoice.unlink()
+
+        return request.redirect('/payment/process')
+
+    # 3DS controllers
+    # transaction began as s2s but we receive a form reply
+    @http.route(['/my/subscription/<sub_uuid>/payment/<int:tx_id>/accept/',
+                 '/my/subscription/<sub_uuid>/payment/<int:tx_id>/decline/',
+                 '/my/subscription/<sub_uuid>/payment/<int:tx_id>/exception/'], type='http', auth="public", website=True)
+    def payment_accept(self, sub_uuid, tx_id, **kw):
+        Subscription = request.env['sale.subscription']
+        tx_res = request.env['payment.transaction']
+
+        subscription = Subscription.sudo().search([('uuid', '=', sub_uuid)])
+        tx = tx_res.sudo().browse(tx_id)
+
+        tx.form_feedback(kw, tx.acquirer_id.provider)
+
+        get_param = self.payment_succes_msg if tx.renewal_allowed else self.payment_fail_msg
+
+        return request.redirect('/my/subscription/%s/%s?%s' % (subscription.id, sub_uuid, get_param))
+
+    @http.route(['/my/subscription/<int:account_id>/close'], type='http', methods=["POST"], auth="public", website=True)
+    def close_account(self, account_id, uuid=None, **kw):
+        account_res = request.env['sale.subscription']
+
+        if uuid:
+            account = account_res.sudo().browse(account_id)
+            if uuid != account.uuid:
+                raise NotFound()
+        else:
+            account = account_res.browse(account_id)
+
+        if account.sudo().template_id.user_closable:
+            close_reason = request.env['sale.subscription.close.reason'].browse(int(kw.get('close_reason_id')))
+            account.close_reason_id = close_reason
             if kw.get('closing_text'):
-                order_sudo.message_post(body=_('Closing text: %s', kw.get('closing_text')))
-            order_sudo.set_close()
+                account.message_post(body=_('Closing text : ') + kw.get('closing_text'))
+            account.set_close()
+            account.date = datetime.date.today().strftime('%Y-%m-%d')
         return request.redirect('/my/home')
 
-    @http.route(['/my/subscription/<int:order_id>/renew'], type='http', methods=["GET"], auth="public", website=True)
-    def renew_subscription(self, order_id, access_token=None, **kw):
-        order_sudo, redirection = self._get_subscription(access_token, order_id)
-        if redirection:
-            return redirection
 
-        if order_sudo.stage_category != 'progress':
-            order_sudo.set_open()
-            new_end_date = format_date(request.env, order_sudo.end_date, lang_code=order_sudo.partner_id.lang)
-            message = _("Your subscription has been renewed until %s.", new_end_date)
+    @http.route(['/my/subscription/<int:account_id>/set_pm',
+                '/my/subscription/<int:account_id>/<string:uuid>/set_pm'], type='http', methods=["POST"], auth="public", website=True)
+    def set_payment_method(self, account_id, uuid=None, **kw):
+        account_res = request.env['sale.subscription']
+        if uuid:
+            account = account_res.sudo().browse(account_id)
+            if uuid != account.uuid:
+                raise NotFound()
         else:
-            message = _("This Subscription is already running. There is no need to renew it.")
-        subscription_url = f'/my/subscription/{order_sudo.id}/{order_sudo.access_token}?message={message}&message_class=alert-success'
-        return request.redirect(subscription_url)
+            account = account_res.browse(account_id)
 
+        if kw.get('pm_id'):
+            new_token = request.env['payment.token'].browse(int(kw.get('pm_id')))
+            account.payment_token_id = new_token
+            get_param = 'message=Your payment method has been changed for this subscription.&message_class=alert-success'
+        else:
+            get_param = 'message=Impossible to change your payment method for this subscription.&message_class=alert-danger'
 
-class PaymentPortal(payment_portal.PaymentPortal):
-
-    @http.route('/my/subscription/transaction/<int:order_id>', type='json', auth='public')
-    def subscription_transaction(
-        self, order_id, access_token, is_validation=False, **kwargs
-    ):
-        """ Create a draft transaction and return its processing values.
-        :param int order_id: The subscription for which a transaction is made, as a `sale.order` id
-        :param str access_token: The access token of the subscription used to authenticate the partner
-        :param bool is_validation: Whether the operation is a validation
-        :param dict kwargs: Locally unused data passed to `_create_transaction`
-        :return: The mandatory values for the processing of the transaction
-        :rtype: dict
-        :raise: ValidationError if the subscription id or the access token is invalid
-        """
-        order_sudo, redirection = self._get_subscription(access_token, order_id)
-        if redirection:
-            return redirection
-        kwargs.update(partner_id=order_sudo.partner_id.id)
-        kwargs.pop('custom_create_values', None)  # Don't allow passing arbitrary create values
-        common_callback_values = {
-            'callback_model_id': request.env['ir.model']._get_id(order_sudo._name),
-            'callback_res_id': order_sudo.id,
-        }
-        if not is_validation:  # Renewal transaction
-            kwargs.update({
-                'amount': order_sudo.amount_total,
-                'currency_id': order_sudo.currency_id.id,
-                'tokenization_requested': True,  # Renewal transactions are always tokenized
-            })
-            # Create the transaction. The `invoice_ids` field is populated later with the final inv.
-            tx_sudo = self._create_transaction(
-                custom_create_values={
-                    **common_callback_values,
-                    'sale_order_ids': [Command.set([order_id])],
-                    'callback_method': '_reconcile_and_assign_token',
-                },
-                is_validation=is_validation,
-                **kwargs
-            )
-        else:  # Validation transaction
-            kwargs['reference_prefix'] = payment_utils.singularize_reference_prefix(
-                prefix='V'  # Validation transactions use their own reference prefix
-            )
-            tx_sudo = self._create_transaction(
-                custom_create_values={
-                    **common_callback_values,
-                    'sale_order_ids': [Command.set([order_id])],
-                    'callback_method': '_assign_token',
-                },
-                is_validation=is_validation,
-                **kwargs
-            )
-
-        return tx_sudo._get_processing_values()
-
-    @http.route('/my/subscription/assign_token/<int:order_id>', type='json', auth='user')
-    def subscription_assign_token(self, order_id, token_id, access_token=None):
-        """ Assign a token to a subscription.
-
-        :param int order_id: The subscription to which the token must be assigned, as a
-                                    `sale.order` id
-        :param int token_id: The token to assign, as a `payment.token` id
-        :param str access_token: the order portal access token
-        :return: None
-        """
-        order_sudo, redirection = self._get_subscription(access_token, order_id)
-        if redirection:
-            return redirection
-        new_token = request.env['payment.token'].browse(int(token_id)).exists()
-        if not new_token:
-            raise werkzeug.exceptions.NotFound()
-
-        try:
-            new_token.check_access_rights('read')
-            new_token.check_access_rule('read')
-        except AccessError:
-            raise werkzeug.exceptions.NotFound()
-
-        if not new_token.sudo().active:
-            # Archived token are removed from existing subscriptions
-            # and shouldn't be re-assigned through this route.
-            raise werkzeug.exceptions.NotFound()
-
-        order_sudo.payment_token_id = new_token
-
-
-class SalePortal(sale_portal.CustomerPortal):
-
-    def _prepare_orders_domain(self, partner):
-        domain = super()._prepare_orders_domain(partner)
-        domain.append(('is_subscription', '=', False))
-        return domain
-
-    def _get_payment_values(self, order_sudo):
-        """ Override of `sale` to specify whether the sales order is a subscription.
-
-        :param recordset order_sudo: The sales order being paid, as a `sale.order` record.
-        :return: The payment-specific values.
-        :rtype: dict
-        """
-        is_subscription = order_sudo.is_subscription or order_sudo.subscription_id.is_subscription
-        return {
-            **super()._get_payment_values(order_sudo),
-            'is_subscription': is_subscription,
-        }
+        return request.redirect('/my/subscription/%s/%s?%s' % (account.id, account.uuid, get_param))
