@@ -116,6 +116,10 @@ class AccountMove(models.Model):
         invoice = super(AccountMove, self).unlink()
         return invoice
 
+    @api.constrains('line_ids', 'fiscal_position_id', 'company_id')
+    def _validate_taxes_country(self):
+        return True
+
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
 

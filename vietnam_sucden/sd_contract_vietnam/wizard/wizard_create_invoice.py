@@ -234,6 +234,9 @@ class WizardCreateInvoice(models.TransientModel):
     def action_confirm(self):
         invoice = self.env['account.move']
         invoice_line = self.env['account.move.line']
+        if self.invoice_origin_id:
+            if self.invoice_origin_id.state != 'posted':
+                raise UserError(_("Invoice origin must be posted"))
         if self.invoice_number:
             check_invoice_number = self.env['account.move'].search([
                 ('ref', '=', self.invoice_number),
