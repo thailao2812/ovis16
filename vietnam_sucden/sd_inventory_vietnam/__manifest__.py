@@ -17,6 +17,7 @@
         'report/report.xml',
         'wizard/wizard_report_stack_merge_view.xml',
         'wizard/in_out_stack_quantity.xml',
+        'wizard/wizard_create_stock_stack.xml',
         'views/device_profile_menu.xml',
         # 'views/device_telemetry_wizard.xml',
         'views/device_telemetry.xml',
