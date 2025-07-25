@@ -884,8 +884,8 @@ class RequestPayment(models.Model):
                 if rec.type_of_ptbf_payment == 'fixation':
                     rec.request_amount = (rec.payment_quantity * rec.final_price_vnd) - rec.liquidation_amount
                 if rec.type_of_ptbf_payment == 'advance':
-                    rec.advance_price_vnd = rec.advance_price_usd * rec.rate
-                    rec.request_amount = self.custom_round(rec.advance_price_usd * rec.rate * rec.payment_quantity)
+                    rec.advance_price_vnd = (rec.advance_price_usd * rec.rate) / 1000
+                    rec.request_amount = self.custom_round((rec.advance_price_usd * rec.rate)/1000 * rec.payment_quantity)
                 if rec.type_of_ptbf_payment == 'fixation_advance':
                     rec.total_contract_value = (rec.final_price_vnd * rec.qty_advance_fix)
                     advance_remain_line = rec.fixation_advance_line_ids.filtered(lambda x: x.name == 'PHẦN CÒN LẠI/ REMAIN PAYMENT:')
