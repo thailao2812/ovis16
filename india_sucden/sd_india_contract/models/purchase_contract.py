@@ -393,7 +393,7 @@ class PurchaseContract(models.Model):
                 'amount_untaxed': contract.currency_id.round(amount_untaxed),
                 'amount_tax': contract.currency_id.round(amount_tax),
                 'amount_sub_total': amount_untaxed + amount_tax,
-                'amount_total': sub_rel + amount + amount_deposit,
+                'amount_total': self.custom_round(sub_rel + amount + amount_deposit),
                 'amount_sub_rel_total': sub_rel,
                 'total_interest_pay': abs(amount),
                 'amount_deposit': abs(amount_deposit)

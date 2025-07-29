@@ -41,8 +41,7 @@ class PurchaseContract(models.Model):
     @api.depends('psc_to_pc_linked_ids', 'psc_to_pc_linked_ids.current_allocated', 'psc_to_pc_linked_ids.state')
     def _compute_allocated_qty(self):
         for record in self:
-            record.total_allocated_qty = sum(i.current_allocated for i in record.psc_to_pc_linked_ids.filtered(
-                lambda x: x.state == 'approve_allocation'))
+            record.total_allocated_qty = sum(i.current_allocated for i in record.psc_to_pc_linked_ids)
 
     @api.depends('total_qty', 'outturn', 'qty_received', 'origin', 'gross_qty')
     def _compute_finished_qty(self):
