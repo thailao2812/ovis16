@@ -56,7 +56,7 @@ class PurchaseContract(models.Model):
     @api.depends('total_qty', 'outturn', 'qty_received', 'origin', 'gross_qty', 'psc_to_pc_linked_ids', 'psc_to_pc_linked_ids.current_allocated')
     def _compute_finished_qty(self):
         for record in self:
-            record.finished_receive_qty = record.qty_received * (record.outturn/100)
+            record.finished_receive_qty = self.truncate(record.qty_received * (record.outturn/100))
             if not record.origin:
                 record.finished_qty = self.truncate(record.total_qty * (record.outturn/100))
             else:
