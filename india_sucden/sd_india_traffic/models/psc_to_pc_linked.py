@@ -52,7 +52,7 @@ class PscToPcLinked(models.Model):
     @api.constrains('current_allocated')
     def _constrains_current_allocated(self):
         for obj in self:
-            if obj.current_allocated > obj.balance_qty:
+            if obj.balance_qty < 0:
                 raise UserError(_("Allocation cannot higher than balance quantity for %s") % obj.purchase_contract_id.name)
 
 

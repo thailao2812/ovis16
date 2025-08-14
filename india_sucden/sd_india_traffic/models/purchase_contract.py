@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo import api, fields, models, tools, _, SUPERUSER_ID
 from odoo.exceptions import ValidationError, UserError
-
+import math
 
 class PurchaseContract(models.Model):
     _inherit = 'purchase.contract'
@@ -41,17 +41,26 @@ class PurchaseContract(models.Model):
     @api.depends('psc_to_pc_linked_ids', 'psc_to_pc_linked_ids.current_allocated', 'psc_to_pc_linked_ids.state')
     def _compute_allocated_qty(self):
         for record in self:
-            record.total_allocated_qty = sum(i.current_allocated for i in record.psc_to_pc_linked_ids.filtered(
-                lambda x: x.state == 'approve_allocation'))
+            record.total_allocated_qty = sum(i.current_allocated for i in record.psc_to_pc_linked_ids)
 
-    @api.depends('total_qty', 'outturn', 'qty_received', 'origin', 'gross_qty')
+    def custom_round(self, number: float) -> int:
+        if number - round(number) == 0.5:
+            return math.ceil(number)
+        else:
+            return round(number)
+
+    def truncate(self, number, decimals=2):
+        factor = 10 ** decimals
+        return int(number * factor) / factor
+
+    @api.depends('total_qty', 'outturn', 'qty_received', 'origin', 'gross_qty', 'psc_to_pc_linked_ids', 'psc_to_pc_linked_ids.current_allocated')
     def _compute_finished_qty(self):
         for record in self:
-            record.finished_receive_qty = record.qty_received * (record.outturn/100)
+            record.finished_receive_qty = self.truncate(record.qty_received * (record.outturn/100))
             if not record.origin:
-                record.finished_qty = record.total_qty * (record.outturn/100)
+                record.finished_qty = self.truncate(record.total_qty * (record.outturn/100))
             else:
-                record.finished_qty = record.gross_qty * (record.outturn/100)
+                record.finished_qty = self.truncate(record.gross_qty * (record.outturn/100))
 
     @api.depends('psc_to_pc_linked_ids', 'finished_qty', 'total_qty', 'total_allocated_qty',
                  'psc_to_pc_linked_ids.state')
