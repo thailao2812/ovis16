@@ -14,3 +14,4 @@ from . import s_contract
 from . import account_payment
 from . import sequence_mixin
 from . import offset_debt
+from . import sale_contract
