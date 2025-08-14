@@ -34,101 +34,100 @@ class TDSReport(models.Model):
         tools.drop_view_if_exists(self.env.cr, 'tds_report')
         self.env.cr.execute("""
             CREATE OR REPLACE VIEW public.tds_report AS
-            select row_number() OVER (
-                                ORDER BY (
-                                    pan_number
-                                ) DESC  
-            ) AS id, string_agg(distinct old_sql.financial_year_name, ', ') financial_year_name, string_agg(distinct old_sql.partner_code, ', ') partner_code, 
-                old_sql.pan_number, string_agg(distinct old_sql.partner_name, ', ') partner_name, 
-                old_sql.pan_status, old_sql.percent_tds, sum(old_sql.request_amount) request_amount, sum(old_sql.interest_amount) interest_amount, sum(old_sql.total_purchase) total_purchase, 
-                old_sql.threshold_amount, sum(old_sql.tds_assessable_calculation) tds_assessable_calculation, sum(old_sql.tds_amount_calculation) tds_amount_calculation,
-                sum(old_sql.tds_assessable_payment) tds_assessable_payment, sum(old_sql.tds_amount_payment) tds_amount_payment, sum(old_sql.different_tds_assessable) different_tds_assessable, 
-                sum(old_sql.different_tds_amount) different_tds_amount
-            FROM (select fy.name as financial_year_name, partner.partner_code as partner_code, partner.pan_number as pan_number, partner.name as partner_name,
-            CASE
-                WHEN partner.pan_number IS NOT NULL
-                     AND partner.pan_number != ''
-                     AND (partner.with_declaration IS NULL OR NOT partner.with_declaration) THEN 'With PAN'
-                WHEN (partner.pan_number IS NULL
-                      OR partner.pan_number = '')
-                     AND (partner.with_declaration IS NULL OR NOT partner.with_declaration) THEN 'Without PAN'
-                WHEN partner.with_declaration THEN 'With Declaration'
-                ELSE 'Unknown'
-            END AS pan_status,
-            CASE
-                WHEN partner.pan_number IS NOT NULL
-                     AND partner.pan_number != ''
-                     AND (partner.with_declaration IS NULL OR NOT partner.with_declaration) THEN 0.1
-                WHEN (partner.pan_number IS NULL
-                      OR partner.pan_number = '')
-                     AND (partner.with_declaration IS NULL OR NOT partner.with_declaration) THEN 5
-                WHEN partner.with_declaration THEN 0
-                ELSE 0
-            END AS percent_tds, sum(rp.request_amount) as request_amount, sum(rp.interest_amount) as interest_amount,
-                                sum(rp.request_amount) + sum(rp.interest_amount) as total_purchase, fy.max_value as threshold_amount,
-                                CASE WHEN sum(rp.request_amount) + sum(rp.interest_amount) - fy.max_value <= 0 THEN 0
-                                    ELSE sum(rp.request_amount) + sum(rp.interest_amount) - fy.max_value END as tds_assessable_calculation,
-                                CASE
-                    WHEN (sum(rp.request_amount) + sum(rp.interest_amount)) - fy.max_value <= 0 THEN 0
-            
+                select row_number() OVER (ORDER BY (fy.name, partner.pan_number) DESC  
+            	) AS id, fy.name AS financial_year_name, partner.pan_number AS pan_number,
+                CASE
+                    WHEN partner.pan_number IS NULL THEN STRING_AGG(DISTINCT partner.partner_code, ', ')
+                    ELSE STRING_AGG(DISTINCT partner.partner_code, ', ')
+                        FILTER (WHERE partner.pan_number IS NOT NULL)
+                END AS partner_code,
+                CASE
+                    WHEN partner.pan_number IS NULL THEN STRING_AGG(DISTINCT partner.name, ',')
+                    ELSE STRING_AGG(DISTINCT partner.name, ', ')
+                        FILTER (WHERE partner.pan_number IS NOT NULL)
+                END AS partner_name,
+                CASE
+                     WHEN partner.pan_number IS NOT NULL
+                          AND partner.pan_number != ''
+                          AND (BOOL_OR(partner.with_declaration) IS NULL OR NOT BOOL_OR(partner.with_declaration)) THEN 'With PAN'
+                     WHEN (partner.pan_number IS NULL
+                           OR partner.pan_number = '')
+                          AND (BOOL_OR(partner.with_declaration) IS NULL OR NOT BOOL_OR(partner.with_declaration)) THEN 'Without PAN'
+                     WHEN BOOL_OR(partner.with_declaration) THEN 'With Declaration'
+                     ELSE 'Unknown'
+				END AS pan_status,
+                CASE
                     WHEN partner.pan_number IS NOT NULL
                          AND partner.pan_number != ''
-                         AND (partner.with_declaration IS NULL OR NOT partner.with_declaration) THEN
-                         CASE
-                            WHEN ABS((sum(rp.request_amount) + sum(rp.interest_amount) - fy.max_value) * (0.1/100) - ROUND((sum(rp.request_amount) + sum(rp.interest_amount) - fy.max_value) * (0.1/100))) = 0.5
-                                THEN CEIL((sum(rp.request_amount) + sum(rp.interest_amount) - fy.max_value) * (0.1/100))
-                            ELSE
-                                ROUND((sum(rp.request_amount) + sum(rp.interest_amount) - fy.max_value) * (0.1/100))
-                         END
-            
+                         AND (BOOL_OR(partner.with_declaration) IS NULL OR NOT BOOL_OR(partner.with_declaration)) THEN 0.1
                     WHEN (partner.pan_number IS NULL
                           OR partner.pan_number = '')
-                         AND (partner.with_declaration IS NULL OR NOT partner.with_declaration) THEN
-                         CASE
-                            WHEN ABS((sum(rp.request_amount) + sum(rp.interest_amount) - fy.max_value) * (5/100) - ROUND((sum(rp.request_amount) + sum(rp.interest_amount) - fy.max_value) * (5/100))) = 0.5
-                                THEN CEIL((sum(rp.request_amount) + sum(rp.interest_amount) - fy.max_value) * (5/100))
-                            ELSE
-                                ROUND((sum(rp.request_amount) + sum(rp.interest_amount) - fy.max_value) * (5/100))
-                         END
-            
-                    WHEN partner.with_declaration THEN 0
+                         AND (BOOL_OR(partner.with_declaration) IS NULL OR NOT BOOL_OR(partner.with_declaration)) THEN 5
+                    WHEN BOOL_OR(partner.with_declaration) THEN 0
                     ELSE 0
-                END as tds_amount_calculation, sum(rp.tds_assessable_value) as tds_assessable_payment, sum(rp.tds_amount) as tds_amount_payment,
-                                               -- Tính toán phần chênh lệch
-                (CASE
-                    WHEN sum(rp.request_amount) + sum(rp.interest_amount) - fy.max_value <= 0 THEN 0
-                    ELSE sum(rp.request_amount) + sum(rp.interest_amount) - fy.max_value
-                END) - sum(rp.tds_assessable_value) as different_tds_assessable,
-            
-                (CASE
-                    WHEN (sum(rp.request_amount) + sum(rp.interest_amount)) - fy.max_value <= 0 THEN 0
-                    WHEN partner.pan_number IS NOT NULL
-                         AND partner.pan_number != ''
-                         AND (partner.with_declaration IS NULL OR NOT partner.with_declaration) THEN
-                         CASE
-                            WHEN ABS((sum(rp.request_amount) + sum(rp.interest_amount) - fy.max_value) * (0.1/100) - ROUND((sum(rp.request_amount) + sum(rp.interest_amount) - fy.max_value) * (0.1/100))) = 0.5
-                                THEN CEIL((sum(rp.request_amount) + sum(rp.interest_amount) - fy.max_value) * (0.1/100))
-                            ELSE
-                                ROUND((sum(rp.request_amount) + sum(rp.interest_amount) - fy.max_value) * (0.1/100))
-                         END
-                    WHEN (partner.pan_number IS NULL OR partner.pan_number = '')
-                         AND (partner.with_declaration IS NULL OR NOT partner.with_declaration) THEN
-                         CASE
-                            WHEN ABS((sum(rp.request_amount) + sum(rp.interest_amount) - fy.max_value) * (5/100) - ROUND((sum(rp.request_amount) + sum(rp.interest_amount) - fy.max_value) * (5/100))) = 0.5
-                                THEN CEIL((sum(rp.request_amount) + sum(rp.interest_amount) - fy.max_value) * (5/100))
-                            ELSE
-                                ROUND((sum(rp.request_amount) + sum(rp.interest_amount) - fy.max_value) * (5/100))
-                         END
-                    WHEN partner.with_declaration THEN 0
-                    ELSE 0
-                END) - sum(rp.tds_amount) as different_tds_amount
-            
-            from request_payment rp
-            join financial_year fy on fy.id = rp.financial_year_id
-            join res_partner partner on partner.id = rp.partner_id
-            -- where partner.pan_number = 'AAKPC8066C'
-            group by fy.id, partner.id) AS old_sql
-            GROUP BY old_sql.pan_number, old_sql.pan_status, old_sql.percent_tds, old_sql.threshold_amount;
+                END AS percent_tds, sum(rp.request_amount) as request_amount, sum(rp.interest_amount) as interest_amount,
+                                    sum(rp.request_amount) + sum(rp.interest_amount) as total_purchase, MAX(fy.max_value) as threshold_amount,
+                                    CASE WHEN sum(rp.request_amount) + sum(rp.interest_amount) - MAX(fy.max_value) <= 0 THEN 0
+                                        ELSE sum(rp.request_amount) + sum(rp.interest_amount) - MAX(fy.max_value) END as tds_assessable_calculation,
+                                    CASE
+                        WHEN (sum(rp.request_amount) + sum(rp.interest_amount)) - MAX(fy.max_value) <= 0 THEN 0
+                
+                        WHEN partner.pan_number IS NOT NULL
+                             AND partner.pan_number != ''
+                             AND (BOOL_OR(partner.with_declaration) IS NULL OR NOT BOOL_OR(partner.with_declaration)) THEN
+                             CASE
+                                WHEN ABS((sum(rp.request_amount) + sum(rp.interest_amount) - MAX(fy.max_value)) * (0.1/100) - ROUND((sum(rp.request_amount) + sum(rp.interest_amount) - MAX(fy.max_value)) * (0.1/100))) = 0.5
+                                    THEN CEIL((sum(rp.request_amount) + sum(rp.interest_amount) - MAX(fy.max_value)) * (0.1/100))
+                                ELSE
+                                    ROUND((sum(rp.request_amount) + sum(rp.interest_amount) - MAX(fy.max_value)) * (0.1/100))
+                             END
+                
+                        WHEN (partner.pan_number IS NULL
+                              OR partner.pan_number = '')
+                             AND (BOOL_OR(partner.with_declaration) IS NULL OR NOT BOOL_OR(partner.with_declaration)) THEN
+                             CASE
+                                WHEN ABS((sum(rp.request_amount) + sum(rp.interest_amount) - MAX(fy.max_value)) * (5/100) - ROUND((sum(rp.request_amount) + sum(rp.interest_amount) - MAX(fy.max_value)) * (5/100))) = 0.5
+                                    THEN CEIL((sum(rp.request_amount) + sum(rp.interest_amount) - MAX(fy.max_value)) * (5/100))
+                                ELSE
+                                    ROUND((sum(rp.request_amount) + sum(rp.interest_amount) - MAX(fy.max_value)) * (5/100))
+                             END
+                
+                        WHEN BOOL_OR(partner.with_declaration) THEN 0
+                        ELSE 0
+                    END as tds_amount_calculation, sum(rp.tds_assessable_value) as tds_assessable_payment, sum(rp.tds_amount) as tds_amount_payment,
+                                                   -- Tính toán phần chênh lệch
+                    (CASE
+                        WHEN sum(rp.request_amount) + sum(rp.interest_amount) - MAX(fy.max_value) <= 0 THEN 0
+                        ELSE sum(rp.request_amount) + sum(rp.interest_amount) - MAX(fy.max_value)
+                    END) - sum(rp.tds_assessable_value) as different_tds_assessable,
+                
+                    (CASE
+                        WHEN (sum(rp.request_amount) + sum(rp.interest_amount)) - MAX(fy.max_value) <= 0 THEN 0
+                        WHEN partner.pan_number IS NOT NULL
+                             AND partner.pan_number != ''
+                             AND (BOOL_OR(partner.with_declaration) IS NULL OR NOT BOOL_OR(partner.with_declaration)) THEN
+                             CASE
+                                WHEN ABS((sum(rp.request_amount) + sum(rp.interest_amount) - MAX(fy.max_value)) * (0.1/100) - ROUND((sum(rp.request_amount) + sum(rp.interest_amount) - MAX(fy.max_value)) * (0.1/100))) = 0.5
+                                    THEN CEIL((sum(rp.request_amount) + sum(rp.interest_amount) - MAX(fy.max_value)) * (0.1/100))
+                                ELSE
+                                    ROUND((sum(rp.request_amount) + sum(rp.interest_amount) - MAX(fy.max_value)) * (0.1/100))
+                             END
+                        WHEN (partner.pan_number IS NULL OR partner.pan_number = '')
+                             AND (BOOL_OR(partner.with_declaration) IS NULL OR NOT BOOL_OR(partner.with_declaration)) THEN
+                             CASE
+                                WHEN ABS((sum(rp.request_amount) + sum(rp.interest_amount) - MAX(fy.max_value)) * (5/100) - ROUND((sum(rp.request_amount) + sum(rp.interest_amount) - MAX(fy.max_value)) * (5/100))) = 0.5
+                                    THEN CEIL((sum(rp.request_amount) + sum(rp.interest_amount) - MAX(fy.max_value)) * (5/100))
+                                ELSE
+                                    ROUND((sum(rp.request_amount) + sum(rp.interest_amount) - MAX(fy.max_value)) * (5/100))
+                             END
+                        WHEN BOOL_OR(partner.with_declaration) THEN 0
+                        ELSE 0
+                    END) - sum(rp.tds_amount) as different_tds_amount
+            FROM request_payment rp
+            JOIN financial_year fy ON fy.id = rp.financial_year_id
+            JOIN res_partner partner ON partner.id = rp.partner_id
+            -- WHERE partner.name LIKE 'MANDANNA%' OR partner.name LIKE 'SOMANNA P A%'
+            GROUP BY fy.name, partner.pan_number
         """)
 
 #     def init(self):
