@@ -17,8 +17,8 @@
                 	<field name="open_qty"/>
                 	<field name="outturn_qty"/>
                 	<field name="open_p_contract"/>
-                	<field name="exchange_rate"/>
                 	<field name="market_price"/>
+                	<field name="exchange_rate"/>
                 	<field name="fob"/>
                 	<field name="a_differential"/>
                 	<field name="ab_differential"/>
