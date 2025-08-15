@@ -81,7 +81,7 @@ class RequestPayment(models.Model):
     price_tobe_fix = fields.Many2one('ptbf.fixprice', string='PTBF Fix Price No.', ondelete='cascade')
     quantity_of_price_tobe_fix = fields.Float(string='Quantity Price To Be Fix', related='price_tobe_fix.quantity', store=True)
     price_usd = fields.Float(string='Price USD', related='price_tobe_fix.price_fix', store=True, digits=(12, 2))
-    price_diff = fields.Float(string='DIFF', related='purchase_contract_id.diff_price', store=True, digits=(12, 0))
+    price_diff = fields.Float(string='DIFF', related=False, digits=(12, 0))
     final_price_usd = fields.Float(string='Final Price USD', compute='compute_price', store=True, digits=(12, 2))
     final_price_vnd = fields.Float(string='Final Price VND', compute='compute_price', store=True, digits=(12, 0))
 

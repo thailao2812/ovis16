@@ -561,7 +561,7 @@
                         <group>
                             <field name="payment_quantity"/>
                             <field name="price_usd"/>
-                            <field name="price_diff"/>
+                            <field name="price_diff" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             <field name="final_price_usd"/>
                             <field name="rate" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             <field name="final_price_vnd"/>
@@ -574,7 +574,7 @@
                             <field name="remain_qty" string="Remain quantity of Convert" readonly="1"/>
                             <field name="payment_quantity" string="Advance quantity"/>
                             <field name="liffe_price" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                            <field name="price_diff"/>
+                            <field name="price_diff" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             <field name="differencial_price"/>
                             <field name="advance_price_usd"/>
                             <field name="total_advance_payment_usd"/>
@@ -616,7 +616,7 @@
                     <group attrs="{'invisible': [('type_of_ptbf_payment', 'not in', ['fixation_advance', 'fixation_advance_ptbf_npe'])]}">
                         <field name="qty_advance_fix" readonly="1"/>
                         <field name="price_usd"/>
-                        <field name="price_diff"/>
+                        <field name="price_diff" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                         <field name="final_price_usd"/>
                         <field name="total_amount_usd"/>
 <!--                        <field name="rate"/>-->
