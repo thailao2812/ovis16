@@ -77,12 +77,12 @@ class RequestPayment(models.Model):
         ('advance', 'Advance'),
         ('fixation_advance', 'Fixation For Advance'),
         ('fixation_advance_ptbf_npe', 'Fixation For Advance NPE'),
-    ], string='Type Of PTBF Payment', default='fixation')
+    ], string='Type Of PTBF Payment', default=None)
     payment_tax = fields.Boolean(string='Payment Tax')
     price_tobe_fix = fields.Many2one('ptbf.fixprice', string='PTBF Fix Price No.', ondelete='cascade')
     quantity_of_price_tobe_fix = fields.Float(string='Quantity Price To Be Fix', related='price_tobe_fix.quantity', store=True)
     price_usd = fields.Float(string='Price USD', related='price_tobe_fix.price_fix', store=True, digits=(12, 2))
-    price_diff = fields.Float(string='DIFF', related='purchase_contract_id.diff_price', store=True, digits=(12, 0))
+    price_diff = fields.Float(string='DIFF', related=False, digits=(12, 0))
     final_price_usd = fields.Float(string='Final Price USD', compute='compute_price', store=True, digits=(12, 2))
     final_price_vnd = fields.Float(string='Final Price VND', compute='compute_price', store=True, digits=(12, 0))
 
@@ -881,7 +881,7 @@ class RequestPayment(models.Model):
                  'total_interest', 'is_converted', 'type', 'type_of_ptbf_payment', 'final_price_vnd', 'total_advance_payment_usd',
                  'rate', 'qty_advance_fix', 'fixation_advance_line_ids', 'fixation_advance_line_ids.request_amount', 'advance_price_usd',
                  'request_deposit', 'fixation_advance_ptbf_npe_ids', 'fixation_advance_ptbf_npe_ids.total', 'fixation_advance_ptbf_npe_total_ids',
-                 'fixation_advance_ptbf_npe_total_ids.total', 'fixation_advance_ptbf_npe_total_ids.name')
+                 'fixation_advance_ptbf_npe_total_ids.total', 'fixation_advance_ptbf_npe_total_ids.name', 'payment_tax', 'invoice_ids')
     def _compute_request_amount(self):
         for rec in self:
             if rec.type == 'purchase':
@@ -907,6 +907,8 @@ class RequestPayment(models.Model):
                 if rec.type_of_ptbf_payment == 'fixation_advance_ptbf_npe':
                     rec.total_contract_value = rec.final_price_vnd * rec.qty_advance_fix
                     rec.request_amount = rec.fixation_advance_ptbf_npe_total_ids.filtered(lambda x: x.name == 'Còn lại/ Remain Payment:').total - rec.deposit_amount - rec.liquidation_amount
+                if rec.invoice_ids and rec.payment_tax:
+                    rec.request_amount = sum(rec.invoice_ids.mapped('tax_amount'))
             if rec.request_deposit > 0:
                 rec.request_amount = rec.request_deposit
 
@@ -1236,6 +1238,17 @@ class RequestPayment(models.Model):
             if purchase_contract.type == 'ptbf' and purchase_contract.origin:
                 res['is_converted'] = True
         purchase_contract = self.env['purchase.contract'].browse(self.env.context.get('default_parent_id', False))
+        latest_rolling = False
+        if purchase_contract:
+            if purchase_contract.rolling_ids:
+                latest_rolling = max(
+                    purchase_contract.rolling_ids,
+                    key=lambda r: r.date_rolling
+                )
+            if latest_rolling:
+                res['price_diff'] = latest_rolling.diff_price
+            else:
+                res['price_diff'] = purchase_contract.diff_price
         if 'status_goods_ids' in fields:
             status_goods_1 = self.env['status.goods.name'].search([
                 ('code', '>=', 0),

@@ -75,14 +75,13 @@
                             <field name="date" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                         </group>
                     </group>
-<!--                    <separator string="Invoice Allocation"/>-->
-<!--                    <field name="invoice_ids" options="{'no_create': True}">-->
-<!--                        <tree string="Invoice" editable="top">-->
-<!--                            <field name="invoice_id" domain="[('purchase_contract_id', '=', parent.purchase_contract_id)]" required="1"/>-->
-<!--                            <field name="remaining_amount"/>-->
-<!--                            <field name="allocate_amount"/>-->
-<!--                        </tree>-->
-<!--                    </field>-->
+                    <separator string="Invoice Allocation" attrs="{'invisible': [('payment_tax', '=', False)]}"/>
+                    <field name="invoice_ids" options="{'no_create': True}" attrs="{'invisible': [('payment_tax', '=', False)]}">
+                        <tree string="Invoice" editable="top">
+                            <field name="invoice_id" domain="[('purchase_contract_id', '=', parent.purchase_contract_id)]" required="1"/>
+                            <field name="tax_amount"/>
+                        </tree>
+                    </field>
                     <separator string="Payment Information"/>
                     <group attrs="{'readonly': [('state', '!=', 'draft')]}">
                         <group>
@@ -95,7 +94,7 @@
                             <field name="liquidation_amount" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             <field name="request_amount" attrs="{'readonly': [('state', '!=', 'draft')]}" decoration-danger="request_amount > 0" decoration-bf="request_amount > 0"/>
                             <field name="tax_id"/>
-                            <field name="amount_invoice"/>
+                            <field name="amount_invoice" invisible="1"/>
                             <field name="amount_in_text"/>
                             <field name="partner_bank_id" attrs="{'readonly': [('state', '!=', 'draft')]}" domain="[('partner_id','=',partner_id)]" required="1"/>
                             <field name="account_no" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
@@ -325,14 +324,13 @@
                             <field name="date" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                         </group>
                     </group>
-<!--                    <separator string="Invoice Allocation"/>-->
-<!--                    <field name="invoice_ids" options="{'no_create': True}">-->
-<!--                        <tree string="Invoice" editable="top">-->
-<!--                            <field name="invoice_id" domain="[('purchase_contract_id', '=', parent.purchase_contract_id)]" required="1"/>-->
-<!--                            <field name="remaining_amount"/>-->
-<!--                            <field name="allocate_amount"/>-->
-<!--                        </tree>-->
-<!--                    </field>-->
+                    <separator string="Invoice Allocation" attrs="{'invisible': [('payment_tax', '=', False)]}"/>
+                    <field name="invoice_ids" options="{'no_create': True}" attrs="{'invisible': [('payment_tax', '=', False)]}">
+                        <tree string="Invoice" editable="top">
+                            <field name="invoice_id" domain="[('purchase_contract_id', '=', parent.purchase_contract_id)]" required="1"/>
+                            <field name="tax_amount"/>
+                        </tree>
+                    </field>
                     <separator string="Payment Information"/>
                     <group>
                         <group attrs="{'readonly': [('state', '!=', 'draft')]}">
@@ -345,7 +343,7 @@
                             <field name="request_deposit" string='Request Amount' attrs="{'invisible': [('payment_quantity', '>', 0)]}"/>
                             <field name="request_amount" attrs="{'readonly': [('state', '!=', 'draft')]}" decoration-danger="request_amount > 0" decoration-bf="request_amount > 0"/>
                             <field name="tax_id"/>
-                            <field name="amount_invoice"/>
+                            <field name="amount_invoice" invisible="1"/>
                             <field name="amount_in_text"/>
                             <field name="partner_bank_id" attrs="{'readonly': [('state', '!=', 'draft')]}" domain="[('partner_id','=',partner_id)]" required="1"/>
                             <field name="account_no" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
@@ -550,7 +548,7 @@
                     <group>
                         <group attrs="{'readonly': [('state', '!=', 'draft')]}">
                             <field name="payment_tax"/>
-                            <field name="type_of_ptbf_payment" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="type_of_ptbf_payment" attrs="{'readonly': [('state', '!=', 'draft')], 'invisible': [('payment_tax', '=', True)], 'required': [('payment_tax', '=', False)]}"/>
                             <field name="price_tobe_fix" options="{'no_create': True}" domain="[('contract_id', '=', parent_id_purchase_contract), ('remain_qty', '>', 0)]"
                                    attrs="{'required': [('type_of_ptbf_payment', 'in', ['fixation', 'fixation_advance', 'fixation_advance_ptbf_npe'])],
                                    'invisible': ['|', ('type_of_ptbf_payment', 'not in', ['fixation', 'fixation_advance', 'fixation_advance_ptbf_npe']), ('type', '!=', 'ptbf')],
@@ -579,20 +577,19 @@
                             <field name="type" invisible="1"/>
                         </group>
                     </group>
-<!--                    <separator string="Invoice Allocation"/>-->
-<!--                    <field name="invoice_ids" options="{'no_create': True}">-->
-<!--                        <tree string="Invoice" editable="top">-->
-<!--                            <field name="invoice_id" domain="[('purchase_contract_id', '=', parent.purchase_contract_id)]" required="1"/>-->
-<!--                            <field name="remaining_amount"/>-->
-<!--                            <field name="allocate_amount"/>-->
-<!--                        </tree>-->
-<!--                    </field>-->
+                    <separator string="Invoice Allocation" attrs="{'invisible': [('payment_tax', '=', False)]}"/>
+                    <field name="invoice_ids" options="{'no_create': True}" attrs="{'invisible': [('payment_tax', '=', False)]}">
+                        <tree string="Invoice" editable="top">
+                            <field name="invoice_id" domain="[('purchase_contract_id', '=', parent.purchase_contract_id)]" required="1"/>
+                            <field name="tax_amount"/>
+                        </tree>
+                    </field>
                     <separator string="Fixation Information" attrs="{'invisible': [('type_of_ptbf_payment', '!=', 'fixation')]}"/>
                     <group attrs="{'invisible': [('type_of_ptbf_payment', '!=', 'fixation')], 'readonly': [('state', '!=', 'draft')]}">
                         <group>
                             <field name="payment_quantity"/>
                             <field name="price_usd"/>
-                            <field name="price_diff"/>
+                            <field name="price_diff" attrs="{'readonly': True}"/>
                             <field name="final_price_usd"/>
                             <field name="rate" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             <field name="final_price_vnd"/>
@@ -605,7 +602,7 @@
                             <field name="remain_qty" string="Remain quantity of Convert" readonly="1"/>
                             <field name="payment_quantity" string="Advance quantity"/>
                             <field name="liffe_price" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                            <field name="price_diff"/>
+                            <field name="price_diff" attrs="{'readonly': True}"/>
                             <field name="differencial_price"/>
                             <field name="advance_price_usd"/>
                             <field name="total_advance_payment_usd"/>
@@ -647,7 +644,7 @@
                     <group attrs="{'invisible': [('type_of_ptbf_payment', 'not in', ['fixation_advance', 'fixation_advance_ptbf_npe'])]}">
                         <field name="qty_advance_fix" readonly="1"/>
                         <field name="price_usd"/>
-                        <field name="price_diff"/>
+                        <field name="price_diff" attrs="{'readonly': True}"/>
                         <field name="final_price_usd"/>
                         <field name="total_amount_usd"/>
 <!--                        <field name="rate"/>-->
@@ -707,7 +704,7 @@
                             <field name="request_deposit" attrs="{'invisible': [('payment_quantity', '>', 0)]}" string="Request Amount"/>
                             <field name="request_amount" readonly="1" decoration-danger="request_amount > 0" decoration-bf="request_amount > 0"/>
                             <field name="tax_id"/>
-                            <field name="amount_invoice"/>
+                            <field name="amount_invoice" invisible="1"/>
                             <field name="amount_in_text"/>
                             <field name="partner_bank_id" domain="[('partner_id','=',partner_id)]" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             <field name="account_no" attrs="{'readonly': [('state', '!=', 'draft')]}"/>

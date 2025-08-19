@@ -83,7 +83,8 @@
                     <group>
                         <group>
                             <field name="is_dr_request" invisible="1"/>
-                            <field name="type_of_ptbf_payment" class="bold-text" readonly="1" attrs="{'invisible': [('type', '!=', 'ptbf')]}"/>
+                            <field name="payment_tax" readonly="1"/>
+                            <field name="type_of_ptbf_payment" class="bold-text" readonly="1" attrs="{'invisible': ['|', ('type', '!=', 'ptbf'), ('payment_tax', '=', True)]}"/>
                             <field name="price_tobe_fix" class="bold-text" readonly="1" options="{'no_create': True}" domain="[('contract_id', '=', parent_id_purchase_contract)]" attrs="{'invisible': ['|', ('type_of_ptbf_payment', 'not in', ['fixation', 'fixation_advance', 'fixation_advance_ptbf_npe']), ('type', '!=', 'ptbf')]}"/>
                             <field name="convert_id" readonly="1"
                                    attrs="{'invisible': ['|', ('is_converted', '=', False), ('type_of_ptbf_payment', '!=', 'advance')]}"/>
@@ -111,6 +112,13 @@
                             <field name="date" readonly="1"/>
                         </group>
                     </group>
+                    <separator string="Invoice Allocation" attrs="{'invisible': [('payment_tax', '=', False)]}"/>
+                        <field name="invoice_ids" options="{'no_create': True}" attrs="{'invisible': [('payment_tax', '=', False)]}" readonly="1">
+                            <tree string="Invoice">
+                                <field name="invoice_id" domain="[('purchase_contract_id', '=', parent.purchase_contract_id)]" required="1"/>
+                                <field name="tax_amount"/>
+                            </tree>
+                        </field>
                     <separator string="Fixation Information" attrs="{'invisible': ['|', ('type_of_ptbf_payment', '!=', 'fixation'), ('type', '!=', 'ptbf')]}"/>
                     <group attrs="{'invisible': ['|', ('type_of_ptbf_payment', '!=', 'fixation'), ('type', '!=', 'ptbf')]}">
                         <group>

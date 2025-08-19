@@ -14,6 +14,7 @@ class RequestPaymentInvoice(models.Model):
     allocate_amount = fields.Float(string='Allocate Amount')
     remaining_amount = fields.Float(string='Remaining Amount', compute='_compute_remaining_amount', store=True)
     paid_amount = fields.Float(string='Paid Amount')
+    tax_amount = fields.Float(string='Tax Amount', compute='_compute_tax_amount', store=True)
 
     account_payment_ids = fields.One2many('account.payment', 'request_payment_invoice_id', string='Account Payment')
 
@@ -21,3 +22,9 @@ class RequestPaymentInvoice(models.Model):
     def _compute_remaining_amount(self):
         for rec in self:
             rec.remaining_amount = rec.invoice_id.amount_residual
+
+
+    @api.depends('invoice_id')
+    def _compute_tax_amount(self):
+        for rec in self:
+            rec.tax_amount = rec.invoice_id.remain_taxed_amount

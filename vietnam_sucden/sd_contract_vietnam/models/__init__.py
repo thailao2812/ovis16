@@ -15,6 +15,7 @@ from . import s_contract
 from . import account_payment, account_move
 from . import sequence_mixin
 from . import offset_debt
+from . import sale_contract
 from . import product_category
 from . import res_company
 from . import purchase_contract_invoice
