@@ -253,7 +253,7 @@
                                     <field name="supervisor" attrs="{'readonly': [('state','=','approve')]}" string="Inspected/Samples"/>
                                     <field name="sampler" attrs="{'readonly': [('state','=','approve')]}" string="Supervisor"/>
                                     <field name="file" widget="binary" filename="file_name"/>
-                                    <field name="lot_date" force_save="1" readonly="1"/>
+                                    <field name="lot_date" force_save="1"/>
                                 </group>
                             </group>
                         </page>
