@@ -27,4 +27,5 @@ class RequestPaymentInvoice(models.Model):
     @api.depends('invoice_id')
     def _compute_tax_amount(self):
         for rec in self:
+            print(rec.invoice_id.remain_taxed_amount)
             rec.tax_amount = rec.invoice_id.remain_taxed_amount

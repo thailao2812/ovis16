@@ -43,7 +43,10 @@ class WizardCreateInvoice(models.TransientModel):
     ptbf_fix_price_id = fields.Many2one('ptbf.fixprice', string='Fix Price Time')
     line_ptbf_fix_price_id = fields.Many2one('history.rate', string='Detail Fix Price')
 
-    @api.depends('ptbf_fix_price_id', 'line_ptbf_fix_price_id', 'type_invoice', 'type', 'is_converted')
+    stock_picking_ids = fields.One2many('stock.picking.allocated.wizard', 'wizard_id', string='GRN Allocate')
+
+    @api.depends('ptbf_fix_price_id', 'line_ptbf_fix_price_id', 'type_invoice', 'type', 'is_converted',
+                 'stock_picking_ids', 'stock_picking_ids.allocated_amount')
     def _compute_quantity(self):
         for rec in self:
             if rec.type == 'ptbf' and not rec.is_converted:
@@ -57,6 +60,8 @@ class WizardCreateInvoice(models.TransientModel):
                 rec.quantity = rec.contract_id.invoice_qty_remain
             if rec.type == 'purchase' and rec.is_converted:
                 rec.quantity = 1
+            if rec.stock_picking_ids:
+                rec.quantity = sum(rec.stock_picking_ids.mapped('allocated_amount'))
 
     @api.onchange('quantity')
     def onchange_quantity(self):
@@ -264,9 +269,6 @@ class WizardCreateInvoice(models.TransientModel):
         if self.type == 'purchase' and self.is_converted:
             if self.quantity > 1:
                 raise UserError(_("You cannot input quantity more than 1"))
-        if self.type == 'purchase' and self.is_converted:
-            if self.quantity > 1:
-                raise UserError(_("You cannot input quantity more than 1"))
 
         if self.is_converted:
             if self.type in ['purchase', 'ptbf']:
@@ -306,25 +308,25 @@ class WizardCreateInvoice(models.TransientModel):
                                 'history_rate_id': self.line_ptbf_fix_price_id.id if self.line_ptbf_fix_price_id else False,
                                 'ptbf_fixprice_id': self.ptbf_fix_price_id.id if self.ptbf_fix_price_id else False,}
 
-                invoice_id = invoice.create(invoice_vals)
+                invoice = invoice.create(invoice_vals)
                 if self.contract_id.type in ['consign']:
                     for line in self.contract_id.contract_line:
-                        vals = self._prepare_invoice_line(line, invoice_id, invoice_vals, price_unit=self.price_unit)
+                        vals = self._prepare_invoice_line(line, invoice, invoice_vals, price_unit=self.price_unit)
                         invoice_line.create(vals)
                 if self.contract_id.type in ['ptbf']:
                     if self.advance_normal:
                         for line in self.contract_id.contract_line:
-                            vals = self._prepare_invoice_line(line, invoice_id, invoice_vals, price_unit=self.price_unit)
+                            vals = self._prepare_invoice_line(line, invoice, invoice_vals, price_unit=self.price_unit)
                             invoice_line.create(vals)
                     else:
                         if not self.line_ptbf_fix_price_id:
                             raise UserError(_("You must choose detail fix price time"))
                         for line in self.contract_id.contract_line:
-                            vals = self._prepare_invoice_line(line, invoice_id, invoice_vals, price_unit=self.line_ptbf_fix_price_id.final_price_vn)
+                            vals = self._prepare_invoice_line(line, invoice, invoice_vals, price_unit=self.line_ptbf_fix_price_id.final_price_vn)
                             invoice_line.create(vals)
                 if self.contract_id.type == 'purchase':
                     for line in self.contract_id.contract_line:
-                        vals = self._prepare_invoice_line(line, invoice_id, invoice_vals, price_unit=line.price_unit)
+                        vals = self._prepare_invoice_line(line, invoice, invoice_vals, price_unit=line.price_unit)
                         invoice_line.create(vals)
 
             if self.type_invoice == 'adjust_increase':
@@ -337,3 +339,67 @@ class WizardCreateInvoice(models.TransientModel):
                     return self.create_credit()
                 else:
                     raise UserError(_("Price of Invoice Origin and price of contract must be different"))
+
+        if invoice and self.stock_picking_ids:
+            for pick in self.stock_picking_ids:
+                purchase_contract_id = self.env['purchase.contract'].search(
+                    [('id', '=', self.env.context.get('active_id'))], limit=1)
+                stock_allocation = self.env['stock.allocation'].search([
+                    ('picking_id', '=', pick.picking_id.id), ('contract_id', '=', purchase_contract_id.id)
+                ], limit=1)
+                allocated_qty = stock_allocation.qty_allocation
+                value = {
+                    'invoice_id': invoice.id,
+                    'picking_id': pick.picking_id.id,
+                    'contract_id': purchase_contract_id.id,
+                    'allocated_qty': allocated_qty,
+                    'allocated_amount': pick.allocated_amount,
+                }
+                self.env['stock.picking.allocated'].create(value)
+
+class StockPickingAllocateWizard(models.TransientModel):
+    _name = "stock.picking.allocated.wizard"
+    _description = "Stock Picking Allocate Wizard"
+
+    wizard_mapping_id = fields.Many2one('mapping.picking.invoice', string='Wizard')
+    wizard_id = fields.Many2one('wizard.create.invoice', string='Wizard')
+    picking_id = fields.Many2one('stock.picking', string='Picking')
+    allocated_qty = fields.Integer(string='Allocated Quantity', compute='_compute_allocated_qty', store=True)
+    remain_qty = fields.Integer(string='Remain Quantity', compute='_compute_allocated_qty', store=True)
+    allocated_amount = fields.Integer(string='Input Allocated Invoice')
+
+    @api.depends('picking_id')
+    def _compute_allocated_qty(self):
+        for rec in self:
+            if rec.picking_id:
+                purchase_contract_id = self.env['purchase.contract'].search(
+                    [('id', '=', self.env.context.get('active_id'))], limit=1)
+                if purchase_contract_id:
+                    stock_allocation = self.env['stock.allocation'].search([
+                        ('picking_id', '=', rec.picking_id.id), ('contract_id', '=', purchase_contract_id.id)
+                    ], limit=1)
+                    rec.allocated_qty = stock_allocation.qty_allocation
+                    check_allocated_invoice_ids = self.env['stock.picking.allocated'].search([
+                        ('picking_id', '=', rec.picking_id.id), ('contract_id', '=', purchase_contract_id.id)
+                    ])
+                    rec.remain_qty = stock_allocation.qty_allocation - sum(check_allocated_invoice_ids.mapped('allocated_amount'))
+                else:
+                    account_move = self.env['account.move'].search([
+                        ('id', '=', self.env.context.get('active_id'))], limit=1)
+                    purchase_contract_id = account_move.purchase_contract_id
+                    stock_allocation = self.env['stock.allocation'].search([
+                        ('picking_id', '=', rec.picking_id.id), ('contract_id', '=', purchase_contract_id.id)
+                    ], limit=1)
+                    rec.allocated_qty = stock_allocation.qty_allocation
+                    check_allocated_invoice_ids = self.env['stock.picking.allocated'].search([
+                        ('picking_id', '=', rec.picking_id.id), ('contract_id', '=', purchase_contract_id.id)
+                    ])
+                    rec.remain_qty = stock_allocation.qty_allocation - sum(
+                        check_allocated_invoice_ids.mapped('allocated_amount'))
+
+    @api.onchange('allocated_amount')
+    def _onchange_allocated_amount(self):
+        if self.allocated_amount > self.remain_qty or self.allocated_amount > self.allocated_qty:
+            raise UserError(_("Input allocated invoice must be less than allocated/remain quantity"))
+        if self.allocated_amount < 0:
+            raise UserError(_("Input allocated invoice must be greater than 0"))

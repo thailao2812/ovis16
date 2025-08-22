@@ -907,10 +907,10 @@ class RequestPayment(models.Model):
                 if rec.type_of_ptbf_payment == 'fixation_advance_ptbf_npe':
                     rec.total_contract_value = rec.final_price_vnd * rec.qty_advance_fix
                     rec.request_amount = rec.fixation_advance_ptbf_npe_total_ids.filtered(lambda x: x.name == 'Còn lại/ Remain Payment:').total - rec.deposit_amount - rec.liquidation_amount
-                if rec.invoice_ids and rec.payment_tax:
-                    rec.request_amount = sum(rec.invoice_ids.mapped('tax_amount'))
             if rec.request_deposit > 0:
                 rec.request_amount = rec.request_deposit
+            if rec.invoice_ids and rec.payment_tax:
+                rec.request_amount = sum(rec.invoice_ids.mapped('tax_amount'))
 
     @api.depends('name', 'type', 'type_of_ptbf_payment')
     def compute_liquidation_amount(self):

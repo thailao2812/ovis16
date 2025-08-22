@@ -27,8 +27,18 @@
 					<field name="price_unit" attrs="{'invisible': ['|', ('advance_normal', '=', False), ('type', '!=', 'ptbf')]}"/>
 					<field name="quantity" attrs="{'invisible': ['|', ('type_invoice', 'in', ['adjust_increase', 'adjust_decrease']), ('is_converted', '=', True)]}"/>
                 </group>
-                <group>
-                </group>
+                <notebook>
+                    <page string="GRN Allocate" name="grn_allocate">
+                        <field name="stock_picking_ids">
+                            <tree editable="top">
+                                <field name="picking_id" options="{'no_create': True}" context="{'grn_invoice': True, 'purchase_contract_id': parent.contract_id}"/>
+                                <field name="allocated_qty"/>
+                                <field name="remain_qty"/>
+                                <field name="allocated_amount"/>
+                            </tree>
+                        </field>
+                    </page>
+                </notebook>
                 <footer>
                     <button name="action_confirm" string="Create Invoice" type="object"
                         class="btn-primary"/>

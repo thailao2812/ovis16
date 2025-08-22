@@ -13,14 +13,24 @@ class AccountMove(models.Model):
                                    readonly=True, states={'draft': [('readonly', False)]})
     invoice_denominator = fields.Char(string='Invoice Denominator')
 
-    allocated_untaxed_amount = fields.Float(string='Allocated Amount', compute='_compute_allocated_amount', store=True)
-    allocated_taxed_amount = fields.Float(string='Allocated Amount', compute='_compute_allocated_amount', store=True)
-    allocated_total_amount = fields.Float(string='Allocated Amount', compute='_compute_allocated_amount', store=True)
-    remain_untaxed_amount = fields.Float(string='Remain Amount', compute='_compute_allocated_amount', store=True)
-    remain_taxed_amount = fields.Float(string='Remain Amount', compute='_compute_allocated_amount', store=True)
-    remain_total_amount = fields.Float(string='Remain Amount', compute='_compute_allocated_amount', store=True)
+    allocated_untaxed_amount = fields.Float(string='Allocated Untaxed Amount', compute='_compute_allocated_amount', store=True)
+    allocated_taxed_amount = fields.Float(string='Allocated Tax Amount', compute='_compute_allocated_amount', store=True)
+    allocated_total_amount = fields.Float(string='Allocated Total Amount', compute='_compute_allocated_amount', store=True)
+    remain_untaxed_amount = fields.Float(string='Remain Untaxed Amount', compute='_compute_allocated_amount', store=True)
+    remain_taxed_amount = fields.Float(string='Remain Tax Amount', compute='_compute_allocated_amount', store=True)
+    remain_total_amount = fields.Float(string='Remain Total Amount', compute='_compute_allocated_amount', store=True)
     total_quantity = fields.Float(string='Total Quantity', compute='_compute_total_quantity', store=True)
     remain_quantity = fields.Float(string='Remain Quantity', compute='_compute_total_quantity', store=True)
+    stock_picking_ids = fields.One2many('stock.picking.allocated', 'invoice_id', string='Stock Picking')
+    total_allocated_amount = fields.Integer(string='Total Allocated Amount by GRN', compute='_compute_total_allocated_amount', store=True)
+    check = fields.Boolean(string='Check', compute='_compute_total_allocated_amount', store=True, default=False)
+
+    @api.depends('stock_picking_ids.allocated_amount')
+    def _compute_total_allocated_amount(self):
+        for rec in self:
+            rec.total_allocated_amount = sum(rec.stock_picking_ids.mapped('allocated_amount'))
+            if rec.total_allocated_amount == rec.total_quantity:
+                rec.check = True
 
     state = fields.Selection(
         selection=[
@@ -54,21 +64,7 @@ class AccountMove(models.Model):
                  'purchase_contract_id.state', 'purchase_contract_id.type', 'amount_untaxed', 'amount_tax', 'amount_total',
                  'purchase_contract_invoice_ids.amount_allocated_tax', 'purchase_contract_invoice_ids.amount_allocated_total')
     def _compute_allocated_amount(self):
-        for rec in self:
-            if rec.purchase_contract_id.type == 'consign':
-                rec.allocated_untaxed_amount = sum(rec.purchase_contract_invoice_ids.mapped('amount_allocated_untaxed'))
-                rec.allocated_taxed_amount = sum(rec.purchase_contract_invoice_ids.mapped('amount_allocated_tax'))
-                rec.allocated_total_amount = sum(rec.purchase_contract_invoice_ids.mapped('amount_allocated_total'))
-                rec.remain_untaxed_amount = rec.amount_untaxed - sum(rec.purchase_contract_invoice_ids.mapped('amount_allocated_untaxed'))
-                rec.remain_taxed_amount =  rec.amount_tax - sum(rec.purchase_contract_invoice_ids.mapped('amount_allocated_tax'))
-                rec.remain_total_amount = rec.amount_total - sum(rec.purchase_contract_invoice_ids.mapped('amount_allocated_total'))
-            else:
-                rec.allocated_untaxed_amount = 0
-                rec.allocated_taxed_amount = 0
-                rec.allocated_total_amount = 0
-                rec.remain_untaxed_amount = 0
-                rec.remain_taxed_amount = 0
-                rec.remain_total_amount = 0
+        return True
 
     @api.depends('purchase_contract_invoice_ids.quantity', 'invoice_line_ids', 'invoice_line_ids.quantity', 'purchase_contract_invoice_ids')
     def _compute_total_quantity(self):
@@ -120,6 +116,10 @@ class AccountMove(models.Model):
     def _validate_taxes_country(self):
         return True
 
+    def action_mapping_grn(self):
+        action = self.env.ref('sd_contract_vietnam.action_mapping_grn_invoice').read()[0]
+        return action
+
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
 
@@ -141,3 +141,12 @@ class AccountMoveLine(models.Model):
                     else:
                         line.account_id = accounts['expense'] or line.account_id
         return res
+
+class StockPickingAllocated(models.Model):
+    _name = 'stock.picking.allocated'
+
+    invoice_id = fields.Many2one('account.move', string='Invoice')
+    picking_id = fields.Many2one('stock.picking', string='Picking')
+    contract_id = fields.Many2one('purchase.contract', string='Purchase Contract')
+    allocated_qty = fields.Integer(string='Allocated Quantity')
+    allocated_amount = fields.Integer(string='Input Allocated Invoice')

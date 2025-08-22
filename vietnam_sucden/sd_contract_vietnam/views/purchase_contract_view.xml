@@ -150,6 +150,8 @@
                             <field name="amount_total"/>
                             <field name="payment_state" widget="badge" decoration-danger="payment_state == 'not_paid'" decoration-warning="payment_state in ('partial', 'in_payment')" decoration-success="payment_state in ('paid', 'reversed')"/>
                             <field name="state" widget="badge" decoration-success="state == 'posted'" decoration-info="state == 'draft'"/>
+                            <field name="check" column_invisible="1"/>
+                            <button name="action_mapping_grn" string="Mapping GRN" type="object" class="oe_highlight" attrs="{'invisible': [('check', '=', True)]}"/>
                         </tree>
                     </field>
                 </page>
@@ -319,6 +321,8 @@
                             <field name="amount_total"/>
                             <field name="payment_state" widget="badge" decoration-danger="payment_state == 'not_paid'" decoration-warning="payment_state in ('partial', 'in_payment')" decoration-success="payment_state in ('paid', 'reversed')"/>
                             <field name="state" widget="badge" decoration-success="state == 'posted'" decoration-info="state == 'draft'"/>
+                            <field name="check" column_invisible="1"/>
+                            <button name="action_mapping_grn" string="Mapping GRN" type="object" class="oe_highlight" attrs="{'invisible': [('check', '=', True)]}"/>
                         </tree>
                     </field>
                 </page>
@@ -437,6 +441,8 @@
                             <field name="amount_total"/>
                             <field name="payment_state" widget="badge" decoration-danger="payment_state == 'not_paid'" decoration-warning="payment_state in ('partial', 'in_payment')" decoration-success="payment_state in ('paid', 'reversed')"/>
                             <field name="state" widget="badge" decoration-success="state == 'posted'" decoration-info="state == 'draft'"/>
+                            <field name="check" column_invisible="1"/>
+                            <button name="action_mapping_grn" string="Mapping GRN" type="object" class="oe_highlight" attrs="{'invisible': [('check', '=', True)]}"/>
                         </tree>
                     </field>
                 </page>

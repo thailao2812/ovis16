@@ -13,6 +13,7 @@
         'wizard/wizard_create_invoice_view.xml',
         'security/request_final_payment_security.xml',
         'data/group.xml',
+        'views/menu.xml',
         'views/purchase_contract_view.xml',
         'views/account_tax_view.xml',
         'views/res_company_view.xml',
@@ -22,11 +23,13 @@
         'views/stock_allocation_view.xml',
         'views/average_price_contract_view.xml',
         'views/sale_contract_view.xml',
+        'views/stock_picking_view.xml',
         'wizard/import_farmer_view.xml',
         'wizard/wizard_report_average_price.xml',
         'wizard/wizard_purchase_contract.xml',
         'wizard/wizard_reason_force_close_view.xml',
         'wizard/wizard_generate_bank_account_view.xml',
+        'wizard/mapping_picking_invoice_view.xml',
         'report/report_view.xml'
     ],
     'assets': {

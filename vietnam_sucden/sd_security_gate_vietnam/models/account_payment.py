@@ -24,7 +24,6 @@ class AccountPayment(models.Model):
                     'date': datetime.today(),
                     'state': 'Paid by %s' % self.env.user.name
                 })
-        print(self.state, 'vao day')
         if self.request_payment_invoice_id:
             self.request_payment_invoice_id.paid_amount += self.amount
             payment_line = self.line_ids.filtered(
@@ -45,3 +44,9 @@ class AccountPayment(models.Model):
         if self.request_payment_invoice_id:
             self.request_payment_invoice_id.paid_amount = 0
         return res
+
+    @api.model
+    def default_get(self, fields):
+        rec = super(AccountPayment, self).default_get(fields)
+
+        return rec

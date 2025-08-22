@@ -43,15 +43,12 @@
                 <group string="Allocated Amount Information">
                     <group>
                         <field name="total_quantity"/>
-                        <field name="allocated_untaxed_amount"/>
-                        <field name="allocated_taxed_amount"/>
-                        <field name="allocated_total_amount"/>
+                        <field name="total_allocated_amount" string="Total Quantity Allocate from GRN to Invoice"/>
+                        <field name="amount_tax"/>
                     </group>
                     <group>
                         <field name="remain_quantity"/>
-                        <field name="remain_untaxed_amount"/>
                         <field name="remain_taxed_amount"/>
-                        <field name="remain_total_amount"/>
                     </group>
                 </group>
             </xpath>
@@ -79,6 +76,25 @@
             </xpath>
             <xpath expr="//field[@name='invoice_date']" position="before">
                 <field name="purchase_contract_id"/>
+            </xpath>
+            <xpath expr="//field[@name='activity_ids']" position="replace">
+                <field name="total_quantity"/>
+                <field name="total_allocated_amount"/>
+                <field name="remain_taxed_amount"/>
+            </xpath>
+            <xpath expr="//field[@name='amount_untaxed_signed']" position="replace">
+                <field name="amount_untaxed"/>
+            </xpath>
+            <xpath expr="//field[@name='amount_tax_signed']" position="replace">
+                <field name="amount_tax"/>
+            </xpath>
+            <xpath expr="//field[@name='amount_total_signed']" position="replace">
+                <field name="amount_total"/>
+                <field name="amount_residual"/>
+            </xpath>
+            <xpath expr="//field[@name='amount_total_in_currency_signed']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='amount_residual_signed']" position="replace">
             </xpath>
         </field>
     </record>
