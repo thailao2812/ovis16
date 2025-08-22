@@ -78,7 +78,7 @@ class faq_stack_tracking(models.Model):
 									JOIN x_fob_management_s_contract_rel x_fob ON x_fob.fob_management_id=fob.id
 									JOIN sale_contract_deatail scd ON scd.p_contract_id=x_fob.s_contract_id
 									-- WHERE x_fob.s_contract_id=15293
-									Group by x_fob.s_contract_id, scd.stack_id) fob_m ON fob_m.stack_id=sp.lot_id
+									Group by x_fob.s_contract_id, scd.stack_id) fob_m ON fob_m.stack_id=sml.lot_id
 								JOIN stock_lot ss ON sml.lot_id=ss.id
                                 WHERE spt.code in ('incoming','production_in','transfer_in','outgoing','production_out','transfer_out') AND sp.state='done') sm  --AND sml.lot_id=99519
                             GROUP BY sm.lot_id) lot_list
