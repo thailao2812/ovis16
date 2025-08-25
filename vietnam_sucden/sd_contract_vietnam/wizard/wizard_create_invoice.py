@@ -1,12 +1,7 @@
 # -*- encoding: utf-8 -*-
-from pyparsing import line_end
 
 from odoo import fields, models, api, _
-import base64
-import xlrd
 from odoo.exceptions import ValidationError, UserError
-from datetime import datetime, timedelta
-from dateutil.relativedelta import relativedelta
 
 
 class WizardCreateInvoice(models.TransientModel):
