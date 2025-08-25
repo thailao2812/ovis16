@@ -5,7 +5,7 @@
     'version' : '16.0.1.0',
     'author': 'SCUDEN VIETNAM',
     'website': 'https://www.sucden.com',
-    'depends': ['base','sd_pur_sales', 'sd_master_vietnam', 'api_restful'],
+    'depends': ['base','sd_pur_sales', 'sd_master_vietnam', 'api_restful', 'account_debit_note'],
     'description': """
     """,
     'data': [
