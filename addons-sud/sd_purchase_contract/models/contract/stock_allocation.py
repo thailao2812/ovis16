@@ -154,27 +154,24 @@ class StockAllocation(models.Model):
             allocation.contract_id.qty_received = allocation.contract_id.qty_received - allocation.qty_allocation
             
             allocation._compute_qty()
-    
-        
-    
-    
+
     def approve_allocation(self):
         for allocation in self:
-            
-            #kiet: Im NVP
-            if allocation.contract_id.type =='purchase':
-                #kiet: Trường hợp transfer trạm
+
+            # kiet: Im NVP
+            if allocation.contract_id.type == 'purchase':
+                # kiet: Trường hợp transfer trạm
                 if allocation.picking_id.to_picking_type_id:
                     if not allocation.picking_id.to_picking_type_id.picking_type_nvp_id:
                         raise UserError(_('You cannot approve, You must define Picking type for NVP'))
                     picking_type = allocation.picking_id.to_picking_type_id.picking_type_nvp_id
-                #kiet: Trương hợp trại kho chính
+                # kiet: Trương hợp trại kho chính
                 else:
                     if not allocation.picking_id.picking_type_id.picking_type_nvp_id:
                         raise UserError(_('You cannot approve, You must define Picking type for NVP'))
                     picking_type = allocation.picking_id.picking_type_id.picking_type_nvp_id
-            
-            #kiet: Im NPE
+
+            # kiet: Im NPE
             else:
                 if allocation.picking_id.to_picking_type_id:
                     if not allocation.picking_id.to_picking_type_id.picking_type_npe_id:
@@ -184,7 +181,7 @@ class StockAllocation(models.Model):
                     if not allocation.picking_id.picking_type_id.picking_type_npe_id:
                         raise UserError(_('You cannot approve, You must define Picking type for NPE'))
                     picking_type = allocation.picking_id.picking_type_id.picking_type_npe_id
-                #kiet: Trương hợp trại kho chính
+                # kiet: Trương hợp trại kho chính
             
             var = {
                 'warehouse_id':allocation.contract_id.warehouse_id.id,

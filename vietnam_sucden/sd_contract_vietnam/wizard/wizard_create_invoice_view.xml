@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_create_invoice" model="ir.ui.view">
+        <field name="name">view_create_invoice</field>
+        <field name="model">wizard.create.invoice</field>
+        <field name="arch" type="xml">
+             <form string="Create Invoice">
+                <group>
+					<field name="is_converted" invisible="1"/>
+                    <field name="type_invoice" attrs="{'invisible': [('is_converted', '=', False)], 'required': [('is_converted', '=', True)]}"/>
+                    <field name="type_invoice" attrs="{'invisible': ['|', ('is_converted', '=', True), ('type', '!=', 'ptbf')], 'required': [('type', '=', 'ptbf')]}"/>
+                    <field name="advance_normal" attrs="{'invisible': ['|', ('type', '!=', 'ptbf'), ('type_invoice', '!=', 'normal')]}"/>
+					<field name="invoice_converted_ids" widget="many2many_tags" invisible="1"/>
+					<field name="invoice_origin_id" options="{'no_create': True}" attrs="{'invisible': [('is_converted', '=', False)], 'required': [('is_converted', '=', True)]}" domain="[('id', 'in', invoice_converted_ids)]"/>
+					<field name="invoice_origin_id" options="{'no_create': True}" attrs="{'invisible': ['|', ('is_converted', '=', True), ('type_invoice', 'not in', ['adjust_increase', 'adjust_decrease'])], 'required': [('is_converted', '=', False), ('type_invoice', 'in', ['adjust_increase', 'adjust_decrease'])]}" domain="[('id', 'in', invoice_converted_ids)]"/>
+					<field name="contract_id" invisible="1" readonly="1"/>
+					<field name="type" invisible="1"/>
+                    <field name="ptbf_fix_price_id" options="{'no_create': True}" attrs="{'invisible': ['|', '|', ('type_invoice', '!=', 'normal'), ('advance_normal', '=', True), ('type', '!=', 'ptbf')]}" domain="[('contract_id', '=', contract_id)]"/>
+                    <field name="line_ptbf_fix_price_id" options="{'no_create': True}" attrs="{'invisible': ['|', ('ptbf_fix_price_id', '=', False), ('type', '!=', 'ptbf')], 'required': [('ptbf_fix_price_id', '!=', False)]}" domain="[('history_id', '=', ptbf_fix_price_id)]"/>
+					<field name="journal_id" readonly="1"/>
+					<field name="invoice_number" required="1"/>
+					<field name="invoice_denominator" required="1"/>
+					<field name="date" required="1"/>
+					<field name="amount_different" attrs="{'invisible': [('is_converted', '=', False)]}"/>
+					<field name="amount_different" attrs="{'invisible': ['|', ('type_invoice', '=', 'normal'), ('type', '!=', 'ptbf')]}"/>
+					<field name="price_unit" attrs="{'invisible': [('type', 'in', ['purchase', 'ptbf'])]}"/>
+					<field name="price_unit" attrs="{'invisible': ['|', ('advance_normal', '=', False), ('type', '!=', 'ptbf')]}"/>
+					<field name="quantity" attrs="{'invisible': ['|', ('type_invoice', 'in', ['adjust_increase', 'adjust_decrease']), ('is_converted', '=', True)]}"/>
+                </group>
+                <notebook>
+                    <page string="GRN Allocate" name="grn_allocate">
+                        <field name="stock_picking_ids">
+                            <tree editable="top">
+                                <field name="picking_id" options="{'no_create': True}" context="{'grn_invoice': True, 'purchase_contract_id': parent.contract_id}"/>
+                                <field name="allocated_qty"/>
+                                <field name="remain_qty"/>
+                                <field name="allocated_amount"/>
+                            </tree>
+                        </field>
+                    </page>
+                </notebook>
+                <footer>
+                    <button name="action_confirm" string="Create Invoice" type="object"
+                        class="btn-primary"/>
+                    <button string="Cancel" class="btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+     <record id="action_create_invoice" model="ir.actions.act_window">
+            <field name="name">Create Invoice</field>
+            <field name="res_model">wizard.create.invoice</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_create_invoice"/>
+            <field name="target">new</field>
+        </record>
+</odoo>

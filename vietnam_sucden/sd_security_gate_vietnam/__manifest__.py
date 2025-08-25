@@ -11,6 +11,7 @@
     'data': [
         'security/ir.model.access.csv',
         'views/purchase_contract_view.xml',
+        'wizard/wizard_create_multiple_payment_view.xml',
         'views/request_payment_view.xml',
         'views/delivery_registration_contract.xml',
         'views/stock_allocation_view.xml',
@@ -21,6 +22,7 @@
         'views/data.xml',
         'report/report_view.xml',
         'views/delivery_registration_exstore_view.xml',
+        'views/account_move_view.xml',
         'wizard/wizard_reason_refuse_view.xml',
     ],
     'assets': {

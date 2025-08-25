@@ -4,3 +4,6 @@ from . import wizard_report_average_price_contract
 from . import wizard_purchase_contract_line
 from . import wizard_reason_force_close
 from . import wizard_generate_bank_account
+from . import wizard_create_invoice
+from . import account_debit_note
+from . import mapping_picking_invoice

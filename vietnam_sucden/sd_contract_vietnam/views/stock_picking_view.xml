@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_picking_form_inherit_sucden_vn_contract" model="ir.ui.view">
+            <field name="name">view_picking_form_inherit_sucden_vn_contract</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='operations']" position="after">
+                    <page string="Invoice Allocate" name="invoice_allocated">
+                        <field name="invoice_allocate_ids" readonly="1">
+                            <tree>
+                                <field name="contract_id"/>
+                                <field name="invoice_id"/>
+                                <field name="allocated_qty" string="Allocated Contract Quantity"/>
+                                <field name="allocated_amount" string="Allocated Invoice Quantity"/>
+                            </tree>
+                        </field>
+                    </page>
+                </xpath>
+            </field>
+    </record>
+</odoo>

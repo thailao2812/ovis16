@@ -73,6 +73,12 @@ class StockPicking(models.Model):
             check = []
             args += ['|', ('name', operator, name), ('description_name', operator, name)]
             backorder = self.search(args + domain, limit=limit)
+            if self._context.get('grn_invoice'):
+                purchase_contract = self.env['purchase.contract'].search([('id', '=', self._context.get('purchase_contract_id'))])
+                stock_allocation = self.env['stock.allocation'].search([('contract_id', '=', purchase_contract.id)])
+                domain += [('id', 'in', stock_allocation.mapped('picking_id').ids)]
+                backorder = self.search(args + domain, limit=limit)
+                return backorder.name_get()
             if self._context.get('grn_fot_allocation') and 'request_payment' not in self._context:
                 if name:
                     args += ['|', ('name', operator, name), ('description_name', operator, name)]
