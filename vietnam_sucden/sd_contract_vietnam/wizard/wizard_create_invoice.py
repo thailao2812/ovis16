@@ -102,12 +102,14 @@ class WizardCreateInvoice(models.TransientModel):
     def _prepare_invoice_line(self, move_line, invoice_id, invoice_vals, price_unit):
         name = move_line.product_id.name or ''
         origin = move_line.product_id.name or ''
-        account_id = move_line.product_id.categ_id.property_account_expense_categ_id.id or False
+        company_id = self.env.user.company_id
+        if not company_id.stock_account_coffee_id:
+            raise UserError(_("Please set stock account coffee in company"))
 
         return {'name': name,
                 'display_type': 'product',
                 'move_id': invoice_id.id, 'product_id': move_line.product_id.id,
-                'account_id': account_id, 'price_unit': price_unit or 0.0,
+                'account_id': company_id.stock_account_coffee_id.id, 'price_unit': price_unit or 0.0,
                 'quantity': self.quantity,
                 'product_uom_id': move_line.product_uom and move_line.product_uom.id or False,
                 'tax_ids': self.contract_id.vat_id.ids
