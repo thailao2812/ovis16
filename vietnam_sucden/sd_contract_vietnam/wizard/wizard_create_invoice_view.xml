@@ -25,16 +25,16 @@
 					<field name="amount_different" attrs="{'invisible': ['|', ('type_invoice', '=', 'normal'), ('type', '!=', 'ptbf')]}"/>
 					<field name="price_unit" attrs="{'invisible': [('type', 'in', ['purchase', 'ptbf'])]}"/>
 					<field name="price_unit" attrs="{'invisible': ['|', ('advance_normal', '=', False), ('type', '!=', 'ptbf')]}"/>
-					<field name="quantity" attrs="{'invisible': ['|', ('type_invoice', 'in', ['adjust_increase', 'adjust_decrease']), ('is_converted', '=', True)]}"/>
+					<field name="quantity" attrs="{'invisible': ['|', ('type_invoice', 'in', ['adjust_increase', 'adjust_decrease']), ('is_converted', '=', True)], 'readonly': [('stock_picking_ids', '!=', False)]}"/>
                 </group>
                 <notebook>
                     <page string="GRN Allocate" name="grn_allocate">
                         <field name="stock_picking_ids">
                             <tree editable="top">
                                 <field name="picking_id" options="{'no_create': True}" context="{'grn_invoice': True, 'purchase_contract_id': parent.contract_id}"/>
-                                <field name="allocated_qty"/>
-                                <field name="remain_qty"/>
-                                <field name="allocated_amount"/>
+                                <field name="allocated_qty" sum="allocated_qty"/>
+                                <field name="remain_qty" sum="remain_qty"/>
+                                <field name="allocated_amount" sum="allocated_amount"/>
                             </tree>
                         </field>
                     </page>

@@ -25,6 +25,9 @@ class AccountMove(models.Model):
     total_allocated_amount = fields.Integer(string='Total Allocated Amount by GRN', compute='_compute_total_allocated_amount', store=True)
     check = fields.Boolean(string='Check', compute='_compute_total_allocated_amount', store=True, default=False)
 
+    attachment_ids = fields.Many2many('ir.attachment', 'account_move_attachment_rel', 'move_id',
+                                      'attachment_id', 'Attachments')
+
     @api.depends('stock_picking_ids.allocated_amount')
     def _compute_total_allocated_amount(self):
         for rec in self:
