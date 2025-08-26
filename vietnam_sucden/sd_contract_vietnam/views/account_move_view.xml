@@ -42,6 +42,7 @@
             <xpath expr="//notebook" position="before">
                 <group string="Allocated Amount Information">
                     <group>
+                        <field name="attachment_ids" widget="many2many_attachment_preview" string="Attach a file"/>
                         <field name="total_quantity"/>
                         <field name="total_allocated_amount" string="Total Quantity Allocate from GRN to Invoice"/>
                         <field name="amount_tax"/>
