@@ -168,6 +168,17 @@ class WizardPurchaseContract(models.TransientModel):
             result['context'] = {}
             result['views'] = [(res and res.id or False, 'form')]
             result['res_id'] = new_id.ids[0] or False
+        for inv in self.invoice_purchase_line_ids:
+            value = {
+                'move_id': inv.invoice_id.id,
+                'purchase_contract_id': new_id.id,
+                'date': datetime.now().date(),
+                'quantity': inv.quantity,
+                'amount_allocated_untaxed': inv.amount_allocated_untaxed,
+                'amount_allocated_tax': inv.amount_allocated_tax,
+                'amount_allocated_total': inv.amount_allocated_total,
+            }
+            self.env['purchase.contract.invoice'].create(value)
         return result
 
     def button_convert_ptbf(self):
@@ -232,7 +243,17 @@ class WizardPurchaseContract(models.TransientModel):
             result['context'] = {}
             result['views'] = [(res and res.id or False, 'form')]
             result['res_id'] = new_id.ids[0] or False
-
+        for inv in self.invoice_purchase_line_ids:
+            value = {
+                'move_id': inv.invoice_id.id,
+                'purchase_contract_id': new_id.id,
+                'date': datetime.now().date(),
+                'quantity': inv.quantity,
+                'amount_allocated_untaxed': inv.amount_allocated_untaxed,
+                'amount_allocated_tax': inv.amount_allocated_tax,
+                'amount_allocated_total': inv.amount_allocated_total,
+            }
+            self.env['purchase.contract.invoice'].create(value)
         return result
 
 class InvoicePurchaseLine(models.TransientModel):
