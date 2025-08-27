@@ -253,16 +253,16 @@ class WizardCreateInvoice(models.TransientModel):
         if self.type == 'ptbf' and self.is_converted:
             if self.quantity > 1:
                 raise UserError(_("You cannot input quantity more than 1"))
-        if self.type == 'ptbf' and not self.is_converted:
-            if self.ptbf_fix_price_id and self.line_ptbf_fix_price_id:
-                if self.quantity > self.ptbf_fix_price_id.remain_qty_invoice:
-                    raise UserError(_("You cannot input quantity more than remain invoice quantity"))
-        if self.type == 'consign':
-            if self.quantity > self.contract_id.invoice_qty_remain:
-                raise UserError(_("You cannot input quantity more than remain invoice quantity"))
-        if self.type == 'purchase' and not self.is_converted:
-            if self.quantity > self.contract_id.invoice_qty_remain:
-                raise UserError(_("You cannot input quantity more than remain invoice quantity"))
+        # if self.type == 'ptbf' and not self.is_converted:
+        #     if self.ptbf_fix_price_id and self.line_ptbf_fix_price_id:
+        #         if self.quantity > self.ptbf_fix_price_id.remain_qty_invoice:
+        #             raise UserError(_("You cannot input quantity more than remain invoice quantity"))
+        # if self.type == 'consign':
+        #     if self.quantity > self.contract_id.invoice_qty_remain:
+        #         raise UserError(_("You cannot input quantity more than remain invoice quantity"))
+        # if self.type == 'purchase' and not self.is_converted:
+        #     if self.quantity > self.contract_id.invoice_qty_remain:
+        #         raise UserError(_("You cannot input quantity more than remain invoice quantity"))
         if self.type == 'purchase' and self.is_converted:
             if self.quantity > 1:
                 raise UserError(_("You cannot input quantity more than 1"))
@@ -338,7 +338,7 @@ class WizardCreateInvoice(models.TransientModel):
                     raise UserError(_("Price of Invoice Origin and price of contract must be different"))
 
         if invoice and self.stock_picking_ids:
-            for pick in self.stock_picking_ids:
+            for pick in self.stock_picking_ids.filtered(lambda x: x.allocated_amount > 0):
                 purchase_contract_id = self.env['purchase.contract'].search(
                     [('id', '=', self.env.context.get('active_id'))], limit=1)
                 stock_allocation = self.env['stock.allocation'].search([
