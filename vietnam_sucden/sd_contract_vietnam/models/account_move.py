@@ -104,8 +104,9 @@ class AccountMove(models.Model):
 
     def action_approve(self):
         for rec in self:
-            if self.env.uid != rec.user_approve.id:
-                raise UserError(_('You cannot approve this Invoice. Please select another person in your team.'))
+            if rec.move_type != 'out_invoice':
+                if self.env.uid != rec.user_approve.id:
+                    raise UserError(_('You cannot approve this Invoice. Please select another person in your team.'))
             rec.state = 'approved'
 
     def unlink(self):
