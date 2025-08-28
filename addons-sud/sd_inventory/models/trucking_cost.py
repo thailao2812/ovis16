@@ -18,7 +18,7 @@ class StockPicking(models.Model):
     @api.depends('truking_cost_id')
     def compute_cost(self):
         for i in self:
-            if i.truking_cost_id and i.total_qty!=0:
+            if i.truking_cost_id:
                 i.cost = i.truking_cost_id.cost 
             
         
