@@ -71,10 +71,10 @@ class LotKcsInherit(models.Model):
 
     @api.onchange('si_id', 'security_gate_id', 'los_ids')
     def _onchange_si_id(self):
-        for rec in self:
-            total = sum(line.quantity for line in rec.los_ids)
-            if total > 28000:
-                raise ValidationError(_('The total quantity across all LOT exceeds 28,000!'))
+        # for rec in self:
+        #     total = sum(line.quantity for line in rec.los_ids)
+        #     if total > 28000:
+        #         raise ValidationError(_('The total quantity across all LOT exceeds 28,000!'))
 
         if self.si_id:
             self.contract_id = self.si_id.contract_id.id
