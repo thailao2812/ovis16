@@ -5,6 +5,9 @@
         <field name="model">purchase.contract</field>
         <field name="inherit_id" ref="sd_contract_vietnam.view_purchase_contract_form_inherit_vietnam"/>
         <field name="arch" type="xml">
+            <xpath expr="//field[@name='total_pay_goods']" position="after">
+                <field name="total_tax_payable"/>
+            </xpath>
             <xpath expr="//field[@name='validity_date']" position="after">
                 <field name="warehouse_id"/>
             </xpath>
@@ -870,6 +873,9 @@
             </xpath>
             <xpath expr="//field[@name='name']" position="before">
                 <button name="button_approve" type="object" string="Approve" attrs="{'invisible': &quot;['|', ('user_approve', '!=', uid), ('state', 'in', ['approved', 'done', 'cancel'])]&quot;}" class="oe_highlight"/>
+            </xpath>
+            <xpath expr="//field[@name='amount_total']" position="after">
+                <field name="total_tax_payable"/>
             </xpath>
         </field>
     </record>

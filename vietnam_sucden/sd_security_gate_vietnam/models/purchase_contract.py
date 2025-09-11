@@ -22,6 +22,18 @@ class PurchaseContract(models.Model):
     warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse', required=False, readonly=True,
                                    states={}, default=False, related='delivery_place_id.warehouse_id', store=True)
     diff_price = fields.Float(compute='_get_diff_price', string='Diff.', store=True, readonly=False)
+    total_tax_payable = fields.Float(string='Total Tax Payable', compute='_compute_all_tax', store=True)
+
+    @api.depends('invoice_ids', 'invoice_ids.state', 'invoice_ids.amount_tax', 'request_payment_ids',
+                 'request_payment_ids.state',
+                 'request_payment_ids.request_amount', 'request_payment_ids.payment_tax')
+    def _compute_all_tax(self):
+        for record in self:
+            total_payment_tax = sum(
+                record.request_payment_ids.filtered(lambda x: x.state == 'paid' and x.payment_tax).mapped(
+                    'request_amount'))
+            record.total_tax_payable = sum(
+                record.invoice_ids.filtered(lambda x: x.state != 'cancel').mapped('amount_tax')) - total_payment_tax
 
     @api.depends('stop_loss_price', 'total_advance', 'type', 'request_payment_ids', 'request_payment_ids.payment_quantity', 'request_payment_ids.state')
     def _compute_stop_loss_value(self):

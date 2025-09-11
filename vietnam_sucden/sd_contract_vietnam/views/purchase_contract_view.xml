@@ -172,6 +172,9 @@
             <xpath expr="//button[@name='button_approve']" position="after">
                 <button name="%(action_create_invoice)d" string="Create Invoice" type="action" states="approved"/>
             </xpath>
+            <xpath expr="//field[@name='amount_total']" position="after">
+                <field name="total_pay_goods"/>
+            </xpath>
         </field>
     </record>
     <record id="view_ptbf_contract_form_inherit_vietnam" model="ir.ui.view">
@@ -528,6 +531,9 @@
             <xpath expr="//field[@name='amount_sub_total']" position="before">
                 <field name="amount_untaxed"/>
                 <field name="amount_tax"/>
+            </xpath>
+            <xpath expr="//field[@name='amount_total']" position="after">
+                <field name="total_pay_goods"/>
             </xpath>
         </field>
     </record>
