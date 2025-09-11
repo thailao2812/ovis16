@@ -62,6 +62,9 @@ class PurchaseContract(models.Model):
     invoice_price = fields.Float(string='Invoice Price', compute='_compute_invoice_price', store=True)
     have_invoice_adjust = fields.Boolean(string='Have Invoice Adjustment?', compute='_compute_invoice_adjustment', store=True)
 
+    total_pay_goods = fields.Float(string='Total Pay Goods', compute='_amount_all', store=True)
+
+
     @api.depends('invoice_ids', 'invoice_ids.state', 'invoice_ids.total_qty',
                  'state', 'total_qty', 'origin', 'purchase_contract_invoice_ids')
     def _compute_invoice_adjustment(self):
@@ -246,6 +249,7 @@ class PurchaseContract(models.Model):
                 'amount_tax': contract.currency_id.round(amount_tax),
                 'amount_sub_total': amount_untaxed + amount_tax,
                 'amount_total': sub_rel + amount + amount_deposit - sum(contract.offset_debt_ids.mapped('amount')) + amount_tax,
+                'total_pay_goods': sub_rel + amount + amount_deposit - sum(contract.offset_debt_ids.mapped('amount')),
                 'amount_sub_rel_total': sub_rel,
                 'total_interest_pay': abs(amount),
                 'amount_deposit': abs(amount_deposit)
