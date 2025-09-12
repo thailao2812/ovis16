@@ -246,16 +246,16 @@ class PurchaseContract(models.Model):
             amount_deposit = abs(amount_deposit) * (-1)
             contract.update({
                 'amount_untaxed': contract.currency_id.round(amount_untaxed),
-                'amount_tax': contract.currency_id.round(amount_tax),
-                'amount_sub_total': amount_untaxed + amount_tax,
-                'amount_total': sub_rel + amount + amount_deposit - sum(contract.offset_debt_ids.mapped('amount')) + amount_tax,
+                'amount_tax': sum(contract.invoice_ids.filtered(lambda x: x.state != 'cancel').mapped('amount_tax')),
+                'amount_sub_total': amount_untaxed + sum(contract.invoice_ids.filtered(lambda x: x.state != 'cancel').mapped('amount_tax')),
+                'amount_total': sub_rel + amount + amount_deposit - sum(contract.offset_debt_ids.mapped('amount')) + sum(contract.invoice_ids.filtered(lambda x: x.state != 'cancel').mapped('amount_tax')),
                 'total_pay_goods': sub_rel + amount + amount_deposit - sum(contract.offset_debt_ids.mapped('amount')),
                 'amount_sub_rel_total': sub_rel,
                 'total_interest_pay': abs(amount),
                 'amount_deposit': abs(amount_deposit)
             })
             if contract.type == 'consign':
-                contract.amount_total = amount_untaxed + amount_tax + amount_deposit
+                contract.amount_total = amount_untaxed + sum(contract.invoice_ids.filtered(lambda x: x.state != 'cancel').mapped('amount_tax')) + amount_deposit
                 contract.different_amount = contract.amount_total - contract.invoice_amount
 
     def create_invoice_adjustment(self):
