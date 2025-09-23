@@ -239,7 +239,7 @@ class PurchaseContract(models.Model):
                 for interest in deposit.allocation_line_ids:
                     amount += interest.actual_interest_pay
 
-            for deposit in contract.payment_ids.filtered(lambda x: x.state == 'posted'):
+            for deposit in contract.payment_ids.filtered(lambda x: x.state == 'posted' and not x.request_payment_id.payment_tax):
                 amount_deposit += deposit.amount
 
             amount = abs(amount) * (-1)
