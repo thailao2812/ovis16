@@ -249,7 +249,7 @@ class PurchaseContract(models.Model):
                 'amount_tax': sum(contract.invoice_ids.filtered(lambda x: x.state != 'cancel').mapped('amount_tax')),
                 'amount_sub_total': amount_untaxed + sum(contract.invoice_ids.filtered(lambda x: x.state != 'cancel').mapped('amount_tax')),
                 'amount_total': sub_rel + amount + amount_deposit - sum(contract.offset_debt_ids.mapped('amount')) + sum(contract.invoice_ids.filtered(lambda x: x.state != 'cancel').mapped('amount_tax')),
-                'total_pay_goods': sub_rel + amount + amount_deposit - sum(contract.offset_debt_ids.mapped('amount')) - sum(contract.payment_ids.filtered(lambda x: x.state == 'posted' and x.request_payment_id.payment_tax).mapped('amount')),
+                'total_pay_goods': sub_rel + amount + amount_deposit - sum(contract.offset_debt_ids.mapped('amount')) + sum(contract.payment_ids.filtered(lambda x: x.state == 'posted' and x.request_payment_id.payment_tax).mapped('amount')),
                 'amount_sub_rel_total': sub_rel,
                 'total_interest_pay': abs(amount),
                 'amount_deposit': abs(amount_deposit)
