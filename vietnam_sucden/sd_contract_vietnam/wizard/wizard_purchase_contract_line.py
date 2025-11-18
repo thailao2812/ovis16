@@ -63,8 +63,9 @@ class WizardPurchaseContract(models.TransientModel):
     def button_convert(self):
         npe_nvp_relation = self.env['npe.nvp.relation']
         convert_line = self.env['open.qty.npe']
-        if not self.invoice_purchase_line_ids:
-            raise UserError(_("You need input invoice line and allocate it with quantity"))
+        if self.purchase_contract_id and self.purchase_contract_id.invoice_ids.filtered(lambda x: x.state != 'cancel'):
+            if not self.invoice_purchase_line_ids:
+                raise UserError(_("You need input invoice line and allocate it with quantity"))
         if self.contract_line_ids and self.invoice_purchase_line_ids:
             errors = []
             for contract in self.contract_line_ids:
@@ -187,6 +188,9 @@ class WizardPurchaseContract(models.TransientModel):
         for line in self.contract_line_ids:
             if line.qty_received < line.product_qty + line.total_qty_fixed:
                 raise UserError('Cannot create a PTBF if Qty Received > Fixed + Qty Fix')
+        if self.purchase_contract_id and self.purchase_contract_id.invoice_ids.filtered(lambda x: x.state != 'cancel'):
+            if not self.invoice_purchase_line_ids:
+                raise UserError(_("You need input invoice line and allocate it with quantity"))
         origin = ''
 
         for line in self._context.get('active_ids'):
