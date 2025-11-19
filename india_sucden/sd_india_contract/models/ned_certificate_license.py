@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo import api, fields, models, tools, _, SUPERUSER_ID
-
+from odoo.exceptions import ValidationError, UserError
 DATE_FORMAT = "%Y-%m-%d"
 DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S"
 
@@ -29,3 +29,12 @@ class NedCertificateLicense(models.Model):
         for rec in self:
             rec.purchased_amount = sum(rec.stock_allocation_ids.filtered(lambda sa: sa.state == 'approved').mapped('qty_allocation'))
         return res
+
+    def validate_license(self):
+        """
+        Check license information and change state to active
+        """
+        for rec in self:
+            if not rec.quota > 0:
+                raise UserError("License's quota must be stricly positive.")
+            rec.state = 'active'
