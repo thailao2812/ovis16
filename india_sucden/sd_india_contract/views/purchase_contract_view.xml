@@ -421,6 +421,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='partner_id']" position="after">
                 <field name="estate_name"/>
+                <field name="qty_unfixed" invisible="1"/>
             </xpath>
 <!--            <xpath expr="//field[@name='license_id']" position="attributes">-->
 <!--                <attribute name="domain">[]</attribute>-->
@@ -495,6 +496,7 @@
                 <attribute name="readonly">1</attribute>
             </xpath>
             <xpath expr="//button[@name='button_approve']" position="after">
+<!--                <button name="return_consignment_goods" string="Return Goods CS" type="object" class="oe_highlight" attrs="{'invisible': [('qty_unfixed', '&lt;=', 0)]}"/>-->
                 <button name="approve_commercial" states="draft" string="Submit" type="object" class="oe_highlight" groups="sd_india_master.group_purchase_india"/>
                 <button name="approve_account" states="commercial" string="Approve" type="object" class="oe_highlight" groups="sd_india_master.group_commercial_cm_india"/>
                 <button name="approve_director" states="accounting" string="Approve" type="object" class="oe_highlight" groups="sd_india_master.group_accounting_india"/>

@@ -458,3 +458,7 @@ class PurchaseContract(models.Model):
         self.write({'state': 'approved', 'user_approve': self.env.uid,
                     'date_approve': datetime.now().strftime(DATETIME_FORMAT)})
 
+
+    def return_consignment_goods(self):
+        return True
+
