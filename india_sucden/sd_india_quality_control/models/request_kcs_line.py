@@ -5,6 +5,8 @@ from odoo.exceptions import ValidationError, UserError
 class RequestKCSLine(models.Model):
     _inherit = 'request.kcs.line'
 
+    inspector = fields.Char(string="Inspector", tracking=True, required=False, default='Povanna')
+    sampler = fields.Char(string="Analysis By", tracking=True, default='Darshan')
     state = fields.Selection(selection=[('draft', 'New'), ('commercial', 'Commercial'), ('approved', 'Approved'), ('reject', 'Reject')],
                              string='Status', readonly=True, copy=False,
                              index=True, default='draft', )
@@ -13,7 +15,7 @@ class RequestKCSLine(models.Model):
     visual_quality_ids = fields.Many2many('visual.quality',
                                           string='Visual Quality')
 
-    sample_weight_india = fields.Float(string='Sample Weight (Gr)', digits=(12, 2))
+    sample_weight_india = fields.Float(string='Sample Weight (Gr)', digits=(12, 2), default=300)
 
     outturn_gram = fields.Float(string='Outturn', digits=(12, 2))
     outturn_percent = fields.Float(string='Outturn%', compute='compute_outturn_percent', store=True, digits=(12, 2))
@@ -366,12 +368,12 @@ class RequestKCSLine(models.Model):
             else:
                 rec.moisture_percent = 0
 
-    @api.constrains('total_gram', 'sample_weight_india', 'template_qc')
+    @api.constrains('total_gram', 'sample_weight_india', 'template_qc', 'state')
     def _check_constraint_total_gram(self):
         for record in self:
             if record.template_qc != 'husk':
                 if record.picking_id.picking_type_id.code != 'production_out':
-                    if record.total_gram != record.sample_weight_india:
+                    if record.total_gram != record.sample_weight_india and record.state != 'draft':
                         raise UserError(_("Sample Weight and Total Gram need to be equal!"))
             if record.total_gram > 300:
                 raise UserError(_("Total Gram need to be <= 300, please check again!"))

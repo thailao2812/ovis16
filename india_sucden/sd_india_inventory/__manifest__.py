@@ -25,6 +25,7 @@
         'views/stock_zone_view.xml',
         'views/stock_move_line_view.xml',
         'views/request_material_view.xml',
+        'views/menu.xml'
     ],
     'installable': True,
     'auto_install': False,

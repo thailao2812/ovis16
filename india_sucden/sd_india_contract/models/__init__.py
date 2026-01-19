@@ -14,3 +14,4 @@ from . import ned_certificate_license, post_shipment, post_shipment_line
 from . import nvp_npe_relation
 from . import invoice_purchase_contract
 from . import supplier_adjustment
+from . import delivery_place
