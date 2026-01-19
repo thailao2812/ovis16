@@ -633,6 +633,7 @@
             </xpath>
             <xpath expr="//field[@name='partner_id']" position="after">
                 <field name="estate_name"/>
+                <field name="vendor_code"/>
             </xpath>
             <xpath expr="//field[@name='name']" position="after">
                 <field name="crop_id"/>
@@ -680,6 +681,7 @@
             </xpath>
             <xpath expr="//field[@name='partner_id']" position="after">
                 <field name="estate_name"/>
+                <field name="vendor_code"/>
             </xpath>
             <xpath expr="//field[@name='certificate_id']" position="after">
                 <field name="agent_id"/>
