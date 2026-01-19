@@ -76,6 +76,8 @@ class PurchaseContract(models.Model):
     return_qty = fields.Float(string='Return Qty', digits=(12,0), compute='compute_return_qty', store=True)
     picking_return_ids = fields.Many2many('stock.picking', string='Picking Returns')
 
+    vendor_code = fields.Char(string='Vendor Code', related='partner_id.partner_code', store=True)
+
     @api.depends('picking_return_ids', 'picking_return_ids.state', 'picking_return_ids.total_qty')
     def compute_return_qty(self):
         for rec in self:
