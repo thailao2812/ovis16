@@ -201,4 +201,10 @@
 
             </field>
     </record>
+
+    <record id="sd_quality.action_stock_kcs" model="ir.actions.act_window">
+            <field name="domain">[('picking_type_id.code','in',('incoming','outgoing','transfer_in','production_in','production_out', 'return_supplier')),
+                ('state','not in',('draft','cancel')),('picking_type_id.kcs','!=',False),('picking_type_id.operation','!=','station'),
+                ('state_kcs','!=','waiting')]</field>
+        </record>
 </odoo>

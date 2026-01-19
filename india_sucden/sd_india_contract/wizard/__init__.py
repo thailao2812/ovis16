@@ -3,3 +3,4 @@ from . import wizard_reject
 from . import wizard_ptbf_contract
 from . import wizard_purchase_contract
 from . import wizard_invoice_line
+from . import wizard_return_goods

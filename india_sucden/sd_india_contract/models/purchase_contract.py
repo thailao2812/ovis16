@@ -73,6 +73,35 @@ class PurchaseContract(models.Model):
 
     allocation_amount = fields.Float(string='Allocation Amount', compute='_compute_allocation_amount', store=True)
 
+    return_qty = fields.Float(string='Return Qty', digits=(12,0), compute='compute_return_qty', store=True)
+    picking_return_ids = fields.Many2many('stock.picking', string='Picking Returns')
+
+    @api.depends('picking_return_ids', 'picking_return_ids.state', 'picking_return_ids.total_qty')
+    def compute_return_qty(self):
+        for rec in self:
+            rec.return_qty = 0
+            if rec.picking_return_ids:
+                rec.return_qty = sum(rec.picking_return_ids.filtered(lambda x: x.state == 'done').mapped('total_qty'))
+
+    @api.depends('state', 'qty_received', 'nvp_ids', 'npe_ids', 'contract_line.product_qty', 'ptbf_ids', 'total_qty',
+                 'ptbf_ids.quantity', 'ptbf_ids.quantity_fixed', 'type', 'return_qty')
+    def _total_qty_fixed(self):
+        for order in self:
+            fix = 0.0
+            if order.type != 'ptbf':
+                for line in order.npe_ids:
+                    fix += line.product_qty
+
+                order.qty_unfixed = order.qty_received - fix - order.return_qty
+                order.total_qty_fixed = fix
+            else:
+                for line in order.ptbf_ids:
+                    fix += line.quantity
+                order.qty_unfixed = order.total_qty - fix - order.return_qty
+                order.total_qty_fixed = fix
+            if order.state == 'done':
+                order.qty_unfixed = 0
+
     @api.depends('pay_allocation_ids', 'pay_allocation_ids.allocation_amount', 'state')
     def _compute_allocation_amount(self):
         for rec in self:
@@ -458,7 +487,4 @@ class PurchaseContract(models.Model):
         self.write({'state': 'approved', 'user_approve': self.env.uid,
                     'date_approve': datetime.now().strftime(DATETIME_FORMAT)})
 
-
-    def return_consignment_goods(self):
-        return True
 
