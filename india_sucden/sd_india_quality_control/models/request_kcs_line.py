@@ -5,7 +5,7 @@ from odoo.exceptions import ValidationError, UserError
 class RequestKCSLine(models.Model):
     _inherit = 'request.kcs.line'
 
-    inspector = fields.Char(string="Inspector", tracking=True, required=False, default='Povanna')
+    inspector = fields.Char(string="Inspector", tracking=True, required=False, default='Poovanna')
     sampler = fields.Char(string="Analysis By", tracking=True, default='Darshan')
     state = fields.Selection(selection=[('draft', 'New'), ('commercial', 'Commercial'), ('approved', 'Approved'), ('reject', 'Reject')],
                              string='Status', readonly=True, copy=False,
