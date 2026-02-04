@@ -30,7 +30,7 @@
                     <attribute name="attrs">{'invisible': ['|', '|', ('processing_loss_aproval_id','!=',False), ('is_return', '=', True)]}</attribute>
                 </xpath>
                 <xpath expr="//button[@name='button_sd_validate']" position="after">
-                    <button name="button_sd_validate" string="Approve by Director" type="object" attrs="{'invisible': ['|', ('is_return', '=', False), ('state_return', '!=', 'approve_inventory')]}"/>
+                    <button name="button_sd_validate" string="Approve by Director" groups="sd_india_master.group_director_india" type="object" attrs="{'invisible': ['|', ('is_return', '=', False), ('state_return', '!=', 'approve_inventory')]}"/>
                 </xpath>
 
                 <xpath expr="//button[@name='%(stock.action_report_delivery)d']" position="replace">
