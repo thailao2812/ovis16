@@ -12,7 +12,10 @@
             	    <attribute name="readonly">0</attribute>
             	    <attribute name="required">1</attribute>
                 </xpath>
+                <xpath expr="//button[@name='action_picking_move_tree']" position="replace">
+                </xpath>
                 <xpath expr="//button[@name='button_qc_assigned']" position="after">
+                    <button name="approve_by_inventory" type="object" string="Approve by Inventory" attrs="{'invisible': ['|','|', ('is_return', '=', False), ('state_return', '!=', 'draft'), ('state', '!=', 'assigned')]}"/>
                     <button name="print_receipt_report" attrs="{'invisible': [('picking_type_code', '!=', 'incoming')]}" string="Coffee Receipt" type="object" class="oe_highlight"/>
                     <button name="print_grn_india" attrs="{'invisible': [('picking_type_code', '!=', 'incoming')]}" string="Print Invoice" type="object" class="oe_highlight" groups="sd_india_inventory.prinout_grn_with_price"/>
                     <button name="print_grn_india_without_price" attrs="{'invisible': [('picking_type_code', '!=', 'incoming')]}" string="Print GRN" type="object" class="oe_highlight" groups="sd_india_inventory.prinout_grn_without_price"/>
@@ -24,12 +27,20 @@
                 </xpath>
                 <xpath expr="//button[@name='button_sd_validate']" position="attributes">
                     <attribute name="groups">sd_india_master.group_warehouse_india</attribute>
+                    <attribute name="attrs">{'invisible': ['|', '|', ('processing_loss_aproval_id','!=',False), ('is_return', '=', True)]}</attribute>
+                </xpath>
+                <xpath expr="//button[@name='button_sd_validate']" position="after">
+                    <button name="button_sd_validate" string="Approve by Director" groups="sd_india_master.group_director_india" type="object" attrs="{'invisible': ['|', ('is_return', '=', False), ('state_return', '!=', 'approve_inventory')]}"/>
                 </xpath>
 
                 <xpath expr="//button[@name='%(stock.action_report_delivery)d']" position="replace">
                 </xpath>
                 <xpath expr="//field[@name='crop_id']" position="after">
                     <field name="template_qc" readonly="1" invisible="1"/>
+                    <field name="processing_loss_aproval_id" invisible="1"/>
+                    <field name="is_return" invisible="1" readonly="1"/>
+                    <field name="state_return" attrs="{'invisible': [('is_return', '=', False)]}" readonly="1" decoration-info="state_return == 'draft'" decoration-muted="state_return in ('approve_inventory')" decoration-success="state_return == 'approve_director'"
+                           decoration-danger="state_return in ('reject')" widget="badge"/>
                 </xpath>
                 <xpath expr="//label[@for='partner_id'][3]" position="attributes">
                     <attribute name="string">Supplier</attribute>

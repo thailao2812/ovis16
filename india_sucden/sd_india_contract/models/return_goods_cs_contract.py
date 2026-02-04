@@ -1,45 +1,29 @@
 # -*- coding: utf-8 -*-
-
 from odoo import api, fields, models, tools, _, SUPERUSER_ID
-from odoo.exceptions import ValidationError, UserError
-DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S"
+from odoo.exceptions import UserError
 DATE_FORMAT = "%Y-%m-%d"
+DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S"
 
 
-class WizardReturnGoods(models.TransientModel):
-    _name = "wizard.return.goods"
+class ReturnGoodsCSContract(models.Model):
+    _name = "return.goods.cs.contract"
+    _description = "Return Goods CS Contract"
 
     contract_id = fields.Many2one('purchase.contract')
-    unfixed_qty = fields.Float(string="Unfixed Qty", related='contract_id.qty_unfixed', store=True)
-    quantity = fields.Float(string="Quantity")
     reason = fields.Char(string="Reason")
+    quantity = fields.Integer(string="Quantity")
+    date_request = fields.Datetime(string="Date Request")
+    state = fields.Selection([
+        ('requested', 'Requested'),
+        ('commercial', 'Approve by Commercial Manager'),
+        ('rejected', 'Rejected'),
+    ])
+    reason_reject = fields.Char(string="Reason Rejected")
+    picking_id = fields.Many2one('stock.picking', string='Return Picking')
 
-    @api.onchange('quantity')
-    def onchange_quantity(self):
-        if self.quantity > self.unfixed_qty:
-            raise UserError(_("Quantity cannot be greater than unfixed"))
-
-    @api.model
-    def default_get(self, fields):
-        res = {}
-        active_id = self._context.get('active_id')
-        if active_id:
-            contract = self.env['purchase.contract'].browse(active_id)
-            res = {'contract_id': contract.id}
-        return res
-
-    def button_request(self):
-        if self.contract_id:
-            value = {
-                'reason': self.reason,
-                'contract_id': self.contract_id.id,
-                'quantity': self.quantity,
-                'state': 'requested'
-            }
-            self.env['return.goods.cs.contract'].create(value)
-            self.contract_id.state_return = 'requested'
-
-    def button_confirm(self):
+    def approve_commercial(self):
+        self.state = 'commercial'
+        self.contract_id.state_return = 'done'
         contract = self.contract_id
         quantity = self.quantity
         if not contract.delivery_place_id.warehouse_id:
@@ -64,3 +48,10 @@ class WizardReturnGoods(models.TransientModel):
             }
             self.env['stock.move.line'].create(value_line)
         contract.picking_return_ids = [(4, picking.id)]
+        self.picking_id = picking.id
+
+    def action_reject(self):
+        if not self.reason_reject:
+            raise UserError(_("Reason reject need to be filled"))
+        self.state = 'rejected'
+        self.contract_id.state_return = 'rejected'

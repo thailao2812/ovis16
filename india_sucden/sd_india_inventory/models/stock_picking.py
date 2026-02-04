@@ -14,6 +14,26 @@ class StockPicking(models.Model):
     partner_code = fields.Char(string='Partner Code', related='partner_id.partner_code', store=True)
     estate_name = fields.Char(string='Estate Name', related='partner_id.estate_name', store=True)
     sup_product_id = fields.Many2one('product.product', string='Sub Product', related='move_line_ids_without_package.sup_product_id', store=True)
+    is_return = fields.Boolean(string='Is Return', store=True, compute='_compute_is_return')
+    state_return = fields.Selection([
+        ('draft', 'Draft'),
+        ('approve_inventory', 'Approved Inventory'),
+        ('approve_director', 'Approved Director'),
+        ('reject', 'Rejected'),
+    ], string='State Return', default='draft', tracking=True, copy=False)
+
+    @api.depends('picking_type_id', 'state')
+    def _compute_is_return(self):
+        for rec in self:
+            rec.is_return = False
+            picking_type_id = rec.picking_type_id
+            if picking_type_id and picking_type_id.code == 'return_supplier':
+                rec.is_return = True
+
+
+    def approve_by_inventory(self):
+        self.write({'state_return': 'approve_inventory'})
+
 
     def print_grn_india(self):
         stock_allocation = self.env['stock.allocation'].search([
@@ -68,6 +88,8 @@ class StockPicking(models.Model):
                         basis_qty = line.basis_weight
                     for ml in record.move_line_ids_without_package:
                         ml.qty_done = basis_qty
+            if record.is_return:
+                record.state_return = 'approve_director'
         return super(StockPicking, self).button_sd_validate()
 
     def print_receipt_report(self):
@@ -80,3 +102,11 @@ class StockPicking(models.Model):
             args += [('name', operator, name)]
         picking = self.with_context(from_name_search=True).search(args, limit=limit)
         return picking.name_get()
+
+
+    def action_cancel(self):
+        res = super().action_cancel()
+        for rec in self:
+            if rec.is_return:
+                rec.state_return = 'reject'
+        return res

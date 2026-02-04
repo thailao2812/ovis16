@@ -9,3 +9,5 @@ supplier_adjustment_purchase_manager,supplier_adjustment_purchase_manager,model_
 ,,,,,,,
 
 access_wizard_return_goods,access_wizard_return_goods,model_wizard_return_goods,,1,1,1,1
+
+access_return_goods_cs_contract,access_return_goods_cs_contract,model_return_goods_cs_contract,,1,1,1,1
