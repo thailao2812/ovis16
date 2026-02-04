@@ -78,6 +78,25 @@ class PurchaseContract(models.Model):
 
     vendor_code = fields.Char(string='Vendor Code', related='partner_id.partner_code', store=True)
 
+    payment_advance_quantity = fields.Integer(string='Payment Advance Quantity', compute='_compute_payment_advance_quantity', store=True)
+
+    state_return = fields.Selection([
+        ('not_return', 'No need return'),
+        ('requested', 'Requested'),
+        ('rejected', 'Rejected'),
+        ('done', 'Done'),
+    ], string='State Return', default='not_return', copy=False, tracking=True)
+
+    return_goods_contract_ids = fields.One2many('return.goods.cs.contract', 'contract_id', string='Return Goods Contract')
+
+    @api.depends('request_payment_ids', 'request_payment_ids.state', 'request_payment_ids.payment_quantity')
+    def _compute_payment_advance_quantity(self):
+        for rec in self:
+            if rec.request_payment_ids:
+                advance_payment = rec.request_payment_ids.filtered(lambda x: x.use_payment_for == 'advance')
+                rec.payment_advance_quantity = sum(advance_payment.mapped('payment_quantity'))
+
+
     @api.depends('picking_return_ids', 'picking_return_ids.state', 'picking_return_ids.total_qty')
     def compute_return_qty(self):
         for rec in self:

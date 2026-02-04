@@ -12,9 +12,10 @@
 		                </group>
 		                <group>
 							<field name="quantity"/>
+							<field name="reason" required="1"/>
 		                </group>
 		                <footer>
-		                	<button string="Confirm" name="button_confirm" type="object" class="oe_highlight"/>
+		                	<button string="Request for Approval" name="button_request" type="object" class="oe_highlight"/>
 		                    <button string="Cancel" class="btn-default" special="cancel"/>
 		                </footer>
 	                </sheet>

@@ -214,7 +214,7 @@
                 <attribute name="invisible">1</attribute>
             </xpath>
             <xpath expr="//field[@name='request_payment_ids']/form/group/group[1]/field[@name='type_payment']" position="after">
-                <field name="use_payment_for" required="1"/>
+                <field name="use_payment_for" readonly="1" required="1"/>
             </xpath>
             <xpath expr="//field[@name='request_payment_ids']/form/group/group[2]/field[@name='purchase_contract_id']" position="after">
                 <field name="purchase_date" required="1"/>
@@ -309,7 +309,7 @@
                 <attribute name="invisible">1</attribute>
             </xpath>
             <xpath expr="//field[@name='request_payment_ids']/form/group/group[1]/field[@name='type_payment']" position="after">
-                <field name="use_payment_for" required="1"/>
+                <field name="use_payment_for" readonly="1" required="1"/>
             </xpath>
             <xpath expr="//field[@name='request_payment_ids']/form/group/group[1]/field[@name='partner_id']" position="attributes">
                 <attribute name="readonly">1</attribute>
@@ -487,7 +487,7 @@
                 <attribute name="invisible">1</attribute>
             </xpath>
             <xpath expr="//field[@name='request_payment_ids']/form/group/group[1]/field[@name='type_payment']" position="after">
-                <field name="use_payment_for" required="1"/>
+                <field name="use_payment_for" readonly="1" required="1"/>
             </xpath>
 			 <xpath expr="//field[@name='contract_line']/tree/field[@name='product_uom']" position="after">
             	<field name="bag_no" attrs="{'readonly': [('parent.state', 'in', ['director', 'approved', 'done', 'cancel'])]}"/>
@@ -575,8 +575,28 @@
             </xpath>
             <xpath expr="//field[@name='total_qty_fixed']" position="after">
                 <field name="qty_unfixed"/>
+                <field name="state_return" widget="badge"/>
+                <field name="payment_advance_quantity"/>
                 <field name="return_qty"/>
                 <field name="picking_return_ids" widget="many2many_tags" readonly="1"/>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="Return Goods Request" name="return_goods_request">
+                    <field name="return_goods_contract_ids">
+                        <tree editable="bottom" create="false" delete="false">
+                            <field name="reason" readonly="1"/>
+                            <field name="quantity" readonly="1"/>
+                            <field name="create_uid" readonly="1" string="User Request"/>
+                            <field name="create_date" readonly="1" string="Requested On"/>
+                            <field name="reason_reject" attrs="{'readonly': [('state', '=', 'rejected')]}"/>
+                            <button name="approve_commercial" string="Approval by CM" type="object" groups="sd_india_master.group_commercial_cm_india"
+                                    attrs="{'invisible': [('state', '!=' , 'requested')]}" class="oe_highlight"/>
+                            <button name="action_reject" string="Reject" type="object" groups="sd_india_master.group_commercial_cm_india" attrs="{'invisible': [('state', '!=' , 'requested')]}"/>
+                            <field name="picking_id" readonly="1"/>
+                            <field name="state" widget="badge" decoration-success="state in ['commercial']"/>
+                        </tree>
+                    </field>
+                </page>
             </xpath>
         </field>
     </record>
