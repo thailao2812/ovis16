@@ -12,7 +12,7 @@ class NedSecurityGateQueue(models.Model):
     template_qc = fields.Selection(related='product_ids.template_qc', store=True)
     visual_quality_ids = fields.Many2many('visual.quality', string='Visual Quality')
 
-    sample_weight_india = fields.Float(string='Sample Weight', digits=(12, 2), default=300)
+    sample_weight_india = fields.Float(string='Sample Weight', digits=(12, 2))
 
     outturn_gram = fields.Float(string='Outturn', digits=(12, 2))
     outturn_percent = fields.Float(string='Outturn%', compute='compute_outturn_percent', store=True, digits=(12, 2))
