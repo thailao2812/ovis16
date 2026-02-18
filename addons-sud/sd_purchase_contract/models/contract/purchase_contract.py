@@ -570,7 +570,7 @@ class PurchaseContract(models.Model):
 
             payment_remain = payment_received = amount = 0.0
             if contract.type == 'consign':
-                for pay in contract.payment_ids:
+                for pay in contract.payment_ids.filtered(lambda r: r.state == 'posted'):
                     amount += pay.amount or 0.0
                     payment_received += pay.payment_refunded or 0.0
                     payment_remain += pay.open_advance or 0.0
