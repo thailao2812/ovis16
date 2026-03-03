@@ -195,14 +195,14 @@ class PurchaseContract(models.Model):
             rec.gross_price = rec.relation_price_unit + rec.premium
             rec.unreceive_gross_value = rec.gross_price * rec.qty_unreceived_net
 
-    @api.depends('qty_received_net', 'qty_received', 'total_qty_fixed')
+    @api.depends('qty_received_net', 'qty_received', 'total_qty_fixed', 'return_qty')
     def compute_data_fix(self):
         for rec in self:
             fixed_gross_qty = 0
             if rec.total_qty_fixed > 0:
                 fixed_gross_qty = rec.qty_received_net - rec.qty_received + rec.total_qty_fixed
             rec.fixed_gross_qty = fixed_gross_qty
-            rec.unfixed_gross_qty = rec.qty_received_net - fixed_gross_qty
+            rec.unfixed_gross_qty = rec.qty_received_net - fixed_gross_qty - rec.return_qty
 
     @api.depends('request_payment_ids', 'request_payment_ids.request_amount', 'partner_id')
     def compute_tds(self):
