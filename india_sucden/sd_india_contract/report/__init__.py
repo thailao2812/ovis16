@@ -9,3 +9,4 @@ from . import report_shipping_advise_parser
 from . import report_packing_list_parser
 from . import report_stock_transfer_invoice_parser
 from . import report_payment_request_invoice_parse
+from . import report_purchase_contract_return
