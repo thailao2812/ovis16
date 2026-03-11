@@ -32,7 +32,7 @@ class RequestPayment(models.Model):
     use_payment_for = fields.Selection([
         ('advance', 'Advance Payment'),
         ('payment', 'Against Delivery')
-    ], string='Type Payment', default='advance')
+    ], string='Type Payment')
     payment_refunded = fields.Float(string='Refunded', compute='_compute_refunded', digits=(12, 0), store=True)
     open_advance = fields.Float(string='Open Advance', compute='_compute_refunded', digits=(12, 0), store=True)
     source_document_contract = fields.Char(string='Source Document', related='purchase_contract_id.origin', store=True)
