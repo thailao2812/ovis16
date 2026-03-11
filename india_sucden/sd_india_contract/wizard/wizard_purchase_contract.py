@@ -8,6 +8,15 @@ DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S"
 class WizardPurchaseContract(models.TransientModel):
     _inherit = "wizard.purchase.contract"
 
+    price_per_bag = fields.Float(string="Price of Bag", compute="_compute_price_per_bag", store=True)
+
+    @api.depends('price_unit', 'purchase_contract_id', 'purchase_contract_id.type')
+    def _compute_price_per_bag(self):
+        for rec in self:
+            if rec.price_unit and rec.price_unit > 0:
+                packing_capacity = rec.purchase_contract_id.packing_id.capacity
+                rec.price_per_bag = rec.price_unit * packing_capacity
+
     def button_convert(self):
         npe_nvp_relation = self.env['npe.nvp.relation']
 
