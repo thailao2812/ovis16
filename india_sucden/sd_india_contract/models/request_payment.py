@@ -54,8 +54,10 @@ class RequestPayment(models.Model):
     def compute_price_per_bag(self):
         for rec in self:
             if rec.purchase_contract_id.type == 'purchase':
-                packing_capacity = rec.purchase_contract_id.packing_id.capacity
-                rec.price_per_bag = rec.purchase_contract_id.relation_price_unit * packing_capacity
+                if rec.purchase_contract_id.product_id.template_qc == 'raw':
+                    rec.price_per_bag = rec.purchase_contract_id.relation_price_unit * 50
+                else:
+                    rec.price_per_bag = 0
             else:
                 rec.price_per_bag = 0
 

@@ -25,7 +25,8 @@ class Parser(models.AbstractModel):
         localcontext = super(Parser, self)._set_localcontext()
         localcontext.update({
             'get_address': self.get_address,
-            'get_date': self.get_date
+            'get_date': self.get_date,
+            'get_price_per_bag': self.get_price_per_bag,
         })
         return localcontext
 
@@ -48,3 +49,10 @@ class Parser(models.AbstractModel):
             date_convert = datetime.strptime(return_date, '%Y-%m-%d')
             date_convert = date_convert.strftime('%d-%m-%Y')
             return date_convert
+
+    def get_price_per_bag(self, purchase):
+        if purchase:
+            if purchase.product_id.template_qc == 'raw':
+                return purchase.relation_price_unit * 50
+            else:
+                return 0
