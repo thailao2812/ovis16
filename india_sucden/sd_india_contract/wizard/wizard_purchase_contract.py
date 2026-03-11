@@ -14,8 +14,10 @@ class WizardPurchaseContract(models.TransientModel):
     def _compute_price_per_bag(self):
         for rec in self:
             if rec.price_unit and rec.price_unit > 0:
-                packing_capacity = rec.purchase_contract_id.packing_id.capacity
-                rec.price_per_bag = rec.price_unit * packing_capacity
+                if rec.purchase_contract_id.product_id.template_qc == 'raw':
+                    rec.price_per_bag = rec.price_per_bag = rec.price_unit * 50
+                else:
+                    rec.price_per_bag = 0
 
     def button_convert(self):
         npe_nvp_relation = self.env['npe.nvp.relation']
