@@ -93,6 +93,12 @@
             <xpath expr="//button[@name='print_payment_request']" position="after">
                 <button name="print_paymentrequest_invoice" string="Print Invoice" type="object" class="oe_highlight" attrs="{'invisible': [('state', '!=', 'paid')]}"/>
             </xpath>
+            <xpath expr="//button[@name='print_payment_request']" position="replace">
+            </xpath>
+            <xpath expr="//button[@name='print_printout_payment_npv']" position="replace">
+            </xpath>
+            <xpath expr="//button[@name='print_advance_payment']" position="replace">
+            </xpath>
 
         </field>
     </record>

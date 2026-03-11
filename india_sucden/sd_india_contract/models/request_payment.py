@@ -48,6 +48,17 @@ class RequestPayment(models.Model):
     purchase_quantity = fields.Float(string='Purchase Quantity')
     interest_amount = fields.Float(string='Interest Amount', compute='compute_interest_amount', store=True)
 
+    price_per_bag = fields.Float(string='Price per Bag', digits=(12, 2), compute='compute_price_per_bag', store=True)
+
+    @api.depends('purchase_contract_id.type', 'state', 'purchase_contract_id', 'use_payment_for')
+    def compute_price_per_bag(self):
+        for rec in self:
+            if rec.purchase_contract_id.type == 'purchase':
+                packing_capacity = rec.purchase_contract_id.packing_id.capacity
+                rec.price_per_bag = rec.purchase_contract_id.relation_price_unit * packing_capacity
+            else:
+                rec.price_per_bag = 0
+
     # @api.constrains('purchase_quantity')
     # def constrains_purchase_quantity(self):
     #     for rec in self:
@@ -94,6 +105,17 @@ class RequestPayment(models.Model):
         ('approved_director', 'Approve by Director'),
         ('paid', 'Paid')
     ]
+
+    @api.model
+    def default_get(self, fields):
+        res = super(RequestPayment, self).default_get(fields)
+        if self._context.get('purchase_contract_id'):
+            contract_id = self.env['purchase.contract'].browse(self._context.get('purchase_contract_id'))
+            if contract_id.type == 'purchase':
+                res['use_payment_for'] = 'payment'
+            if contract_id.state == 'consign':
+                res['use_payment_for'] = 'advance'
+        return res
 
     @api.depends('payment_quantity', 'price')
     def compute_invoice_amount(self):
