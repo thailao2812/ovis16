@@ -220,7 +220,10 @@
                 <attribute name="invisible">1</attribute>
             </xpath>
             <xpath expr="//field[@name='request_payment_ids']/form/group/group[1]/field[@name='type_payment']" position="after">
-                <field name="use_payment_for" required="1" readonly="1"/>
+                <field name="use_payment_for" required="1" readonly="1" force_save="1"/>
+            </xpath>
+            <xpath expr="//field[@name='request_payment_ids']/tree/field[@name='type_payment']" position="replace">
+                <field name="use_payment_for"/>
             </xpath>
             <xpath expr="//field[@name='request_payment_ids']/form/group/group[2]/field[@name='purchase_contract_id']" position="after">
                 <field name="purchase_date" required="1"/>
@@ -315,7 +318,10 @@
                 <attribute name="invisible">1</attribute>
             </xpath>
             <xpath expr="//field[@name='request_payment_ids']/form/group/group[1]/field[@name='type_payment']" position="after">
-                <field name="use_payment_for" readonly="1" required="1"/>
+                <field name="use_payment_for" readonly="1" required="1" force_save="1"/>
+            </xpath>
+            <xpath expr="//field[@name='request_payment_ids']/tree/field[@name='type_payment']" position="replace">
+                <field name="use_payment_for"/>
             </xpath>
             <xpath expr="//field[@name='request_payment_ids']/form/group/group[1]/field[@name='partner_id']" position="attributes">
                 <attribute name="readonly">1</attribute>
@@ -498,7 +504,10 @@
                 <attribute name="invisible">1</attribute>
             </xpath>
             <xpath expr="//field[@name='request_payment_ids']/form/group/group[1]/field[@name='type_payment']" position="after">
-                <field name="use_payment_for" readonly="1" required="1"/>
+                <field name="use_payment_for" readonly="1" required="1" force_save="1"/>
+            </xpath>
+            <xpath expr="//field[@name='request_payment_ids']/tree/field[@name='type_payment']" position="replace">
+                <field name="use_payment_for"/>
             </xpath>
 			 <xpath expr="//field[@name='contract_line']/tree/field[@name='product_uom']" position="after">
             	<field name="bag_no" attrs="{'readonly': [('parent.state', 'in', ['director', 'approved', 'done', 'cancel'])]}"/>
