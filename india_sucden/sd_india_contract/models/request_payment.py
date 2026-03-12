@@ -112,7 +112,7 @@ class RequestPayment(models.Model):
             contract_id = self.env['purchase.contract'].browse(self._context.get('purchase_contract_id'))
             if contract_id.type == 'purchase':
                 res['use_payment_for'] = 'payment'
-            if contract_id.state == 'consign':
+            if contract_id.type == 'consign':
                 res['use_payment_for'] = 'advance'
         return res
 
