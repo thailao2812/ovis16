@@ -14,13 +14,15 @@ class DeductionLine(models.Model):
     reject = fields.Boolean(string='Reject')
     remark = fields.Text(string='Remark Comm Dept')
 
-    @api.depends('request_kcs_line_id', 'request_kcs_line_id.moisture_deduct')
+    @api.depends('request_kcs_line_id', 'request_kcs_line_id.moisture_deduct', 'request_kcs_line_id.outturn_percent',)
     def compute_percent(self):
         for rec in self:
             rec.percent = 0
             if rec.request_kcs_line_id:
                 if rec.name.code == 'MD':
                     rec.percent = rec.request_kcs_line_id.moisture_deduct
+                if rec.name.code == 'OD':
+                    rec.percent = rec.request_kcs_line_id.outturn_percent
 
     @api.depends('name', 'percent', 'request_kcs_line_id', 'request_kcs_line_id.product_qty',
                  'request_kcs_line_id.categ_id', 'request_kcs_line_id.categ_id')
