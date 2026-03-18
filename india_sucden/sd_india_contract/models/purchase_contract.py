@@ -89,6 +89,16 @@ class PurchaseContract(models.Model):
 
     return_goods_contract_ids = fields.One2many('return.goods.cs.contract', 'contract_id', string='Return Goods Contract')
 
+    have_reference = fields.Boolean(string='Have Reference', compute='compute_have_reference', store=True)
+
+    @api.depends('partner_id')
+    def compute_have_reference(self):
+        for rec in self:
+            rec.have_reference = False
+            if rec.partner_id:
+                if rec.partner_id.ref or len(rec.partner_id.ref) > 1:
+                    rec.have_reference = True
+
     @api.depends('request_payment_ids', 'request_payment_ids.state', 'request_payment_ids.payment_quantity')
     def _compute_payment_advance_quantity(self):
         for rec in self:
