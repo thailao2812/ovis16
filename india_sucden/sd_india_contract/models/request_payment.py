@@ -163,10 +163,69 @@ class RequestPayment(models.Model):
             'type': 'ir.actions.act_window',
         }
 
+    def _get_total_purchase_amount(self, financial_year):
+        """Calculate total purchase amount including current and other requests."""
+        domain = [
+            ('id', '!=', self.id),
+            ('partner_id', '=', self.partner_id.id),
+            ('financial_year_id', '=', financial_year.id),
+        ]
+        other_requests = self.env['request.payment'].search(domain)
+
+        # Sum amounts from other requests
+        total_other_amount = sum(other_requests.mapped('request_amount'))
+        total_other_interest = sum(other_requests.mapped('interest_amount'))
+
+        # Add current request amounts
+        total_amount = total_other_amount + total_other_interest + self.request_amount + self.interest_amount
+        return total_amount
+
+    def _is_threshold_exceeded(self, total_amount, threshold_limit):
+        """Check if total purchase amount exceeds threshold."""
+        return total_amount > threshold_limit
+
+    def _validate_tds_assessable_value(self):
+        """Validate TDS assessable value when threshold is exceeded."""
+        if not self.tds_assessable_value or self.tds_assessable_value <= 0:
+            raise UserError(_(
+                "TDS assessable value must be greater than 0 when threshold is exceeded."
+            ))
+
+    def _check_threshold_logic(self):
+        """Check threshold logic and update state accordingly."""
+        financial_year = self.financial_year_id
+        threshold_limit = financial_year.max_value
+
+        # Calculate total purchase amount
+        total_purchase = self._get_total_purchase_amount(financial_year)
+
+        # Approve if within threshold
+        if not self._is_threshold_exceeded(total_purchase, threshold_limit):
+            self.state = 'approved'
+            return
+
+        # Approve if partner has declaration
+        if self.partner_id.with_declaration:
+            self.state = 'approved'
+            return
+
+        # Validate TDS assessable value when threshold exceeded
+        self._validate_tds_assessable_value()
+
     def btt_approved(self):
+        """Approve button action with validation."""
+        # Validate contract state
         if self.purchase_contract_id.state != 'approved':
-            raise UserError(_("You cannot approve this request payment when Contract not in Approve State, please check again!!!"))
+            raise UserError(_(
+                "Cannot approve this request payment. "
+                "The purchase contract must be in 'Approved' state."
+            ))
+
+        # Set approval date and check threshold logic
         self.date_approve = datetime.now()
+        self._check_threshold_logic()
+
+        # Update state to approved
         self.state = 'approved'
 
     @api.depends('request_payment_ids', 'request_amount', 'advance_payment_quantity', 'tds_amount', 'date_approve')
