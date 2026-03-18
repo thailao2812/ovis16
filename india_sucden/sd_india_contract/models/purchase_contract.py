@@ -96,7 +96,7 @@ class PurchaseContract(models.Model):
         for rec in self:
             rec.have_reference = False
             if rec.partner_id:
-                if rec.partner_id.ref or len(rec.partner_id.ref) > 1:
+                if rec.partner_id.ref:
                     rec.have_reference = True
 
     @api.depends('request_payment_ids', 'request_payment_ids.state', 'request_payment_ids.payment_quantity')
