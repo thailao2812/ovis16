@@ -340,7 +340,8 @@ class PurchaseContract(models.Model):
         partner = self.partner_id
         license_checking = self.env['ned.certificate.license'].search([
             ('partner_id', '=', partner.id),
-            ('state', '=', 'active')
+            ('state', '=', 'active'),
+            ('certificate_id.code', '=', 'RA'),
         ])
         if license_checking and not self.certificate_id:
             raise UserError(_("You have to input Certificate and License before submit"))
