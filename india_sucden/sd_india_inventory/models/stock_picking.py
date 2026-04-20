@@ -110,3 +110,22 @@ class StockPicking(models.Model):
             if rec.is_return:
                 rec.state_return = 'reject'
         return res
+
+
+    def btt_reopen_stock(self):
+        res = super(StockPicking, self).btt_reopen_stock()
+        for rec in self:
+            if rec.picking_type_id.code == 'return_supplier':
+                rec.state_return = 'draft'
+        return res
+
+    @api.model
+    def default_get(self, fields):
+        res = super(StockPicking, self).default_get(fields)
+        default_warehouse = self.env['stock.warehouse'].search([('code', '=', 'KSNG')], limit=1)
+        res['warehouse_id'] = default_warehouse.id
+        if self.env.context.get('gip'):
+            res['picking_type_id'] = default_warehouse.production_out_type_id.id
+        if self.env.context.get('picking_grp_Goods'):
+            res['picking_type_id'] = default_warehouse.production_in_type_id.id
+        return res

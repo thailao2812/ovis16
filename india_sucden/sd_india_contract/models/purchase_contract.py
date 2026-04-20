@@ -107,7 +107,7 @@ class PurchaseContract(models.Model):
                 rec.payment_advance_quantity = sum(advance_payment.mapped('payment_quantity'))
 
 
-    @api.depends('picking_return_ids', 'picking_return_ids.state', 'picking_return_ids.total_qty')
+    @api.depends('picking_return_ids', 'picking_return_ids.state', 'picking_return_ids.total_qty', 'picking_return_ids.state_return')
     def compute_return_qty(self):
         for rec in self:
             rec.return_qty = 0
@@ -115,7 +115,8 @@ class PurchaseContract(models.Model):
                 rec.return_qty = sum(rec.picking_return_ids.filtered(lambda x: x.state == 'done').mapped('total_qty'))
 
     @api.depends('state', 'qty_received', 'nvp_ids', 'npe_ids', 'contract_line.product_qty', 'ptbf_ids', 'total_qty',
-                 'ptbf_ids.quantity', 'ptbf_ids.quantity_fixed', 'type', 'return_qty')
+                 'ptbf_ids.quantity', 'ptbf_ids.quantity_fixed', 'type', 'return_qty', 'picking_return_ids.state',
+                 'picking_return_ids.state_return', 'picking_return_ids.total_qty')
     def _total_qty_fixed(self):
         for order in self:
             fix = 0.0
@@ -248,8 +249,8 @@ class PurchaseContract(models.Model):
                 record.total_deduction_quantity = 0
 
     @api.depends('contract_line.product_qty', 'state', 'stock_allocation_ids', 'total_qty',
-                 'stock_allocation_ids.state', 'stock_allocation_ids.qty_allocation',
-                 'stock_allocation_ids.contract_id', 'stock_allocation_ids.picking_id', 'nvp_ids', 'npe_ids')
+                 'stock_allocation_ids.state', 'stock_allocation_ids.qty_allocation', 'return_qty', 'picking_return_ids.state_return', 'picking_return_ids.total_qty',
+                 'picking_return_ids.state', 'stock_allocation_ids.contract_id', 'stock_allocation_ids.picking_id', 'nvp_ids', 'npe_ids')
     def _received_qty_net(self):
         for contract in self:
             contract.qty_received_net = contract.qty_unreceived_net = 0
