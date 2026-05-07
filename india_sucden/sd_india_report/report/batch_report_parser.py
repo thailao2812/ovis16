@@ -374,7 +374,16 @@ class Parser(models.AbstractModel):
                     FROM batch_report_output bo
                         JOIN product_product pp ON pp.id = bo.product_id
                         JOIN product_category pc ON pc.id = bo.categ_id
-                    WHERE batch_id = %s and (pp.default_code between '13000' AND '14399' and pp.default_code not in ('14101', '14102', '14103', '14104', '14107', '14108'))
+                    WHERE batch_id = %s AND (
+        (
+            pp.default_code BETWEEN '13000' AND '14399'
+            AND pp.default_code NOT IN (
+                '14101', '14102', '14103',
+                '14104', '14107', '14108'
+            )
+        )
+        OR pp.default_code IN ('12001', '12002')
+    )
                     GROUP BY pp.display_wb,
                             pc.code
                 ''' % (batch_id)
@@ -416,7 +425,16 @@ class Parser(models.AbstractModel):
             FROM batch_report_output bo
                 JOIN product_product pp ON pp.id = bo.product_id
                 JOIN product_category pc ON pc.id = bo.categ_id
-            WHERE batch_id = %s and (pp.default_code between '13000' AND '14399' and pp.default_code not in ('14101', '14102', '14103', '14104','14107', '14108'))
+            WHERE batch_id = %s AND (
+        (
+            pp.default_code BETWEEN '13000' AND '14399'
+            AND pp.default_code NOT IN (
+                '14101', '14102', '14103',
+                '14104', '14107', '14108'
+            )
+        )
+        OR pp.default_code IN ('12001', '12002')
+    )
             GROUP BY pp.display_wb,
                     pc.code
             ORDER BY pp.display_wb
@@ -593,7 +611,18 @@ class Parser(models.AbstractModel):
             FROM batch_report_output bo
                 JOIN product_product pp ON bo.product_id = pp.id
             WHERE bo.batch_id = %(batch_id)s
-                AND pp.default_code between '13000' and '13999' and pp.default_code not in ('13005', '13006', '13105', '13106', '13205', '13206', '13305', '13306')
+                AND (
+        (
+            pp.default_code BETWEEN '13000' AND '13999'
+            AND pp.default_code NOT IN (
+                '13005', '13006',
+                '13105', '13106',
+                '13205', '13206',
+                '13305', '13306'
+            )
+        )
+        OR pp.default_code IN ('12001', '12002')
+    )
         ''' % ({'batch_id': batch_id})
         self.env.cr.execute(sql)
         for line in self.env.cr.dictfetchall():
