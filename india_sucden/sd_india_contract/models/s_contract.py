@@ -102,3 +102,4 @@ class SContractLine(models.Model):
     _inherit = 's.contract.line'
 
     number_of_bags = fields.Float(string="Number of bags", digits=(16, 0))
+    price_unit = fields.Float('Unit Price', required=True, default=0.0, digits=(16, 4))
