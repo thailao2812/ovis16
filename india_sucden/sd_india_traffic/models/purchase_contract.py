@@ -107,6 +107,55 @@ class PurchaseContract(models.Model):
             i._compute_finished_qty()
             i._compute_open_qty()
 
+    def button_draft(self):
+        for rec in self:
+            if rec.state in ['commercial', 'accounting', 'director', 'approved']:
+                contract_price_purchase = self.env['contract.price.purchase'].search([
+                    ('contract_id', '=', rec.id),
+                ])
+                if contract_price_purchase:
+                    if any(x.total_allocated_qty > 0 for x in contract_price_purchase):
+                        raise UserError("You cannot set to draft this contract, it already have allocated quantity.")
+
+        return super(PurchaseContract, self).button_draft()
+
+    def button_cancel(self):
+        for rec in self:
+            if rec.state != 'cancel':
+                contract_price_purchase = self.env['contract.price.purchase'].search([
+                    ('contract_id', '=', rec.id),
+                ])
+                if contract_price_purchase:
+                    if any(x.total_allocated_qty > 0 for x in contract_price_purchase):
+                        raise UserError("You cannot cancel this contract, it already have allocated quantity.")
+
+        return super(PurchaseContract, self).button_cancel()
+
+    from odoo.exceptions import UserError
+
+    def write(self, vals):
+
+        bypass_states = ['commercial', 'accounting', 'director', 'approved']
+
+        for rec in self:
+
+            # State sau khi write hoàn tất
+            final_state = vals.get('state', rec.state)
+
+            # Nếu state cuối thuộc bypass -> skip
+            if final_state in bypass_states:
+                continue
+
+            if any(
+                    x.total_allocated_qty > 0
+                    for x in rec.contract_price_purchase_ids
+            ):
+                raise UserError(
+                    "You cannot edit this contract, it already have allocated quantity."
+                )
+
+        return super().write(vals)
+
     # @api.model
     # def name_search(self, name, args=None, operator='ilike', limit=100):
     #     args = args or []
