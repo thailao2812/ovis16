@@ -131,13 +131,19 @@ class PurchaseContract(models.Model):
 
         return super(PurchaseContract, self).button_cancel()
 
-    from odoo.exceptions import UserError
+    # Inherit core in sd_india_contract
+    def button_done(self):
+        for contract in self:
+            if not contract.remark_note_done:
+                raise UserError(_("You have to input Remark for setting this Contract Close/Done"))
+            contract.with_context(bypass_validation=True).write({'state': 'done'})
+        return 1
 
     def write(self, vals):
         if self.env.context.get('bypass_validation'):
             return super().write(vals)
         else:
-            bypass_states = ['commercial', 'accounting', 'director', 'approved']
+            bypass_states = ['commercial', 'accounting', 'director', 'approved', 'done']
 
             for rec in self:
 
