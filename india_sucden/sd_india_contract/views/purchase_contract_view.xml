@@ -821,6 +821,7 @@
 
     <record id="sd_purchase_contract.action_nvp_contract_allocation_invoiced" model="ir.actions.act_window">
         <field name="domain">[('state','=','approved')]</field>
+        <field name="context">{'bypass_validation': True}</field>
     </record>
 
     <function name="write" model="ir.model.data">

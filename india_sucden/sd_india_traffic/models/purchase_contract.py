@@ -134,27 +134,29 @@ class PurchaseContract(models.Model):
     from odoo.exceptions import UserError
 
     def write(self, vals):
+        if self.env.context.get('bypass_validation'):
+            return super().write(vals)
+        else:
+            bypass_states = ['commercial', 'accounting', 'director', 'approved']
 
-        bypass_states = ['commercial', 'accounting', 'director', 'approved']
+            for rec in self:
 
-        for rec in self:
+                # State sau khi write hoàn tất
+                final_state = vals.get('state', rec.state)
 
-            # State sau khi write hoàn tất
-            final_state = vals.get('state', rec.state)
+                # Nếu state cuối thuộc bypass -> skip
+                if final_state in bypass_states:
+                    continue
 
-            # Nếu state cuối thuộc bypass -> skip
-            if final_state in bypass_states:
-                continue
+                if any(
+                        x.total_allocated_qty > 0
+                        for x in rec.contract_price_purchase_ids
+                ):
+                    raise UserError(
+                        "You cannot edit this contract, it already have allocated quantity."
+                    )
 
-            if any(
-                    x.total_allocated_qty > 0
-                    for x in rec.contract_price_purchase_ids
-            ):
-                raise UserError(
-                    "You cannot edit this contract, it already have allocated quantity."
-                )
-
-        return super().write(vals)
+            return super().write(vals)
 
     # @api.model
     # def name_search(self, name, args=None, operator='ilike', limit=100):
