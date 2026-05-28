@@ -37,21 +37,21 @@ class ResPartner(models.Model):
                 with_declaration = rec.declaration_line_ids.filtered(lambda x: x.with_declaration)[0].with_declaration
             rec.with_declaration = with_declaration
 
-    @api.model
-    def create(self, vals):
-        if not self.env.user.user_has_groups('sd_india_master.group_admin_india'):
-            raise UserError(_("You don't have permission Create Contact to do that"))
-        return super(ResPartner, self).create(vals)
-
-    def write(self, vals):
-        if not self.env.user.user_has_groups('sd_india_master.group_admin_india'):
-            raise UserError(_("You don't have permission Write Contact to do that"))
-        return super(ResPartner, self).write(vals)
-
-    def unlink(self):
-        if not self.env.user.user_has_groups('sd_india_master.group_admin_india'):
-            raise UserError(_("You don't have permission Delete Contact to do that"))
-        return super(ResPartner, self).unlink()
+    # @api.model
+    # def create(self, vals):
+    #     if not self.env.user.user_has_groups('sd_india_master.group_admin_india'):
+    #         raise UserError(_("You don't have permission Create Contact to do that"))
+    #     return super(ResPartner, self).create(vals)
+    #
+    # def write(self, vals):
+    #     if not self.env.user.user_has_groups('sd_india_master.group_admin_india'):
+    #         raise UserError(_("You don't have permission Write Contact to do that"))
+    #     return super(ResPartner, self).write(vals)
+    #
+    # def unlink(self):
+    #     if not self.env.user.user_has_groups('sd_india_master.group_admin_india'):
+    #         raise UserError(_("You don't have permission Delete Contact to do that"))
+    #     return super(ResPartner, self).unlink()
 
 
 class PanNumberLine(models.Model):
