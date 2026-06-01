@@ -74,9 +74,93 @@ class Parser(models.AbstractModel):
             'get_mill_analysis': self.get_mill_analysis,
             'get_qc_analysis': self.get_qc_analysis,
             'get_processing_loss': self.get_processing_loss,
-            'get_instore_loss': self.get_instore_loss
+            'get_instore_loss': self.get_instore_loss,
+            'get_data_grn_stack': self.get_data_grn_stack
         })
         return localcontext
+
+    def get_data_grn_stack(self, batch_report):
+        if batch_report:
+            data = []
+            input_ids = batch_report.input_ids
+            for i in input_ids:
+                data.append({
+                    'picking_name': i.picking_id.picking_grn_id.name if i.picking_id.picking_grn_id else False,
+                    'kcs_date': self.get_date(i.picking_id.picking_grn_id.date_kcs) if i.picking_id.picking_grn_id else False,
+                    'st_slip': i.picking_id.picking_grn_id.quality_slip_no if i.picking_id.picking_grn_id else False,
+                    'product': i.product_id.display_name,
+                    'zone': i.zone_id.name,
+                    'stack': i.stack_id.name,
+                    'bag_no': i.stack_id.bag_qty,
+                    'net_weight': i.stack_id.init_qty,
+                    'issue_bag': i.bag_no,
+                    'issue_weight': i.real_qty,
+                    'balance_bag': i.stack_id.bag_qty - i.bag_no,
+                    'balance_quantity': i.stack_id.init_qty - i.real_qty,
+                    'moisture': round(i.moisture_percent or 0, 2),
+                    'outturn': round(i.outturn_percent or 0, 2),
+
+                    'aaa': round(i.aaa_percent or 0, 2),
+
+                    'aa': round(i.aa_percent or 0, 2),
+
+                    'a': round(i.a_percent or 0, 2),
+
+                    'b': round(i.b_percent or 0, 2),
+
+                    'c': round(i.c_percent or 0, 2),
+
+                    'pb': round(i.pb_percent or 0, 2),
+
+                    'bb': round(i.bb_percent or 0, 2),
+
+                    'bit': round(i.bits_percent or 0, 2),
+
+                    'bleach': round(i.bleached_percent or 0, 2),
+
+                    'idb': round(i.idb_percent or 0, 2),
+
+                    'husk': round(i.hulks_percent or 0, 2),
+
+                    'stone': round(i.stone_percent or 0, 2),
+
+                    'skin_out': round(i.skin_out_percent or 0, 2),
+
+                    'wet_beans': round(i.wet_bean_percent or 0, 2),
+
+                    'red_beans': round(i.red_beans_percent or 0, 2),
+
+                    'unhulled': round(i.unhulled_percent or 0, 2),
+
+                    'triage': round(i.triage_percent or 0, 2),
+
+                    'stinker': round(i.stinker_percent or 0, 2),
+
+                    'pb1': round(i.pb1_percent or 0, 2),
+
+                    'pb2': round(i.pb2_percent or 0, 2),
+
+                    'flat': round(i.flat_percent or 0, 2),
+
+                    'faded': round(i.faded_percent or 0, 2),
+
+                    'fm': round(0, 2),
+
+                    'up_6': round(i.sleeve_6_up_percent or 0, 2),
+
+                    'up_5_5': round(i.sleeve_5_5_up_percent or 0, 2),
+
+                    'down_5_5': round(i.sleeve_5_5_down_percent or 0, 2),
+
+                    'up_5': round(i.sleeve_5_up_percent or 0, 2),
+
+                    'down_5': round(i.sleeve_5_down_percent or 0, 2),
+
+                    'good_beans': round(i.good_beans_percent or 0, 2),
+
+                    'remaining_coffee': round(i.remaining_coffee_percent or 0, 2),
+                })
+            return data
     
     def get_date(self, date):
         if date:
