@@ -157,6 +157,11 @@
 
 
                     <field name="origin_deduction"/>
+					<field name="related_picking_ids" widget="many2many_tags"/>
+					<field name="moisture_grp"/>
+					<field name="outturn_grp"/>
+
+
                     <field name="deduction"/>
                     <field name="qty_reached" invisible="1"/>
 
