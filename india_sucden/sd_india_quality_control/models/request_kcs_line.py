@@ -232,6 +232,32 @@ class RequestKCSLine(models.Model):
     wet_bean_deduct_remark = fields.Text(string='Wet Bean Remark', compute='compute_data_new_deduction', store=True)
     special_deduct_remark = fields.Text(string='BB/Bleached/IDB/Red Beans Remark', compute='compute_data_new_deduction',store=True)
 
+    related_picking_ids = fields.Many2many('stock.picking', string='Related Pickings', compute='_compute_related_picking_ids', store=True)
+    moisture_grp = fields.Float(string='Moisture GRP', compute='_compute_qa_grp', store=True)
+    outturn_grp = fields.Float(string='Outturn GRP', compute='_compute_qa_grp', store=True)
+
+    @api.depends('related_picking_ids', 'state', 'picking_id.state_kcs', 'picking_id.state')
+    def _compute_qa_grp(self):
+        for rec in self:
+            if rec.related_picking_ids:
+                picking_select_ids = rec.related_picking_ids.filtered(lambda x: x.product_id.template_qc != 'husk')
+                if picking_select_ids:
+                    picking_select_id = picking_select_ids[0]
+                    request_kcs_line_id = picking_select_id.kcs_line[0] if picking_select_id.kcs_line else False
+                    if not request_kcs_line_id:
+                        rec.moisture_grp = 0
+                        rec.outturn_grp = 0
+                        return
+                    rec.moisture_grp = request_kcs_line_id.moisture_percent
+                    rec.outturn_grp = request_kcs_line_id.outturn_percent
+
+    @api.depends('picking_id', 'picking_id.linked_picking_ids', 'picking_id.state_kcs', 'picking_id.state')
+    def _compute_related_picking_ids(self):
+        for rec in self:
+            if rec.picking_id and rec.picking_id.linked_picking_ids:
+                rec.related_picking_ids = rec.picking_id.linked_picking_ids
+
+
     @api.depends('deduction_ids', 'deduction_ids.commercial_input', 'deduction_ids.kg', 'deduction_ids.percent', 'deduction_ids.remark',
                  'deduction_special_ids', 'deduction_special_ids.commercial_input', 'deduction_special_ids.kg', 'deduction_special_ids.percent', 'deduction_special_ids.remark')
     def compute_data_new_deduction(self):

@@ -14,6 +14,16 @@ class StockPicking(models.Model):
                    ('rejected', 'Rejected'), ('cancel', 'Cancel')], string='KCS Status', readonly=True, copy=False,
         index=True, default='draft', tracking=True, )
     deduction_qty = fields.Float(string='Deduction Qty', related='kcs_line.qty_reached', store=True)
+    grn_id = fields.Many2one('stock.picking', string='GRN')
+    linked_picking_ids = fields.One2many( 'stock.picking','grn_id', string='Linked Pickings')
+    is_grp = fields.Boolean(string='Is GRP', compute='_compute_is_grp', store=True)
+
+    @api.depends('picking_type_id', 'state_kcs')
+    def _compute_is_grp(self):
+        for rec in self:
+            rec.is_grp = False
+            if rec.picking_type_id.code == 'production_in':
+                rec.is_grp = True
 
     def button_assign_commercial(self):
         for pick in self:
