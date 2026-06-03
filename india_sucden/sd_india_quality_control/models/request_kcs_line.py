@@ -239,6 +239,8 @@ class RequestKCSLine(models.Model):
     @api.depends('related_picking_ids', 'state', 'picking_id.state_kcs', 'picking_id.state')
     def _compute_qa_grp(self):
         for rec in self:
+            rec.moisture_grp = 0
+            rec.outturn_grp = 0
             if rec.related_picking_ids:
                 picking_select_ids = rec.related_picking_ids.filtered(lambda x: x.product_id.template_qc != 'husk')
                 if picking_select_ids:
@@ -256,6 +258,8 @@ class RequestKCSLine(models.Model):
         for rec in self:
             if rec.picking_id and rec.picking_id.linked_picking_ids:
                 rec.related_picking_ids = rec.picking_id.linked_picking_ids
+            if rec.picking_id and not rec.picking_id.linked_picking_ids:
+                rec.related_picking_ids = False
 
 
     @api.depends('deduction_ids', 'deduction_ids.commercial_input', 'deduction_ids.kg', 'deduction_ids.percent', 'deduction_ids.remark',
