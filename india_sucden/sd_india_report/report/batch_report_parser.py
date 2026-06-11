@@ -982,7 +982,7 @@ class Parser(models.AbstractModel):
             production_id = batch.production_id
             finish_line = production_id.move_line_finished_good_ids.filtered(lambda x: x.product_id.default_code == '16001')
             if finish_line:
-                return finish_line[0].product_id.display_wb, finish_line[0].init_qty
+                return finish_line[0].product_id.display_wb, sum(finish_line.mapped('init_qty'))
             else:
                 return '', 0
 
