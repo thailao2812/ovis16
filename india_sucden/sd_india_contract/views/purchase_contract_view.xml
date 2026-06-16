@@ -792,8 +792,14 @@
             <xpath expr="//button[@name='button_convert']" position="attributes">
                 <attribute name="string">Convert CR</attribute>
             </xpath>
+            <xpath expr="//button[@name='button_convert_ptbf']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
             <xpath expr="//field[@name='contract_line_ids']/tree/field[@name='purchase_contract_id']" position="attributes">
                 <attribute name="string">CS Contract</attribute>
+            </xpath>
+            <xpath expr="//field[@name='contract_line_ids']/tree/field[@name='qty_unreceived']" position="after">
+                <field name="return_qty" readonly="1"/>
             </xpath>
             <xpath expr="//field[@name='price_unit']" position="after">
                 <field name="price_per_bag"/>

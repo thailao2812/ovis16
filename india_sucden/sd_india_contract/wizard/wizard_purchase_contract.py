@@ -26,6 +26,8 @@ class WizardPurchaseContract(models.TransientModel):
                 raise UserError(_("Please input Quantity before Convert"))
             if line.qty_received < line.product_qty + line.total_qty_fixed:
                 raise UserError('Cannot create a CR if Qty Received > Fixed + Qty Fix')
+            if line.product_qty > line.qty_unreceived:
+                raise UserError(_("Please input Quantity < Qty Unfixed"))
         origin = ''
         for line in self._context.get('active_ids'):
             origin += self.env['purchase.contract'].browse(line).name
@@ -86,3 +88,51 @@ class WizardPurchaseContract(models.TransientModel):
             result['views'] = [(res and res.id or False, 'form')]
             result['res_id'] = new_id.ids[0] or False
         return result
+
+    @api.model
+    def default_get(self, fields):
+        res = {}
+        val = []
+        sql = '''
+                SELECT count(distinct partner_id) count_partner,
+                        count(distinct delivery_place_id) count_place
+                FROM purchase_contract
+                WHERE id in (%s)
+            ''' % (','.join(map(str, self._context.get('active_ids'))))
+        self.env.cr.execute(sql)
+        for r in self.env.cr.dictfetchall():
+            if r['count_partner'] > 1:
+                raise UserError('You must select NPE with the same Vendor.')
+            if r['count_place'] > 1:
+                raise UserError('You must select NPE with the same Delivery Place.')
+
+        res['purchase_contract_id'] = self.env['purchase.contract'].browse(self._context.get('active_id')).id
+        for active_id in self._context.get('active_ids'):
+            if self._context.get('active_model', False) == 'ptbf.fixprice':
+                contract_obj = self.env['purchase.contract'].browse(self._context.get('default_purchase_contract_id'))
+            else:
+                contract_obj = self.env['purchase.contract'].browse(active_id)
+
+            for line in contract_obj.contract_line:
+                product_remain_qty = 0.0
+                for relation in self.env['npe.nvp.relation'].search([('npe_contract_id', '=', line.contract_id.id)]):
+                    product_remain_qty += relation.product_qty or 0.0
+
+                val.append((0, 0, {
+                    'product_id': line.product_id.id,
+                    'product_uom': line.product_uom.id,
+                    'product_qty': line.contract_id.qty_unfixed,
+                    'purchase_contract_id': line.contract_id.id,
+                    'qty_received': line.contract_id.qty_received or 0.0,
+                    'total_qty_fixed': line.contract_id.total_qty_fixed or 0.0,
+                    'qty_unreceived': line.contract_id.qty_received - product_remain_qty - line.contract_id.return_qty or 0.0,
+                    'product_remain_qty': line.product_qty - product_remain_qty,
+                    'return_qty': line.contract_id.return_qty or 0.0,
+                }))
+            res.update({'contract_line_ids': val})
+        return res
+
+class wizard_purchase_contract_line(models.TransientModel):
+    _inherit = "wizard.purchase.contract.line"
+
+    return_qty = fields.Float(string ='Return Quantity',digits=(12, 0))
