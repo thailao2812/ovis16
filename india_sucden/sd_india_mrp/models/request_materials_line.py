@@ -12,5 +12,5 @@ class RequestMaterialLine(models.Model):
     def _compute_grn_domain(self):
         for rec in self:
             if rec.stack_id:
-                picking_ids = rec.stack_id.move_line_ids.mapped('picking_id').filtered(lambda x: x.picking_type_id.code == 'incoming' and x.state == 'done')
+                picking_ids = rec.stack_id.move_line_ids.mapped('picking_id').filtered(lambda x: x.picking_type_id.code in ['incoming', 'production_in'] and x.state == 'done')
                 rec.domain_grn = picking_ids
