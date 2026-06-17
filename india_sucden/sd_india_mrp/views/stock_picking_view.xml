@@ -23,4 +23,16 @@
 
         </field>
     </record>
+
+    <record id="view_gip_from_view_inherit_india" model="ir.ui.view">
+        <field name="name">view_gip_from_view_inherit_india</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="sd_mrp.view_picking_inherit_sucden_edit_btt_done_form"/>
+        <field name="arch" type="xml">
+			 <xpath expr="//field[@name='origin']" position="after">
+            	<field name="picking_grn_id"/>
+            </xpath>
+
+        </field>
+    </record>
 </odoo>
