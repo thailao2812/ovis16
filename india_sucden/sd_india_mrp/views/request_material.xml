@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="sd_inventory.view_request_materials_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='request_line']/tree/field[@name='stack_id']" position="after">
-                <field name="picking_grn_id" string="GRN" domain="[('id', 'in', domain_grn)]" required="0" options="{'no_create': True}"/>
+                <field name="picking_grn_id" string="GRN/GRP" domain="[('id', 'in', domain_grn)]" required="0" options="{'no_create': True}"/>
                 <field name="domain_grn" invisible="1"/>
             </xpath>
         </field>
