@@ -8,13 +8,13 @@
                 <field name = 'product_id' readonly="1" />
                 <field name = 'category_id' readonly="1" />
                 <field name = 'template_qc' readonly="1" />
-                <field name = 'bags_no' readonly="1" />
-                <field name = 'quantity' readonly="1" />
+                <field name = 'bags_no' readonly="1" sum="bags_no"/>
+                <field name = 'quantity' readonly="1" sum="quantity"/>
                 <field name = 'price' readonly="1" />
-                <field name = 'value' readonly="1" />
-                <field name = 'receive_gross_qty' readonly="1" />
-                <field name = 'un_receive_gross_qty' readonly="1" />
-                <field name = 'un_receive_gross_value' readonly="1" />
+                <field name = 'value' readonly="1" sum="value"/>
+                <field name = 'receive_gross_qty' readonly="1" sum="receive_gross_qty"/>
+                <field name = 'un_receive_gross_qty' readonly="1" sum="un_receive_gross_qty"/>
+                <field name = 'un_receive_gross_value' readonly="1" sum="un_receive_gross_value"/>
             </tree>
          </field>
     </record>
