@@ -35,6 +35,7 @@
             'views/report_bag_transfer_view.xml',
             'views/stock_report_view.xml',
             'views/tds_report_view.xml',
+            'views/exposure_report.xml',
             # 'views/long_short_fob_view.xml',
             # 'views/long_short_fob_v2_view.xml',
             # 'views/long_short_factory_view.xml',
