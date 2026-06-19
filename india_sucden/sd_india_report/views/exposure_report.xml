@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_exposure_report" model="ir.ui.view">
+        <field name="name">view_exposure_report</field>
+        <field name="model">exposure.report</field>
+        <field name="arch" type="xml">
+            <tree editable="top" create="false" edit="false">
+                <field name = 'product_id' readonly="1" />
+                <field name = 'category_id' readonly="1" />
+                <field name = 'template_qc' readonly="1" />
+                <field name = 'bags_no' readonly="1" />
+                <field name = 'quantity' readonly="1" />
+                <field name = 'price' readonly="1" />
+                <field name = 'value' readonly="1" />
+                <field name = 'receive_gross_qty' readonly="1" />
+                <field name = 'un_receive_gross_qty' readonly="1" />
+                <field name = 'un_receive_gross_value' readonly="1" />
+            </tree>
+         </field>
+    </record>
+
+    <record id="exposure_report_search_view" model="ir.ui.view">
+        <field name="name">exposure_report_search_view</field>
+        <field name="model">exposure.report</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name = "product_id"/>
+                <field name = "category_id"/>
+                <field name = "template_qc"/>
+                <group expand="1" string="Group By">
+                    <filter string="Product" name="product_id" context="{'group_by':'product_id'}"/>
+                    <filter string="Category" name="category_id" context="{'group_by':'category_id'}"/>
+                    <filter string="Template QC" name="template_qc" context="{'group_by':'template_qc'}"/>
+                </group>
+            </search>
+         </field>
+    </record>
+
+    <record id="action_exposure_report_india" model="ir.actions.act_window">
+        <field name="name">Exposure Report</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">exposure.report</field>
+        <field name="view_mode">tree</field>
+        <field name="context">{}</field>
+ </record>
+</odoo>
