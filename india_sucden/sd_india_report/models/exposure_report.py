@@ -35,6 +35,8 @@ class ExposureReport(models.Model):
                     CASE
                         WHEN LOWER(categ.name) LIKE '%clean%' THEN 'Clean Coffee'
                         WHEN LOWER(categ.name) LIKE '%raw%'   THEN 'Raw Coffee'
+                        WHEN pt.template_qc = 'raw'           THEN 'Raw Coffee'
+                        WHEN pt.template_qc = 'clean'         THEN 'Clean Coffee'
                         ELSE NULL
                     END                                 AS template_qc,
                     SUM(pc.number_of_bags)              AS bags_no,
@@ -55,6 +57,7 @@ class ExposureReport(models.Model):
                 GROUP BY
                     pc.product_id,
                     pt.categ_id,
-                    categ.name
+                    categ.name,
+                    pt.template_qc
             )
         """)
