@@ -5,16 +5,23 @@
         <field name="model">exposure.report</field>
         <field name="arch" type="xml">
             <tree editable="top" create="false" edit="false">
-                <field name = 'product_id' readonly="1" />
-                <field name = 'category_id' readonly="1" />
-                <field name = 'template_qc' readonly="1" />
-                <field name = 'bags_no' readonly="1" sum="bags_no"/>
-                <field name = 'quantity' readonly="1" sum="quantity"/>
-                <field name = 'price' readonly="1" />
-                <field name = 'value' readonly="1" sum="value"/>
-                <field name = 'receive_gross_qty' readonly="1" sum="receive_gross_qty"/>
-                <field name = 'un_receive_gross_qty' readonly="1" sum="un_receive_gross_qty"/>
-                <field name = 'un_receive_gross_value' readonly="1" sum="un_receive_gross_value"/>
+                <field name="purchase_contract_id" readonly="1"/>
+                <field name="vendor_id" readonly="1"/>
+                <field name="date_contract" readonly="1"/>
+                <field name="deadline_date" readonly="1"/>
+                <field name="certificate" readonly="1"/>
+                <field name="no_of_days" readonly="1"/>
+                <field name="premium" readonly="1"/>
+                <field name="product_id" readonly="1"/>
+                <field name="category_id" readonly="1"/>
+                <field name="template_qc" readonly="1"/>
+                <field name="bags_no" readonly="1" sum="bags_no"/>
+                <field name="quantity" readonly="1" sum="quantity"/>
+                <field name="price" readonly="1"/>
+                <field name="value" readonly="1" sum="value"/>
+                <field name="receive_gross_qty" readonly="1" sum="receive_gross_qty"/>
+                <field name="un_receive_gross_qty" readonly="1" sum="un_receive_gross_qty"/>
+                <field name="un_receive_gross_value" readonly="1" sum="un_receive_gross_value"/>
             </tree>
          </field>
     </record>
@@ -24,10 +31,17 @@
         <field name="model">exposure.report</field>
         <field name="arch" type="xml">
             <search>
-                <field name = "product_id"/>
-                <field name = "category_id"/>
-                <field name = "template_qc"/>
+                <field name="purchase_contract_id"/>
+                <field name="vendor_id"/>
+                <field name="certificate"/>
+                <field name="product_id"/>
+                <field name="category_id"/>
+                <field name="template_qc"/>
                 <group expand="1" string="Group By">
+                    <filter string="Contract" name="purchase_contract_id" context="{'group_by':'purchase_contract_id'}"/>
+                    <filter string="Vendor" name="vendor_id" context="{'group_by':'vendor_id'}"/>
+                    <filter string="Date Contract" name="date_contract" context="{'group_by':'date_contract'}"/>
+                    <filter string="Certificate" name="certificate" context="{'group_by':'certificate'}"/>
                     <filter string="Product" name="product_id" context="{'group_by':'product_id'}"/>
                     <filter string="Category" name="category_id" context="{'group_by':'category_id'}"/>
                     <filter string="Template QC" name="template_qc" context="{'group_by':'template_qc'}"/>
