@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_clean_coffee_report_tree" model="ir.ui.view">
+        <field name="name">view_clean_coffee_report_tree</field>
+        <field name="model">clean.coffee.report</field>
+        <field name="arch" type="xml">
+            <tree create="false" edit="false">
+                <field name="product_id" readonly="1"/>
+                <field name="total_stock" readonly="1" sum="total_stock"/>
+                <field name="total_dispatch" readonly="1" sum="total_dispatch"/>
+                <field name="balance" readonly="1" sum="balance"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_clean_coffee_report_search" model="ir.ui.view">
+        <field name="name">view_clean_coffee_report_search</field>
+        <field name="model">clean.coffee.report</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="product_id"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_clean_coffee_report" model="ir.actions.act_window">
+        <field name="name">Clean Coffee Report</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">clean.coffee.report</field>
+        <field name="view_mode">tree</field>
+        <field name="context">{}</field>
+    </record>
+</odoo>

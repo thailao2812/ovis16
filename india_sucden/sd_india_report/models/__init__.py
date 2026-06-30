@@ -25,3 +25,4 @@ from . import purchase_report, purchase_report_consignment
 from . import stock_report
 from . import tds_report
 from . import exposure_report
+from . import clean_coffee
