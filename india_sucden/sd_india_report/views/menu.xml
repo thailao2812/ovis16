@@ -26,6 +26,10 @@
 				            action="sd_india_report.action_exposure_report_india" sequence="4"
 				            parent="menu_report_purchase"
 				            name="Exposure Report" active="True"/>
+					<menuitem id="menu_clean_coffee_report_india"
+				            action="sd_india_report.action_clean_coffee_report" sequence="5"
+				            parent="menu_report_purchase"
+				            name="Clean Coffee Report" active="True"/>
 
 				<menuitem id="menu_stock_report"
 					name="Stock Report"
