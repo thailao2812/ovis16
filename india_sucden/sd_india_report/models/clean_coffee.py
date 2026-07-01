@@ -8,7 +8,8 @@ class CleanCoffeeReport(models.Model):
     _auto = False
 
     product_id = fields.Many2one('product.product', string='Product')
-    total_stock = fields.Float(string='Total Stock')
+    total_stock = fields.Float(string='Total Purchase')
+    total_grp = fields.Float(string='Total GRP')
     total_dispatch = fields.Float(string='Total Dispatch')
     balance = fields.Float(string='Balance Stock')
 
@@ -66,7 +67,8 @@ class CleanCoffeeReport(models.Model):
                 SELECT
                     cp.product_id AS id,
                     cp.product_id,
-                    COALESCE(sc.qty, 0) + COALESCE(sp.qty, 0) AS total_stock,
+                    COALESCE(sc.qty, 0) AS total_stock,
+                    COALESCE(sp.qty, 0) AS total_grp,
                     COALESCE(dp.qty, 0) AS total_dispatch,
                     COALESCE(sc.qty, 0) + COALESCE(sp.qty, 0) - COALESCE(dp.qty, 0) AS balance
                 FROM clean_products cp
