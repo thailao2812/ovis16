@@ -33,6 +33,7 @@ class CleanCoffeeReport(models.Model):
                       AND nc.state = 'current'
                       AND pc.product_id IN (SELECT product_id FROM clean_products)
                       AND pc.qty_received_net > 0
+                      AND pc.type = 'purhcase' AND pc.origin is not null
                     GROUP BY pc.product_id
                 ),
                 stock_from_picking AS (
