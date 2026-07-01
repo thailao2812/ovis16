@@ -29,9 +29,10 @@ class CleanCoffeeReport(models.Model):
                            SUM(pc.qty_received_net) AS qty
                     FROM purchase_contract pc
                     JOIN ned_crop nc ON nc.id = pc.crop_id
-                    WHERE pc.state NOT IN ('draft', 'cancel')
+                    WHERE pc.state IN ('approved', 'done')
                       AND nc.state = 'current'
                       AND pc.product_id IN (SELECT product_id FROM clean_products)
+                      AND pc.qty_received_net > 0
                     GROUP BY pc.product_id
                 ),
                 stock_from_picking AS (
@@ -72,6 +73,5 @@ class CleanCoffeeReport(models.Model):
                 LEFT JOIN stock_from_picking sp ON sp.product_id = cp.product_id
                 LEFT JOIN dispatch_from_picking dp ON dp.product_id = cp.product_id
                 WHERE COALESCE(sc.qty, 0) + COALESCE(sp.qty, 0) > 0
-                   OR COALESCE(dp.qty, 0) > 0
             )
         """)
