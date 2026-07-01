@@ -40,9 +40,12 @@ class CleanCoffeeReport(models.Model):
                     FROM stock_picking sp
                     JOIN stock_picking_type spt ON spt.id = sp.picking_type_id
                     JOIN ned_crop nc ON nc.id = sp.crop_id
+                    JOIN mrp_production mp ON mp.id = sp.production_id
+                    JOIN mrp_bom mb ON mb.id = mp.bom_id
                     WHERE sp.state = 'done'
                       AND spt.code = 'production_in'
                       AND nc.state = 'current'
+                      AND mb.code IN ('BTA1', 'BTA2', 'BTA4', 'BTA5')
                       AND sp.product_id IN (SELECT product_id FROM clean_products)
                     GROUP BY sp.product_id
                 ),
