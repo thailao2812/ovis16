@@ -30,6 +30,10 @@
 				            action="sd_india_report.action_clean_coffee_report" sequence="5"
 				            parent="menu_report_purchase"
 				            name="Clean Coffee Report" active="True"/>
+					<menuitem id="menu_purchase_raw_coffee_report_india"
+				            action="sd_india_report.action_purchase_raw_coffee_report" sequence="6"
+				            parent="menu_report_purchase"
+				            name="Purchase Raw Coffee Report" active="True"/>
 
 				<menuitem id="menu_stock_report"
 					name="Stock Report"
