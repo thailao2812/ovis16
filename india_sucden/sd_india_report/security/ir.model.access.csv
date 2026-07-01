@@ -69,3 +69,4 @@ access_purchase_report_consignment,access_purchase_report_consignment,model_purc
 access_tds_report,access_tds_report,model_tds_report,base.group_user,1,1,1,0
 access_exposure_report,access_exposure_report,model_exposure_report,base.group_user,1,1,1,0
 access_clean_coffe_report,access_clean_coffee_report,model_clean_coffee_report,base.group_user,1,1,1,0
+access_purchase_raw_coffee_report,access_purchase_raw_coffee_report,model_purchase_raw_coffee_report,base.group_user,1,1,1,0

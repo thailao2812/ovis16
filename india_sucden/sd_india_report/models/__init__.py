@@ -26,3 +26,4 @@ from . import stock_report
 from . import tds_report
 from . import exposure_report
 from . import clean_coffee
+from . import purchase_raw_coffee_report
