@@ -48,7 +48,7 @@ class CleanCoffeeReport(models.Model):
                     WHERE sp.state = 'done'
                       AND spt.code = 'production_in'
                       AND nc.state = 'current'
-                      AND mb.code IN ('BTA1', 'BTA2', 'BTA4', 'BTA5')
+                      AND mb.code IN ('BTA1', 'BTA2', 'BTA4', 'BTA5', 'BTA3', 'BTA6')
                       AND sp.product_id IN (SELECT product_id FROM clean_products)
                     GROUP BY sp.product_id
                 ),
