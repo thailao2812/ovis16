@@ -18,7 +18,7 @@ class TruckQualityProduction(models.Model):
     name = fields.Char(string='Name', compute='compute_name', store=True)
     production_id = fields.Many2one('mrp.production', string='Manufacturing Order (Batch No)')
     product_id = fields.Many2one('product.product', string='Product')
-    stack_id = fields.Many2one('stock.lot', string='Stack', domain=[('product_id', '=', product_id)])
+    stack_id = fields.Many2one('stock.lot', string='Stack')
     no_of_bag = fields.Float(string='Number of bag', digits=(12,0))
     quantity = fields.Float(string='Quantity (Kgs)', digits=(12,0))
     wb_slip_number = fields.Char(string='WB Slip Number')
