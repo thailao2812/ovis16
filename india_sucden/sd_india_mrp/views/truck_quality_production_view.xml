@@ -23,6 +23,7 @@
                                 <field name="production_id"/>
                                 <field name="date"/>
                                 <field name="product_id"/>
+                                <field name="stack_id" options="{'no_create': True}"/>
                                 <field name="no_of_bag"/>
                                 <field name="quantity"/>
                             </group>
