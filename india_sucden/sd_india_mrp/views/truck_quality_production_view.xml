@@ -138,6 +138,7 @@
                     <field name="department_stage"/>
                     <field name="production_id"/>
                     <field name="product_id"/>
+                    <field name="stack_id"/>
                     <field name="no_of_bag"/>
                     <field name="quantity"/>
                     <field name="wb_slip_number"/>
