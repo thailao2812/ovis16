@@ -560,25 +560,44 @@ class Parser(models.AbstractModel):
     def get_total_stack_in(self, batch_id):
         var = []
         sql = '''
+            WITH agg AS (
+                SELECT bi.stack_id,
+                        sum(bi.net_qty) net_qty,
+                        sum(bi.bag_no) bag_no
+                FROM batch_report_input bi
+                WHERE bi.batch_id = %s
+                GROUP BY bi.stack_id
+            ),
+            first_line AS (
+                SELECT DISTINCT ON (bi.stack_id)
+                        bi.stack_id,
+                        bi.date,
+                        bi.product_id,
+                        bi.packing_id,
+                        bi.zone_id
+                FROM batch_report_input bi
+                WHERE bi.batch_id = %s
+                ORDER BY bi.stack_id, bi.date ASC
+            )
             SELECT ss.name stack_name,
-                    bi.net_qty,
-                    bi.date,
+                    agg.net_qty,
+                    fl.date,
                     pp.display_wb,
                     pu.name uom_name,
                     np.name packing_name,
-                    bi.bag_no,
+                    agg.bag_no,
                     sz.name zone_name,
-                    bi.stack_id stack_id
-            FROM batch_report_input bi
-                JOIN stock_lot ss ON bi.stack_id = ss.id
-                JOIN product_product pp ON pp.id = bi.product_id
+                    agg.stack_id stack_id
+            FROM agg
+                JOIN first_line fl ON fl.stack_id = agg.stack_id
+                JOIN stock_lot ss ON agg.stack_id = ss.id
+                JOIN product_product pp ON pp.id = fl.product_id
                     JOIN product_template tmpl ON tmpl.id = pp.product_tmpl_id
                     JOIN uom_uom pu ON pu.id = tmpl.uom_id
-                LEFT JOIN ned_packing np ON np.id = bi.packing_id
-                JOIN stock_zone sz ON sz.id = bi.zone_id
-            WHERE batch_id = %s
-            ORDER BY bi.date ASC
-        '''%(batch_id)
+                LEFT JOIN ned_packing np ON np.id = fl.packing_id
+                JOIN stock_zone sz ON sz.id = fl.zone_id
+            ORDER BY fl.date ASC
+        '''%(batch_id, batch_id)
         self.env.cr.execute(sql)
         for line in self.env.cr.dictfetchall():
             uom = line['uom_name']['en_US']
