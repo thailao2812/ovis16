@@ -93,9 +93,9 @@
             </xpath>
             <xpath expr="//group[1]" position="after">
                 <group string="Reject Reason">
-                    <field name="reject_by_commercial" readonly="1"/>
-                    <field name="reject_by_accounting" readonly="1"/>
-                    <field name="reject_by_director" readonly="1"/>
+                    <field name="reject_by_commercial" attrs="{'readonly': [('state', '!=', 'commercial')]}"/>
+                    <field name="reject_by_accounting" attrs="{'readonly': [('state', '!=', 'accounting')]}"/>
+                    <field name="reject_by_director" attrs="{'readonly': [('state', '!=', 'director')]}"/>
                 </group>
             </xpath>
             <xpath expr="//page[2]" position="attributes">
@@ -349,9 +349,9 @@
             </xpath>
             <xpath expr="//group[1]" position="after">
                 <group string="Reject Reason">
-                    <field name="reject_by_commercial" readonly="1"/>
-                    <field name="reject_by_accounting" readonly="1"/>
-                    <field name="reject_by_director" readonly="1"/>
+                    <field name="reject_by_commercial" attrs="{'readonly': [('state', '!=', 'commercial')]}"/>
+                    <field name="reject_by_accounting" attrs="{'readonly': [('state', '!=', 'accounting')]}"/>
+                    <field name="reject_by_director" attrs="{'readonly': [('state', '!=', 'director')]}"/>
                 </group>
             </xpath>
             <xpath expr="//field[@name='npe_contract_id']" position="attributes">
@@ -535,9 +535,9 @@
             </xpath>
             <xpath expr="//group[1]" position="after">
                 <group string="Reject Reason">
-                    <field name="reject_by_commercial" readonly="1"/>
-                    <field name="reject_by_accounting" readonly="1"/>
-                    <field name="reject_by_director" readonly="1"/>
+                    <field name="reject_by_commercial" attrs="{'readonly': [('state', '!=', 'commercial')]}"/>
+                    <field name="reject_by_accounting" attrs="{'readonly': [('state', '!=', 'accounting')]}"/>
+                    <field name="reject_by_director" attrs="{'readonly': [('state', '!=', 'director')]}"/>
                 </group>
             </xpath>
             <xpath expr="//page[2]" position="attributes">

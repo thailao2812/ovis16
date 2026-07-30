@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
+import ast
 import math
 
 from odoo import api, fields, models, tools, _, SUPERUSER_ID
 from odoo.exceptions import UserError
+from odoo.osv import expression
 DATE_FORMAT = "%Y-%m-%d"
 DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S"
 import time
@@ -31,10 +33,98 @@ class PurchaseContract(models.Model):
                              string='Status',
                              readonly=True, copy=False, index=True, default='draft', tracking=True)
 
-    reject_by_commercial = fields.Text(string='Commercial Reject Reason')
-    reject_by_accounting = fields.Text(string='Accounting Reject Reason')
-    reject_by_director = fields.Text(string='Director Reject Reason')
+    reject_by_commercial = fields.Text(string='Commercial Reject Reason', tracking=True)
+    reject_by_accounting = fields.Text(string='Accounting Reject Reason', tracking=True)
+    reject_by_director = fields.Text(string='Director Reject Reason', tracking=True)
     agent_id = fields.Many2one('res.partner', string='Agent')
+
+    # -- Lock the contract form once it leaves the 'draft' state -------------
+    # In Odoo 16 a ``readonly`` modifier set on a container node (sheet/group)
+    # is NOT inherited by its child fields, so we make every top-level field of
+    # the sheet readonly through ``_get_view`` instead of touching each field in
+    # XML. This is applied to the 3 main purchase.contract forms only.
+    _LOCK_WHEN_NOT_DRAFT_FORMS = (
+        'sd_purchase_contract.view_purchase_contract_form',      # Regular (NVP)
+        'sd_purchase_contract.view_ptbf_contract_form',          # PTBF
+        'sd_purchase_contract.view_consignment_agreement_form',  # Consignment
+    )
+    _LOCK_WHEN_NOT_DRAFT_DOMAIN = [('state', '!=', 'draft')]
+    # Field names that must stay editable even when the contract left draft
+    # (fields used later in the workflow). These keep their own per-state
+    # readonly rules defined in the XML views instead of the generic lock.
+    _LOCK_WHEN_NOT_DRAFT_EXCLUDE = {
+        'reject_by_commercial',   # editable only in 'commercial' state
+        'reject_by_accounting',   # editable only in 'accounting' state
+        'reject_by_director',     # editable only in 'director' state
+    }
+
+    @api.model
+    def _get_view(self, view_id=None, view_type='form', **options):
+        arch, view = super()._get_view(view_id=view_id, view_type=view_type, **options)
+        if view_type == 'form' and view:
+            lock_view_ids = {
+                v.id
+                for v in (
+                    self.env.ref(xmlid, raise_if_not_found=False)
+                    for xmlid in self._LOCK_WHEN_NOT_DRAFT_FORMS
+                )
+                if v
+            }
+            if view.id in lock_view_ids:
+                self._lock_fields_when_not_draft(arch)
+        return arch, view
+
+    @api.model
+    def _lock_fields_when_not_draft(self, arch):
+        """Force every top-level field of the form ``<sheet>`` to be readonly
+        while the contract is not in draft.
+
+        Only fields that are direct children of the sheet are touched: fields
+        inside embedded x2many subviews are covered automatically, because
+        making the x2many field itself readonly disables adding/removing/editing
+        its lines. Header buttons (Confirm/Reject/Cancel...) stay untouched so
+        the workflow keeps working.
+
+        Computed / model-readonly fields (e.g. the amount totals) are kept
+        *unconditionally* readonly instead of the state-dependent readonly, so
+        we never accidentally make a computed field editable in draft.
+        """
+        lock_domain = self._LOCK_WHEN_NOT_DRAFT_DOMAIN
+        exclude = self._LOCK_WHEN_NOT_DRAFT_EXCLUDE
+        for node in arch.xpath("//sheet//field[not(ancestor::field)]"):
+            name = node.get('name')
+            if name in exclude:
+                continue
+            attrs = ast.literal_eval(node.get('attrs') or '{}')
+
+            # Fields that must always be readonly: those the model itself never
+            # lets you edit (computed without inverse, related, plain
+            # readonly=True) or a stored computed field. Force them readonly
+            # regardless of state. Fields that are readonly=True *but* editable
+            # in draft via ``states`` (e.g. partner_id, date_order) are NOT
+            # caught here -- they stay editable in draft and lock afterwards.
+            field = self._fields.get(name)
+            if field is not None and (not field.is_editable() or (field.compute and field.store)):
+                attrs['readonly'] = True
+                node.set('attrs', repr(attrs))
+                node.attrib.pop('readonly', None)
+                continue
+
+            existing = attrs.get('readonly')
+            if existing is None:
+                raw = node.get('readonly')
+                if raw is not None:
+                    existing = raw.strip().lower() in ('1', 'true')
+            if existing is True:
+                # already unconditionally readonly, nothing to add
+                continue
+            if isinstance(existing, (list, tuple)) and existing:
+                attrs['readonly'] = expression.OR([list(existing), lock_domain])
+            else:
+                attrs['readonly'] = lock_domain
+            node.set('attrs', repr(attrs))
+            # a static readonly="0"/"1" attribute would override attrs, drop it
+            node.attrib.pop('readonly', None)
 
     qty_received_net = fields.Float(compute='_received_qty_net', string='Received Gross Qty', digits=(12, 0), store=True)
     qty_unreceived_net = fields.Float(compute='_received_qty_net', string='UnReceived Gross Qty', digits=(12, 0), store=True)
@@ -63,7 +153,7 @@ class PurchaseContract(models.Model):
 
     remark = fields.Text(string='Remark')
 
-    gross_qty = fields.Float(string='Gross Quantity (SN)', digits=(12,0), readonly=False)
+    gross_qty = fields.Float(string='Gross Quantity (SN)', digits=(12,0), readonly=False, tracking=True)
     quality_deduction = fields.Float(string='Quality Deduction', digits=(12,0), compute='compute_quality_deduction', store=True)
 
     crop_id = fields.Many2one('ned.crop', string='Crop', required=True, readonly=False, default=_default_crop_id,
