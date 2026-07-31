@@ -56,7 +56,11 @@ class PurchaseContract(models.Model):
         'reject_by_commercial',   # editable only in 'commercial' state
         'reject_by_accounting',   # editable only in 'accounting' state
         'reject_by_director',     # editable only in 'director' state
+        'request_payment_ids',    # editable / add line only in 'approved' state
     }
+    total_qty = fields.Float(tracking=True)
+    relation_price_unit = fields.Float(tracking=True)
+    certificate_id = fields.Many2one('ned.certificate', string='Certificate', tracking=True)
 
     @api.model
     def _get_view(self, view_id=None, view_type='form', **options):
@@ -136,7 +140,7 @@ class PurchaseContract(models.Model):
                                    , default=False, compute='_compute_warehouse_id', store=True)
     premium = fields.Float(tracking=True)
 
-    number_of_bags = fields.Float(string='Number of bags', related='contract_line.bag_no', store=True)
+    number_of_bags = fields.Float(string='Number of bags', related='contract_line.bag_no', store=True, tracking=True)
     estate_name = fields.Char(string='Estate Name', related='partner_id.estate_name', store=True)
 
     delivery_place_id = fields.Many2one('delivery.place', string='Delivery Place',
