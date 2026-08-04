@@ -58,6 +58,11 @@ class PurchaseContract(models.Model):
         'reject_by_director',     # editable only in 'director' state
         'request_payment_ids',    # editable / add line only in 'approved' state
     }
+    # Fields that are editable in exactly one state (and readonly otherwise).
+    # The generic lock replaces their readonly with ``state != <state>``.
+    _LOCK_WHEN_NOT_DRAFT_STATE_FIELDS = {
+        'pay_allocation_ids': 'approved',   # edit / add line only in 'approved'
+    }
     total_qty = fields.Float(tracking=True)
     relation_price_unit = fields.Float(tracking=True)
     certificate_id = fields.Many2one('ned.certificate', string='Certificate', tracking=True)
@@ -100,6 +105,14 @@ class PurchaseContract(models.Model):
             if name in exclude:
                 continue
             attrs = ast.literal_eval(node.get('attrs') or '{}')
+
+            # Fields editable in exactly one state: readonly everywhere else.
+            state_only = self._LOCK_WHEN_NOT_DRAFT_STATE_FIELDS.get(name)
+            if state_only:
+                attrs['readonly'] = [('state', '!=', state_only)]
+                node.set('attrs', repr(attrs))
+                node.attrib.pop('readonly', None)
+                continue
 
             # Fields that must always be readonly: those the model itself never
             # lets you edit (computed without inverse, related, plain
