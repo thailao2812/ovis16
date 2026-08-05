@@ -58,10 +58,14 @@ class PurchaseContract(models.Model):
         'reject_by_director',     # editable only in 'director' state
         'request_payment_ids',    # editable / add line only in 'approved' state
     }
-    # Fields that are editable in exactly one state (and readonly otherwise).
-    # The generic lock replaces their readonly with ``state != <state>``.
-    _LOCK_WHEN_NOT_DRAFT_STATE_FIELDS = {
-        'pay_allocation_ids': 'approved',   # edit / add line only in 'approved'
+    # Fields with their own readonly rule: the generic lock replaces their
+    # readonly modifier with the domain below instead of the draft-only one.
+    _LOCK_WHEN_NOT_DRAFT_DOMAINS = {
+        # edit / add line only while the contract is approved
+        'pay_allocation_ids': [('state', '!=', 'approved')],
+        # always editable, except once the contract is cancelled
+        'agent_id': [('state', '=', 'cancel')],
+        'note': [('state', '=', 'cancel')],
     }
     total_qty = fields.Float(tracking=True)
     relation_price_unit = fields.Float(tracking=True)
@@ -106,10 +110,10 @@ class PurchaseContract(models.Model):
                 continue
             attrs = ast.literal_eval(node.get('attrs') or '{}')
 
-            # Fields editable in exactly one state: readonly everywhere else.
-            state_only = self._LOCK_WHEN_NOT_DRAFT_STATE_FIELDS.get(name)
-            if state_only:
-                attrs['readonly'] = [('state', '!=', state_only)]
+            # Fields carrying their own readonly rule (see the mapping above).
+            own_domain = self._LOCK_WHEN_NOT_DRAFT_DOMAINS.get(name)
+            if own_domain:
+                attrs['readonly'] = own_domain
                 node.set('attrs', repr(attrs))
                 node.attrib.pop('readonly', None)
                 continue
