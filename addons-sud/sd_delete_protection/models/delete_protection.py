@@ -49,6 +49,16 @@ class DeleteProtectionMixin(models.AbstractModel):
     # even when the line itself looks untouched.
     _protect_parent_field = None
 
+    # Set on documents that must never be deleted, whatever their state. Use it
+    # rather than leaning on the number: how a draft document is named is not
+    # dependable -- draft journal entries here are variously called "Draft",
+    # "INV-00019" or "BYP/93/2026-27" -- so a rule built on the number would
+    # block them for a reason that is not true and would read as nonsense to
+    # whoever hit it. This states the actual policy instead.
+    # Note this does not reach the lines: `_protect_committed_state` is what the
+    # parent rule consults, so a draft document is still editable line by line.
+    _protect_never_delete = False
+
     # ------------------------------------------------------------------
     # Checks
     # ------------------------------------------------------------------
@@ -105,6 +115,13 @@ class DeleteProtectionMixin(models.AbstractModel):
         self.ensure_one()
         label = self.display_name or _('this record')
 
+        if self._protect_never_delete:
+            raise UserError(_(
+                'You cannot delete "%(name)s".\n\n'
+                'This kind of document is never deleted, in any state, because '
+                'the rest of the system refers back to it. Cancel it instead.'
+            ) % {'name': label})
+
         sequence = self._protect_sequence_value()
         if sequence:
             raise UserError(_(
@@ -126,22 +143,36 @@ class DeleteProtectionMixin(models.AbstractModel):
         self._protect_check_parent()
 
     def _protect_check_parent(self):
-        """Block removing a line from a parent document that is committed."""
+        """Block removing a line only once its parent has left draft.
+
+        Deliberately looks at the parent's *state* alone and not at its whole
+        protection. A parent that already carries a document number is still
+        being drafted -- a stock picking is numbered the moment it is created,
+        and a sale contract likewise -- and while it is in draft its lines have
+        to stay editable, which includes removing them. Running the parent's
+        full check here would refuse that and make ordinary editing impossible.
+        """
         field_name = self._protect_parent_field
         if not field_name or field_name not in self._fields:
             return
         parent = self[field_name]
         # A parent that does not carry the mixin has nothing to enforce.
-        if not parent or not hasattr(parent, '_protect_check_record'):
+        if not parent or not hasattr(parent, '_protect_committed_state'):
             return
-        try:
-            parent.sudo()._protect_check_record()
-        except UserError:
-            raise UserError(_(
-                'You cannot delete this line.\n\n'
-                'It belongs to "%(parent)s", which is no longer in draft. '
-                'Change the parent document back to draft first, or cancel it.'
-            ) % {'parent': parent.display_name})
+        parent = parent.sudo()
+        committed = parent._protect_committed_state()
+        if not committed:
+            return
+        field, value = committed
+        raise UserError(_(
+            'You cannot delete this line.\n\n'
+            'It belongs to "%(parent)s", whose status is "%(state)s". '
+            'Only lines of a draft document may be removed; put the document '
+            'back to draft first, or cancel it.'
+        ) % {
+            'parent': parent.display_name,
+            'state': parent._protect_state_label(field, value),
+        })
 
     # ------------------------------------------------------------------
     # Override
