@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+        A picking QC turns down is now cancelled along with the rejection. The
+        one case that cannot be is a picking the warehouse had already
+        validated: Odoo refuses to cancel a move that is done, so the rejection
+        is recorded and the picking stays open. Those need someone to return or
+        reverse the goods, and nothing in the interface said so.
+
+        Hence a banner on both forms people actually open (Quality Analysis and
+        the ordinary Inventory transfer) and a filter on both list views, so
+        they can be found without knowing where to look.
+    -->
+
+    <record id="view_stock_kcs_form_reject_banner_india" model="ir.ui.view">
+        <field name="name">stock.picking.kcs.form.reject.banner.india</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="sd_quality.view_stock_kcs_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="before">
+                <div class="alert alert-warning" role="alert"
+                     attrs="{'invisible': [('kcs_rejected_not_cancelled', '=', False)]}">
+                    <strong>Rejected by QC, but this transfer is still open.</strong>
+                    It could not be cancelled automatically because the warehouse
+                    had already validated it. The goods need to be returned or the
+                    transfer reversed by hand.
+                </div>
+                <field name="kcs_rejected_not_cancelled" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_stock_kcs_search_reject_filter_india" model="ir.ui.view">
+        <field name="name">stock.picking.kcs.search.reject.filter.india</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="sd_quality.view_stock_kcs_sucden_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <separator/>
+                <filter name="filter_kcs_rejected_not_cancelled"
+                        string="QC Rejected, Not Cancelled"
+                        domain="[('kcs_rejected_not_cancelled', '=', True)]"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_stock_kcs_tree_reject_flag_india" model="ir.ui.view">
+        <field name="name">stock.picking.kcs.tree.reject.flag.india</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="sd_quality.view_stock_kcs_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="inside">
+                <field name="kcs_rejected_not_cancelled" optional="hide"
+                       string="QC Rejected, Not Cancelled"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- The same two on the standard Inventory transfer screens, so someone
+         working in Inventory rather than in QC sees it as well. -->
+    <record id="view_picking_form_reject_banner_india" model="ir.ui.view">
+        <field name="name">stock.picking.form.reject.banner.india</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="before">
+                <div class="alert alert-warning" role="alert"
+                     attrs="{'invisible': [('kcs_rejected_not_cancelled', '=', False)]}">
+                    <strong>Rejected by QC, but this transfer is still open.</strong>
+                    Quality turned this down after the warehouse had validated it,
+                    so it could not be cancelled automatically. Return the goods or
+                    reverse the transfer.
+                </div>
+                <field name="kcs_rejected_not_cancelled" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_picking_internal_search_reject_filter_india" model="ir.ui.view">
+        <field name="name">stock.picking.search.reject.filter.india</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_internal_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <separator/>
+                <filter name="filter_kcs_rejected_not_cancelled"
+                        string="QC Rejected, Not Cancelled"
+                        domain="[('kcs_rejected_not_cancelled', '=', True)]"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="vpicktree_reject_flag_india" model="ir.ui.view">
+        <field name="name">stock.picking.tree.reject.flag.india</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.vpicktree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="inside">
+                <field name="kcs_rejected_not_cancelled" optional="hide"
+                       string="QC Rejected, Not Cancelled"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

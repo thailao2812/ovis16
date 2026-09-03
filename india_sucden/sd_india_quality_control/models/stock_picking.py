@@ -17,6 +17,59 @@ class StockPicking(models.Model):
     grn_id = fields.Many2one('stock.picking', string='GRN')
     linked_picking_ids = fields.One2many( 'stock.picking','grn_id', string='Linked Pickings')
     is_grp = fields.Boolean(string='Is GRP', compute='_compute_is_grp', store=True)
+    kcs_rejected_not_cancelled = fields.Boolean(
+        string='QC Rejected, Not Cancelled',
+        compute='_compute_kcs_rejected_not_cancelled', store=True,
+        help='QC turned this picking down but the picking itself is still open. '
+             'It happens when the warehouse had already validated it: Odoo will '
+             'not cancel a move that is done, so the goods have to be returned '
+             'or reversed by hand.')
+
+    @api.depends('state', 'state_kcs')
+    def _compute_kcs_rejected_not_cancelled(self):
+        # Phrased as "not cancelled" rather than "still done" deliberately. Done
+        # is the case that arises today, but anything rejected and left open
+        # needs the same attention, and this also catches the ones from before
+        # the cancel below was widened to every operation type.
+        for picking in self:
+            picking.kcs_rejected_not_cancelled = (
+                picking.state_kcs == 'rejected' and picking.state != 'cancel')
+
+    def btt_reject(self):
+        """Reject at QC and cancel the picking with it, whatever its type.
+
+        The shared method in ``sd_quality`` cancels only for ``production_in``,
+        so a GRN -- which is ``incoming`` -- was left rejected by QC with its
+        picking still open and the goods still received. Quality Analysis offers
+        the rejection for every operation type, so the cancel has to follow.
+
+        Two things are worked around rather than reimplemented. The shared
+        method raises outright on a done ``production_in``, and that error would
+        roll the rejection back with it, so those records are handled here and
+        everything else is still delegated -- which keeps the rest of the chain,
+        including the WIP recompute in ``sd_mrp_quality``, intact. And a picking
+        the warehouse has already validated cannot be cancelled at all: Odoo
+        refuses to cancel a done move, so the rejection is recorded and
+        ``kcs_rejected_not_cancelled`` is what brings it to someone's attention.
+        """
+        blocked = self.filtered(
+            lambda p: p.state == 'done' and p.picking_type_id.code == 'production_in')
+        delegated = self - blocked
+
+        if delegated:
+            super(StockPicking, delegated).btt_reject()
+            # The shared method cancelled the production_in ones; cover the rest.
+            # Done pickings are left alone -- they cannot be cancelled.
+            to_cancel = delegated.filtered(lambda p: p.state not in ('done', 'cancel'))
+            if to_cancel:
+                to_cancel.action_cancel()
+
+        for pick in blocked:
+            pick.state_kcs = 'rejected'
+            for line in pick.kcs_line:
+                if line.state_kcs == 'draft':
+                    line.state = 'reject'
+        return True
 
     @api.depends('picking_type_id', 'state_kcs')
     def _compute_is_grp(self):

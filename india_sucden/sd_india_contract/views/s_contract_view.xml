@@ -36,6 +36,14 @@
             <xpath expr="//field[@name='contract_count']" position="attributes">
                 <attribute name="string">Contract Relevant</attribute>
             </xpath>
+            <!-- Warehouse lives in the "Other Information" page, which the base
+                 form hides for a P Contract. Required and invisible at once is
+                 unusable: the save is refused over a field the user has nowhere
+                 to fill in. Moved up next to Crop, which shows for every
+                 contract type, so the requirement below can actually be met. -->
+            <xpath expr="//field[@name='crop_id']" position="after">
+                <xpath expr="//field[@name='warehouse_id']" position="move"/>
+            </xpath>
             <xpath expr="//field[@name='warehouse_id']" position="attributes">
                 <attribute name="required">1</attribute>
             </xpath>
