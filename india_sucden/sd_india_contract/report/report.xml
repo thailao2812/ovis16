@@ -68,6 +68,23 @@
 	        <field name="print_report_name">(object._get_printed_report_name())</field>
     </record>
 
+	<record id="payment_request_invoice_india_report" model="ir.actions.report">
+	        <field name="name">Payment Request Invoice</field>
+	        <field name="type">ir.actions.report</field>
+	         <field name="model">request.payment</field>
+	        <field name="binding_model_id" ref="sd_purchase_contract.model_request_payment"/>
+	        <field name="report_name">payment_request_invoice_india_report</field>
+	        <field name="report_type">aeroo</field>
+	        <field name="in_format">oo-odt</field>
+	        <field name="out_format" model="report.mimetypes" search="[('code','=','oo-pdf'),('compatible_types','=','oo-odt')]"/>
+	        <field name="preview">True</field>
+	        <field name="parser_state">loc</field>
+	        <field name="parser_loc">sd_india_contract/report/report_payment_request_invoice_parse.py</field>
+	        <field name="report_file">sd_india_contract/report/report_payment_request_invoice.odt</field>
+	        <field name="tml_source">file</field>
+	        <field name="print_report_name">(object._get_printed_report_name())</field>
+    </record>
+
 	<!-- report_s_contract  -->
 	<record id="report_s_contract" model="ir.actions.report">
 		<field name="name">S-Contract</field>
@@ -95,7 +112,7 @@
 		<field name="report_name">report_delivery_order_india</field>
 		<field name="report_type">aeroo</field>
 		<field name="in_format">oo-odt</field>
-		<field name="out_format" model="report.mimetypes" search="[('code','=','oo-doc'),('compatible_types','=','oo-odt')]"/>
+		<field name="out_format" model="report.mimetypes" search="[('code','=','oo-pdf'),('compatible_types','=','oo-odt')]"/>
 		<field name="preview">True</field>
 		<field name="parser_state">loc</field>
 		<field name="parser_loc">sd_india_contract/report/report_delivery_order_parser.py</field>
@@ -153,6 +170,23 @@
 		<field name="report_file">sd_india_contract/report/report_stock_transfer_invoice.odt</field>
 		<field name="tml_source">file</field>
 		<field name="print_report_name">'Stock Transfer Invoice'</field>
+	</record>
+
+	<record id="purchase_contract_return_goods" model="ir.actions.report">
+		<field name="name">purchase_contract_return_goods</field>
+		<field name="type">ir.actions.report</field>
+		<field name="model">stock.picking</field>
+		<field name="binding_model_id" ref="stock.model_stock_picking"/>
+		<field name="report_name">purchase_contract_return_goods</field>
+		<field name="report_type">aeroo</field>
+		<field name="in_format">oo-odt</field>
+		<field name="out_format" model="report.mimetypes" search="[('code','=','oo-pdf'),('compatible_types','=','oo-odt')]"/>
+		<field name="preview">True</field>
+		<field name="parser_state">loc</field>
+		<field name="parser_loc">sd_india_contract/report/report_purchase_contract_return.py</field>
+		<field name="report_file">sd_india_contract/report/report_purchase_contract_return.odt</field>
+		<field name="tml_source">file</field>
+		<field name="print_report_name">'Stock Return %s' % (object.name)</field>
 	</record>
 
 </odoo>

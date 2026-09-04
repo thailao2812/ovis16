@@ -16,6 +16,18 @@ class FinancialYear(models.Model):
         ('new', 'New'),
         ('confirm', 'Confirm')
     ], string='State', default='new')
+    current_year = fields.Boolean(string='Current Year')
+
+    @api.constrains('current_year')
+    def constrain_current_year(self):
+        for rec in self:
+            if rec.current_year:
+                check_constraint = self.search([
+                    ('id', '!=', rec.id),
+                    ('current_year', '=', True)
+                ])
+                if check_constraint:
+                    raise UserError(_('Current Year already exists'))
 
     def confirm_year(self):
         for rec in self:

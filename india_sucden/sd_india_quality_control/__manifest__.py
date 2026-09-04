@@ -18,6 +18,7 @@
         'views/lot_stack_allocation_view.xml',
         'views/stock_movement_view.xml',
         'views/stock_picking_view_kcs.xml',
+        'views/stock_picking_kcs_reject.xml',
         'views/pss_management_view.xml',
         'views/tolerance_quality_view.xml',
         'views/moisture_configuration_view.xml',

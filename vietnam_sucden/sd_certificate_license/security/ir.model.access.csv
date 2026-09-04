@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_v_sd_certificate_license_detail_user,access_v_sd_certificate_license_detail_user,model_v_sd_certificate_license_detail,sd_report.group_report_user,1,1,1,1
+access_v_sd_certificate_license_detail2_user,access_v_sd_certificate_license_detail2_user,model_v_sd_certificate_license_detail2,sd_report.group_report_user,1,1,1,1

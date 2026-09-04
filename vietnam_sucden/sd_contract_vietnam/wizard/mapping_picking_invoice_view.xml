@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_mapping_picking_invoice_form" model="ir.ui.view">
+        <field name="name">view_mapping_picking_invoice_form</field>
+        <field name="model">mapping.picking.invoice</field>
+        <field name="arch" type="xml">
+             <form string="Create Invoice">
+                 <group>
+                     <field name="contract_id" readonly="1"/>
+                     <field name="invoice_id" readonly="1"/>
+                 </group>
+                <notebook>
+                    <page string="GRN Allocate" name="grn_allocate">
+                        <field name="stock_picking_ids">
+                            <tree editable="top">
+                                <field name="picking_id" options="{'no_create': True}" context="{'grn_invoice': True, 'purchase_contract_id': parent.contract_id}"/>
+                                <field name="allocated_qty"/>
+                                <field name="remain_qty"/>
+                                <field name="allocated_amount"/>
+                            </tree>
+                        </field>
+                    </page>
+                </notebook>
+                <footer>
+                    <button name="action_confirm" string="Confirm Mapping" type="object"
+                        class="btn-primary"/>
+                    <button string="Cancel" class="btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+     <record id="action_mapping_grn_invoice" model="ir.actions.act_window">
+            <field name="name">Mapping GRN Invoice</field>
+            <field name="res_model">mapping.picking.invoice</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_mapping_picking_invoice_form"/>
+            <field name="target">new</field>
+        </record>
+</odoo>

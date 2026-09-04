@@ -20,6 +20,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='lot_id']" position="after">
             	<field name="stack_type"/>
+                <field name="tare_weight"/>
             </xpath>
 
         </field>
@@ -32,6 +33,9 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='lot_id']" position="after">
             	<field name="stack_type"/>
+            </xpath>
+            <xpath expr="//field[@name='production_id']" position="before">
+                <field name="warehouse_id"/>
             </xpath>
 
         </field>
@@ -61,22 +65,37 @@
         </field>
     </record>
 
+    <record id="view_picking_tree_gdn_good_inherit_vietnam_sucden" model="ir.ui.view">
+        <field name="name">view_picking_tree_gdn_good_inherit_vietnam_sucden</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="sd_inventory.view_picking_tree_gdn_good"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='product_id']" position="after">
+            	<field name="total_bag" sum="total_bag"/>
+            </xpath>
+
+        </field>
+    </record>
+
     <record id="view_picking_inherit_sucden_form_inherit_vietnam_sucden" model="ir.ui.view">
         <field name="name">view_picking_inherit_sucden_form_inherit_vietnam_sucden</field>
         <field name="model">stock.picking</field>
         <field name="inherit_id" ref="sd_inventory.view_picking_inherit_sucden_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='move_ids_without_package']/tree/field[@name='first_weight']" position="attributes">
-            	<attribute name="attrs">{'readonly': [('state', '!=', 'draft')]}</attribute>
+            	<attribute name="attrs">{'readonly': [('parent.state', '!=', 'draft')]}</attribute>
             </xpath>
             <xpath expr="//field[@name='move_ids_without_package']/tree/field[@name='second_weight']" position="attributes">
-            	<attribute name="attrs">{'readonly': [('state', '!=', 'draft')]}</attribute>
+            	<attribute name="attrs">{'readonly': [('parent.state', '!=', 'draft')]}</attribute>
             </xpath>
             <xpath expr="//field[@name='move_ids_without_package']/tree/field[@name='bag_no']" position="attributes">
-            	<attribute name="attrs">{'readonly': [('state', '!=', 'draft')]}</attribute>
+            	<attribute name="attrs">{'readonly': [('parent.state', '!=', 'draft')]}</attribute>
             </xpath>
             <xpath expr="//field[@name='move_ids_without_package']/tree/field[@name='init_qty']" position="attributes">
-            	<attribute name="attrs">{'readonly': [('state', '!=', 'draft')]}</attribute>
+            	<attribute name="attrs">{'readonly': [('parent.state', '!=', 'draft')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='location_id']" position="after">
+                <field name="location_dest_id"/>
             </xpath>
 
         </field>
@@ -126,16 +145,16 @@
 	                      states="draft,waiting,confirmed,assigned"
 	                      groups="stock.group_stock_user" invisible="0"/>
 					<field name="packing_id"/>
-					<field name="first_weight" sum="first_weight" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-					<field name="second_weight" sum="second_weight" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-					<field name="bag_no" sum="bag_no" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-					<field name="tare_weight" sum="tare_weight" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-					<field name="init_qty" sum="init_qty" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-					<field name="qty_done" attrs="{'readonly': [('state', 'in', ('done', 'cancel')), ('is_locked', '=', True)]}" force_save="1" optional="hide" />
+					<field name="first_weight" sum="first_weight" attrs="{'readonly': [('parent.state', '!=', 'draft')]}"/>
+					<field name="second_weight" sum="second_weight" attrs="{'readonly': [('parent.state', '!=', 'draft')]}"/>
+					<field name="bag_no" sum="bag_no" attrs="{'readonly': [('parent.state', '!=', 'draft')]}"/>
+					<field name="tare_weight" sum="tare_weight" attrs="{'readonly': [('parent.state', '!=', 'draft')]}"/>
+					<field name="init_qty" sum="init_qty" attrs="{'readonly': [('parent.state', '!=', 'draft')]}"/>
+					<field name="qty_done" attrs="{'readonly': [('parent.state', 'in', ('done', 'cancel')), ('is_locked', '=', True)]}" force_save="1" optional="hide" />
 					<field name="reserved_uom_qty" attrs="{'readonly': [('state', 'in', ('done', 'cancel')), ('is_locked', '=', True)]}" force_save="1" optional="hide" />
 
 
-                    <field name="product_uom_id" force_save="1" attrs="{'readonly': [('state', '!=', 'draft'), ('id', '!=', False)]}" groups="uom.group_uom" optional="hide"/>
+                    <field name="product_uom_id" force_save="1" attrs="{'readonly': [('parent.state', '!=', 'draft'), ('id', '!=', False)]}" groups="uom.group_uom" optional="hide"/>
                 </tree>
             </field>
         </record>

@@ -14,6 +14,69 @@ class StockPicking(models.Model):
                    ('rejected', 'Rejected'), ('cancel', 'Cancel')], string='KCS Status', readonly=True, copy=False,
         index=True, default='draft', tracking=True, )
     deduction_qty = fields.Float(string='Deduction Qty', related='kcs_line.qty_reached', store=True)
+    grn_id = fields.Many2one('stock.picking', string='GRN')
+    linked_picking_ids = fields.One2many( 'stock.picking','grn_id', string='Linked Pickings')
+    is_grp = fields.Boolean(string='Is GRP', compute='_compute_is_grp', store=True)
+    kcs_rejected_not_cancelled = fields.Boolean(
+        string='QC Rejected, Not Cancelled',
+        compute='_compute_kcs_rejected_not_cancelled', store=True,
+        help='QC turned this picking down but the picking itself is still open. '
+             'It happens when the warehouse had already validated it: Odoo will '
+             'not cancel a move that is done, so the goods have to be returned '
+             'or reversed by hand.')
+
+    @api.depends('state', 'state_kcs')
+    def _compute_kcs_rejected_not_cancelled(self):
+        # Phrased as "not cancelled" rather than "still done" deliberately. Done
+        # is the case that arises today, but anything rejected and left open
+        # needs the same attention, and this also catches the ones from before
+        # the cancel below was widened to every operation type.
+        for picking in self:
+            picking.kcs_rejected_not_cancelled = (
+                picking.state_kcs == 'rejected' and picking.state != 'cancel')
+
+    def btt_reject(self):
+        """Reject at QC and cancel the picking with it, whatever its type.
+
+        The shared method in ``sd_quality`` cancels only for ``production_in``,
+        so a GRN -- which is ``incoming`` -- was left rejected by QC with its
+        picking still open and the goods still received. Quality Analysis offers
+        the rejection for every operation type, so the cancel has to follow.
+
+        Two things are worked around rather than reimplemented. The shared
+        method raises outright on a done ``production_in``, and that error would
+        roll the rejection back with it, so those records are handled here and
+        everything else is still delegated -- which keeps the rest of the chain,
+        including the WIP recompute in ``sd_mrp_quality``, intact. And a picking
+        the warehouse has already validated cannot be cancelled at all: Odoo
+        refuses to cancel a done move, so the rejection is recorded and
+        ``kcs_rejected_not_cancelled`` is what brings it to someone's attention.
+        """
+        blocked = self.filtered(
+            lambda p: p.state == 'done' and p.picking_type_id.code == 'production_in')
+        delegated = self - blocked
+
+        if delegated:
+            super(StockPicking, delegated).btt_reject()
+            # The shared method cancelled the production_in ones; cover the rest.
+            # Done pickings are left alone -- they cannot be cancelled.
+            to_cancel = delegated.filtered(lambda p: p.state not in ('done', 'cancel'))
+            if to_cancel:
+                to_cancel.action_cancel()
+
+        for pick in blocked:
+            pick.state_kcs = 'rejected'
+            for line in pick.kcs_line:
+                if line.state_kcs == 'draft':
+                    line.state = 'reject'
+        return True
+
+    @api.depends('picking_type_id', 'state_kcs')
+    def _compute_is_grp(self):
+        for rec in self:
+            rec.is_grp = False
+            if rec.picking_type_id.code == 'production_in':
+                rec.is_grp = True
 
     def button_assign_commercial(self):
         for pick in self:
@@ -92,7 +155,6 @@ class StockPicking(models.Model):
                     'name': i.id
                 })
             if pick.picking_type_id.code == 'production_out':
-                pick.kcs_line.refresh()
                 pick.load_qc_gip()
 
     def btt_approved(self):
@@ -130,22 +192,22 @@ class StockPicking(models.Model):
                         line.move_id.write({'qty_done': line.product_qty or 0.0})
                         # line.move_id.write({'reserved_uom_qty':line.product_qty or 0.0,'qty_done': line.product_qty or 0.0})
                     # Minh update QC transfer in and transfer out
-                    if line.stack_id:
-                        for pick_in in line.stack_id.move_line_ids.filtered(
-                                lambda x: x.picking_id.picking_type_id.code == 'transfer_in').mapped('picking_id'):
-                            pick_in.kcs_line.write({'state': 'draft'})
-                            pick_in.kcs_line.unlink()
-                            for move_in in pick_in.move_lines:
-                                pick.kcs_line.filtered(lambda x: x.product_id == move_in.product_id).copy(
-                                    {'picking_id': pick_in.id,
-                                     'move_id': move_in.id})
-                            if pick_in.backorder_id:
-                                pick_in.backorder_id.kcs_line.write({'state': 'draft'})
-                                pick_in.backorder_id.kcs_line.unlink()
-                                for move_out in pick_in.backorder_id.move_lines:
-                                    pick.kcs_line.filtered(lambda x: x.product_id == move_out.product_id).copy(
-                                        {'picking_id': pick_in.backorder_id.id,
-                                         'move_id': move_out.id})
+                    # if line.stack_id:
+                    #     for pick_in in line.stack_id.move_line_ids.filtered(
+                    #             lambda x: x.picking_id.picking_type_id.code == 'transfer_in').mapped('picking_id'):
+                    #         pick_in.kcs_line.write({'state': 'draft'})
+                    #         pick_in.kcs_line.unlink()
+                    #         for move_in in pick_in.move_lines:
+                    #             pick.kcs_line.filtered(lambda x: x.product_id == move_in.product_id).copy(
+                    #                 {'picking_id': pick_in.id,
+                    #                  'move_id': move_in.id})
+                    #         if pick_in.backorder_id:
+                    #             pick_in.backorder_id.kcs_line.write({'state': 'draft'})
+                    #             pick_in.backorder_id.kcs_line.unlink()
+                    #             for move_out in pick_in.backorder_id.move_lines:
+                    #                 pick.kcs_line.filtered(lambda x: x.product_id == move_out.product_id).copy(
+                    #                     {'picking_id': pick_in.backorder_id.id,
+                    #                      'move_id': move_out.id})
             #                     line.move_id.write({'product_uom_qty': line.product_qty or 0.0})
             return True
 

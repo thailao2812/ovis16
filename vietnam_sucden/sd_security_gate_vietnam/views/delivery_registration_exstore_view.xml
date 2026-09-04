@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+	<record id="view_security_gate_queue_exstore_tree_inherit_sd_vietnam" model="ir.ui.view">
+		<field name="name">view_security_gate_queue_exstore_tree_inherit_sd_vietnam</field>
+		<field name="model">ned.security.gate.queue</field>
+		<field name="inherit_id" ref="sd_security_gate.view_security_gate_queue_exstore_tree"/>
+		<field name="arch" type="xml">
+			<xpath expr="//field[@name='packing_id']" position="after">
+				<field name="delivery_id" widget="many2many_tags"/>
+			</xpath>
+		</field>
+	</record>
+</odoo>

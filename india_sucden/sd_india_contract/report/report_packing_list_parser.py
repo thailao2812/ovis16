@@ -99,7 +99,7 @@ class Parser(models.AbstractModel):
     def get_total_qty_mt(self, post_shipment):
         if post_shipment:
             total_gross = sum(post_shipment.post_line.mapped('shipped_weight'))
-            total_net = sum(post_shipment.post_line.mapped('shipped_weight'))
+            total_net = sum(post_shipment.post_line.mapped('net_qty'))
             return '{:,.2f}'.format(total_gross/1000), '{:,.2f}'.format(total_net/1000)
 
     def get_total_container(self, post_shipment):

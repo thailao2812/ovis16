@@ -18,7 +18,7 @@ DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S"
 
 
 class APIWeightBridge(http.Controller):
-
+    _inherit = ['mail.thread','mail.activity.mixin']
 
     @http.route('/api/weight/supplier', type='http', methods=['GET'], auth='none', website = True, csrf=False)
     def list_partner(self):
@@ -327,7 +327,6 @@ class APIWeightBridge(http.Controller):
                             'product_id': product_id.id,
                         })
 
-                print(len(picking_id.kcs_line))
                 if len(picking_id.kcs_line) == 0:    
                     for move in picking_id.move_line_ids_without_package.filtered(lambda x: x.product_id == product_id):
                         move.with_user(weight_user_id).update({
@@ -372,9 +371,12 @@ class APIWeightBridge(http.Controller):
                                 'lot_id':stack_id,
                                 'zone_id':zone_id
                             })
-                        picking_id.button_qc_assigned()
+                        picking_id.with_user(weight_user_id).button_qc_assigned()
+
                         gate_id.state ='closed'
                         gate_id.time_out = datetime.now()
+                        # msg = _("'%s' closed ") % (_(gate_id.with_user(weight_user_id).state))
+                        request.env['ned.security.gate.queue'].with_user(weight_user_id).search([('id','=',gate_id.id)]).message_post(body='Approved -> Closed (Status)')
 
                     if packing_id:
                         for move in picking_id.move_line_ids_without_package.filtered(lambda x: x.product_id == product_id):

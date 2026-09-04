@@ -78,10 +78,10 @@
             <xpath expr="//field[@name='contract_line']/tree/field[@name='tax_id']" position="replace">
             </xpath>
             <xpath expr="//field[@name='contract_line']/tree/field[@name='number_of_bags']" position="after">
-                <field name="differential"/>
+                <field name="differential" invisible="1"/>
                 <field name="type" invisible="1"/>
-                <field name="premium_cert" readonly="1" force_save="1"/>
-                <field name="packing_cost" force_save="1" attrs="{'readonly': ['|', ('type', '=', 'export'), ('parent.state', '!=', 'draft')]}"/>
+                <field name="premium_cert" readonly="1" force_save="1" invisible="1"/>
+                <field name="packing_cost" force_save="1" attrs="{'readonly': ['|', ('type', '=', 'export'), ('parent.state', '!=', 'draft')]}" invisible="1"/>
                 <field name="tax_id" readonly="1" force_save="1" widget="many2many_tags"/>
             </xpath>
             <xpath expr="//field[@name='warehouse_id']" position="after">
@@ -103,6 +103,27 @@
             </xpath>
             <xpath expr="//page[@name='nls_nvl']" position="attributes">
                 <attribute name="string">Sale Contract</attribute>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="PSC to SC" name="psc_to_sc">
+                    <field name="psc_to_sc_ids" readonly="1">
+                        <tree>
+                            <field name="s_contract" readonly="1"/>
+                            <field name="sc_date" readonly="1" force_save="1"/>
+                            <field name="partner_id" readonly="1" force_save="1"/>
+                            <field name="product_id" readonly="1" force_save="1"/>
+                            <field name="sc_qty" readonly="1" force_save="1" sum="sc_qty"/>
+                            <field name="allocated_qty" readonly="1" force_save="1" sum="allocated_qty"/>
+                            <field name="balance_qty" readonly="1" force_save="1" sum="balance_qty"/>
+                            <field name="value" readonly="1"/>
+                            <field name="current_allocated" readonly="1" sum="current_allocated"/>
+                            <field name="state_allocate" readonly="1"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+            <xpath expr="//field[@name='pss_type']" position="after">
+                <field name="open_qty" readonly="1"/>
             </xpath>
 
         </field>
@@ -150,9 +171,22 @@
                 <field name="bag_allocated_so"/>
                 <field name="qty_tobe_allocated_so"/>
                 <field name="bag_tobe_allocated_so"/>
+                <field name="qty_allocated_do"/>
+                <field name="bag_allocated_do"/>
+                <field name="qty_tobe_allocated_do"/>
+                <field name="bag_tobe_allocated_do"/>
             </xpath>
             <xpath expr="//field[@name='name']" position="after">
                 <field name="crop_id"/>
+            </xpath>
+            <xpath expr="//field[@name='start_of_ship_period']" position="replace">
+                <field name="date_from"/>
+            </xpath>
+            <xpath expr="//field[@name='end_of_ship_period']" position="replace">
+                <field name="date_to"/>
+            </xpath>
+            <xpath expr="//field[@name='product_id']" position="after">
+                <field name="open_qty"/>
             </xpath>
         </field>
     </record>

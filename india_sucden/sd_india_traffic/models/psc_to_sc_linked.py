@@ -12,14 +12,31 @@ class PscToScLinked(models.Model):
     partner_id = fields.Many2one('res.partner', string='Customer')
     product_id = fields.Many2one('product.product', string='Item name - Item code')
     sc_qty = fields.Float(string='SC Qty')
-    balance_qty = fields.Float(string='Balance Qty')
-    value = fields.Float(string='Value (USD/MT)', related='sale_contract_id.price_unit', store=True)
+    balance_qty = fields.Float(string='Balance Qty', digits=(16, 2))
+    value = fields.Float(string='Value (USD/MT)', compute='compute_value', store=True)
+    allocated_qty = fields.Float(string='Allocated Qty')
     current_allocated = fields.Float(string='Current Allocation')
     state = fields.Selection(related='sale_contract_id.state', string='State')
     state_allocate = fields.Selection([
         ('draft', 'Draft'),
         ('submit', 'Submit')
     ], string='State', default='draft')
+
+    date_allocate = fields.Date(string='Date Allocated')
+
+    @api.depends('s_contract')
+    def compute_value(self):
+        for rec in self:
+            if rec.s_contract:
+                sale_contract = self.env['sale.contract'].search([
+                    ('scontract_id', '=', rec.s_contract.id)
+                ], limit=1)
+                if sale_contract:
+                    rec.value = sale_contract.price_unit
+                else:
+                    rec.value = 0
+            else:
+                rec.value = 0
 
     @api.onchange('s_contract')
     def onchange_s_contract(self):
@@ -29,6 +46,7 @@ class PscToScLinked(models.Model):
             self.product_id = self.s_contract.product_id.id
             self.sc_qty = self.s_contract.total_qty
             self.balance_qty = self.s_contract.open_qty
+            self.allocated_qty = self.s_contract.total_allocated_sc
 
     @api.constrains('current_allocated')
     def _constrains_current_allocated(self):
@@ -40,10 +58,16 @@ class PscToScLinked(models.Model):
     def button_submit(self):
         for rec in self:
             rec.s_contract._compute_total_allocated()
+            if not rec.date_allocate:
+                raise UserError(_("Please input a date allocated."))
             rec.state_allocate = 'submit'
+            rec.onchange_s_contract()
 
     def button_draft(self):
         for rec in self:
             rec.s_contract._compute_total_allocated()
+            if not rec.date_allocate:
+                raise UserError(_("Please input a date allocated."))
             rec.state_allocate = 'draft'
+            rec.onchange_s_contract()
 

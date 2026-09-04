@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_v_fob_weight_franchise_tree_inherit_sucden_vn" model="ir.ui.view">
+            <field name="name">view_v_fob_weight_franchise_tree_inherit_sucden_vn</field>
+            <field name="model">v.fob.weight.franchise</field>
+            <field name="inherit_id" ref="sd_report.view_v_fob_weight_franchise_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//tree" position="replace">
+                    <tree default_order="id desc" editable="top">
+                        <field name = 'warehouse_id' string="Warehouse" readonly = '1'/>
+                        <field name = 'factory_etd' string="Factory ETD" readonly = '1'/>
+                        <field name = 'shipping_id' string="SI Name" readonly = '1'/>
+                        <field name = 'partner_id' string="Customer" readonly = '1'/>
+                        <field name = 'product_id' string="Product" readonly = '1'/>
+                        <field name = 'description' string="Description" readonly = '1'/>
+                        <field name = 'qty_si' string="SI Qty" readonly = '1' sum="qty_si"/>
+                        <field name = 'ex_store_qty' string="Ex-Stored Qty" readonly = '1' sum="ex_store_qty"/>
+                        <field name = 'invoice_qty' string="Invoice Qty" readonly = '1' sum="invoice_qty"/>
+                        <field name = 'franchise_qty' string="Franchise Qty" readonly = '1' sum="franchise_qty"/>
+                        <field name = 'franchise' string="Franchise %" readonly = '1'/>
+                        <field name = 'weight_claim' readonly = '1' sum="weight_claim"/>
+                        <field name = 'amount_claim' readonly = '1' sum="amount_claim"/>
+                        <field name = 'reason' readonly = '1'/>
+                    </tree>
+                </xpath>
+            </field>
+    </record>
+
+
+    <record id="search_v_fob_weight_franchise_inherit_sucden_vn" model="ir.ui.view">
+            <field name="name">search_v_fob_weight_franchise_inherit_sucden_vn</field>
+            <field name="model">v.fob.weight.franchise</field>
+            <field name="inherit_id" ref="sd_report.search_v_fob_weight_franchise"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='si_name']" position="replace">
+                    <field name="shipping_id"/>
+                </xpath>
+                <xpath expr="//field[@name='customer']" position="replace">
+                    <field name="partner_id"/>
+                </xpath>
+                <xpath expr="//field[@name='product_name']" position="replace">
+                    <field name="product_id"/>
+                    <field name="warehouse_id"/>
+                    <field name="description"/>
+                </xpath>
+                <xpath expr="//filter[@name='filter_si_name']" position="replace">
+                    <filter string="SI" domain="[]" name="filter_si_name" context="{'group_by':'shipping_id'}"/>
+                </xpath>
+                <xpath expr="//filter[@name='filter_customer']" position="replace">
+                    <filter string="Customer" domain="[]" name="filter_partner_id" context="{'group_by':'partner_id'}"/>
+                </xpath>
+                <xpath expr="//filter[@name='filter_product_name']" position="replace">
+                    <filter string="Product" domain="[]" name="filter_product_id" context="{'group_by':'product_id'}"/>
+                    <filter string="Warehouse" domain="[]" name="filter_warehouse_id" context="{'group_by':'warehouse_id'}"/>
+                </xpath>
+            </field>
+    </record>
+</odoo>

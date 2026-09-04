@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from string import digits
+
 from odoo import api, fields, models, tools, _, SUPERUSER_ID
 from odoo.exceptions import ValidationError, UserError
 
@@ -36,8 +38,8 @@ class SaleContractIndia(models.Model):
     p_date = fields.Date(string='P Date')
     product_id = fields.Many2one('product.product', related='line_ids.product_id', store=True)
     item_group_id = fields.Many2one('product.group', related='line_ids.item_group_id', store=True)
-    total_quantity = fields.Float(string='PSC Qty(Kg)', compute='_compute_quantity', store=True)
-    allocated_quantity = fields.Float(string='Allocated Qty(Kg)', compute="_compute_transaction_qty", store=True)
+    total_quantity = fields.Float(string='PSC Qty(Kg)', compute='_compute_quantity', store=True, digits=(16, 2))
+    allocated_quantity = fields.Float(string='Allocated Qty(Kg)', compute="_compute_transaction_qty", store=True, digits=(16, 2))
     balance_quantity = fields.Float(string='Balance Qty(Kg)', compute="_compute_transaction_qty", store=True)
     allocated_quantity_sc = fields.Float(string='Allocated Qty(Kg)', compute="_compute_transaction_sc_qty", store=True)
     balance_quantity_sc = fields.Float(string='Balance Qty(Kg)', compute="_compute_transaction_sc_qty", store=True)
@@ -54,6 +56,14 @@ class SaleContractIndia(models.Model):
     packing_id = fields.Many2one('ned.packing', string='Packing Nature', related='line_ids.packing_id', store=True)
     currency_id = fields.Many2one('res.currency', string='Currency', related='line_ids.currency_id', store=True)
     price_uom = fields.Many2one('uom.uom', string='UOM', related='line_ids.price_uom', store=True)
+    current_allocate_qty = fields.Float(string='Current Allocate', compute='_compute_allocate_qty', store=True, digits=(16, 2))
+
+    @api.depends('line_purchase_ids', 'line_purchase_ids.current_allocated', 'line_purchase_ids.balance_qty', 'line_purchase_ids.total_allocated')
+    def _compute_allocate_qty(self):
+        for rec in self:
+            rec.current_allocate_qty = sum(rec.line_purchase_ids.mapped('current_allocated'))
+            # if rec.current_allocate_qty > rec.total_quantity:
+            #     raise UserError(_("You cannot allocate more Total Qty than you have. %s") % rec.p_number)
 
     @api.depends('p_number', 'p_date')
     def compute_check_state_p(self):
@@ -76,6 +86,8 @@ class SaleContractIndia(models.Model):
 
     def button_approve_allocation(self):
         for record in self:
+            if record.current_allocate_qty > record.total_quantity:
+                raise UserError(_("You cannot allocate more Total Qty than you have. %s") % record.p_number)
             record.state = 'approve_allocation'
             for line in record.line_purchase_ids:
                 line.purchase_contract_id._compute_allocated_qty()
@@ -101,20 +113,25 @@ class SaleContractIndia(models.Model):
                 street += self.partner_id.state_id.name
             self.partner_address = street
 
-    @api.depends('line_purchase_ids', 'line_purchase_ids.current_allocated', 'total_quantity')
+    @api.depends('line_purchase_ids', 'line_purchase_ids.current_allocated', 'total_quantity', 'state',
+                 'line_purchase_ids.state', 'current_allocate_qty')
     def _compute_transaction_qty(self):
         for record in self:
             record.allocated_quantity = sum(i.current_allocated for i in record.line_purchase_ids.filtered(
                 lambda x: x.state == 'approve_allocation'))
-            record.balance_quantity = record.total_quantity - record.allocated_quantity
+            record.balance_quantity = round(record.total_quantity, 2) - round(record.current_allocate_qty, 2)
+            if record.balance_quantity < 0:
+                raise UserError(_("You cannot allocate more than PSC Qty, check again!"))
 
     @api.depends('sale_contract_factory_ids', 'sale_contract_factory_ids.state_allocate',
-                 'sale_contract_factory_ids.current_allocated')
+                 'sale_contract_factory_ids.current_allocated', 'total_quantity')
     def _compute_transaction_sc_qty(self):
         for record in self:
             record.allocated_quantity_sc = sum(i.current_allocated for i in record.sale_contract_factory_ids.filtered(
                 lambda x: x.state_allocate == 'submit'))
             record.balance_quantity_sc = record.total_quantity - record.allocated_quantity_sc
+            if record.balance_quantity_sc < 0:
+                raise UserError(_("You cannot allocate more than PSC Qty, check again!"))
 
     @api.depends('line_ids', 'line_ids.quantity')
     def _compute_quantity(self):
@@ -138,11 +155,11 @@ class SaleContractIndia(models.Model):
             raise UserError(_("You have to input P Number and P Date!! Not leave it empty!!"))
         return res
 
-    @api.model
-    def create(self, vals):
-        vals['name'] = self.env['ir.sequence'].next_by_code('sale.contract.india')
-        result = super(SaleContractIndia, self).create(vals)
-        return result
+    # @api.model
+    # def create(self, vals):
+    #     vals['name'] = self.env['ir.sequence'].next_by_code('sale.contract.india')
+    #     result = super(SaleContractIndia, self).create(vals)
+    #     return result
 
     @api.model
     def name_search(self, name, args=None, operator='ilike', limit=100):
@@ -168,8 +185,39 @@ class SaleContractIndia(models.Model):
             if self.env.context.get('search_sale_contract'):
                 res.append((record.id, record.name))
             else:
-                res.append((record.id, record.p_number))
+                if record.p_number:
+                    res.append((record.id, record.p_number))
+                else:
+                    res.append((record.id, record.name))
         return res
+
+    def open_wizard_select_pc_date_range(self):
+        return {
+            'name': _('Filter Purchase Contract'),
+            'res_model': 'wizard.select.date.range.purchase.contract',
+            'view_mode': 'form',
+            # 'domain':self.request_payment_ids.ids,
+            'context': {
+                'active_model': 'sale.contract.india',
+                'res_id': self.id,
+            },
+            'target': 'new',
+            'type': 'ir.actions.act_window',
+        }
+
+    def open_wizard_select_sc_date_range(self):
+        return {
+            'name': _('Filter S Contract'),
+            'res_model': 'wizard.select.date.range.s.contract',
+            'view_mode': 'form',
+            # 'domain':self.request_payment_ids.ids,
+            'context': {
+                'active_model': 'sale.contract.india',
+                'res_id': self.id,
+            },
+            'target': 'new',
+            'type': 'ir.actions.act_window',
+        }
 
 
 class SaleContractLineIndia(models.Model):

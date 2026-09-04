@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_mrp_operation_result_scale_line_search" model="ir.ui.view">
+            <field name="name">mrp.operation.result.scale.line.search</field>
+            <field name="model">mrp.operation.result.scale</field>
+            <field name="arch" type="xml">
+                <search string="MRP Operation Result Scale Line search">
+                    <!-- <field name="production_id" string="Batch No."/> -->
+                    <field name="batch_name" string="Batch No."/>
+                    <field name="form_name" string="GIP GRP"/>
+                    <field name="product_id" string="Product"/>
+                    <field name="usr_api_create" string="Create by"/>
+                    
+                    <group expand="1" string="Group By...">
+                        <filter name="non_zero" string="Remove None Batch" domain="[('batch_name','=','')]" />
+                        <filter string="Batch No." name="batch_name" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'batch_name'}"/>
+                        <filter string="GIP GRP" name="form_name" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'form_name'}"/>
+                        <filter string="Create by" name="usr_api_create" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'usr_api_create'}"/>
+                    </group>
+                    
+               </search>
+            </field>
+        </record>
+    	
+    	<record id="view_mrp_operation_result_scale_line_tree" model="ir.ui.view">
+            <field name="name">mrp.operation.result.scale.line.tree</field>
+            <field name="model">mrp.operation.result.scale</field>
+            <field name="arch" type="xml">
+                <tree string="MRP Operation Result Scale Line" default_order="batch_name desc, form_name desc">
+                    <field name="batch_name"/>
+                    <field name="form_name"/>
+                    <field name="product_id"/>
+                    <field name="lot_id"/>
+                    <field name="packing_id"/>
+                    <field name="weight_scale" string="Gross Weight" sum="weight_scale" />
+                    <field name="bag_no" sum="bag_no" />
+                    <field name="tare_weight" sum="tare_weight"/>
+                    <field name="lining_bag"/>
+                    <field name="packing_branch_id"/>
+                    <field name="pallet_weight" sum="pallet_weight"/>
+                    <field name="net_weight" sum="net_weight"/>
+                    <field name="bag_code"/>
+                    <field name="usr_api_create"/>
+                    <field name="create_date"/>
+                    <field name="state_scale"/>
+                    <field name="scale_no"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id="action_mrp_operation_result_scale_line" model="ir.actions.act_window">
+            <field name="name">MRP Operation Result Scale Line</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">mrp.operation.result.scale</field>
+            <field name="view_mode">tree</field>
+            <field name="search_view_id" ref="view_mrp_operation_result_scale_line_search"/>
+            <field name="context">{"search_default_non_zero":True,'search_by_field_date': ['create_date']}</field>
+        </record>
+    </data>
+</odoo>

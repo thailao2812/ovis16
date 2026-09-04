@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="vpicktree_inherit_add_allocated_total_qty_adding_data_request_payment" model="ir.ui.view">
+            <field name="name">vpicktree_inherit_add_allocated_total_qty_adding_data_request_payment</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="sd_inventory.vpicktree_inherit_add_allocated_total_qty"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='state']" position="before">
+                    <field name="allocated_request_payment"/>
+                    <field name="remain_request_payment"/>
+                </xpath>
+            </field>
+    </record>
+
+    <record id="view_picking_inherit_sucden_form_inherit_request_payment" model="ir.ui.view">
+            <field name="name">view_picking_inherit_sucden_form_inherit_request_payment</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="sd_inventory.view_picking_inherit_sucden_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="allocated_request_payment" invisible="1"/>
+                </xpath>
+                <xpath expr="//field[@name='partner_id']" position="attributes">
+                    <attribute name="attrs">{'readonly': ['|', ('state', 'in', ['done', 'cancel']), ('allocated_request_payment', '>', 0)]}</attribute>
+                </xpath>
+            </field>
+    </record>
+</odoo>

@@ -224,7 +224,7 @@ class VShipments(models.Model):
                    JOIN delivery_order_line dol ON dor.id = dol.delivery_id
                    LEFT JOIN stock_picking sp ON dor.picking_id = sp.id
                    LEFT JOIN ( SELECT stock_move_line.picking_id,
-                      sum(stock_move_line.qty_done) AS gdn_quantity
+                      sum(stock_move_line.init_qty) AS gdn_quantity
                      FROM stock_move_line
                     GROUP BY stock_move_line.picking_id) sm ON dor.picking_id = sm.picking_id
                  where sp.state = 'done'

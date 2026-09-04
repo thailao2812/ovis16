@@ -16,3 +16,6 @@ class StockPicking(models.Model):
             if record.picking_type_id.code == 'transfer_out':
                 transfer_order.picking_id = record.id
         return res
+
+    def print_output_return(self):
+        return self.env.ref('sd_india_contract.purchase_contract_return_goods').report_action(self)

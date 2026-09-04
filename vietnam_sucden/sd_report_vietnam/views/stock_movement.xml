@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_report_ned_stock_stack_tree_inherit_sucden_vn" model="ir.ui.view">
+            <field name="name">view_report_ned_stock_stack_tree_inherit_sucden_vn</field>
+            <field name="model">stock.lot</field>
+            <field name="inherit_id" ref="sd_quality.view_report_ned_stock_stack_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='warehouse_id']" position="after">
+                    <field name="area_name_link" readonly="1"/>
+                </xpath>
+            </field>
+    </record>
+    <record id="view_report_ned_stock_stack_search_inherit_sucden_vn" model="ir.ui.view">
+            <field name="name">view_report_ned_stock_stack_search_inherit_sucden_vn</field>
+            <field name="model">stock.lot</field>
+            <field name="inherit_id" ref="sd_quality.view_report_ned_stock_stack_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='group_certificate']" position="after">
+                    <filter name="group_area_name_link" string="Area" domain="[]" context="{'group_by':'area_name_link'}"/>
+                </xpath>
+            </field>
+    </record>
+</odoo>

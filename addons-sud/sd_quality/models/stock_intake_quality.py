@@ -107,11 +107,13 @@ class QCIntakeQuality(models.Model):
                 LEFT JOIN s_contract scon on scon.id = sc.p_contract_id
                 LEFT JOIN stock_zone sz ON sz.id = sc.zone_id
                 JOIN stock_picking sp ON sc.id = sp.lot_id
+                JOIN stock_picking_type spt ON sp.picking_type_id = spt.id
                 LEFT JOIN stock_move_line sm ON sp.id = sm.picking_id
                 LEFT JOIN ned_packing np ON sm.packing_id = np.id
                 JOIN request_kcs_line rkl ON sp.id = rkl.picking_id
                 JOIN product_product pp ON sm.product_id = pp.id
                 LEFT JOIN res_partner rp ON sp.partner_id = rp.id
                 LEFT JOIN res_district rd ON sp.districts_id=rd.id
-                JOIN res_country_state rcs ON rd.state_id = rcs.id;
+                LEFT JOIN res_country_state rcs ON rd.state_id = rcs.id
+                WHERE spt.code = 'incoming';
             """)

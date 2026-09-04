@@ -5,7 +5,7 @@
     'version' : '16.0.1.0',
     'author': 'Sucden Viet Nam',
     'website': 'https://www.sucden.com',
-    'depends': ['base', 'sd_inventory'],
+    'depends': ['base', 'sd_mrp'],
     'description': """
     """,
     'data': [
@@ -23,7 +23,9 @@
         'views/building_to_building.xml',
         'views/import_stack_view.xml',
         'views/stock_zone_view.xml',
+        'views/stock_move_line_view.xml',
         'views/request_material_view.xml',
+        'views/menu.xml'
     ],
     'installable': True,
     'auto_install': False,

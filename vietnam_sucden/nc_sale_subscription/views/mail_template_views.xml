@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="email_template_view_form_follower" model="ir.ui.view">
+        <field name="name">email.template.form.view.follower.inherit</field>
+        <field name="model">mail.template</field>
+        <field name="inherit_id" ref="mail.email_template_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='use_default_to']" position="after">
+                <field name="to_followers"/>
+                <field name="to_assigns"/>
+            </xpath>
+            <xpath expr="//field[@name='email_to']" position="replace">
+                <field  name="email_to" 
+                        attrs="{'invisible': ['|', '|', ('use_default_to', '=', True), ('to_followers', '=', True), ('to_assigns', '=', True)]}" 
+                        placeholder="Comma-separated recipient addresses"/>
+            </xpath>
+            <xpath expr="//field[@name='partner_to']" position="replace">
+                <field  name="partner_to" 
+                        attrs="{'invisible': ['|', '|', ('use_default_to', '=', True), ('to_followers', '=', True), ('to_assigns', '=', True)]}" 
+                        placeholder="Comma-separated ids of recipient partners"/>
+            </xpath>
+            <xpath expr="//field[@name='email_cc']" position="replace">
+                <field  name="email_cc" 
+                        attrs="{'invisible': ['|', '|', ('use_default_to', '=', True), ('to_followers', '=', True), ('to_assigns', '=', True)]}" 
+                        placeholder="Comma-separated carbon copy recipients addresses"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

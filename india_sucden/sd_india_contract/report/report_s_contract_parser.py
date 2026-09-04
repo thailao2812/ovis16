@@ -11,8 +11,7 @@ DATE_FORMAT = "%d-%m-%Y"
 from odoo import api, fields, models, SUPERUSER_ID, _
 from odoo.addons.report_aeroo.report_parser import Parser
 from babel.dates import format_date, format_datetime, format_time
-
-
+from odoo.tools.misc import formatLang
 
 
 class Parser(models.AbstractModel):
@@ -46,9 +45,34 @@ class Parser(models.AbstractModel):
             'get_shipt_weights':self.get_shipt_weights,
             'get_container_status':self.get_container_status,
             'get_string_selection': self.get_string_selection,
-            'get_data_document_contract': self.get_data_document_contract
+            'get_data_document_contract': self.get_data_document_contract,
+            'get_psc_name': self.get_psc_name,
+            'get_psc_date': self.get_psc_date,
+            'get_price_sale_contract': self.get_price_sale_contract
         })
         return localcontext
+
+    def get_price_sale_contract(self, scontract):
+        if scontract:
+            if scontract.contract_ids:
+                price = sum(scontract.contract_ids.mapped('price_unit')) / len(scontract.contract_ids)
+                return price
+            else:
+                return 0
+
+    def get_psc_name(self, scontract):
+        if scontract:
+            if scontract.psc_to_sc_ids:
+                psc_name = '/'.join(i.p_number for i in scontract.psc_to_sc_ids.mapped('sale_contract_id'))
+                return psc_name
+            return ''
+
+    def get_psc_date(self, scontract):
+        if scontract:
+            if scontract.psc_to_sc_ids:
+                psc_name = ';'.join(self.get_date(i.p_date) for i in scontract.psc_to_sc_ids.mapped('sale_contract_id'))
+                return psc_name
+            return ''
     
     def get_account_holder(self,partner):
         if not self.account_holder:

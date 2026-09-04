@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_post_shipment_form_inherit_adding_ship_to" model="ir.ui.view">
+        <field name="name">view_post_shipment_form_inherit_adding_ship_to</field>
+        <field name="model">post.shipment</field>
+        <field name="inherit_id" ref="sd_sale_contract.view_post_shipment_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='shipping_id']" position="after">
+                <field name="partner_id"/>
+                <field name="address" readonly="1" force_save="1"/>
+                <field name="ship_to_id"/>
+                <field name="ship_to_address"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

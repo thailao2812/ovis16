@@ -115,7 +115,8 @@ class WizardImportProductionResult(models.Model):
                     'immature_gram': j.immature,
                     'sampler': j.sampler,
                     'stone_count': j.stone,
-                    'stick_count': j.stick 
+                    'stick_count': j.stick,
+                    'check_deduction': True
                     
                     #Bulk Density  -> chưa thây có
             })

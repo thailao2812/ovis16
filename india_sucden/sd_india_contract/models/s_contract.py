@@ -10,13 +10,20 @@ class SContract(models.Model):
     _inherit = "s.contract"
 
     state = fields.Selection(
-        [('draft', 'New'), ('submit', 'Submit'), ('approved', 'Approved'), ('done', 'Done'), ('cancel', 'Cancelled')],
+        [('draft', 'New'), ('submit', 'Submit'), ('approved', 'Approved'), ('done', 'Close'), ('cancel', 'Cancelled')],
         string='Status', readonly=True, copy=False, index=True, default='draft')
 
     status = fields.Selection(selection='_get_new_status_type', string='Shipped From')
 
     warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse', required=False, readonly=True,
                                    states={'draft': [('readonly', False)]}, default=False)
+
+    contract_line = fields.One2many('s.contract.line', 'contract_id', string='Contract Lines', readonly=False,
+                                    states={}, copy=True)
+    price_unit = fields.Float(string='Price Unit', related='contract_line.price_unit', store=True)
+
+    # Field for PSS Management
+    pss_management_ids = fields.One2many('pss.management', 's_contract_id')
 
     @api.model
     def _default_document_contract(self):
@@ -29,6 +36,28 @@ class SContract(models.Model):
 
     date_from = fields.Date(string='Date From')
     date_to = fields.Date(string='Date To')
+
+    pss_status = fields.Selection([
+        ('pending', 'Pending'),
+        ('sent', 'Sent'),
+        ('approved', 'Approved'),
+        ('rejected', 'Rejected'),
+        ('none', '')
+    ], string='PSS Status', compute='_compute_pss_status', store=True)
+
+    @api.depends('pss_management_ids', 'pss_management_ids.pss_status', 'pss_management_ids.approve_date')
+    def _compute_pss_status(self):
+        for rec in self:
+            if rec.pss_management_ids:
+                valid_records = rec.pss_management_ids.filtered(lambda x: x.approve_date)
+                if valid_records:
+                    pss_management = max(valid_records, key=lambda x: x.approve_date)
+                    rec.pss_status = pss_management.pss_status
+                else:
+                    rec.pss_status = 'none'
+
+            else:
+                rec.pss_status = 'none'
 
     @api.model
     def _get_new_status_type(self):
@@ -49,6 +78,14 @@ class SContract(models.Model):
         for record in self:
             record.state = 'draft'
 
+    def action_cancel(self):
+        for record in self:
+            record.state = 'cancel'
+
+    def action_done(self):
+        for record in self:
+            record.state = 'done'
+
     @api.constrains('name')
     def _check_constraint_name(self):
         for record in self:
@@ -65,3 +102,4 @@ class SContractLine(models.Model):
     _inherit = 's.contract.line'
 
     number_of_bags = fields.Float(string="Number of bags", digits=(16, 0))
+    price_unit = fields.Float('Unit Price', required=True, default=0.0, digits=(16, 4))

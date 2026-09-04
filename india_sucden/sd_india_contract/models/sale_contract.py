@@ -48,3 +48,13 @@ class SaleContract(models.Model):
                 'amount_total': amount_untaxed + amount_tax,
                 'amount_total_india': self.custom_round(amount_untaxed + amount_tax),
             })
+
+    def button_cancel(self):
+        for rec in self:
+            for i in rec.delivery_ids:
+                if i.state != 'cancel':
+                    raise UserError(_("You have to cancel DO first if you want to cancel Sale Contract"))
+            for inv in rec.invoice_ids:
+                if inv.state != 'cancel':
+                    raise UserError(_("You have to cancel Invoice first if you want to cancel Sale Contract"))
+            rec.status = 'cancel'

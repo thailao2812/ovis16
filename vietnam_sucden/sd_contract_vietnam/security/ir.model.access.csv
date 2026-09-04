@@ -10,3 +10,17 @@ access_average_price_contract,access_average_price_contract,model_average_price_
 access_delivery_ktn,access_delivery_ktn,model_delivery_katoen,base.group_user,1,1,1,1
 
 access_open_qty_npe,access_open_qty_npe,model_open_qty_npe,base.group_user,1,1,1,1
+
+access_purchase_invoice_line,access_purchase_invoice_line,model_purchase_invoice_line,base.group_user,1,1,1,1
+access_wizard_force_close_npe,access_wizard_force_close_npe,model_force_close_npe,base.group_user,1,1,1,1
+access_offset_debt,access_offset_debt,model_offset_debt,base.group_user,1,1,1,1
+
+access_wizard_generate_bank_account,access_wizard_generate_bank_account,model_wizard_generate_bank_account,base.group_user,1,1,1,1
+
+access_wizard_create_invoice,access_wizard_create_invoice,model_wizard_create_invoice,base.group_user,1,1,1,1
+access_purchase_contract_invoice,access_purchase_contract_invoice,model_purchase_contract_invoice,base.group_user,1,1,1,1
+access_invoice_purchase_line,access_invoice_purchase_line,model_invoice_purchase_line,base.group_user,1,1,1,1
+
+access_stock_picking_allocated_wizard,access_stock_picking_allocated_wizard,model_stock_picking_allocated_wizard,base.group_user,1,1,1,1
+access_stock_picking_allocated,access_stock_picking_allocated,model_stock_picking_allocated,base.group_user,1,1,1,1
+access_mapping_picking_invoice,access_mapping_picking_invoice,model_mapping_picking_invoice,base.group_user,1,1,1,1

@@ -32,7 +32,7 @@ class RequestPayment(models.Model):
     use_payment_for = fields.Selection([
         ('advance', 'Advance Payment'),
         ('payment', 'Against Delivery')
-    ], string='Type Payment', default=None)
+    ], string='Type Payment')
     payment_refunded = fields.Float(string='Refunded', compute='_compute_refunded', digits=(12, 0), store=True)
     open_advance = fields.Float(string='Open Advance', compute='_compute_refunded', digits=(12, 0), store=True)
     source_document_contract = fields.Char(string='Source Document', related='purchase_contract_id.origin', store=True)
@@ -43,6 +43,32 @@ class RequestPayment(models.Model):
     final_request_payment = fields.Float(string='Net Payment', compute='compute_net_payment', store=True)
     financial_year_id = fields.Many2one('financial.year', string='Financial year')
     date_approve = fields.Date(string='Date Approve')
+    purchase_date = fields.Date(string='Purchase Date')
+
+    purchase_quantity = fields.Float(string='Purchase Quantity')
+    interest_amount = fields.Float(string='Interest Amount', compute='compute_interest_amount', store=True)
+
+    price_per_bag = fields.Float(string='Price per Bag', digits=(12, 2), compute='compute_price_per_bag', store=True)
+
+    @api.depends('purchase_contract_id.type', 'state', 'purchase_contract_id', 'use_payment_for')
+    def compute_price_per_bag(self):
+        for rec in self:
+            if rec.purchase_contract_id.type == 'purchase':
+                rec.price_per_bag = rec.purchase_contract_id.relation_price_unit * 50
+            else:
+                rec.price_per_bag = 0
+
+    # @api.constrains('purchase_quantity')
+    # def constrains_purchase_quantity(self):
+    #     for rec in self:
+    #         if rec.purchase_quantity <= 0:
+    #             raise UserError('Purchase Quantity must be greater than 0')
+
+    @api.depends('purchase_contract_id.interest_amount', 'purchase_contract_id.state', 'state',
+                 'purchase_contract_id.pay_allocation_ids', 'purchase_contract_id.pay_allocation_ids.total_interest_pay')
+    def compute_interest_amount(self):
+        for rec in self:
+            rec.interest_amount = rec.purchase_contract_id.interest_amount
 
     @api.depends('request_amount', 'tds_amount', 'tds_assessable_value', 'financial_year_id')
     def compute_net_payment(self):
@@ -65,6 +91,8 @@ class RequestPayment(models.Model):
                     rec.tds_amount = self.custom_round(rec.tds_assessable_value * (financial_year.percent_for_pan / 100))
                 else:
                     rec.tds_amount = self.custom_round(rec.tds_assessable_value * (financial_year.percent_unpan / 100))
+            if rec.partner_id.with_declaration:
+                rec.tds_amount = 0
 
     @api.model
     def _get_new_state(self):
@@ -76,6 +104,17 @@ class RequestPayment(models.Model):
         ('approved_director', 'Approve by Director'),
         ('paid', 'Paid')
     ]
+
+    @api.model
+    def default_get(self, fields):
+        res = super(RequestPayment, self).default_get(fields)
+        if self._context.get('purchase_contract_id'):
+            contract_id = self.env['purchase.contract'].browse(self._context.get('purchase_contract_id'))
+            if contract_id.type == 'purchase':
+                res['use_payment_for'] = 'payment'
+            if contract_id.type == 'consign':
+                res['use_payment_for'] = 'advance'
+        return res
 
     @api.depends('payment_quantity', 'price')
     def compute_invoice_amount(self):
@@ -124,10 +163,69 @@ class RequestPayment(models.Model):
             'type': 'ir.actions.act_window',
         }
 
+    def _get_total_purchase_amount(self, financial_year):
+        """Calculate total purchase amount including current and other requests."""
+        domain = [
+            ('id', '!=', self.id),
+            ('partner_id', '=', self.partner_id.id),
+            ('financial_year_id', '=', financial_year.id),
+        ]
+        other_requests = self.env['request.payment'].search(domain)
+
+        # Sum amounts from other requests
+        total_other_amount = sum(other_requests.mapped('request_amount'))
+        total_other_interest = sum(other_requests.mapped('interest_amount'))
+
+        # Add current request amounts
+        total_amount = total_other_amount + total_other_interest + self.request_amount + self.interest_amount
+        return total_amount
+
+    def _is_threshold_exceeded(self, total_amount, threshold_limit):
+        """Check if total purchase amount exceeds threshold."""
+        return total_amount > threshold_limit
+
+    def _validate_tds_assessable_value(self):
+        """Validate TDS assessable value when threshold is exceeded."""
+        if not self.tds_assessable_value or self.tds_assessable_value <= 0:
+            raise UserError(_(
+                "TDS assessable value must be greater than 0 when threshold is exceeded."
+            ))
+
+    def _check_threshold_logic(self):
+        """Check threshold logic and update state accordingly."""
+        financial_year = self.financial_year_id
+        threshold_limit = financial_year.max_value
+
+        # Calculate total purchase amount
+        total_purchase = self._get_total_purchase_amount(financial_year)
+
+        # Approve if within threshold
+        if not self._is_threshold_exceeded(total_purchase, threshold_limit):
+            self.state = 'approved'
+            return
+
+        # Approve if partner has declaration
+        if self.partner_id.with_declaration:
+            self.state = 'approved'
+            return
+
+        # Validate TDS assessable value when threshold exceeded
+        self._validate_tds_assessable_value()
+
     def btt_approved(self):
+        """Approve button action with validation."""
+        # Validate contract state
         if self.purchase_contract_id.state != 'approved':
-            raise UserError(_("You cannot approve this request payment when Contract not in Approve State, please check again!!!"))
+            raise UserError(_(
+                "Cannot approve this request payment. "
+                "The purchase contract must be in 'Approved' state."
+            ))
+
+        # Set approval date and check threshold logic
         self.date_approve = datetime.now()
+        self._check_threshold_logic()
+
+        # Update state to approved
         self.state = 'approved'
 
     @api.depends('request_payment_ids', 'request_amount', 'advance_payment_quantity', 'tds_amount', 'date_approve')
@@ -161,7 +259,5 @@ class RequestPayment(models.Model):
                 if request.total_remain == request.tds_amount:
                     request.state = 'paid'
 
-
-
-
-
+    def print_paymentrequest_invoice(self):
+        return self.env.ref('sd_india_contract.payment_request_invoice_india_report').report_action(self)

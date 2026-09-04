@@ -94,7 +94,7 @@ class StackShortInfo(Datamodel):
     init_qty = fields.Float(load_default=0.0)
     zone_id = fields.Integer()
     zone_name = fields.String()
-    create_date = fields.DateTime()
+    create_date = fields.String()
     product_id = fields.Int()
 
 class UserShortInfo(Datamodel):
@@ -135,7 +135,7 @@ class MasterDataApiService(Component):
         auth="api_key",
     )
     def partners_list(self):
-        partners = self.env["res.partner"].search([("is_supplier_coffee", "=", "True"),("is_customer_coffee", "=", "True"),("shortname", "!=", False)])
+        partners = self.env["res.partner"].search(["|",("is_supplier_coffee", "=", "True"),("is_customer_coffee", "=", "True"),("shortname", "!=", False)])
         return [{"id": p.id, "name": p.name, "short_name": p.shortname} for p in partners]
 
     @restapi.method(
@@ -288,7 +288,9 @@ class MasterDataApiService(Component):
 
     def _get_district_schema(self):
         return {"id": {"type": "integer", "required": True},
-                "name": {"type": "string", "required": True}}
+                "name": {"type": "string", "required": True},
+                "state_id": {},
+                "state_name": {}}
 
     @restapi.method(
         [(["/res_district/list"], "GET")],
@@ -296,8 +298,8 @@ class MasterDataApiService(Component):
         auth="api_key",
     )
     def district_list(self):
-        districts = self.env["res.district"].search([("active", "=", True)])
-        return [{"id": p.id, "name": p.name} for p in districts]
+        districts = self.env["res.district"].search([("active", "=", True),("state_id", "!=", False)])
+        return [{"id": p.id, "name": p.name, "state_id": p.state_id.id, "state_name": p.state_id.name} for p in districts]
     
     @restapi.method(
         [(["/res_district/search"], "GET")],
@@ -461,3 +463,39 @@ class MasterDataApiService(Component):
         for p in self.env["res.users"].search(domain):
             res.append(UserShortInfo(id=p.id, name=p.partner_id.name, email=p.login))
         return res
+
+### SQL EXECUTE QUERY ###
+    def _input_execute_query_schema(self):
+        return {"exe_query": {"type": "string"}}
+        
+    def _output_execute_query_schema(self):
+        return {
+                'status_code': {"type": "string"},
+                'message': {"type": "string"},
+                'data': {"type": "list", "schema": {"type": "dict"}, "required": False}
+                }
+
+    @restapi.method(
+        [(["/execute_query"], "POST")],
+        input_param=restapi.CerberusValidator("_input_execute_query_schema"),
+        output_param=restapi.CerberusValidator("_output_execute_query_schema"),
+        auth="api_key",
+    )
+
+    def execute_query(self, **params):
+        exe_query = params.get('exe_query')
+        records = request.cr.execute(exe_query)
+        result = request.env.cr.dictfetchall()
+        if not result:
+            mess = {
+                    'status_code': "SUD23-204",
+                    'message': 'Record does not exist.',
+                    'data': []
+                    }
+            return mess
+        else:
+            return {
+                'status_code': "SUD23-200",
+                'message': 'Success',
+                'data': result
+            }

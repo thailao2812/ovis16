@@ -5,25 +5,59 @@
             <field name="model">contract.price.purchase</field>
             <field name="arch" type="xml">
                 <tree string="Contract Price Purchase" editable="top" default_order="id desc">
+                	<field name="contract_id" required="1" domain="[('type', '=', 'purchase'), ('state', '!=', 'cancel')]"/>
+                	<field name="state_contract" string="Contract State" widget="badge"/>
                 	<field name="product_id" required="1"/>
                 	<field name="date_price" required="1"/>
                 	<field name="exchange"/>
-                	<field name="exchange_rate"/>
+                	<field name="trade_month"/>
+                	<field name="gross_qty"/>
+                	<field name="total_allocated_qty"/>
+                	<field name="currency_id" invisible="1"/>
+                	<field name="open_qty"/>
+                	<field name="outturn_qty"/>
+                	<field name="open_p_contract"/>
                 	<field name="market_price"/>
+                	<field name="exchange_rate"/>
                 	<field name="fob"/>
                 	<field name="a_differential"/>
                 	<field name="ab_differential"/>
-                	<field name="grade_differential"/>
+                	<field name="outturn"/>
+                	<field name="a_ab_price"/>
+                	<field name="validate"/>
                 	<field name="partner_id" required="1"/>
-                	<field name="contract_number" required="1"/>
                 	<field name="quantity"/>
                 	<field name="certificate_id"/>
                 	<field name="price"/>
                 	<field name="premium"/>
                 	<field name="total"/>
+                	<field name="hide_allocation"/>
+                	<field name="state" widget="badge" readonly="1"/>
+                	<button name="action_approve" string="Approve" type="object" states="draft"/>
+                	<button name="action_set_to_draft" string="Set To Draft" type="object" states="approve"/>
                 </tree>
             </field>
         </record>
+
+	<record id="view_contract_price_purchase_search" model="ir.ui.view">
+        <field name="name">view_contract_price_purchase_search</field>
+        <field name="model">contract.price.purchase</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="contract_id"/>
+                <field name="product_id"/>
+                <field name="exchange"/>
+                <field name="partner_id"/>
+                <separator/>
+                <group expand="0" string="Group By">
+                   <filter string="Contract" name="contract_id" context="{'group_by': 'contract_id'}"/>
+                   <filter string="Product" name="product_id" context="{'group_by': 'product_id'}"/>
+                   <filter string="Exchange" name="exchange" context="{'group_by': 'exchange'}"/>
+                   <filter string="Partner" name="partner_id" context="{'group_by': 'partner_id'}"/>
+               </group>
+            </search>
+        </field>
+    </record>
 
     <record id="action_contract_price_purchase" model="ir.actions.act_window">
             <field name="name">Contract Price Purchase</field>

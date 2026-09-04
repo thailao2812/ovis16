@@ -39,20 +39,19 @@ class MrpProduction(models.Model):
             self.notes = self.bom_id.detail or ''
     
     def action_to_draft(self):
-        if len(self.move_line_finished_good_ids) ==0 and len(self.move_line_material_ids) ==0:
-            self.state = 'draft'
-        else:
-            raise UserError(_('This Manufacturing Order have had GIP or GRP already. You can not set to draft!!!'))
-            
-    
+        # if len(self.move_line_finished_good_ids) ==0 and len(self.move_line_material_ids) ==0:
+        self.state = 'draft'
+        # else:
+        #     raise UserError(_('This Manufacturing Order have had GIP or GRP already. You can not set to draft!!!'))
+
     def action_cancel(self):
         """ Kiểm tra các điều kiện rùi cập nhật trạng thái cancel """
         if self.state == 'done':
-            raise UserError(_('Lệnh sản Xuất đã được hoàn thành'))
-        #Trường hợp đã tạo git rùi thì ko có tạo phiếu Cancel
-        if self.request_count > 0:
-            raise UserError(_('Đã Có phiếu Request material, Không được Cancel Lệnh sản Xuất'))
-        
+            raise UserError(_('The Other is Done, cannot cancel'))
+        # Trường hợp đã tạo git rùi thì ko có tạo phiếu Cancel
+        if self.move_line_material_ids.filtered(lambda d:d.state != 'cancel') or self.move_line_finished_good_ids.filtered(lambda d:d.state != 'cancel'):
+            raise UserError(_('You cannot Cancel MO because you have material/finished product that not cancel yet!'))
+
         self.state = 'cancel'
         # self._action_cancel()
         return True

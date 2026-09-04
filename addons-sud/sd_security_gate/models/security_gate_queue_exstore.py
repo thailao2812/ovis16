@@ -13,15 +13,14 @@ class NedSecurityGateQueue(models.Model):
     @api.onchange('shipping_id')
     def onchange_si_id(self):
         if self.shipping_id:
-        	for line in self.shipping_id.shipping_ids:
-	            # shipping_info = self.env['shipping.instruction'].browse(self.shipping_id.id)
-	            return {'value': {'product_id': line.product_id.id,
-	            				  'packing_id': line.packing_id.id,
-                                  'customer_id': self.shipping_id.partner_id.id,
-                                  'supplier_id': self.shipping_id.partner_id.id,
-	            				  }
-            			}
-	        return {'value': {}}
+            for line in self.shipping_id.shipping_ids:
+                # shipping_info = self.env['shipping.instruction'].browse(self.shipping_id.id)
+                return {'value': {'product_id': line.product_id.id,
+                        'packing_id': line.packing_id.id,
+                        'customer_id': self.shipping_id.partner_id.id,
+                        'supplier_id': self.shipping_id.partner_id.id,
+                        }}
+            return {'value': {}}
 
     customer_id = fields.Many2one('res.partner', string='Customer')
     trucking_id = fields.Many2one('res.partner', string='Trucking Co', states={'approved': [('readonly', True)],'closed': [('readonly', True)]})
