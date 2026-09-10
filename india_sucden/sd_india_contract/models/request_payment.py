@@ -28,7 +28,7 @@ class RequestPayment(models.Model):
     vendor_invoice_number = fields.Char(string='Vendor Invoice Number')
     vendor_invoice_date = fields.Date(string='Vendor Invoice Date')
     product_id = fields.Many2one('product.product', string='Product', related='purchase_contract_id.product_id', store=True)
-    price = fields.Float(string='Price/Qty', compute='compute_price_request_payment', store=True)
+    price = fields.Float(string='Price/Qty', compute='compute_price_request_payment', store=True, digits=(12,2))
     use_payment_for = fields.Selection([
         ('advance', 'Advance Payment'),
         ('payment', 'Against Delivery')
@@ -36,7 +36,7 @@ class RequestPayment(models.Model):
     payment_refunded = fields.Float(string='Refunded', compute='_compute_refunded', digits=(12, 0), store=True)
     open_advance = fields.Float(string='Open Advance', compute='_compute_refunded', digits=(12, 0), store=True)
     source_document_contract = fields.Char(string='Source Document', related='purchase_contract_id.origin', store=True)
-    invoice_amount = fields.Float(string='Invoice Amount', compute='compute_invoice_amount', store=True)
+    invoice_amount = fields.Float(string='Invoice Amount', compute='compute_invoice_amount', store=True, digits=(12, 2))
     state = fields.Selection(selection='_get_new_state', string='State', readonly=False, copy=False, index=True, default='request')
     tds_assessable_value = fields.Float(string='TDS Assessable Value')
     tds_amount = fields.Float(string='TDS Amount', compute='compute_tds_amount', store=True)
