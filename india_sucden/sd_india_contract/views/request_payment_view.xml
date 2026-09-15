@@ -23,6 +23,7 @@
             <xpath expr="//field[@name='payment_quantity']" position="after">
                 <field name="price"/>
                 <field name="invoice_amount"/>
+                <field name="interest_amount" sum="interest_amount"/>
             </xpath>
             <xpath expr="//field[@name='purchase_contract_id']" position="before">
                 <field name="use_payment_for"/>
@@ -37,10 +38,17 @@
             </xpath>
             <xpath expr="//field[@name='date']" position="after">
                 <field name="date_approve"/>
+                <field name="purchase_date"/>
                 <field name="financial_year_id"/>
             </xpath>
             <xpath expr="//field[@name='invoice_amount']" position="attributes">
                 <attribute name="sum">invoice_amount</attribute>
+            </xpath>
+            <xpath expr="//field[@name='users_request_id']" position="after">
+                <field name="purchase_quantity" sum="purchase_quantity"/>
+            </xpath>
+            <xpath expr="//field[@name='provisional_amount']" position="replace">
+
             </xpath>
         </field>
     </record>
@@ -79,6 +87,19 @@
             <xpath expr="//field[@name='date']" position="attributes">
                 <attribute name="readonly">1</attribute>
             </xpath>
+            <xpath expr="//field[@name='payment_quantity']" position="after">
+                <field name="interest_amount"/>
+            </xpath>
+            <xpath expr="//button[@name='print_payment_request']" position="after">
+                <button name="print_paymentrequest_invoice" string="Print Invoice" type="object" class="oe_highlight" attrs="{'invisible': [('state', '!=', 'paid')]}"/>
+            </xpath>
+            <xpath expr="//button[@name='print_payment_request']" position="replace">
+            </xpath>
+            <xpath expr="//button[@name='print_printout_payment_npv']" position="replace">
+            </xpath>
+            <xpath expr="//button[@name='print_advance_payment']" position="replace">
+            </xpath>
+
         </field>
     </record>
 

@@ -17,6 +17,7 @@
         'views/truck_quality_production_view.xml',
         'views/mrp_production_view.xml',
         'views/stock_picking_view.xml',
+        'views/request_material.xml',
     ],
     'installable': True,
     'auto_install': False,

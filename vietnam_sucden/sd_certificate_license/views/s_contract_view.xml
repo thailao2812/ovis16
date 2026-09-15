@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_s_contract_form_inherit_sd_certificate" model="ir.ui.view">
+        <field name="name">view_s_contract_form_inherit_sd_certificate</field>
+        <field name="model">s.contract</field>
+        <field name="inherit_id" ref="sd_sale_contract.view_s_contract_form"/>
+        <field name="arch" type="xml">
+            <!-- <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="certificate_id" options="{'no_write': True, 'no_create': True}" string="Certificate"/>
+                <field name="cer_license_type"/>
+            </xpath> -->
+            <xpath expr="//field[@name='certificated_ids']" position="replace">
+                <label for="certificated_ids"/>
+                <div name="certificated_ids" class="o_row">
+                    <field name="certificated_ids" widget="many2many">
+                        <tree>
+                            <field name="name"/>
+                            <field name="premium"/>
+                            <field name="active"/>
+                        </tree>
+                    </field>
+                </div>
+            </xpath>
+            <xpath expr="//field[@name='contract_line']/tree/field[@name='certificate_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+                <!-- <attribute name="domain">[('id', 'in', parent.certificated_ids)]</attribute> -->
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_s_contract_tree_inherit_sd_certificate" model="ir.ui.view">
+        <field name="name">view_s_contract_tree_inherit_sd_certificate</field>
+        <field name="model">s.contract</field>
+        <field name="inherit_id" ref="sd_sale_contract.view_s_contract_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+				<field name="certificated_ids" widget="many2many_tags"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -35,6 +35,7 @@ class StockIntakeQtyWeek(models.Model):
     burned = fields.Float(string = 'Burned', group_operator = 'avg', digits=(12, 2))
     eaten = fields.Float(string = 'Insect', group_operator = 'avg', digits=(12, 2))
     immature = fields.Float(string = 'Imt.', group_operator = 'avg', digits=(12, 2))
+    date_done = fields.Date(string='Date Done')
     # product = fields.Char(string='Product')
     # receipt_qty = fields.Float(string="Receipt Qty.", digits=(12, 2))
     # supplier = fields.Char(string = 'Supplier')
@@ -69,7 +70,8 @@ class StockIntakeQtyWeek(models.Model):
                 sum(rkl.belowsc12 * rkl.product_qty)/sum(rkl.product_qty) belowsc12,
                 sum(rkl.burned * rkl.product_qty)/sum(rkl.product_qty) burned,
                 sum(rkl.eaten * rkl.product_qty)/sum(rkl.product_qty) eaten,
-                sum(rkl.immature * rkl.product_qty)/sum(rkl.product_qty) immature
+                sum(rkl.immature * rkl.product_qty)/sum(rkl.product_qty) immature,
+                sp.date_done as date_done
             FROM stock_lot sc
                 JOIN stock_picking sp ON sc.id = sp.lot_id
                 JOIN stock_picking_type spt on sp.picking_type_id = spt.id
@@ -81,6 +83,6 @@ class StockIntakeQtyWeek(models.Model):
             Where spt.code in ('incoming','transfer_in') and rkl.product_qty != 0
             Group by (SELECT EXTRACT(week FROM sp.date_done::TIMESTAMP)),
             (SELECT EXTRACT(year FROM sp.date_done::TIMESTAMP)),
-            pp.default_code, rcs.name 
+            pp.default_code, rcs.name, sp.date_done
             Order by (SELECT EXTRACT(year FROM sp.date_done::TIMESTAMP)) desc, (SELECT EXTRACT(week FROM  sp.date_done::TIMESTAMP)) desc
             """)

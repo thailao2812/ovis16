@@ -130,6 +130,7 @@ class Parser(models.AbstractModel):
     def get_license(self, purchase):
         if purchase:
             if purchase.license_id:
+                print()
                 return purchase.license_id.name[:-5]
             else:
                 return ''

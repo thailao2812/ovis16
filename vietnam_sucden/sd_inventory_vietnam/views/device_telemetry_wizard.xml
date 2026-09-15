@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_iotthinks_device_telemetry_wizard_form" model="ir.ui.view">
+        <field name="name">iotthinks.device.telemetry.wizard.form</field>
+        <field name="model">iotthinks.device.telemetry.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Lấy dữ liệu Telemetry">
+                <group>
+                    <field name="start_date"/>
+                    <field name="end_date"/>
+                </group>
+                <footer>
+                    <button name="action_fetch_telemetry" type="object" class="btn-primary" string="Lấy dữ liệu"/>
+                    <button string="Hủy" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+    <act_window id="action_iotthinks_device_telemetry_wizard"
+                name="Lấy dữ liệu Telemetry"
+                res_model="iotthinks.device.telemetry.wizard"
+                view_mode="form"
+                target="new" />
+    <!-- Nút vào wizard lấy dữ liệu telemetry -->
+    <menuitem id="menu_iotthinks_device_telemetry_wizard"
+              name="Lấy Dữ liệu Telemetry"
+              parent="sd_inventory.menu_action_other_notes"
+              action="action_iotthinks_device_telemetry_wizard"
+              sequence="115"/>
+
+    <record id="action_iotthinks_device_telemetry_wizard" model="ir.actions.act_window">
+        <field name="name">Lấy Dữ liệu Telemetry</field>
+        <field name="res_model">iotthinks.device.telemetry.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

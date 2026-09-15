@@ -41,6 +41,7 @@
         
         'wizards/import_qc_view.xml',
         'wizards/wizard_glyphosat.xml',
+        'wizards/wizard_cancel_confirmation.xml',
         
         'views/menu.xml',
         

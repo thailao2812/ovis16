@@ -14,6 +14,11 @@
                     <field name="import_date"/>
                     <field name="create_uid"/>
                 </xpath>
+                <xpath expr="//field[@name='gshape_type']" position="replace">
+                    <field name="type_geometry"/>
+                    <field name="latitude"/>
+                    <field name="longitude"/>
+                </xpath>
             </field>
     </record>
 
@@ -28,6 +33,9 @@
                 </xpath>
                 <xpath expr="//field[@name='partner_id']" position="after">
                     <field name="import_id" readonly="1"/>
+                    <field name="type_geometry" readonly="1"/>
+                    <field name="latitude" attrs="{'invisible': [('type_geometry', '=', 'polygon')]}"/>
+                    <field name="longitude" attrs="{'invisible': [('type_geometry', '=', 'polygon')]}"/>
                     <field name="import_date"/>
                     <field name="create_uid"/>
                 </xpath>

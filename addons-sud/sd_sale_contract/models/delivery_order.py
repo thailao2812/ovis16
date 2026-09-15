@@ -403,7 +403,10 @@ class DeliveryOrder(models.Model):
                 #     print pick.id
                 # print weight_out, weight_in, 'STOP', order.id
                 order.weightfactory = weight_out
-                order.bagsfactory = bags_out
+                if order.delivery_order_ids and sum(order.delivery_order_ids.mapped('bags_input')) > 0:
+                    order.bagsfactory = sum(order.delivery_order_ids.mapped('bags_input'))
+                else:
+                    order.bagsfactory = bags_out
                 order.shipped_weight = weight_in
                 order.bags = bags_in
                 order.storing_loss = order.total_qty - order.weightfactory
@@ -434,20 +437,22 @@ class DeliveryOrder(models.Model):
                         shipped_weight += line.shipped_weight
 
                 if order.packing_place == 'factory':
-                    order.bagsfactory = bagsfactory
-                    order.weightfactory = weight
-                    order.bags = bagsfactory
                     order.shipped_weight = weight
-                    order.storing_loss = order.total_qty - weight
                     order.transportation_loss = 0
                 else:
-                    order.bags = bags
                     order.shipped_weight = shipped_weight
-
-                    order.bagsfactory = bagsfactory
-                    order.weightfactory = weight
-                    order.storing_loss = order.total_qty - weight
                     order.transportation_loss = weight - shipped_weight
+                    
+                order.storing_loss = order.total_qty - weight
+                order.weightfactory = weight
+                
+                print(sum(order.delivery_order_ids.mapped('bags_input')))
+                if order.delivery_order_ids and sum(order.delivery_order_ids.mapped('bags_input')) > 0:
+                    order.bagsfactory = sum(order.delivery_order_ids.mapped('bags_input'))
+                    order.bags = sum(order.delivery_order_ids.mapped('bags_input'))
+                else:
+                    order.bagsfactory = bagsfactory
+                    order.bags = bagsfactory
 
                 if order.contract_id and order.contract_id.type == 'export':
                     if order.picking_id and ('KTN' in order.picking_id.name or 'CWT' in order.picking_id.name):
@@ -609,6 +614,7 @@ class DeliveryOrderLine(models.Model):
 ######################################### NED Contract ############################################################################
     
     packing_id = fields.Many2one('ned.packing', string='Packing')
+    bags_input = fields.Float(string='Bags', digits=(12, 0) , default=0.0)
     certificate_id = fields.Many2one('ned.certificate', string='Certificate')
 ##########################################END NED Contract###########################################################################
 

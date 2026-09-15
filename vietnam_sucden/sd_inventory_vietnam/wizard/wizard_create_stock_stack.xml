@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_create_stock_stack_inherit_vietnam" model="ir.ui.view">
+        <field name="name">view_create_stock_stack_inherit_vietnam</field>
+        <field name="model">create.stock.stack</field>
+        <field name="inherit_id" ref="sd_inventory.view_create_stock_stack"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='zone_id']" position="attributes">
+                <attribute name="options">{'no_create': True}</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

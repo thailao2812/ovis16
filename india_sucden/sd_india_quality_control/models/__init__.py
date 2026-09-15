@@ -8,3 +8,4 @@ from . import lot_kcs
 from . import tolerance_quality
 from . import pss_management
 from . import moisture_configuration
+from . import shipping_instruction, s_contract

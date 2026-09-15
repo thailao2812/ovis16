@@ -5,6 +5,8 @@ from odoo.exceptions import ValidationError, UserError
 class RequestKCSLine(models.Model):
     _inherit = 'request.kcs.line'
 
+    inspector = fields.Char(string="Inspector", tracking=True, required=False, default='Poovanna')
+    sampler = fields.Char(string="Analysis By", tracking=True, default='Darshan')
     state = fields.Selection(selection=[('draft', 'New'), ('commercial', 'Commercial'), ('approved', 'Approved'), ('reject', 'Reject')],
                              string='Status', readonly=True, copy=False,
                              index=True, default='draft', )
@@ -13,7 +15,7 @@ class RequestKCSLine(models.Model):
     visual_quality_ids = fields.Many2many('visual.quality',
                                           string='Visual Quality')
 
-    sample_weight_india = fields.Float(string='Sample Weight (Gr)', digits=(12, 2))
+    sample_weight_india = fields.Float(string='Sample Weight (Gr)', digits=(12, 2), default=300)
 
     outturn_gram = fields.Float(string='Outturn', digits=(12, 2))
     outturn_percent = fields.Float(string='Outturn%', compute='compute_outturn_percent', store=True, digits=(12, 2))
@@ -230,6 +232,36 @@ class RequestKCSLine(models.Model):
     wet_bean_deduct_remark = fields.Text(string='Wet Bean Remark', compute='compute_data_new_deduction', store=True)
     special_deduct_remark = fields.Text(string='BB/Bleached/IDB/Red Beans Remark', compute='compute_data_new_deduction',store=True)
 
+    related_picking_ids = fields.Many2many('stock.picking', string='Related Pickings', compute='_compute_related_picking_ids', store=True)
+    moisture_grp = fields.Float(string='Moisture GRP', compute='_compute_qa_grp', store=True)
+    outturn_grp = fields.Float(string='Outturn GRP', compute='_compute_qa_grp', store=True)
+
+    @api.depends('related_picking_ids', 'state', 'picking_id.state_kcs', 'picking_id.state')
+    def _compute_qa_grp(self):
+        for rec in self:
+            rec.moisture_grp = 0
+            rec.outturn_grp = 0
+            if rec.related_picking_ids:
+                picking_select_ids = rec.related_picking_ids.filtered(lambda x: x.product_id.template_qc != 'husk')
+                if picking_select_ids:
+                    picking_select_id = picking_select_ids[0]
+                    request_kcs_line_id = picking_select_id.kcs_line[0] if picking_select_id.kcs_line else False
+                    if not request_kcs_line_id:
+                        rec.moisture_grp = 0
+                        rec.outturn_grp = 0
+                        return
+                    rec.moisture_grp = request_kcs_line_id.moisture_percent
+                    rec.outturn_grp = request_kcs_line_id.outturn_percent
+
+    @api.depends('picking_id', 'picking_id.linked_picking_ids', 'picking_id.state_kcs', 'picking_id.state')
+    def _compute_related_picking_ids(self):
+        for rec in self:
+            if rec.picking_id and rec.picking_id.linked_picking_ids:
+                rec.related_picking_ids = rec.picking_id.linked_picking_ids
+            if rec.picking_id and not rec.picking_id.linked_picking_ids:
+                rec.related_picking_ids = False
+
+
     @api.depends('deduction_ids', 'deduction_ids.commercial_input', 'deduction_ids.kg', 'deduction_ids.percent', 'deduction_ids.remark',
                  'deduction_special_ids', 'deduction_special_ids.commercial_input', 'deduction_special_ids.kg', 'deduction_special_ids.percent', 'deduction_special_ids.remark')
     def compute_data_new_deduction(self):
@@ -366,12 +398,12 @@ class RequestKCSLine(models.Model):
             else:
                 rec.moisture_percent = 0
 
-    @api.constrains('total_gram', 'sample_weight_india', 'template_qc')
+    @api.constrains('total_gram', 'sample_weight_india', 'template_qc', 'state')
     def _check_constraint_total_gram(self):
         for record in self:
             if record.template_qc != 'husk':
                 if record.picking_id.picking_type_id.code != 'production_out':
-                    if record.total_gram != record.sample_weight_india:
+                    if record.total_gram != record.sample_weight_india and record.state != 'draft':
                         raise UserError(_("Sample Weight and Total Gram need to be equal!"))
             if record.total_gram > 300:
                 raise UserError(_("Total Gram need to be <= 300, please check again!"))

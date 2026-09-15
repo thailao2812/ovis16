@@ -1,0 +1,126 @@
+<odoo>
+    <record id="view_iotthinks_device_telemetry_tree" model="ir.ui.view">
+        <field name="name">iotthinks.device.telemetry.tree</field>
+        <field name="model">iotthinks.device.telemetry</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="device_profile_id"/>
+                <field name="description"/>
+                <field name="country_id"/>
+                <field name="timestamp"/>
+                <field name="datetime_device"/>
+                <field name="datetime_display"/>
+                <field name="value"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- <record id="view_iotthinks_device_telemetry_form" model="ir.ui.view">
+        <field name="name">iotthinks.device.telemetry.form</field>
+        <field name="model">iotthinks.device.telemetry</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="device_profile_id"/>
+                        <field name="timestamp"/>
+                        <field name="datetime_device"/>
+                        <field name="datetime_display"/>
+                        <field name="value"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record> -->
+
+    <record id="view_iotthinks_device_telemetry_pivot" model="ir.ui.view">
+        <field name="name">iotthinks.device.telemetry.pivot</field>
+        <field name="model">iotthinks.device.telemetry</field>
+        <field name="arch" type="xml">
+            <pivot>
+                <field name="datetime_display" type="row"/>
+                <field name="country_id" type="col"/>
+                <field name="device_profile_id" type="col"/>
+                <field name="value" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="search_iotthinks_device_telemetry" model="ir.ui.view">
+        <field name="name">search.iotthinks.device.telemetry</field>
+        <field name="model">iotthinks.device.telemetry</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name = "device_profile_id" string="Device Name"/>
+                <field name = "datetime_device" string="Datetime"/>
+                <filter icon="terp-go-month" string="Today" name="today"
+                    domain="[('datetime_device', '>', (datetime.date.today()-datetime.timedelta(days=1)).strftime('%Y-%m-%d')), ('datetime_device', '&lt;=', (datetime.date.today()+datetime.timedelta(days=1)).strftime('%Y-%m-%d'))]" help="Today" 
+                />
+                <group expand="1" string="Group By">
+                    <filter string="Country" domain="[]" name = "group_country_id" context="{'group_by':'country_id'}"/>
+                    <filter string="Datetime" domain="[]" name = "group_datetime_device" context="{'group_by':'datetime_device'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_iotthinks_device_telemetry" model="ir.actions.act_window">
+        <field name="name">IoTThinks Telemetries</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">iotthinks.device.telemetry</field>
+        <field name="view_mode">pivot,tree</field>
+        <field name="view_id" ref="view_iotthinks_device_telemetry_pivot"/>
+        <field name="context">{'search_default_today': 1}</field>
+    </record>
+
+    <!-- # This cron job is used to pull IoT data.
+    # - Nếu quãng thời gian cố định giữa các lần chạy: dùng interval_number = 8 và interval_type = hours. -->
+
+    <!-- <record id="iotthinks_device_profile_cron" model="ir.cron">
+        <field name="name">Pull IoT data form IoTThinks</field>
+        <field name="model_id" ref="model_iotthinks_device_profile"/>
+        <field name="state">code</field>
+        <field name="code">model.fetch_all_telemetry()</field>
+        <field name="interval_number">6</field>
+        <field name="interval_type">hours</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="True"/>
+    </record> -->
+
+    <!-- #- Nếu giờ chạy cụ thể: tạo 3 bản ghi ir.cron với các trường nextcall mong muốn. -->
+    <record id="iotthinks_device_profile_cron_1h" model="ir.cron">
+        <field name="name">Pull IoT data at 1h</field>
+        <field name="model_id" ref="model_iotthinks_device_profile"/>
+        <field name="state">code</field>
+        <field name="code">model.fetch_all_telemetry()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="nextcall" eval="'2025-05-29 01:00:00'"/>
+        <field name="doall" eval="True"/>
+    </record>
+
+    <!-- <record id="iotthinks_device_profile_cron_17h" model="ir.cron">
+        <field name="name">Pull IoT data at 12h</field>
+        <field name="model_id" ref="model_iotthinks_device_profile"/>
+        <field name="state">code</field>
+        <field name="code">model.fetch_all_telemetry()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="nextcall" eval="'2025-05-28 12:00:00'"/>
+        <field name="doall" eval="True"/>
+    </record>
+
+    <record id="iotthinks_device_profile_cron_17h" model="ir.cron">
+        <field name="name">Pull IoT data at 17h</field>
+        <field name="model_id" ref="model_iotthinks_device_profile"/>
+        <field name="state">code</field>
+        <field name="code">model.fetch_all_telemetry()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="nextcall" eval="'2025-05-28 17:00:00'"/>
+        <field name="doall" eval="True"/>
+    </record> -->
+</odoo>

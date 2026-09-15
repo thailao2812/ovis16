@@ -1,0 +1,214 @@
+## Sử dụng Odoo 16 làm nền tảng
+#FROM odoo:16
+#
+## Chạy với quyền root để cài đặt gói hệ thống
+#USER root
+#
+## Cấu hình repo PostgreSQL để tránh lỗi libpq-dev
+#RUN apt-get update && apt-get install -y wget gnupg2 lsb-release && \
+#    echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" | tee /etc/apt/sources.list.d/pgdg.list && \
+#    wget -qO - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
+#
+## Cài đặt các gói cần thiết
+#RUN apt-get update && apt-get install -y --no-install-recommends \
+#    git \
+#    nodejs \
+#    npm \
+#    libxml2-dev \
+#    libxslt1-dev \
+#    libjpeg-dev \
+#    libldap2-dev \
+#    libsasl2-dev \
+#    libpq-dev \
+#    build-essential \
+#    wget \
+#    fonts-liberation \
+#    libfreetype6 \
+#    libfontconfig1 \
+#    xfonts-75dpi \
+#    xfonts-base \
+#    zlib1g-dev \
+#    libpng-dev \
+#    libjpeg62-turbo-dev \
+#    && rm -rf /var/lib/apt/lists/*
+#
+## Cài đặt Python 3.10
+#RUN wget https://www.python.org/ftp/python/3.10.0/Python-3.10.0.tgz && \
+#    tar xzf Python-3.10.0.tgz && \
+#    cd Python-3.10.0 && \
+#    ./configure --enable-optimizations && \
+#    make -j$(nproc) && \
+#    make altinstall && \
+#    cd .. && rm -rf Python-3.10.0 Python-3.10.0.tgz
+#
+## Đặt Python 3.10 làm mặc định
+#RUN update-alternatives --install /usr/bin/python3 python3 /usr/local/bin/python3.10 1 && \
+#    update-alternatives --set python3 /usr/local/bin/python3.10
+#
+## Cài đặt pip, setuptools, và wheel để tránh lỗi khi cài đặt các package từ source
+#RUN wget https://bootstrap.pypa.io/get-pip.py && \
+#    python3.10 get-pip.py && \
+#    rm get-pip.py && \
+#    pip3.10 install --upgrade pip setuptools wheel
+#
+## Cài đặt các thư viện Python cần thiết
+#RUN pip3.10 install odoo
+#RUN pip3.10 install --upgrade pip setuptools wheel
+#COPY requirements.txt /tmp/requirements.txt
+#RUN pip3.10 install -r /tmp/requirements.txt
+#RUN pip3.10 install --no-cache-dir \
+#    Babel==2.9.1 \
+#    chardet==3.0.4 \
+#    decorator==4.4.2 \
+#    docutils==0.16 \
+#    ebaysdk==2.1.5 \
+#    freezegun==0.3.15 \
+#    gevent==22.10.2 \
+#    greenlet==2.0.2 \
+#    idna==2.8 \
+#    Jinja2==3.1.2 \
+#    libsass==0.22.0 \
+#    lxml==4.9.1 \
+#    MarkupSafe==2.1.1 \
+#    num2words==0.5.12 \
+#    ofxparse==0.19 \
+#    passlib==1.7.4 \
+#    Pillow==9.3.0 \
+#    polib==1.1.1 \
+#    psutil==5.9.4 \
+#    psycopg2==2.9.5 \
+#    pydot==1.4.2 \
+#    python-dateutil==2.8.2 \
+#    python-ldap==3.4.3 \
+#    python-stdnum==1.18 \
+#    pytz==2022.6 \
+#    pyusb==1.2.1 \
+#    qrcode==7.4.2 \
+#    reportlab==3.6.12 \
+#    requests==2.28.1 \
+#    urllib3==1.26.13 \
+#    vobject==0.9.6.1 \
+#    Werkzeug==2.2.3 \
+#    xlrd==1.2.0 \
+#    XlsxWriter==3.0.3 \
+#    xlwt==1.3.0 \
+#    zeep==4.2.1 \
+#    PyPDF2==2.12.1 \
+#    rasterstats \
+#    pandas \
+#    shapely \
+#    html2text \
+#    psycopg2-binary
+#
+## Cài đặt wkhtmltopdf (hỗ trợ in PDF trong Odoo)
+#RUN wget https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6.1-2/wkhtmltox_0.12.6.1-2.bullseye_amd64.deb && \
+#    dpkg -i wkhtmltox_0.12.6.1-2.bullseye_amd64.deb || true && \
+#    apt-get -f install -y && \
+#    rm wkhtmltox_0.12.6.1-2.bullseye_amd64.deb
+#
+## Đặt thư mục làm việc cho Odoo
+#WORKDIR /opt/odoo
+#
+## Đặt quyền user odoo để chạy container an toàn hơn
+#USER odoo
+
+FROM python:3.10-slim-bullseye
+
+SHELL ["/bin/bash", "-xo", "pipefail", "-c"]
+
+# Đặt timezone
+ENV TZ=UTC
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+# Cài đặt các dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ca-certificates \
+    curl \
+    dirmngr \
+    fonts-noto-cjk \
+    gnupg \
+    libssl-dev \
+    node-less \
+    npm \
+    python3-num2words \
+    python3-pdfminer \
+    python3-pip \
+    python3-phonenumbers \
+    python3-pyldap \
+    python3-qrcode \
+    python3-renderpm \
+    python3-setuptools \
+    python3-slugify \
+    python3-vobject \
+    python3-watchdog \
+    python3-xlrd \
+    python3-xlwt \
+    xz-utils \
+    libpq-dev \
+    build-essential \
+    libxml2-dev \
+    libxslt1-dev \
+    libldap2-dev \
+    libsasl2-dev \
+    libtiff5-dev \
+    libjpeg62-turbo-dev \
+    libopenjp2-7-dev \
+    zlib1g-dev \
+    libfreetype6-dev \
+    liblcms2-dev \
+    libwebp-dev \
+    libharfbuzz-dev \
+    libfribidi-dev \
+    libxcb1-dev \
+    git \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Cài đặt wkhtmltopdf
+RUN curl -o wkhtmltox.deb -sSL https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6.1-2/wkhtmltox_0.12.6.1-2.bullseye_amd64.deb \
+    && apt-get update && apt-get install -y --no-install-recommends ./wkhtmltox.deb \
+    && rm -rf /var/lib/apt/lists/* wkhtmltox.deb
+
+# Tạo người dùng Odoo
+RUN useradd -ms /bin/bash odoo
+
+# Tạo các thư mục cần thiết
+RUN mkdir -p /var/lib/odoo \
+    && mkdir -p /etc/odoo \
+    && mkdir -p /mnt/extra-addons \
+    && chown -R odoo:odoo /var/lib/odoo /etc/odoo /mnt/extra-addons
+
+# Clone Odoo 16
+WORKDIR /opt
+RUN git clone --depth 1 --branch 16.0 https://github.com/odoo/odoo.git \
+    && chown -R odoo:odoo /opt/odoo
+
+# Cài đặt Odoo và các phụ thuộc Python
+WORKDIR /opt/odoo
+USER odoo
+
+# Cài đặt gevent phiên bản mới trước khi cài đặt requirements
+RUN pip install --no-cache-dir "gevent>=22.10.2" \
+    && pip install --no-cache-dir psycogreen psycopg2 \
+    && grep -v "gevent" requirements.txt > requirements_no_gevent.txt \
+    && pip install --no-cache-dir -r requirements_no_gevent.txt
+
+# Cấu hình Odoo
+USER root
+RUN mkdir -p /etc/odoo
+COPY ./odoo.conf /etc/odoo/odoo.conf
+RUN chown odoo:odoo /etc/odoo/odoo.conf
+
+# Thiết lập các volume
+VOLUME ["/var/lib/odoo", "/mnt/extra-addons"]
+
+# Thiết lập cổng
+EXPOSE 8069 8071 8072
+
+# Thiết lập người dùng
+USER odoo
+
+# Thiết lập thư mục làm việc
+WORKDIR /opt/odoo
+
+# Chạy Odoo
+ENTRYPOINT ["python3", "/opt/odoo/odoo-bin", "-c", "/etc/odoo/odoo.conf"]

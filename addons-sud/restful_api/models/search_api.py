@@ -37,7 +37,7 @@ class APISearch(http.Controller):
         if result == []:
             sql = '''SELECT sec.id, sec.name, sec.warehouse_id, sec.supplier_id, sec.customer_id, sec.license_plate as vehicle, sec.first_cont, sec.last_cont, sec.estimated_bags, 
                     sec.parking_order, spt.code, spt.name picking_name, sec.state, pp.default_code, pp.id product_id, sec.type_transfer, sec.districts_id, sec.packing_id,
-                    CAST(sec.time_out AS TEXT), sec.estate_name 
+                    CAST(sec.time_out AS TEXT), CAST(sec.arrivial_time AS TEXT), sec.estate_name 
                     FROM ned_security_gate_queue sec 
                     LEFT JOIN stock_picking_type spt ON sec.picking_type_id=spt.id 
                     LEFT JOIN security_gate_product_rel sec_rel ON sec.id=sec_rel.security_gate_id
@@ -48,7 +48,7 @@ class APISearch(http.Controller):
         else:
             sql = '''SELECT sec.id, sec.name, sec.warehouse_id, sec.supplier_id, sec.customer_id, sec.license_plate as vehicle, sec.first_cont, sec.last_cont, sec.estimated_bags, 
                     sec.parking_order, spt.code, spt.name picking_name, sec.state, pp.default_code, pp.id product_id, sec.type_transfer, sec.districts_id, sec.packing_id,
-                    CAST(sec.time_out AS TEXT)
+                    CAST(sec.time_out AS TEXT), CAST(sec.arrivial_time AS TEXT)
                     FROM ned_security_gate_queue sec 
                     LEFT JOIN stock_picking_type spt ON sec.picking_type_id=spt.id 
                     LEFT JOIN security_gate_product_rel sec_rel ON sec.id=sec_rel.security_gate_id
@@ -619,30 +619,30 @@ class APISearch(http.Controller):
                 sql = '''SELECT ss.id, ss.name, ss.init_qty, ss.zone_id, sz.name zone_name, CAST(ss.create_date AS TEXT), ss.product_id
                     from stock_lot ss
                     JOIN stock_zone sz ON sz.id = ss.zone_id
-                    WHERE ss.warehouse_id = %s and ss.active = True AND ss.init_invetory = False 
-                    and (ss.create_date >= date_trunc('month', CURRENT_DATE - INTERVAL '12 month') or ss.init_qty > 0) Order By ss.init_qty desc
+                    WHERE ss.warehouse_id = %s and ss.active = True 
+                    and (ss.create_date >= date_trunc('month', CURRENT_DATE - INTERVAL '3 month') or ss.init_qty > 0) Order By ss.init_qty desc
                     ; '''%(warehouse_id)
             else:
                 sql = '''SELECT ss.id, ss.name, ss.init_qty, ss.zone_id, sz.name zone_name, CAST(ss.create_date AS TEXT), ss.product_id
                     from stock_lot ss
                     JOIN stock_zone sz ON sz.id = ss.zone_id
-                    WHERE ss.warehouse_id in (%s) and ss.active = True AND ss.init_invetory = False 
-                    and (ss.create_date >= date_trunc('month', CURRENT_DATE - INTERVAL '12 month') or ss.init_qty > 0) Order By ss.init_qty desc
+                    WHERE ss.warehouse_id in (%s) and ss.active = True 
+                    and (ss.create_date >= date_trunc('month', CURRENT_DATE - INTERVAL '3 month') or ss.init_qty > 0) Order By ss.init_qty desc
                     ; '''%(warehouse_id_list)
         else:
             if warehouse_id:
                 sql = '''SELECT ss.id, ss.name, ss.init_qty, ss.zone_id, sz.name zone_name, CAST(ss.create_date AS TEXT), ss.product_id
                     from stock_lot ss
                     JOIN stock_zone sz ON sz.id = ss.zone_id
-                    WHERE ss.warehouse_id = %s and ss.active = True AND ss.init_invetory = False %s 
-                    and (ss.create_date >= date_trunc('month', CURRENT_DATE - INTERVAL '12 month') or ss.init_qty > 0) Order By ss.init_qty desc
+                    WHERE ss.warehouse_id = %s and ss.active = True %s 
+                    and (ss.create_date >= date_trunc('month', CURRENT_DATE - INTERVAL '3 month') or ss.init_qty > 0) Order By ss.init_qty desc
                     ; '''%(warehouse_id,query)
             else:
                 sql = '''SELECT ss.id, ss.name, ss.init_qty, ss.zone_id, sz.name zone_name, CAST(ss.create_date AS TEXT), ss.product_id
                     from stock_lot ss
                     JOIN stock_zone sz ON sz.id = ss.zone_id
-                    WHERE ss.warehouse_id in (%s) and ss.active = True AND ss.init_invetory = False %s 
-                    and (ss.create_date >= date_trunc('month', CURRENT_DATE - INTERVAL '12 month') or ss.init_qty > 0) Order By ss.init_qty desc
+                    WHERE ss.warehouse_id in (%s) and ss.active = True %s 
+                    and (ss.create_date >= date_trunc('month', CURRENT_DATE - INTERVAL '3 month') or ss.init_qty > 0) Order By ss.init_qty desc
                     ; '''%(warehouse_id_list, query)
 
                     # And date(timezone('UTC',ss.date::timestamp)) >= date(TIMESTAMP '2018/11/01') or ss.init_qty>0 

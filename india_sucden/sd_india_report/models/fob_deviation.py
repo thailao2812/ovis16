@@ -134,7 +134,7 @@ class FOB_Deviation(models.Model):
                         a.factory_etd,
                         a.push_off_etd,
                         a.closing_time,
-                        a.forwarding_agent,
+                        a.forwarding_agent_id,
                         a.pss_sent,
                         a.shipping_line_id,
                         a.incoterms_id,

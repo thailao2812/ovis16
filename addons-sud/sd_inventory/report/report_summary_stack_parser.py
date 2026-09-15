@@ -38,7 +38,7 @@ class Parser(models.AbstractModel):
         return localcontext
     
     def get_line(self, stack):
-        stack = stack.move_line_ids.filtered(lambda x: x.picking_id.picking_type_id.code in ['production_in', 'incoming']
+        stack = stack.move_line_ids.filtered(lambda x: x.picking_id.picking_type_id.code in ['production_in', 'incoming', 'transfer_in']
                                                  and x.picking_id.state == 'done')
         
         return stack
@@ -48,14 +48,14 @@ class Parser(models.AbstractModel):
         return date
 
     def sum_init_qty(self, stack):
-        total = sum(i.init_qty for i in stack.move_line_ids.filtered(lambda x: x.picking_id.picking_type_id.code in ['production_in', 'incoming']
+        total = sum(i.init_qty for i in stack.move_line_ids.filtered(lambda x: x.picking_id.picking_type_id.code in ['production_in', 'incoming', 'transfer_in']
                                                                           and x.picking_id.state == 'done'))
-        total_bags_no = sum(i.bag_no for i in stack.move_line_ids.filtered(lambda x: x.picking_id.picking_type_id.code in ['production_in', 'incoming']
+        total_bags_no = sum(i.bag_no for i in stack.move_line_ids.filtered(lambda x: x.picking_id.picking_type_id.code in ['production_in', 'incoming', 'transfer_in']
                                                                                 and x.picking_id.state == 'done'))
         return '{:,}'.format(int(total)), '{:,}'.format(int(total_bags_no))
 
     def return_data_grn_grp(self, line):
-        if line.picking_id.picking_type_id.code == 'incoming':
+        if line.picking_id.picking_type_id.code in ['incoming', 'transfer_in']:
             return '', line.picking_id.vehicle_no
         if line.picking_id.picking_type_id.code == 'production_in':
             return line.picking_id.production_id.name, ''

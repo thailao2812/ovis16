@@ -16,5 +16,5 @@
 
     <menuitem id="menu_stack_merge" action="action_stock_stack_merge"
               parent="stock.menu_stock_inventory_control"
-					name="Stack Merge" sequence="55"/>
+					name="Stack Merge" sequence="55" active="False"/>
 </odoo>

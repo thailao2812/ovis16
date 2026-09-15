@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sale_subscription_template_view_form2" model="ir.ui.view">
+        <field name="name">sale.subscription.template.form.view.inherit</field>
+        <field name="model">sale.subscription.template</field>
+        <field name="inherit_id" ref="sale_subscription.sale_subscription_template_view_form"/>
+        <field name="arch" type="xml">
+            <page name="description" position="before">
+                <page name="role" string="Workflow">
+                    <group>
+                        <field name="code"/>
+                    </group>
+                    <field name="role_ids" widget="one2many_list" colspan="4">
+                        <tree string="Stages and Security" editable="bottom">
+                            <field name="sequence" widget="handle"/>
+                            <field name="name" invisible="1"/>
+                            <field name="stage_id" required="1"/>
+                            <field name="approval_ids" widget="many2many_tags" options="{'not_delete': True}"/>
+                            <field name="alert_time" groups="nc_sale_subscription.group_sale_subscription_approve"/> 
+                            <field name="amount_limit" groups="nc_sale_subscription.group_sale_subscription_approve"/>
+                            <field name="appr_num"/>
+                            <field name="appr_man"/>
+                            <field name="rev_num"/>
+                            <field name="rev_man"/>
+                            <field name="auto_approval"/>
+                            <field name="currency_id" invisible="1"/>
+                        </tree>
+                    </field>
+                </page>
+                <!-- <page name="product" string="Products">
+                    <field name="product_ids" colspan="4">
+                        <tree editable="bottom">
+                            <field name="product_id"/>
+                            <field name="name"/>
+                            <field name="quantity"/>
+                            <field name="uom_id" groups="uom.group_uom"/>
+                            <field name="price_unit"/>
+                            <field name="discount" groups="sale.group_discount_per_so_line"/>
+                            <field name="price_subtotal"/>
+                            <field name="template_id" invisible="1"/>
+                        </tree>
+                    </field>
+                </page> -->
+            </page>
+
+            <!-- <field name="recurring_interval" position='attributes'>
+                <attribute name="groups">base.group_no_one</attribute>
+            </field> -->
+            <!-- <field name="recurring_rule_type" position='attributes'>
+                <attribute name="groups">base.group_no_one</attribute>
+            </field>
+            <field name="recurring_rule_boundary" position='attributes'>
+                <attribute name="groups">base.group_no_one</attribute>
+            </field> -->
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="module_category_sd_delete_protection" model="ir.module.category">
+        <field name="name">OVIS Delete Protection</field>
+        <field name="description">Who may bypass the protection on committed transactions, and who may read the deletion audit log.</field>
+        <field name="sequence">30</field>
+    </record>
+
+    <record id="group_sd_audit_log_viewer" model="res.groups">
+        <field name="name">Deletion Audit Log Viewer</field>
+        <field name="category_id" ref="module_category_sd_delete_protection"/>
+        <field name="comment">Read access to the deletion audit log. The log holds a snapshot of every deleted record, so grant it only to people entitled to see that data.</field>
+    </record>
+
+    <record id="group_sd_force_delete" model="res.groups">
+        <field name="name">Force Delete Records</field>
+        <field name="category_id" ref="module_category_sd_delete_protection"/>
+        <field name="implied_ids" eval="[(4, ref('group_sd_audit_log_viewer'))]"/>
+        <field name="comment">Allows deletion of committed transactions when the session explicitly requests it. Grant sparingly: it exists for correcting data errors, not for day-to-day work. Every such deletion is recorded in the audit log and flagged.</field>
+    </record>
+
+</odoo>

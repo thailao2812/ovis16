@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <record id="wizard_select_date_purchase_contract" model="ir.ui.view">
+            <field name="name">wizard_psc_to_sc_link</field>
+            <field name="model">wizard.select.date.range.purchase.contract</field>
+            <field name="arch" type="xml">
+                <form string="Filter Purchase Contract">
+                    <sheet>
+			            <group>
+		            		<label for="date_from" string="Date from"/>
+							<div>
+								<field name="date_from" class="oe_inline" required="1"/>
+								<span>       </span><span>   Date to</span>
+								<field name="date_to" class="oe_inline ms-3" required="1"/>
+							</div>
+		                </group>
+		                <group>
+
+		                </group>
+		                <footer>
+		                	<button string="Search" name="action_search" type="object" class="oe_highlight"/>
+		                    <button string="Cancel" class="btn-default" special="cancel"/>
+		                </footer>
+	                </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_filter_purchase_contract" model="ir.actions.act_window">
+            <field name="name">Filter Purchase Contract</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">wizard.select.date.range.purchase.contract</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+</odoo>

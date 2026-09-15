@@ -17,21 +17,21 @@ class WizardPSCtoSCLink(models.TransientModel):
         if self.date_to < self.date_from:
             raise UserError(_("You can not set date to < date from, please check again!!!"))
         if self.sale_contract_ids:
-            for sale in self.sale_contract_ids:
-                item_group_id = sale.item_group_id
-                s_contract = self.env['s.contract'].search([
-                    ('product_id.item_group_id', '=', item_group_id.id),
-                    ('type', 'in', ['export', 'local']),
-                    ('open_qty', '>', 0),
-                    ('id', 'not in', self.sale_contract_ids.sale_contract_factory_ids.mapped('s_contract').ids),
-                ])
-                for sc in s_contract:
-                    value = {
-                        's_contract': sc.id,
-                        'sale_contract_id': sale.id
-                    }
-                    psc_sc_link = self.env['psc.to.sc.linked'].create(value)
-                    psc_sc_link.onchange_s_contract()
+            # for sale in self.sale_contract_ids:
+            #     item_group_id = sale.item_group_id
+            #     s_contract = self.env['s.contract'].search([
+            #         ('product_id.item_group_id', '=', item_group_id.id),
+            #         ('type', 'in', ['export', 'local']),
+            #         ('open_qty', '>', 0),
+            #         ('id', 'not in', self.sale_contract_ids.sale_contract_factory_ids.mapped('s_contract').ids),
+            #     ])
+            #     for sc in s_contract:
+            #         value = {
+            #             's_contract': sc.id,
+            #             'sale_contract_id': sale.id
+            #         }
+            #         psc_sc_link = self.env['psc.to.sc.linked'].create(value)
+            #         psc_sc_link.onchange_s_contract()
             return {
                 'name': _('PSC to SC Linked'),
                 'view_type': 'form',

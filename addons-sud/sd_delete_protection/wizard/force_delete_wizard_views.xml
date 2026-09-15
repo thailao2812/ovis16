@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_sd_force_delete_wizard_form" model="ir.ui.view">
+        <field name="name">sd.force.delete.wizard.form</field>
+        <field name="model">sd.force.delete.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Force Delete">
+                <div class="alert alert-warning" role="alert">
+                    <strong>This bypasses the delete protection.</strong>
+                    These records are normally kept because they carry a document
+                    number or have moved past draft. Deleting them leaves a gap in
+                    the numbering. Cancel the document instead where that is possible.
+                    <br/>
+                    The deletion is recorded permanently in the audit log, together
+                    with your name and the reason below.
+                </div>
+                <group>
+                    <field name="model_label"/>
+                    <field name="record_count"/>
+                </group>
+                <field name="record_summary" readonly="1" nolabel="1"
+                       options="{'no_label': True}"/>
+                <group>
+                    <field name="reason" placeholder="Why can this not be cancelled instead?"/>
+                </group>
+                <footer>
+                    <button name="action_force_delete" type="object"
+                            string="Delete Permanently" class="btn-danger"
+                            confirm="This cannot be undone. Delete these records?"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>

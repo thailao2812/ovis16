@@ -27,15 +27,67 @@
                 <button name="button_submit" string="Submit" type="object" states="draft" class="oe_highlight" groups="sd_india_master.group_sale_logistic_india"/>
                 <button name="button_approve" string="Approve" type="object" states="submit" class="oe_highlight" groups="sd_india_master.group_accounting_india"/>
                 <button name="set_to_draft" string="Set To Draft" type="object" class="oe_highlight" attrs="{'invisible': [('state', '=', 'draft')]}" confirm="Do you want to Set To Draft this contract?" groups="sd_india_master.group_admin_india"/>
+                <button name="action_cancel" string="Cancel" type="object" class="oe_highlight" attrs="{'invisible': [('state', '=', 'cancel')]}" confirm="Do you want to Cancel this contract?" groups="sd_india_master.group_admin_india"/>
+                <button name="action_done" string="Close" type="object" class="oe_highlight" attrs="{'invisible': [('state', '=', 'done')]}" confirm="Do you want to Close this contract?" groups="sd_india_master.group_admin_india"/>
                 <button name="button_print_s_contract" string="Print S-Contract"  states="approved"
                     type="object" class="oe_highlight" />
-                <field name="state" widget="statusbar" statusbar_visible="draft,submit,approved"/>
+                <field name="state" widget="statusbar" statusbar_visible="draft,submit,approved,done,cancel"/>
             </xpath>
             <xpath expr="//field[@name='contract_count']" position="attributes">
                 <attribute name="string">Contract Relevant</attribute>
             </xpath>
+            <!-- Warehouse lives in the "Other Information" page, which the base
+                 form hides for a P Contract. Required and invisible at once is
+                 unusable: the save is refused over a field the user has nowhere
+                 to fill in. Moved up next to Crop, which shows for every
+                 contract type, so the requirement below can actually be met. -->
+            <xpath expr="//field[@name='crop_id']" position="after">
+                <xpath expr="//field[@name='warehouse_id']" position="move"/>
+            </xpath>
             <xpath expr="//field[@name='warehouse_id']" position="attributes">
                 <attribute name="required">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='contract_line']/tree/field[@name='price_unit']" position="replace">
+                <field name="price_unit" attrs="{'readonly': [('type', '=', 'export')]}" optional="show"/>
+            </xpath>
+
+            <xpath expr="//field[@name='pss_sent_ids']" position="replace">
+                <field name="pss_management_ids" readonly="1">
+                    <tree>
+                        <field name="shipping_id"/>
+                        <field name="shipping_date"/>
+                        <field name="ship_to"/>
+                        <field name="product_id"/>
+                        <field name="certificate_id"/>
+                        <field name="crop_id"/>
+                        <field name="pss_type"/>
+                        <field name="contract_qty"/>
+                        <field name="sample_qty"/>
+                        <field name="sample_sent_date"/>
+                        <field name="courier"/>
+                        <field name="awb_no"/>
+                        <field name="shipt_month"/>
+                        <field name="pss_delivery_date"/>
+                        <field name="pss_status"/>
+                        <field name="approve_date"/>
+                        <field name="reject_date" />
+                        <field name="reason_reject" />
+                    </tree>
+                </field>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_s_contract_tree_inherit_india" model="ir.ui.view">
+        <field name="name">view_s_contract_tree_inherit_india</field>
+        <field name="model">s.contract</field>
+        <field name="inherit_id" ref="sd_sale_contract.view_s_contract_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='total_qty']" position="before">
+                <field name="price_unit"/>
+            </xpath>
+            <xpath expr="//field[@name='pss_type']" position="after">
+                <field name="pss_status"/>
             </xpath>
         </field>
     </record>

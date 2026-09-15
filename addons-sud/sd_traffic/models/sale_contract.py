@@ -79,6 +79,7 @@ class SaleContractDeatail(models.Model):
     _inherit = 'sale.contract.deatail'
 
     code_stack = fields.Char(string='WR No', related='stack_id.code', store=True)
+    mc_on_despatch = fields.Float(string="Mc On Despatch")
 
     def button_set_to_draft(self):
         for record in self:

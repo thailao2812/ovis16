@@ -5,7 +5,7 @@
     'version' : '15.0.1.0',
     'author': 'SCUDEN VIETNAM',
     'website': 'https://www.sucden.com',
-    'depends': ['base', 'sd_master', 'contacts_area'],
+    'depends': ['base', 'sd_master', 'contacts_area', 'auth_totp'],
     'description': """
     """,
     'data': [
@@ -16,7 +16,9 @@
         'views/import_deforestation_view.xml',
         'views/farmer_view.xml',
         'views/res_user_view.xml',
-        'views/product_view.xml'
+        'views/product_view.xml',
+        'views/res_bank_view.xml',
+        'views/auth_totp_template_view.xml'
     ],
     'assets': {
         'web.assets_backend': [

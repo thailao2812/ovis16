@@ -15,7 +15,7 @@ class ProductTemplate(models.Model):
 
     @api.model
     def create(self, vals):
-        if not self.env.user.login == 'tuan.tran@sucden.com' and not self.env.user.login == 'thai.lao@sucden.com' and not self.env.user.login == 'admin':
+        if not self.env.user.has_group('sd_master_vietnam.group_access_product'):
             raise UserError(_("You don't have permission to do that"))
         res = super(ProductTemplate, self).create(vals)
         product_variant = self.env['product.product'].search([
@@ -28,7 +28,7 @@ class ProductTemplate(models.Model):
         return res
 
     def write(self, vals):
-        if not self.env.user.login == 'tuan.tran@sucden.com' and not self.env.user.login == 'thai.lao@sucden.com' and not self.env.user.login == 'admin':
+        if not self.env.user.has_group('sd_master_vietnam.group_access_product'):
             raise UserError(_("You don't have permission to do that"))
         res = super(ProductTemplate, self).write(vals)
         for rec in self:
@@ -53,11 +53,11 @@ class ProductProduct(models.Model):
 
     @api.model
     def create(self, vals):
-        if not self.env.user.login == 'tuan.tran@sucden.com' and not self.env.user.login == 'thai.lao@sucden.com':
+        if not self.env.user.has_group('sd_master_vietnam.group_access_product'):
             raise UserError(_("You don't have permission to do that"))
         return super(ProductProduct, self).create(vals)
 
     def write(self, vals):
-        if not self.env.user.login == 'tuan.tran@sucden.com' and not self.env.user.login == 'thai.lao@sucden.com':
+        if not self.env.user.has_group('sd_master_vietnam.group_access_product'):
             raise UserError(_("You don't have permission to do that"))
         return super(ProductProduct, self).write(vals)

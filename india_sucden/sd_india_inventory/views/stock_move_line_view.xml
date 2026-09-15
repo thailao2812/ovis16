@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="vview_move_line_tree_inherit_india" model="ir.ui.view">
+            <field name="name">vview_move_line_tree_inherit_india</field>
+            <field name="model">stock.move.line</field>
+            <field name="inherit_id" ref="stock.view_move_line_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='qty_done']" position="before">
+            	    <field name="warehouse_id"/>
+            	    <field name="bag_no"/>
+            	    <field name="init_qty"/>
+                </xpath>
+            </field>
+    </record>
+
+</odoo>

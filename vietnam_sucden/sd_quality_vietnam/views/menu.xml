@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+            <menuitem id="ned_certificate_license_sd_quality_vietnam_menu" 
+                action="sd_pur_sales.action_ned_certificate_license" 
+                sequence="1115"
+                parent="sd_quality.quality_control_report_root_menu" 
+                name="Certificate License"
+                groups="sd_quality.group_kcs_user,sd_quality.group_kcs_manager"/>
+
+</odoo>

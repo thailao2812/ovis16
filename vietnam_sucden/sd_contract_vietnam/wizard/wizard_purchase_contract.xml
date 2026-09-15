@@ -16,12 +16,38 @@
                     Mặc định sẽ là số lượng Qty No Advance mà bạn đã nhập cho NPE. Nếu chưa phải là SVNP cuối cùng, hãy nhập 0 vào cột Qty No Advance, nếu là SVNP cuối cùng, hãy kiểm tra số lượng chính xác trước khi Convert
                     </p></div>
                 </group>
+                <field name="invoice_ids" invisible="1"/>
+                <field name="invoice_purchase_line_ids">
+                    <tree editable="bottom">
+                        <field name="invoice_id" options="{'no_create': True}" domain="[('id', 'in', parent.invoice_ids), ('remain_quantity', '>', 0), ('state', '=', 'posted')]"/>
+                        <field name="quantity_invoice" sum="quantity_invoice"/>
+                        <field name="quantity" sum="quantity"/>
+                        <field name="amount_allocated_untaxed" sum="amount_allocated_untaxed"/>
+                        <field name="amount_allocated_tax" sum="amount_allocated_tax"/>
+                        <field name="amount_allocated_total" sum="amount_allocated_total"/>
+                    </tree>
+                </field>
+                <group>
+                    <field name="amount_allocated_untaxed"/>
+                    <field name="amount_allocated_tax"/>
+                    <field name="amount_allocated_total"/>
+                </group>
             </xpath>
             <xpath expr="//field[@name='contract_line_ids']/tree/field[@name='product_qty']" position="after">
                 <field name="open_qty" string="Qty No Advance"/>
             </xpath>
+            <xpath expr="//field[@name='price_unit']" position="after">
+                <field name="purchase_contract_id"/>
+            </xpath>
+<!--            <xpath expr="//field[@name='contract_line_ids']/tree/field[@name='product_qty']" position="before">-->
+<!--                <field name="request_payment_id" options="{'no_create': True}" string="Request Payment" domain="[('purchase_contract_id', '=', parent.purchase_contract_id)]"/>-->
+<!--                <field name="remain_request_payment" string="Remain Request Payment"/>-->
+<!--            </xpath>-->
             <xpath expr="//button[@name='button_convert']" position="attributes">
                 <attribute name="confirm">Bạn có chắc muốn Convert không? Hãy kiểm tra lại lượng Qty No Advance trước khi Convert, nếu đã chắc, vui lòng nhấn OK, nếu không xin hãy kiểm tra lại lượng Qty No Advance 1 lần nữa. Khi Convert hoàn thành, sẽ không thể chỉnh sửa lượng Qty No Advance</attribute>
+            </xpath>
+            <xpath expr="//button[@name='button_convert_ptbf']" position="attributes">
+                <attribute name="confirm">Bạn có chắc muốn Convert không?</attribute>
             </xpath>
 
         </field>

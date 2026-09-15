@@ -20,45 +20,63 @@ class WizardReportPSCtoSC(models.TransientModel):
         if (not self.date_from and self.date_to) or (self.date_from and not self.date_to):
             raise UserError(_("You have to input date from and date to OR leave it blank to Generate Report!!"))
         p_contract = False
-        if self.date_from and self.date_to:
-            p_contract = self.env['sale.contract.india'].search([
-                ('p_date', '>=', self.date_from),
-                ('p_date', '<=', self.date_to)
-            ])
+        domain = []
         if self.season_id:
-            p_contract = p_contract.filtered(lambda x: x.crop_id.id == self.season_id.id)
+            domain += [('crop_id', '=', self.season_id.id)]
         if self.item_group_ids:
-            p_contract = p_contract.filtered(lambda x: x.item_group_id.id in self.item_group_ids.ids)
+            domain += [('item_group_id', 'in', self.item_group_ids.ids)]
+        if self.date_from and self.date_to:
+            domain += [('p_date', '>=', self.date_from), ('p_date', '<=', self.date_to)]
         if self.sale_contract_ids:
-            p_contract = self.sale_contract_ids
-        if not p_contract:
-            p_contract = self.env['sale.contract.india'].search([
-                ('p_number', '!=', False)
-            ])
+            domain += [('id', 'in', self.sale_contract_ids.ids)]
+        if domain:
+            p_contract = self.env['sale.contract.india'].search(domain)
+
         number = 1
         for p in p_contract:
             if p.sale_contract_factory_ids:
                 for line in p.sale_contract_factory_ids:
-                    if line.s_contract.type == 'export':
-                        number = 1000
+                    number = 1000
                     si = self.env['shipping.instruction'].search([
                         ('contract_id', '=', line.s_contract.id)
                     ])
+                    date_allocation = line.date_allocate
+                    if not date_allocation:
+                        raise UserError(_("Please input date allocate for PSC to SC link %s, before generate report!!") % line.sale_contract_id.p_number)
+                    markup_value = 0
+                    grade_premium = 0
+                    crop_s_contract = line.s_contract.crop_id
+                    product_id = line.s_contract.product_id
+                    markup_value_id = self.env['markup.value'].search([
+                        ('from_date', '<=', date_allocation),
+                        ('to_date', '>=', date_allocation),
+                    ], limit=1)
+                    if markup_value_id:
+                        markup_value = markup_value_id.value
+                    grade_premium_id = self.env['grade.premium.india'].search([
+                        ('crop_id', '=', crop_s_contract.id),
+                        ('product_ids', 'in', product_id.ids)
+                    ], limit=1)
+                    if grade_premium_id:
+                        grade_premium = grade_premium_id.premium
                     if not si:
                         value = {
                             'p_number': p.id,
                             'p_qty': p.total_quantity,
                             'p_price': p.price_unit,
-                            'p_amount': (p.total_quantity * p.price_unit) / number,
+                            "date_allocate": date_allocation,
+                            'p_amount': (p.total_quantity/number) * p.price_unit,
                             's_contract_id': line.s_contract.id,
                             'product_id': line.s_contract.product_id.id,
                             's_qty': line.s_contract.total_qty,
-                            'allocated_qty': line.s_contract.total_allocated_sc,
-                            'differential': line.s_contract.differential,
+                            'allocated_qty': line.current_allocated,
+                            'markup_value': markup_value,
+                            'grade_premium': grade_premium,
                             'packing_cost': line.s_contract.packing_cost,
                             'certificate_premium': line.s_contract.premium_cert,
-                            's_total_price': p.price_unit + line.s_contract.differential + line.s_contract.packing_cost + line.s_contract.premium_cert,
-                            's_contract_amount': ((p.price_unit + line.s_contract.differential + line.s_contract.packing_cost + line.s_contract.premium_cert) * line.s_contract.total_allocated_sc) / number,
+                            's_total_price': p.price_unit + line.s_contract.packing_cost + line.s_contract.premium_cert + markup_value + grade_premium,
+                            's_contract_amount': (line.current_allocated * (
+                                        p.price_unit + line.s_contract.packing_cost + line.s_contract.premium_cert + markup_value + grade_premium)) / number,
                             'open_position': p.balance_quantity_sc,
                             'open_position_value': (p.balance_quantity_sc * p.price_unit) / number
                         }
@@ -70,16 +88,18 @@ class WizardReportPSCtoSC(models.TransientModel):
                                 'p_qty': p.total_quantity,
                                 'p_price': p.price_unit,
                                 'p_amount': (p.total_quantity * p.price_unit) / number,
+                                "date_allocate": date_allocation,
                                 's_contract_id': line.s_contract.id,
                                 'shipping_instruction_id': s.id,
                                 'product_id': line.s_contract.product_id.id,
                                 's_qty': line.s_contract.total_qty,
-                                'allocated_qty': line.s_contract.total_allocated_sc,
-                                'differential': line.s_contract.differential,
+                                'allocated_qty': line.current_allocated,
+                                'markup_value': markup_value,
+                                'grade_premium': grade_premium,
                                 'packing_cost': line.s_contract.packing_cost,
                                 'certificate_premium': line.s_contract.premium_cert,
-                                's_total_price': p.price_unit + line.s_contract.differential + line.s_contract.packing_cost + line.s_contract.premium_cert,
-                                's_contract_amount': ((p.price_unit + line.s_contract.differential + line.s_contract.packing_cost + line.s_contract.premium_cert) * line.s_contract.total_allocated_sc) / number,
+                                's_total_price': p.price_unit + line.s_contract.packing_cost + line.s_contract.premium_cert + markup_value + grade_premium,
+                                's_contract_amount': (line.current_allocated * (p.price_unit + line.s_contract.packing_cost + line.s_contract.premium_cert + markup_value + grade_premium)) / number,
                                 'open_position': p.balance_quantity_sc,
                                 'open_position_value': (p.balance_quantity_sc * p.price_unit) / number
                             }
@@ -89,7 +109,7 @@ class WizardReportPSCtoSC(models.TransientModel):
                     'p_number': p.id,
                     'p_qty': p.total_quantity,
                     'p_price': p.price_unit,
-                    'p_amount': p.total_quantity * p.price_unit,
+                    'p_amount': (p.total_quantity * p.price_unit)/number,
                     's_contract_id': False,
                     'product_id': False,
                     's_qty': 0,

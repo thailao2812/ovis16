@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="group_request_final_payment" model="res.groups">
+            <field name="name">Request Final Payment</field>
+        </record>
+
+    <record id="group_approve_final_payment" model="res.groups">
+            <field name="name">Approve Final Payment</field>
+        </record>
+    <record id="group_director_approve_final_payment" model="res.groups">
+            <field name="name">Approve Final Payment by Director</field>
+        </record>
+</odoo>

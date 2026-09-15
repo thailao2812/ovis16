@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_sd_delete_log_tree" model="ir.ui.view">
+        <field name="name">sd.delete.log.tree</field>
+        <field name="model">sd.delete.log</field>
+        <field name="arch" type="xml">
+            <tree string="Deletion Audit Log" create="false" edit="false" delete="false"
+                  decoration-danger="bypassed_protection == True"
+                  decoration-info="cascaded_from != False"
+                  decoration-muted="source == 'uninstall'">
+                <field name="deleted_on"/>
+                <field name="deleted_by"/>
+                <field name="model_label"/>
+                <field name="record_label"/>
+                <field name="reference"/>
+                <field name="state_value"/>
+                <field name="was_protected" optional="hide"/>
+                <field name="bypassed_protection"/>
+                <field name="bypass_reason" optional="show"/>
+                <field name="cascaded_from" optional="show"/>
+                <field name="source" optional="hide"/>
+                <field name="company_id" optional="hide" groups="base.group_multi_company"/>
+                <field name="model_name" optional="hide"/>
+                <field name="res_id" optional="hide"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_sd_delete_log_form" model="ir.ui.view">
+        <field name="name">sd.delete.log.form</field>
+        <field name="model">sd.delete.log</field>
+        <field name="arch" type="xml">
+            <form string="Deletion Audit Entry" create="false" edit="false" delete="false">
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="record_label" readonly="1"/></h1>
+                        <h3><field name="model_label" readonly="1"/></h3>
+                    </div>
+                    <group>
+                        <group string="Deletion">
+                            <field name="deleted_by" readonly="1"/>
+                            <field name="deleted_on" readonly="1"/>
+                            <field name="source" readonly="1"/>
+                            <field name="company_id" readonly="1" groups="base.group_multi_company"/>
+                        </group>
+                        <group string="Record">
+                            <field name="reference" readonly="1"/>
+                            <field name="state_value" readonly="1"/>
+                            <field name="model_name" readonly="1"/>
+                            <field name="res_id" readonly="1"/>
+                            <field name="cascaded_from" readonly="1"/>
+                        </group>
+                    </group>
+                    <group string="Protection">
+                        <field name="was_protected" readonly="1"/>
+                        <field name="bypassed_protection" readonly="1"/>
+                        <field name="bypass_reason" readonly="1"
+                               attrs="{'invisible': [('bypassed_protection', '=', False)]}"/>
+                    </group>
+                    <notebook>
+                        <page string="Record Snapshot">
+                            <field name="record_data" readonly="1" widget="text"
+                                   options="{'no_label': True}"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_sd_delete_log_search" model="ir.ui.view">
+        <field name="name">sd.delete.log.search</field>
+        <field name="model">sd.delete.log</field>
+        <field name="arch" type="xml">
+            <search string="Deletion Audit Log">
+                <field name="record_label" string="Record"
+                       filter_domain="['|', '|', ('record_label', 'ilike', self), ('reference', 'ilike', self), ('model_label', 'ilike', self)]"/>
+                <field name="deleted_by"/>
+                <field name="model_name"/>
+                <field name="reference"/>
+                <separator/>
+                <filter name="filter_bypassed" string="Protection Bypassed"
+                        domain="[('bypassed_protection', '=', True)]"/>
+                <filter name="filter_protected" string="Protected Documents"
+                        domain="[('was_protected', '=', True)]"/>
+                <filter name="filter_cascaded" string="Deleted by Cascade"
+                        domain="[('cascaded_from', '!=', False)]"/>
+                <separator/>
+                <filter name="filter_user_action" string="User Actions"
+                        domain="[('source', '=', 'user')]"/>
+                <separator/>
+                <filter name="filter_today" string="Today"
+                        domain="[('deleted_on', '>=', context_today().strftime('%Y-%m-%d 00:00:00'))]"/>
+                <filter name="filter_this_month" string="This Month"
+                        domain="[('deleted_on', '>=', (context_today().replace(day=1)).strftime('%Y-%m-%d 00:00:00'))]"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_user" string="Deleted By" context="{'group_by': 'deleted_by'}"/>
+                    <filter name="group_model" string="Document Type" context="{'group_by': 'model_label'}"/>
+                    <filter name="group_date" string="Date" context="{'group_by': 'deleted_on:day'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_sd_delete_log" model="ir.actions.act_window">
+        <field name="name">Deletion Audit Log</field>
+        <field name="res_model">sd.delete.log</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_sd_delete_log_search"/>
+        <field name="context">{'search_default_filter_user_action': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Nothing has been deleted yet.</p>
+            <p>Every deletion on the system is recorded here, together with who
+               did it and what the record contained at the time. Entries where
+               the delete protection was bypassed are highlighted.</p>
+        </field>
+    </record>
+
+    <menuitem id="menu_sd_delete_log"
+              name="Deletion Audit Log"
+              parent="base.menu_administration"
+              action="action_sd_delete_log"
+              groups="sd_delete_protection.group_sd_audit_log_viewer"
+              sequence="90"/>
+
+</odoo>

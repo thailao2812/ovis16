@@ -24,7 +24,7 @@
                             <field name="shipper" attrs="{'readonly':[('state','=','done')]}"/>
                             <field name="shipping_line_id" attrs="{'readonly':[('state','=','done')]}"/>
                             <field name="shipment_from" attrs="{'readonly':[('state','=','done')]}"/>
-                            <field name="forwarding_agent" attrs="{'readonly':[('state','=','done')]}"/>
+                            <field name="forwarding_agent_id" attrs="{'readonly':[('state','=','done')]}"/>
                         </group>
                     </group>
                 </page>
@@ -57,7 +57,7 @@
                 </page>
             </xpath>
             <xpath expr="//field[@name='partner_id']" position="after">
-                <field name="ship_to" domain="[('customer_rank', '=', True), ('shipping_customer', '=', True)]" options="{'no_create': True}"/>
+                <field name="ship_to" domain="[('shipping_customer', '=', True)]" options="{'no_create': True}"/>
                 <field name="ship_to_address" readonly="1" force_save="1"/>
             </xpath>
             <xpath expr="//field[@name='od_doc_rec_date']" position="replace">
@@ -85,6 +85,9 @@
             <xpath expr="//field[@name='shipping_ids']/tree/field[@name='price_unit']" position="attributes">
                 <attribute name="readonly">1</attribute>
             </xpath>
+            <xpath expr="//field[@name='shipping_ids']/tree/field[@name='certificate_id']" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </xpath>
         </field>
     </record>
 
@@ -102,6 +105,9 @@
 
             <xpath expr="//field[@name='name']" position="after">
                 <field name="crop_id"/>
+            </xpath>
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="ship_to"/>
             </xpath>
         </field>
     </record>

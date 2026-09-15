@@ -56,8 +56,7 @@ class RequestMaterials(models.Model):
     
     def unlink(self):
         for record in self:
-            if record.state not in ('draft', 'cancel'):
-                raise UserError(_('You cannot delete is not draft or cancelled.'))
+            raise UserError(_('You cannot delete request material, please contact administrator.'))
         return super(RequestMaterials, self).unlink()
     
     @api.model

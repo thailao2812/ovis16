@@ -11,7 +11,13 @@
     'data': [
         'security/ir.model.access.csv',
         'views/shipment_view.xml',
-        'views/production_analysis_view.xml'
+        'views/production_analysis_view.xml',
+        'views/fob_weight_franchise_view.xml',
+        'views/stock_zone.xml',
+        'views/stock_movement.xml',
+        'views/production_analysis_line_output_view.xml',
+        'views/lot_allocation_bonded.xml',
+        'views/menu.xml',
     ],
     'assets': {
 

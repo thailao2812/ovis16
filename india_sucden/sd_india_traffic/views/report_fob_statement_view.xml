@@ -8,6 +8,8 @@
             <field name="arch" type="xml">
                 <tree string="Report FOB Statement" editable="top" edit="false" create="false" delete="false">
                     <field name="item_id"/>
+                    <field name="product_id"/>
+                    <field name="exchange_id"/>
                     <field name="p_number"/>
                     <field name="p_date"/>
                     <field name="sn_no"/>
@@ -20,6 +22,8 @@
                     <field name="green_coffee" sum="green_coffee"/>
                     <field name="fob_value" sum="fob_value"/>
                     <field name="currency_uom"/>
+                    <field name="fob_value_usc" sum="fob_value_usc"/>
+                    <field name="currency_uom_usc"/>
                     <field name="value_usd" sum="value_usd"/>
                     <field name="forex"/>
                     <field name="farm_gate"/>
@@ -29,6 +33,7 @@
                     <field name="margin_per_mt"/>
                     <field name="market_price"/>
                     <field name="currency_uom_fob"/>
+                    <field name="market_month"/>
 <!--                    <field name="contract_price"/>-->
 <!--                    <field name="currency_uom_2nd"/>-->
                     <field name="differential"/>

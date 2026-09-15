@@ -16,24 +16,28 @@ class GRNMatchingReport(models.Model):
     _auto = False
 
     branch_id = fields.Char(sring = 'ID')
-    grn_branch = fields.Char(sring = 'GRN Branch')
+    grn_branch = fields.Char(sring = 'GRN Br.')
     shortname = fields.Char(sring = 'Partner')
     branch_date_received = fields.Datetime(string = 'Br. Date')
-    grn_factory = fields.Char(sring = 'GRN Factory')
+    grn_factory = fields.Char(sring = 'GRN FA.')
     truck_com = fields.Char(sring = 'Trucking Co.')
-    factory_date_received = fields.Datetime(string = 'Factory Date')
+    factory_date_received = fields.Datetime(string = 'FA. Date')
     deduction_branch = fields.Float(string = 'Br. deduction (%)', digits=(12, 2), group_operator="avg")
-    deduction_factory = fields.Float(string = 'Factory deduction (%)', digits=(12, 2), group_operator="avg")
+    deduction_factory = fields.Float(string = 'FA. deduction (%)', digits=(12, 2), group_operator="avg")
     brn_fac = fields.Float(string = 'Var. (%)', digits=(12, 2), group_operator="avg")
     deficit = fields.Char(sring = 'Var. (%)')
 
+    gross_weight_branch = fields.Float(string = 'Br. GW (kg)', digits=(12, 0))
+    gross_weight_factory = fields.Float(string = 'FA. GW (kg)', digits=(12, 0))
+    gross_weight_deficit = fields.Float(string = 'GW +/- (kg)', digits=(12, 0))
+
     net_weight_branch = fields.Float(string = 'Br. Net (kg)', digits=(12, 0))
-    net_weight_factory = fields.Float(string = 'Factory Net (kg)', digits=(12, 0))
+    net_weight_factory = fields.Float(string = 'FA. Net (kg)', digits=(12, 0))
     net_weight_deficit = fields.Float(string = 'Net +/- (kg)', digits=(12, 0))
     net_var = fields.Float(string = 'Net +/- (%)', digits=(12, 2))
 
     basis_weight_branch = fields.Float(string = 'Br. Basis (kg)', digits=(12, 0))
-    basis_weight_factory = fields.Float(string = 'Factory Basis (kg)', digits=(12, 0))
+    basis_weight_factory = fields.Float(string = 'FA. Basis (kg)', digits=(12, 0))
     basis_weight_deficit = fields.Float(string = 'Basis +/- (kg)', digits=(12, 0))
     basis_var = fields.Float(string = 'Basis +/- (%)', digits=(12, 2))
 
@@ -222,6 +226,9 @@ class GRNMatchingReport(models.Model):
                     END AS deficit,
                 b.product,
                 b.inspector as x_inspectator,
+				b.gross_weight AS gross_weight_branch,
+                f.gross_weight AS gross_weight_factory,
+                b.gross_weight - f.gross_weight AS gross_weight_deficit,
                 b.product_qty AS net_weight_branch,
                 f.product_qty AS net_weight_factory,
                 b.product_qty - f.product_qty AS net_weight_deficit,
@@ -280,6 +287,7 @@ class GRNMatchingReport(models.Model):
                         rpn.shortname,
                         pp.default_code AS product,
                         rkl_b.deduction AS deduction_branch,
+						sml.init_qty + sml.tare_weight AS gross_weight,
                         rkl_b.product_qty,
                         rkl_b.basis_weight,
                         rkl_b.mc,
@@ -303,6 +311,7 @@ class GRNMatchingReport(models.Model):
                         sp_b.vehicle_no
                        FROM stock_picking sp_b
                             JOIN stock_picking_type spt on sp_b.picking_type_id = spt.id
+							JOIN stock_move_line sml ON sml.picking_id=sp_b.id
                             JOIN request_kcs_line rkl_b ON sp_b.id = rkl_b.picking_id
                             JOIN res_partner rpn ON sp_b.partner_id = rpn.id
                             LEFT JOIN res_partner rpn_truck ON sp_b.trucking_id = rpn_truck.id
@@ -312,6 +321,7 @@ class GRNMatchingReport(models.Model):
                         sp_f.name,
                         sp_f.date_done,
                         rkl_f.deduction AS deduction_factory,
+						sml.init_qty + sml.tare_weight AS gross_weight,
                         rkl_f.product_qty,
                         rkl_f.basis_weight,
                         rkl_f.mc,
@@ -333,6 +343,7 @@ class GRNMatchingReport(models.Model):
                         rkl_f.immature
                        FROM stock_picking sp_f
                             JOIN stock_picking_type spt_f on sp_f.picking_type_id = spt_f.id
+							JOIN stock_move_line sml ON sml.picking_id=sp_f.id
                             JOIN request_kcs_line rkl_f ON sp_f.id = rkl_f.picking_id
                       WHERE spt_f.code::text = 'incoming'::text) f ON b.id = f.backorder_id;
             """)

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_res_bank_tree_inherit_sucden_vn" model="ir.ui.view">
+            <field name="name">view_res_bank_tree_inherit_sucden_vn</field>
+            <field name="model">res.bank</field>
+            <field name="inherit_id" ref="base.view_res_bank_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='country']" position="replace">
+                    <field name="street"/>
+                    <field name="city"/>
+                </xpath>
+            </field>
+    </record>
+</odoo>

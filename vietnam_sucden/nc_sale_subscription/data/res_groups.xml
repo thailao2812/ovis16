@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="sale_subscription.group_sale_subscription_view" model="res.groups">
+            <field name="name">See Proposals</field>
+            <field name="category_id" ref="sale_subscription.module_category_subscription_management"/>
+            <field name="comment">The user will have read access to Proposals.</field>
+        </record>
+
+        <record id="nc_sale_subscription.group_sale_subscription_create" model="res.groups">
+            <field name="name">Create proposals</field>
+            <field name="category_id" ref="sale_subscription.module_category_subscription_management"/>
+            <field name="comment">The user will have write access to Proposals.</field>
+            <field name="implied_ids" eval="[(4, ref('sale_subscription.group_sale_subscription_view'))]"/>
+            <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+        </record>
+        
+        <record id="nc_sale_subscription.group_sale_subscription_approve" model="res.groups">
+            <field name="name">Approve proposals</field>
+            <field name="category_id" ref="sale_subscription.module_category_subscription_management"/>
+            <field name="comment">The user will have write access to Proposals.</field>
+            <field name="implied_ids" eval="[(4, ref('nc_sale_subscription.group_sale_subscription_create'))]"/>
+            <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+        </record>
+
+        <record id="sale_subscription.group_sale_subscription_manager" model="res.groups">
+            <field name="name">Manage proposals</field>
+            <field name="category_id" ref="sale_subscription.module_category_subscription_management"/>
+            <field name="comment">The user will have write access to Proposals.</field>
+            <field name="implied_ids" eval="[(4, ref('nc_sale_subscription.group_sale_subscription_approve'))]"/>
+            <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+        </record>
+    </data>
+</odoo>

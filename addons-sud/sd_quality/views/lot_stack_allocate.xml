@@ -12,6 +12,7 @@
                 	<field name="contract_id" readonly="1" attrs="{'readonly': [('state', '=', 'approve')]}"/>
                 	<field name="nvs_id"/>
                 	<field name="delivery_id" required="0" attrs="{'readonly': [('state', '=', 'approve')]}"/>
+                	<field name="vehicle_no" readonly="1"/>
                 	<field name="packing_id" required="0" attrs="{'readonly': [('state', '=', 'approve')]}"/>
                 	<field name="shipping_id" required="0" attrs="{'readonly': [('state', '=', 'approve')]}"/>
                 	<field name="grp_id" invisible="1" required="0" attrs="{'readonly': [('state', '=', 'approve')]}"/>
@@ -26,8 +27,12 @@
                     <field name="defects_tcvn"/>
                     <field name="cuptaste"/>
                     <field name="gdn_id"/>
-                    <button name="btt_confirm" string="Confirm" type="object" states="draft"/>
-                    <button name="btt_settodraft" string="Set to Draft" type="object" states="approve"/>
+                    <button name="btt_confirm" string="Confirm" type="object" states="draft" class="oe_highlight"/>
+                    <button name="btt_settodraft" string="Set to Draft" type="object" states="approve,cancel" class="oe_highlight"/>
+                    <button name="action_cancel_confirm" string="Cancel" type="object" states="draft" class="oe_highlight"/>
+                    <!-- <button name="btt_cancel" states="approve,draft" string="Cancel"
+                            confirm="Are you sure that you need to cancel?"
+                            type="object" class="oe_highlight"/> -->
                     <field name="state" readonly="1"/>
                 </tree>
             </field>

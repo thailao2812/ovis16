@@ -72,6 +72,7 @@
                                             <field name="warehouse_id" attrs="{'readonly': [('state','=','approve')]}"/>
 <!--                                            <button name="btn_approve" string="Confirm" type="object" states="draft"/>-->
                                             <field name="allocated_qty" string="Real Qty" sum="Real Qty"/>
+                                            <field name="mc_on_despatch" attrs="{'readonly': [('state','=','approve')]}"/>
                                             <field name="x_gd_qty" sum="Inspection Qty"/>
                                             <button name="btn_approve" string="Confirm" type="object" states="draft"/>
                                             <button name="button_set_to_draft" string="Set Draft" type="object" states="approve"/>

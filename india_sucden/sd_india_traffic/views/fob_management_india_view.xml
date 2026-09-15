@@ -6,9 +6,11 @@
             <field name="arch" type="xml">
                 <tree string="FOB Management" default_order="id desc">
                 	<field name="name"/>
+                	<field name="purchase_contract_id"/>
                 	<field name="fob_date"/>
                 	<field name="exchange"/>
                 	<field name="market_id"/>
+                	<field name="market_month"/>
                 	<field name="forex_rate_inr"/>
                 	<field name="fob"/>
                 	<field name="fob_usd"/>
@@ -32,6 +34,7 @@
                         <button name="button_submit" string='Submit' type="object" class="oe_highlight" states="draft"/>
                         <button name="button_approve" string='Approve' type="object" class="oe_highlight" states="submit"/>
                         <button name="close_fob" string='Close' type="object" class="oe_highlight" states="approve"/>
+                        <button name="button_set_to_draft" string='Set To Draft' type="object" class="oe_highlight" attrs="{'invisible': [('state', '=', 'draft')]}"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,submit,approve,close"/>
                     </header>
                 	<sheet>
@@ -43,9 +46,14 @@
 	                    </div>
                         <group>
                             <group>
-                                <field name="crop_id" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <label for="purchase_contract_id"/>
+                                <div nam="purchase_contract_id" class="o_row">
+                                    <field name="purchase_contract_id" required="1"/>
+                                    <button name="load_contract" class="btn-default" icon="fa-bars" type="object" string="Load Contract"/>
+                                </div>
+                                <field name="crop_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="fob_date" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                                <field name="exchange" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}" options="{'no_create': True, 'no_open': True}"/>
+                                <field name="exchange" attrs="{'readonly': [('state', '!=', 'draft')]}" options="{'no_create': True, 'no_open': True}"/>
                                 <field name="market_id" readonly="1" options="{'no_create': True, 'no_open': True}"/>
                                 <field name="forex_rate_inr" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="fob" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
@@ -58,6 +66,7 @@
                                 <field name="farm_gate_price_1st" readonly="1"/>
                                 <field name="farm_gate_price_2nd" readonly="1"/>
                                 <field name="price" readonly="1"/>
+                                <field name="market_month" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                 		    </group>
                         </group>
 

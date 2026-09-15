@@ -962,7 +962,6 @@ class CostMaterialsCollection(models.Model):
                       'out_qty':qty_fifo
                 }
                 fifo_id =self.env['stock.move.fifo'].create(val)
-                move.refresh()
             return 1
         
 

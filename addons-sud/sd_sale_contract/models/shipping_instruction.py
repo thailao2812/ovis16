@@ -386,6 +386,8 @@ class ShippingInstruction(models.Model):
             
             if self.contract_id.certificated_ids:
                 self.certificated_ids = [(6, 0, [x.id for x in self.contract_id.certificated_ids])]
+            else:
+                self.certificated_ids = False
         return True
     
     

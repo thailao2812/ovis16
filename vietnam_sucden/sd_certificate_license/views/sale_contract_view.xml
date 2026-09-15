@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_sale_contract_tree_inherit_sd_certificate" model="ir.ui.view">
+        <field name="name">view_sale_contract_tree_inherit_sd_certificate</field>
+        <field name="model">sale.contract</field>
+        <field name="inherit_id" ref="sd_sale_contract.view_sale_contract_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='certificate_id_list']" position="after">
+                <field name="note" string="Note"/>
+            </xpath>
+            <xpath expr="//field[@name='certificate_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_sale_contract_export_tree_inherit_sd_certificate" model="ir.ui.view">
+        <field name="name">view_sale_contract_export_tree_inherit_sd_certificate</field>
+        <field name="model">sale.contract</field>
+        <field name="inherit_id" ref="sd_sale_contract.view_sale_contract_export_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='certificate_id_list']" position="after">
+                <field name="note" string="Note"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_sale_contract_form_inherit_sd_certificate" model="ir.ui.view">
+        <field name="name">view_sale_contract_form_inherit_sd_certificate</field>
+        <field name="model">sale.contract</field>
+        <field name="inherit_id" ref="sd_sale_contract.view_sale_contract_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='certificate_id_list']" position="replace">
+				<label for="certificate_id_list" string="Cer Compliant" class="o_form_field_label"/>
+                <div name="certificate_id_list" class="o_row">
+                    <field name="certificate_id_list" widget="many2many_tags"/>
+                        <!-- <tree>
+                            <field name="name"/>
+                            <field name="premium"/>
+                        </tree>
+                    </field> -->
+                </div>
+			</xpath>
+            <xpath expr="//field[@name='license_certificate_ids']" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </xpath>
+            <xpath expr="//group[@name='date_crop']" position="after">
+                <sheet>
+                    <group class="oe_subtotal_footer oe_right" colspan="2" name="prem_valuation">
+                        <field name="product_prem"/>
+                        <field name="packing_prem"/>
+                        <field name="cert_prem"/>
+                        <div class="oe_subtotal_footer_separator oe_inline o_td_label">
+                            <label for="total_prem" />
+                        </div>
+                        <field name="total_prem" nolabel="1" class="oe_subtotal_footer_separator"/>
+                    </group>
+                    <group/>
+                </sheet>
+                <group/>
+            </xpath>
+            <xpath expr="//field[@name='contract_line']/tree/field[@name='certificate_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+    
+</odoo>

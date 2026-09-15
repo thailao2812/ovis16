@@ -17,7 +17,7 @@ class StockMoveLine(models.Model):
         else:
             return round(number)
 
-    @api.onchange('first_weight', 'second_weight', 'packing_id', 'bag_no', 'tare_weight')
+    @api.onchange('first_weight', 'second_weight', 'packing_id', 'bag_no')
     def onchange_weight(self):
         if not self.packing_id:
             tare_weight = 0.0
@@ -31,3 +31,9 @@ class StockMoveLine(models.Model):
             net_weight = (self.first_weight or 0.0) - (self.second_weight or 0.0) - tare_weight
             if net_weight:
                 self.update({'tare_weight': tare_weight, 'init_qty': net_weight, 'qty_done': net_weight})
+
+
+    @api.onchange('tare_weight')
+    def onchange_tare_weight(self):
+        if self.tare_weight:
+            self.update({'init_qty': self.init_qty - self.tare_weight, 'qty_done': self.qty_done - self.tare_weight})

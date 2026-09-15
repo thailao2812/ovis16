@@ -11,6 +11,7 @@
 				<field name="max_value" attrs="{'readonly': [('state', '=', 'confirm')]}"/>
 				<field name="percent_for_pan" attrs="{'readonly': [('state', '=', 'confirm')]}"/>
 				<field name="percent_unpan" attrs="{'readonly': [('state', '=', 'confirm')]}"/>
+				<field name="current_year"/>
 				<button name="confirm_year" string="Confirm" type="object" attrs="{'invisible': [('state', '=', 'confirm')]}"/>
 				<button name="button_set_to_draft" string="Revert" type="object" attrs="{'invisible': [('state', '=', 'new')]}"/>
 				<field name="state" widget="badge" readonly="1"/>

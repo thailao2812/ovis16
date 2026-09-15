@@ -19,12 +19,10 @@
                 <field name="bl_no" attrs="{'readonly': [('state', '=', 'approved')]}"/>
                 <field name="bl_date" attrs="{'readonly': [('state', '=', 'approved')]}"/>
             </xpath>
-            <xpath expr="//field[@name='shipping_id']" position="after">
-                <field name="partner_id"/>
-                <field name="address" readonly="1" force_save="1"/>
-                <field name="ship_to"  attrs="{'readonly': [('state', '=', 'approved')]}"/>
-                <field name="address_ship_to"  attrs="{'readonly': [('state', '=', 'approved')]}"/>
-            </xpath>
+<!--            <xpath expr="//field[@name='shipping_id']" position="after">-->
+<!--                <field name="partner_id"/>-->
+<!--                <field name="address" readonly="1" force_save="1"/>-->
+<!--            </xpath>-->
 <!--            <xpath expr="//field[@name='post_line']/tree/field[@name='shipped_weight']" position="attributes">-->
 <!--                <attribute name="string">Gross Qty (In Kgs)</attribute>-->
 <!--            </xpath>-->

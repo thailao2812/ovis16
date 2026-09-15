@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_wizard_force_close_npe" model="ir.ui.view">
+        <field name="name">Force Close NPE</field>
+        <field name="model">force.close.npe</field>
+        <field name="arch" type="xml">
+             <form string="Force Close NPE">
+                <group>
+					<field name="reason" required="1"/>
+                </group>
+                <footer>
+                    <button name="action_confirm" string="Confirm" type="object" class="btn-primary" confirm="Are you sure to Force Close this contract?"/>
+                    <button string="Cancel" class="btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action of Reimbursement Report -->
+     <record id="action_force_close_npe" model="ir.actions.act_window">
+            <field name="name">Force Close NPE</field>
+            <field name="res_model">force.close.npe</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_wizard_force_close_npe"/>
+            <field name="target">new</field>
+        </record>
+</odoo>

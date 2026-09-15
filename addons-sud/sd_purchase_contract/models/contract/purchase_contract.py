@@ -502,7 +502,7 @@ class PurchaseContract(models.Model):
 
                 for line in contract.nvp_ids:
                     received += line.product_qty
-                if contract.state == 'done':
+                if contract.state in ['done', 'cancel']:
                     contract.qty_unreceived = 0
                 else:
                     contract.qty_unreceived = contract.total_qty - received
@@ -512,7 +512,7 @@ class PurchaseContract(models.Model):
                 for line in contract.stock_allocation_ids:
                     if line.state == 'approved':
                         received += line.qty_allocation or 0.0
-                if contract.state == 'done':
+                if contract.state in ['done', 'cancel']:
                     contract.qty_unreceived = 0
                 else:
                     contract.qty_unreceived = contract.total_qty - received
@@ -533,6 +533,8 @@ class PurchaseContract(models.Model):
                     contract.qty_unfixed = contract.qty_received - fix
             else:
                 contract.qty_unfixed = received - fix
+            if contract.state in ['done', 'cancel']:
+                contract.qty_unfixed = 0
             contract.total_qty_fixed = fix
 
     qty_received = fields.Float(string='Received', digits=(12, 0))
@@ -568,7 +570,7 @@ class PurchaseContract(models.Model):
 
             payment_remain = payment_received = amount = 0.0
             if contract.type == 'consign':
-                for pay in contract.payment_ids:
+                for pay in contract.payment_ids.filtered(lambda r: r.state == 'posted'):
                     amount += pay.amount or 0.0
                     payment_received += pay.payment_refunded or 0.0
                     payment_remain += pay.open_advance or 0.0
@@ -603,6 +605,9 @@ class PurchaseContract(models.Model):
                     fix += line.quantity
                 order.qty_unfixed = order.total_qty - fix
                 order.total_qty_fixed = fix
+            if order.state == 'done':
+                print('vaoi dayt rofi')
+                order.qty_unfixed = 0
 
     total_qty_fixed = fields.Float(compute='_total_qty_fixed', string='Fixed', digits=(12, 0), store=True)
     qty_unfixed = fields.Float(compute='_total_qty_fixed', string='UnFixed', digits=(12, 0), store=True)
@@ -987,6 +992,7 @@ class PurchaseContract(models.Model):
             if contract.type == 'ptbf':
                 contract.write({'state': 'done'})
                 return 1
+            contract._amount_all()
             if contract.amount_total != 0:
                 raise UserError(_('Payable must be 0!'))
             if contract.type != 'purchase':
