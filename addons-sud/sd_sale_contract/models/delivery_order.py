@@ -197,14 +197,23 @@ class DeliveryOrder(models.Model):
     
     
     def button_draft(self):
-        if self.state == 'approved':
-            picking_id = self.picking_id
-#             if picking_id and picking_id.invoice_state == 'invoiced':
-#                 raise UserError(_('Unable to cancel Delivery Order %s.') % (self.name))
-            if picking_id.state not in ('confirmed','assigned','done','approved'):
-                picking_id.unlink()
-            else:
-                raise UserError(_('Unable to cancel Delivery Order %s.') % (self.name))
+        for order in self:
+            if order.state == 'approved' and order.picking_id:
+                picking = order.picking_id
+                if picking.state in ('confirmed', 'assigned', 'done', 'approved'):
+                    raise UserError(_('Unable to cancel/set draft Delivery Order %s.') % (order.name))
+                # Pickings are never deleted (sd_delete_protection_odoo): the old GDN stays,
+                # cancelled, and is detached so the next approval creates a new one.
+                if picking.state == 'draft':
+                    picking.action_cancel()
+                    picking.message_post(
+                        body=_('GDN cancelled because Delivery Order %(do)s was set to draft by %(user)s.') % {
+                            'do': order.name,
+                            'user': self.env.user.name,
+                        },
+                        subtype_xmlid='mail.mt_note',
+                    )
+                order.picking_id = False
         self.write({'state': 'draft'})
  
     
