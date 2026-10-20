@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_purchase_raw_coffee_report_tree" model="ir.ui.view">
+        <field name="name">view_purchase_raw_coffee_report_tree</field>
+        <field name="model">purchase.raw.coffee.report</field>
+        <field name="arch" type="xml">
+            <tree create="false" edit="false">
+                <field name="name" readonly="1"/>
+                <field name="total_purchase_volume" readonly="1" sum="total_purchase_volume"/>
+                <field name="avg_purchase_diff" readonly="1"/>
+                <field name="ptbf_coffee" readonly="1" sum="ptbf_coffee"/>
+                <field name="total" readonly="1" sum="total"/>
+                <field name="total_production" readonly="1" sum="total_production"/>
+                <field name="balance" readonly="1" sum="balance"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_purchase_raw_coffee_report_search" model="ir.ui.view">
+        <field name="name">view_purchase_raw_coffee_report_search</field>
+        <field name="model">purchase.raw.coffee.report</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_purchase_raw_coffee_report" model="ir.actions.act_window">
+        <field name="name">Purchase Raw Coffee Report</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">purchase.raw.coffee.report</field>
+        <field name="view_mode">tree</field>
+        <field name="context">{}</field>
+    </record>
+</odoo>

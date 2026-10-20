@@ -197,14 +197,23 @@ class DeliveryOrder(models.Model):
     
     
     def button_draft(self):
-        if self.state == 'approved':
-            picking_id = self.picking_id
-#             if picking_id and picking_id.invoice_state == 'invoiced':
-#                 raise UserError(_('Unable to cancel Delivery Order %s.') % (self.name))
-            if picking_id.state not in ('confirmed','assigned','done','approved'):
-                picking_id.unlink()
-            else:
-                raise UserError(_('Unable to cancel Delivery Order %s.') % (self.name))
+        for order in self:
+            if order.state == 'approved' and order.picking_id:
+                picking = order.picking_id
+                if picking.state in ('confirmed', 'assigned', 'done', 'approved'):
+                    raise UserError(_('Unable to cancel/set draft Delivery Order %s.') % (order.name))
+                # Pickings are never deleted (sd_delete_protection_odoo): the old GDN stays,
+                # cancelled, and is detached so the next approval creates a new one.
+                if picking.state == 'draft':
+                    picking.action_cancel()
+                    picking.message_post(
+                        body=_('GDN cancelled because Delivery Order %(do)s was set to draft by %(user)s.') % {
+                            'do': order.name,
+                            'user': self.env.user.name,
+                        },
+                        subtype_xmlid='mail.mt_note',
+                    )
+                order.picking_id = False
         self.write({'state': 'draft'})
  
     
@@ -403,7 +412,10 @@ class DeliveryOrder(models.Model):
                 #     print pick.id
                 # print weight_out, weight_in, 'STOP', order.id
                 order.weightfactory = weight_out
-                order.bagsfactory = bags_out
+                if order.delivery_order_ids and sum(order.delivery_order_ids.mapped('bags_input')) > 0:
+                    order.bagsfactory = sum(order.delivery_order_ids.mapped('bags_input'))
+                else:
+                    order.bagsfactory = bags_out
                 order.shipped_weight = weight_in
                 order.bags = bags_in
                 order.storing_loss = order.total_qty - order.weightfactory
@@ -434,20 +446,22 @@ class DeliveryOrder(models.Model):
                         shipped_weight += line.shipped_weight
 
                 if order.packing_place == 'factory':
-                    order.bagsfactory = bagsfactory
-                    order.weightfactory = weight
-                    order.bags = bagsfactory
                     order.shipped_weight = weight
-                    order.storing_loss = order.total_qty - weight
                     order.transportation_loss = 0
                 else:
-                    order.bags = bags
                     order.shipped_weight = shipped_weight
-
-                    order.bagsfactory = bagsfactory
-                    order.weightfactory = weight
-                    order.storing_loss = order.total_qty - weight
                     order.transportation_loss = weight - shipped_weight
+                    
+                order.storing_loss = order.total_qty - weight
+                order.weightfactory = weight
+                
+                print(sum(order.delivery_order_ids.mapped('bags_input')))
+                if order.delivery_order_ids and sum(order.delivery_order_ids.mapped('bags_input')) > 0:
+                    order.bagsfactory = sum(order.delivery_order_ids.mapped('bags_input'))
+                    order.bags = sum(order.delivery_order_ids.mapped('bags_input'))
+                else:
+                    order.bagsfactory = bagsfactory
+                    order.bags = bagsfactory
 
                 if order.contract_id and order.contract_id.type == 'export':
                     if order.picking_id and ('KTN' in order.picking_id.name or 'CWT' in order.picking_id.name):
@@ -609,6 +623,7 @@ class DeliveryOrderLine(models.Model):
 ######################################### NED Contract ############################################################################
     
     packing_id = fields.Many2one('ned.packing', string='Packing')
+    bags_input = fields.Float(string='Bags', digits=(12, 0) , default=0.0)
     certificate_id = fields.Many2one('ned.certificate', string='Certificate')
 ##########################################END NED Contract###########################################################################
 

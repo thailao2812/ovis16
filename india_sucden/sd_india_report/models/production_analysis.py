@@ -31,9 +31,9 @@ class ProductionAnalysis(models.Model):
         prod = []
         where = '1 = 1'
         if self._context.get('normal', False):
-            where += "AND name ilike 'BTA%'"
+            where += " AND name ilike 'BTA%'"
         if self._context.get('upgrade', False):
-            where += "AND name not like 'BTA%'"
+            where += " AND name not like 'BTA%'"
 
         sql = '''
             SELECT id

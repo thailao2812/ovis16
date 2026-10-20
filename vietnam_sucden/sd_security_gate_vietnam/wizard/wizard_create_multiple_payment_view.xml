@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="action_create_multiple_payment" model="ir.actions.act_window">
+            <field name="name">Create Multiple Payment</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">wizard.create.multiple.payment</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+    <record id="wizard_create_multiple_payment_form" model="ir.ui.view">
+            <field name="name">wizard_create_multiple_payment_form</field>
+            <field name="model">wizard.create.multiple.payment</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <notebook>
+                            <page string="Payment Invoice">
+                                <field name="line_ids">
+                                    <tree editable="top" create="false">
+                                        <field name="invoice_id"/>
+                                        <field name="journal_id" required="1"/>
+                                        <field name="request_amount"/>
+                                        <field name="allocate_amount"/>
+                                        <field name="paid_amount"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <footer>
+                        <button
+                                name="action_confirm"
+                                string="Confirm"
+                                type="object"
+                                class="btn-primary"
+                                confirm="Make sure everything are correct?"
+                        />
+                        <button string="Close" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+</odoo>

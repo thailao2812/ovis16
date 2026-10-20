@@ -44,75 +44,53 @@ class PSSManagement(models.Model):
 
     moisture_percent = fields.Float(string='Moisture%', digits=(12, 2),  )
 
-    @api.onchange('stack')
-    def onchange_stack(self):
-        res = super(PSSManagement, self).onchange_stack()
-        for i in self:
-            if not i.stack:
-                i.outturn_percent = 0
-                i.aaa_percent = 0
-                i.aa_percent = 0
-                i.a_percent = 0
-                i.b_percent = 0
-                i.c_percent = 0
-                i.pb_percent = 0
-                i.bb_percent = 0
-                i.bleached_percent = 0
-                i.idb_percent = 0
-                i.bits_percent = 0
-                i.hulks_percent = 0
-                i.stone_percent = 0
-                i.skin_out_percent = 0
-                i.triage_percent = 0
-                i.wet_bean_percent = 0
-                i.red_beans_percent = 0
-                i.stinker_percent = 0
-                i.faded_percent = 0
-                i.flat_percent = 0
-                i.pb1_percent = 0
-                i.pb2_percent = 0
-                i.sleeve_6_up_percent = 0
-                i.sleeve_5_5_up_percent = 0
-                i.sleeve_5_5_down_percent = 0
-                i.sleeve_5_down_percent = 0
-                i.moisture_percent = 0
+    # New field for india
+    s_contract_id = fields.Many2one('s.contract', string='Sale Contract')
+    product_id = fields.Many2one("product.product", related='s_contract_id.product_id', string="Product", store=True)
+    s_contract_date = fields.Date(related='s_contract_id.date', store=True, string='Sale Contract Date')
+    shipping_id = fields.Many2one("shipping.instruction", string="SI No.", compute='_compute_data_from_s_contract', store=True)
+    shipping_date = fields.Date(string='SI Date', related='shipping_id.date', store=True)
+    partner_id = fields.Many2one("res.partner", string="Customer", related='shipping_id.partner_id', store=True)
+    ship_to = fields.Many2one('res.partner', string='Ship To', related='shipping_id.ship_to', store=True)
+    certificate_id = fields.Many2one('ned.certificate', compute='_compute_data_from_s_contract', store=True)
+    crop_id = fields.Many2one('ned.crop', string='Crop Year', related='s_contract_id.crop_id', store=True)
+    pss_type = fields.Selection(related='s_contract_id.pss_type', store=True, string='PSS Type')
+    contract_qty = fields.Float(string='Contract Qty', related='s_contract_id.total_qty', store=True)
+    sample_qty = fields.Float(string='Sample Qty')
+    sample_sent_date = fields.Date(string='Sample Sent On')
+    sample_ref = fields.Char(string='Sample Ref No')
+    courier = fields.Char(string='Courier')
+    awb_no = fields.Char(string='AWB No.')
+    shipt_month = fields.Many2one('s.period', related='s_contract_id.shipt_month', store=True)
+    pss_delivery_date = fields.Date(string='PSS Delivery Date')
+    pss_status = fields.Selection(
+        [('pending', 'Pending'), ('sent', 'Sent'), ('approved', 'Approved'), ('rejected', 'Rejected')],
+        string="PSS status", default='pending')
+    approve_date = fields.Date(string='Approve On')
+    reject_date = fields.Date(string='Reject On')
+    reason_reject = fields.Text(string='Reason Reject')
+    buyer_ref = fields.Char(string='Buyer Ref')
+    note = fields.Text(string='Note')
+    buyer_comment = fields.Text(string="Buyer's Comment")
+    comment = fields.Text(string='Our Comment')
+    inspector = fields.Char(string='Inspector')
+    qc_staff_id = fields.Many2one('res.users', string='QC Staff')
 
-
-            for stack in i.stack:
-                i.outturn_percent = stack.outturn_percent
-                i.aaa_percent = stack.aaa_percent
-                i.aa_percent = stack.aa_percent
-                i.a_percent = stack.a_percent
-                i.b_percent = stack.b_percent
-                i.c_percent = stack.c_percent
-                i.pb_percent = stack.pb_percent
-                i.bb_percent = stack.bb_percent
-                i.bleached_percent = stack.bleached_percent
-                i.idb_percent = stack.idb_percent
-                i.bits_percent = stack.bits_percent
-                i.hulks_percent = stack.hulks_percent
-                i.stone_percent = stack.stone_percent
-                i.skin_out_percent = stack.skin_out_percent
-                i.triage_percent = stack.triage_percent
-                i.wet_bean_percent = stack.wet_bean_percent
-                i.red_beans_percent = stack.red_beans_percent
-                i.stinker_percent = stack.stinker_percent
-                i.faded_percent = stack.faded_percent
-                i.flat_percent = stack.flat_percent
-                i.pb1_percent = stack.pb1_percent
-                i.pb2_percent = stack.pb2_percent
-                i.sleeve_6_up_percent = stack.sleeve_6_up_percent
-                i.sleeve_5_5_up_percent = stack.sleeve_5_5_up_percent
-                i.sleeve_5_5_down_percent = stack.sleeve_5_5_down_percent
-                i.sleeve_5_down_percent = stack.sleeve_5_down_percent
-
-                i.sleeve_5_up_percent = stack.sleeve_5_up_percent
-                i.unhulled_percent = stack.unhulled_percent
-                i.remaining_coffee_percent = stack.remaining_coffee_percent
-                i.blacks_percent = stack.blacks_percent
-                i.half_monsoon_percent = stack.half_monsoon_percent
-                i.good_beans_percent = stack.good_beans_percent
-
-                i.moisture_percent = stack.moisture_percent
-
-        return res
+    @api.depends('s_contract_id')
+    def _compute_data_from_s_contract(self):
+        for rec in self:
+            if rec.s_contract_id:
+                shipping_id = self.env['shipping.instruction'].search([
+                    ('contract_id', '=', rec.s_contract_id.id)
+                ])
+                if rec.s_contract_id.certificated_ids:
+                    rec.certificate_id = rec.s_contract_id.certificated_ids[0].id
+                else:
+                    rec.certificate_id = False
+                if shipping_id:
+                    rec.shipping_id = shipping_id.id
+                else:
+                    rec.shipping_id = False
+            else:
+                rec.certificate_id = False
+                rec.shipping_id = False

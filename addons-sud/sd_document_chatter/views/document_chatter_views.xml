@@ -1,0 +1,395 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+        Each view below appends the chatter after the form's sheet. They target
+        the base form of each document (the one with no inherit_id), so the
+        chatter survives whatever the other inheriting views add.
+    -->
+
+    <record id="view_s_contract_form_chatter" model="ir.ui.view">
+        <field name="name">s.contract.form.chatter</field>
+        <field name="model">s.contract</field>
+        <field name="inherit_id" ref="sd_sale_contract.view_s_contract_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="after">
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_kcs_criterions_form_chatter" model="ir.ui.view">
+        <field name="name">kcs.criterions.form.chatter</field>
+        <field name="model">kcs.criterions</field>
+        <field name="inherit_id" ref="sd_quality.view_kcs_criterions_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="after">
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- shipping.instruction has two base forms: the standard one and the KCS
+         variant. Both get the chatter so it does not vanish depending on which
+         menu the user came in through. -->
+    <record id="view_shipping_instruction_form_chatter" model="ir.ui.view">
+        <field name="name">shipping.instruction.form.chatter</field>
+        <field name="model">shipping.instruction</field>
+        <field name="inherit_id" ref="sd_sale_contract.view_shipping_instruction_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="after">
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_shipping_instruction_kcs_form_chatter" model="ir.ui.view">
+        <field name="name">shipping.instruction.kcs.form.chatter</field>
+        <field name="model">shipping.instruction</field>
+        <field name="inherit_id" ref="sd_quality.view_shipping_instruction_kcs_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="after">
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_post_shipment_form_chatter" model="ir.ui.view">
+        <field name="name">post.shipment.form.chatter</field>
+        <field name="model">post.shipment</field>
+        <field name="inherit_id" ref="sd_sale_contract.view_post_shipment_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="after">
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_lot_kcs_form_chatter" model="ir.ui.view">
+        <field name="name">lot.kcs.form.chatter</field>
+        <field name="model">lot.kcs</field>
+        <field name="inherit_id" ref="sd_quality.view_lot_kcs_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="after">
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_daily_confirmation_form_chatter" model="ir.ui.view">
+        <field name="name">daily.confirmation.form.chatter</field>
+        <field name="model">daily.confirmation</field>
+        <field name="inherit_id" ref="sd_sale_contract.view_daily_confirmation_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="after">
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_request_stock_material_form_chatter" model="ir.ui.view">
+        <field name="name">request.stock.material.form.chatter</field>
+        <field name="model">request.stock.material</field>
+        <field name="inherit_id" ref="sd_inventory.view_request_stock_material_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="after">
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_traffic_contract_form_chatter" model="ir.ui.view">
+        <field name="name">traffic.contract.form.chatter</field>
+        <field name="model">traffic.contract</field>
+        <field name="inherit_id" ref="sd_traffic.view_traffic_contract_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="after">
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- ==================================================================
+         Head contracts: mail.thread was already there, but the chatter only
+         appeared on a secondary allocation form, never on the main one.
+         ================================================================== -->
+    <record id="view_sale_contract_main_form_chatter" model="ir.ui.view">
+        <field name="name">sale.contract.form.chatter</field>
+        <field name="model">sale.contract</field>
+        <field name="inherit_id" ref="sd_sale_contract.view_sale_contract_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="after">
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_sale_contract_sp_alloc_form_chatter" model="ir.ui.view">
+        <field name="name">sale.contract.form.chatter</field>
+        <field name="model">sale.contract</field>
+        <field name="inherit_id" ref="sd_traffic.view_s_p_allocation_traffic_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="after">
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_purchase_contract_alloc_invoiced_form_chatter" model="ir.ui.view">
+        <field name="name">purchase.contract.form.chatter</field>
+        <field name="model">purchase.contract</field>
+        <field name="inherit_id" ref="sd_purchase_contract.view_nvp_contract_allocation_invoiced_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="after">
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- ==================================================================
+         Documents and master data that had no chatter at all.
+         ================================================================== -->
+    <record id="view_account_fiscalyear_form_chatter" model="ir.ui.view">
+        <field name="name">account.fiscalyear.form.chatter</field>
+        <field name="model">account.fiscalyear</field>
+        <field name="inherit_id" ref="sd_account.view_account_fiscalyear_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="after">
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- This form has no <sheet>, so the chatter is appended to the form itself. -->
+    <record id="view_account_period_form_chatter" model="ir.ui.view">
+        <field name="name">account.period.form.chatter</field>
+        <field name="model">account.period</field>
+        <field name="inherit_id" ref="sd_account.view_account_period_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_by_product_derivable_form_chatter" model="ir.ui.view">
+        <field name="name">by.product.derivable.form.chatter</field>
+        <field name="model">by.product.derivable</field>
+        <field name="inherit_id" ref="sd_inventory.view_by_product_derivable_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="after">
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_cert_pre_form_chatter" model="ir.ui.view">
+        <field name="name">cert.pre.form.chatter</field>
+        <field name="model">cert.pre</field>
+        <field name="inherit_id" ref="sd_purchase_contract.view_cert_pre_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="after">
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_fob_value_form_chatter" model="ir.ui.view">
+        <field name="name">fob.value.form.chatter</field>
+        <field name="model">fob.value</field>
+        <field name="inherit_id" ref="sd_purchase_contract.view_cost_fob_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="after">
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_fx_trade_root_form_chatter" model="ir.ui.view">
+        <field name="name">fx.trade.root.form.chatter</field>
+        <field name="model">fx.trade.root</field>
+        <field name="inherit_id" ref="sd_purchase_contract.view_fx_trade_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="after">
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_grade_premium_root_form_chatter" model="ir.ui.view">
+        <field name="name">grade.premium.root.form.chatter</field>
+        <field name="model">grade.premium.root</field>
+        <field name="inherit_id" ref="sd_purchase_contract.view_form_grades_premium"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="after">
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_mrp_periodical_costing_form_chatter" model="ir.ui.view">
+        <field name="name">mrp.periodical.production.costing.form.chatter</field>
+        <field name="model">mrp.periodical.production.costing</field>
+        <field name="inherit_id" ref="sd_account.view_mrp_periodical_production_costing_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="after">
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_ned_certificate_license_form_chatter" model="ir.ui.view">
+        <field name="name">ned.certificate.license.form.chatter</field>
+        <field name="model">ned.certificate.license</field>
+        <field name="inherit_id" ref="sd_pur_sales.ned_certificate_license_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="after">
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_ned_certificate_license_traffic_form_chatter" model="ir.ui.view">
+        <field name="name">ned.certificate.license.form.chatter</field>
+        <field name="model">ned.certificate.license</field>
+        <field name="inherit_id" ref="sd_traffic.ned_certificate_license_traffic_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="after">
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_ned_crop_form_chatter" model="ir.ui.view">
+        <field name="name">ned.crop.form.chatter</field>
+        <field name="model">ned.crop</field>
+        <field name="inherit_id" ref="sd_master.view_ned_crop_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="after">
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_request_payment_form_chatter" model="ir.ui.view">
+        <field name="name">request.payment.form.chatter</field>
+        <field name="model">request.payment</field>
+        <field name="inherit_id" ref="sd_purchase_contract.view_request_payment_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="after">
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_stoploss_config_form_chatter" model="ir.ui.view">
+        <field name="name">stoploss.config.form.chatter</field>
+        <field name="model">stoploss.config</field>
+        <field name="inherit_id" ref="sd_purchase_contract.view_stoploss_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="after">
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

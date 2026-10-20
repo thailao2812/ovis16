@@ -275,7 +275,7 @@ class StockPicking(models.Model):
             if pick.picking_type_id.code =='production_out':
                 pick.kcs_line.refresh()
                 pick.load_qc_gip()
-    
+
     def btt_approved(self):
         for pick in self:
             if not pick.kcs_line:
@@ -634,7 +634,6 @@ class StockPicking(models.Model):
                                             WHERE request_kcs_line.x_warehouse_id is NULL; ''')
                 
             if pick.picking_type_id.code =='production_out':
-                pick.kcs_line.refresh()
                 pick.load_qc_gip()
         
 

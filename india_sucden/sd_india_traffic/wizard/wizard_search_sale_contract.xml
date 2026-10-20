@@ -15,7 +15,7 @@
 								<span>       </span><span>   Date to</span>
 								<field name="date_to" class="oe_inline ms-3"/>
 							</div>
-							<field name="sale_contract_ids" required="1" widget="many2many_tags" options="{'no_create': true}" context="{'search_sale_contract': True}"/>
+							<field name="sale_contract_ids" widget="many2many_tags" options="{'no_create': true}" context="{'search_sale_contract': True}"/>
 		                </group>
 		                <group>
 

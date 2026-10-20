@@ -234,7 +234,7 @@ class SaleContract(models.Model):
     
     entries_id = fields.Many2one('account.move',  string='Entries')
     
-    @api.depends('delivery_ids','delivery_ids.total_qty','contract_line','contract_line.product_qty', \
+    @api.depends('delivery_ids', 'delivery_ids.state','delivery_ids.total_qty','contract_line','contract_line.product_qty', \
     'invoice_ids','invoice_ids.state','invoice_ids.invoice_line_ids','invoice_ids.invoice_line_ids.quantity', \
     'invoice_ids.invoice_line_ids.price_unit')
     def _do_qty(self):
@@ -248,7 +248,7 @@ class SaleContract(models.Model):
             
             # for line in order.delivery_ids:
             #     total_qty += line.total_qty
-            for do in order.delivery_ids:
+            for do in order.delivery_ids.filtered(lambda x: x.state != 'cancel'):
                 do_qty += do.total_qty
                 
             for line in order.invoice_ids:

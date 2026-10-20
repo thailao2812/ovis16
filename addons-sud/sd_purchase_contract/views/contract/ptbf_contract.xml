@@ -126,7 +126,7 @@
 	                    		</group>
 	                    	</page>
 	                    	
-	                    	<page string="PTBF Fix Price" attrs="{'invisible': [('type','!=','ptbf')]}">
+	                    	<page string="PTBF Fix Price" name="ptbf_fixprice" attrs="{'invisible': [('type','!=','ptbf')]}">
 	                    		<button name="allocate_recevice_qty" type ="object" string="Alocate" invisible="1"/>
 	                    		<field name="ptbf_ids">
 		                    		<tree >

@@ -12,6 +12,21 @@ class AccountMove(models.Model):
     amount_total_india = fields.Monetary(string='Total Amount (rounding)', store=True, readonly=True,
                                          compute='_compute_amount', )
 
+    @api.depends('invoice_date', 'company_id')
+    def _compute_date(self):
+        for move in self:
+            if not move.invoice_date:
+                if not move.date:
+                    move.date = fields.Date.context_today(self)
+                continue
+            accounting_date = move.invoice_date
+            if not move.is_sale_document(include_receipts=True):
+                accounting_date = move._get_accounting_date(move.invoice_date, move._affect_tax_report())
+            if accounting_date and accounting_date != move.date:
+                move.date = accounting_date
+                # might be protected because `_get_accounting_date` requires the `name`
+                # self.env.add_to_compute(self._fields['name'], move)
+
     def custom_round(self, number: float) -> int:
         if number - round(number) == 0.5:
             return math.ceil(number)

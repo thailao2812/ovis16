@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sale_assign_box_view_form" model="ir.ui.view">
+        <field name="name">sale.assign.box.view.form</field>
+        <field name="model">sale.subscription.assign</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="approval_id"/>
+                            <field name="user_id" invisible="1"/>
+                            <field name="sub_id" invisible="1"/>
+                        </group>
+                    </group>
+
+                    <separator string="Comment"/>
+                    <div>
+                        <field name="name" placeholder="Comment" colspan="4"/>
+                    </div>
+                    
+                </sheet>
+                <footer>
+                    <button name="approve" string="Confirm" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

@@ -10,10 +10,37 @@
 		            name="Purchase"
 		            parent="menu_report_control_root"
 		            sequence="40"/>
-					<menuitem id="menu_purchase_contract_detail_line_report_action"
-				            action="sd_purchase_contract.purchase_contract_detail_line_report_action" sequence="1"
+					<menuitem id="menu_purchase_report_india"
+				            action="sd_india_report.action_purchase_report_india" sequence="1"
 				            parent="menu_report_purchase"
-				            name="Purchase Contract Line Detail"/>
+				            name="Purchase Report - Regular"/>
+					<menuitem id="menu_purchase_report_cs_india"
+				            action="sd_india_report.action_purchase_report_cs_india" sequence="2"
+				            parent="menu_report_purchase"
+				            name="Purchase Report - Consignment"/>
+					<menuitem id="menu_tds_report_india"
+				            action="sd_india_report.action_tds_report_india" sequence="3"
+				            parent="menu_report_purchase"
+				            name="TDS Report" active="True"/>
+					<menuitem id="menu_exposure_report_india"
+				            action="sd_india_report.action_exposure_report_india" sequence="4"
+				            parent="menu_report_purchase"
+				            name="Exposure Report" active="True"/>
+					<menuitem id="menu_clean_coffee_report_india"
+				            action="sd_india_report.action_clean_coffee_report" sequence="5"
+				            parent="menu_report_purchase"
+				            name="Clean Coffee Report" active="True"/>
+					<menuitem id="menu_purchase_raw_coffee_report_india"
+				            action="sd_india_report.action_purchase_raw_coffee_report" sequence="6"
+				            parent="menu_report_purchase"
+				            name="Purchase Raw Coffee Report" active="True"/>
+
+				<menuitem id="menu_stock_report"
+					name="Stock Report"
+						  parent="menu_report_control_root"
+						  sequence="45"
+						  action="action_stock_report_india"
+				/>
 
             
 	            <!-- Configuration Contracts Top 1-->

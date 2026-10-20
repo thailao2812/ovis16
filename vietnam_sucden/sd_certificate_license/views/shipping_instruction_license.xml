@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_shipping_instruction_license_allocations_tree" model="ir.ui.view">
+            <field name="name">view.shipping.instruction.license.allocation.tree</field>
+            <field name="model">shipping.instruction.license.allocation</field>
+            <field name="arch" type="xml">
+                <tree string="SI License Allocations" default_order="id desc">
+                    <field name = 'certificate_id' readonly = '1'/>
+                    <field name = 'certificated_ids' readonly = '1' widget="many2many_tags"/>
+                    <field name = 'type' readonly = '1'/>
+                    <field name = 'license_id' readonly = '1'/>
+                    <field name = 'partner_id' readonly = '1'/>
+                    <field name = 'warehouse_id' readonly = '1'/>
+                    <field name = 'shipping_id' readonly = '1'/>
+                    <field name = 'date_etd' readonly = '1'/>
+                    <field name = 'shipment_date' readonly = '1'/>
+                    <field name = 'product_id' readonly = '1'/>
+                    <field name = 'grade_id' readonly = '1'/>
+                    <field name = 'state' readonly = '1'/>
+                    <field name = 'allocation_qty' readonly = '1'/>
+                    <field name = 'crop_id' readonly = '1'/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_shipping_instruction_license_allocations_pivot" model="ir.ui.view">
+            <field name="name">view.shipping.instruction.license.allocation.pivot</field>
+            <field name="model">shipping.instruction.license.allocation</field>
+            <field name="arch" type="xml">
+                <pivot string="SI License Allocations Pivot">
+                    <field name="license_id" type="row"/>
+                    <field name="certificated_ids" type="col"/>
+                    <field name="allocation_qty" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
+        <record id="search_shipping_instruction_license_allocations" model="ir.ui.view">
+            <field name="name">search.shipping.instruction.license.allocation</field>
+            <field name="model">shipping.instruction.license.allocation</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name = "license_id"/>
+                    <field name = "warehouse_id"/>
+                    <field name = "shipping_id"/>
+                    <field name = "certificated_ids"/>
+                    <field name = "state"/>
+                    
+                    <group expand="1" string="Group By">
+                        <filter string="License Number" domain="[]" name="filter_license_id" context="{'group_by':'license_id'}"/>
+                        <filter string="Warehouse" domain="[]" name="filter_warehouse_id" context="{'group_by':'warehouse_id'}"/>
+                        <filter string="Supplier" domain="[]" name="filter_partner_id" context="{'group_by':'partner_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+                        
+        <record id="action_shipping_instruction_license_allocations" model="ir.actions.act_window">
+            <field name="name">SI License Allocations</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">shipping.instruction.license.allocation</field>
+            <field name="view_mode">tree,pivot</field>
+            <field name="view_id" ref="view_shipping_instruction_license_allocations_tree"/>
+            <!-- <field name="view_id" ref="view_sd_certificate_license_detail_tree"/> -->
+            <!-- <field name="context">{'search_by_field_date': ['fob_date']}</field> -->
+            <field name="context">{}</field>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="action_queue_exstore_view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_shipping_instruction_license_allocations_tree"/>
+            <field name="act_window_id" ref="action_shipping_instruction_license_allocations"/>
+        </record>
+        
+    </data>
+</odoo>

@@ -15,11 +15,11 @@
 				            	action="action_fob_management_india"
 				            	sequence="1"
 					        	parent="menu_menu_traffic_management_india"/>
-				<!-- Purchase Contract - FOB Link -->
-				      <menuitem id="menu_purchase_contract_fob_link_india"
-				            	action="action_view_search_purchase_contract"
-				            	sequence="2"
-					        	parent="menu_menu_traffic_management_india"/>
+<!--				&lt;!&ndash; Purchase Contract - FOB Link &ndash;&gt;-->
+<!--				      <menuitem id="menu_purchase_contract_fob_link_india"-->
+<!--				            	action="action_view_search_purchase_contract"-->
+<!--				            	sequence="2"-->
+<!--					        	parent="menu_menu_traffic_management_india"/>-->
 				<!-- Purchase Contract - FOB already Linked -->
 				      <menuitem id="menu_purchase_contract_fob_linked_together"
 				            	action="action_purchase_contract_fob_linked_view"

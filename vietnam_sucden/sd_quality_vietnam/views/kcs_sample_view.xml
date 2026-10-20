@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_kcs_sample_form_inherit_sucden_vn" model="ir.ui.view">
+            <field name="name">view_kcs_sample_form_inherit_sucden_vn</field>
+            <field name="model">kcs.sample</field>
+            <field name="inherit_id" ref="sd_quality.view_kcs_sample_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='picking_ids']" position="attributes">
+                    <attribute name="context">{'picking_sample_ids': True, 'date': date_kcs, 'partner_id': partner_id, 'product_id': product_id}</attribute>
+                    <attribute name="options">{'no_create': True}</attribute>
+                </xpath>
+            </field>
+    </record>
+</odoo>

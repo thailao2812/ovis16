@@ -5,9 +5,12 @@
     'category': 'SUCDEN Report Manager',
     'depends': ['sd_india_quality_control', 'sd_india_mrp','sd_india_inventory','sd_india_traffic'],
     'data': [
+            'data/data.xml',
             'security/security.xml',
             'security/ir.model.access.csv',
             'views/production_report_view.xml',
+            'views/purchase_report_view.xml',
+            'views/purchase_report_cs_view.xml',
             'views/sucden_syn_config_view.xml',
             'views/batch_report.xml',
             'views/production_analysis_view.xml',
@@ -30,6 +33,11 @@
             'views/fob_weight_franchise.xml',
             'views/report_grn_unallocated.xml',
             'views/report_bag_transfer_view.xml',
+            'views/stock_report_view.xml',
+            'views/tds_report_view.xml',
+            'views/exposure_report.xml',
+            'views/clean_coffee_view.xml',
+            'views/purchase_raw_coffee_report_view.xml',
             # 'views/long_short_fob_view.xml',
             # 'views/long_short_fob_v2_view.xml',
             # 'views/long_short_factory_view.xml',
@@ -39,6 +47,12 @@
 
             'report/report_view.xml',
             ],
+    "assets": {
+        "web.assets_backend": [
+            "sd_india_report/static/src/xml/list_view.xml",
+            "sd_india_report/static/src/js/list_view.js"
+        ]
+    },
     'installable': True,
     'auto_install': False,
     'author': 'Sucden Vietnam Ltd',

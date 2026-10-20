@@ -8,3 +8,8 @@ class ProductionAnalysis(models.Model):
     _inherit = 'production.analysis'
 
     locked = fields.Boolean(string='Locked Batch PnL', default=False)
+
+class ProductionAnalysisLineOutput(models.Model):
+    _inherit = 'production.analysis.line.output'
+
+    batch_id = fields.Many2one('mrp.production', related='analysis_id.production_id', store=True)

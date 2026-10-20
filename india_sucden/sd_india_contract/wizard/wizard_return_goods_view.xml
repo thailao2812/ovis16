@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_wizard_return_purchase_contract" model="ir.ui.view">
+	        <field name="name">view_wizard_return_purchase_contract</field>
+	        <field name="model">wizard.return.goods</field>
+	        <field name="arch" type="xml">
+		       	<form string="Return Information">
+		        	<sheet>
+			            <group>
+		            		<field name="contract_id" readonly="1"/>
+		            		<field name="unfixed_qty"/>
+		                </group>
+		                <group>
+							<field name="quantity"/>
+							<field name="reason" required="1"/>
+		                </group>
+		                <footer>
+		                	<button string="Request for Approval" name="button_request" type="object" class="oe_highlight"/>
+		                    <button string="Cancel" class="btn-default" special="cancel"/>
+		                </footer>
+	                </sheet>
+	            </form>
+	        </field>
+	    </record>
+
+    	<record id="action_view_return_purchase_contract" model="ir.actions.act_window">
+            <field name="name">Return Goods Contract</field>
+            <field name="res_model">wizard.return.goods</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+</odoo>

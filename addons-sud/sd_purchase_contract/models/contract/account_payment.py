@@ -26,9 +26,9 @@ class AccountPayment(models.Model):
         
         if self.purchase_contract_id:
             if not self.request_payment_id:
-                if self.purchase_contract_id.type != 'purchase':
-                    self.purchase_contract_id.write({'state':'done'})
-                    return res
+                # if self.purchase_contract_id.type != 'purchase':
+                #     self.purchase_contract_id.write({'state':'done'})
+                #     return res
                 
                 self.purchase_contract_id.write({
                     'date_payment_final': self.date or False
@@ -50,9 +50,9 @@ class AccountPayment(models.Model):
                 for i in self.purchase_contract_id.interest_move_id.line_ids:
                     i.date = date_final_payment
                 
-                if self.purchase_contract_id.type != 'purchase':
-                    self.purchase_contract_id.write({'state':'done'})
-                    return res
+                # if self.purchase_contract_id.type != 'purchase':
+                #     self.purchase_contract_id.write({'state':'done'})
+                #     return res
                 
                 if self.purchase_contract_id.interest_move_entries_id:
                     return res
@@ -104,10 +104,10 @@ class AccountPayment(models.Model):
                 
                 if request.purchase_contract_id.type not in ('purchase','ptbf'):
                     rec['extend_payment'] = 'payment'
-                    rec['ref'] = u'Tạm ứng theo ' + request.purchase_contract_id.name
+                    rec['ref'] = request.purchase_contract_id.name + u' được tạm ứng'
                 else:
                     rec['extend_payment'] = 'payment'
-                    rec['ref'] = u'Thanh toán tiền theo ' + request.purchase_contract_id.name
+                    rec['ref'] = request.purchase_contract_id.name + u' được thanh toán tiền'
                     
                     
                 # if request.purchase_contract_id.type !='purchase':
@@ -125,7 +125,7 @@ class AccountPayment(models.Model):
                 rec['payment_type'] = 'outbound'
                 rec['partner_id'] = contract_id.partner_id.id
                 rec['purchase_contract_id'] = contract_id.id
-                rec['ref'] = u'Thanh toán tiền theo ' + contract_id.name
+                rec['ref'] = contract_id.name + u' được thanh toán tiền'
                 rec['extend_payment'] = 'payment'
                 rec['amount'] = contract_id.amount_total
             
@@ -135,7 +135,7 @@ class AccountPayment(models.Model):
                 rec['payment_type'] = 'outbound'
                 rec['partner_id'] = contract_id.partner_id.id
                 rec['purchase_contract_id'] = contract_id.id
-                rec['communication'] = u'Nhận đặt cọc tiền theo ' + contract_id.name
+                rec['communication'] = contract_id.name + u' được nhận đặt cọc tiền'
                 rec['extend_payment'] = 'payment'
                 rec['amount'] = contract_id.amount_total
                 

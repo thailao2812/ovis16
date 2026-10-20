@@ -284,10 +284,10 @@ class Parser(models.AbstractModel):
         self.out_format = False
 
     def unlink(self):
-        trans_obj = self.env['ir.translation']
-        trans_ids = trans_obj.search(
-            [('type', '=', 'report'), ('res_id', 'in', self.ids)])
-        trans_ids.unlink()
+        # trans_obj = self.env['ir.translation']
+        # trans_ids = trans_obj.search(
+        #     [('type', '=', 'report'), ('res_id', 'in', self.ids)])
+        # trans_ids.unlink()
         res = super(IrActionsReport, self).unlink()
         return res
 

@@ -15,8 +15,10 @@ class ProductionAnalysisLineInputValue(models.Model):
             if this.contract_id:
                 if (this.contract_id.name[0:3] == 'NVP' or this.contract_id.name[0:4] == 'SVNP') and this.exchange_rate:
                     this.raw_coffee_cost = this.contract_price / this.exchange_rate * this.qty_allocation
-                else:
+                if this.contract_id.type == 'ptbf':
                     this.raw_coffee_cost = this.qty_allocation * (this.liffe + this.contract_id.diff_price) / 1000
+                if this.contract_id.type == 'consign':
+                    this.raw_coffee_cost = this.qty_allocation * (this.liffe + this.diff_price) / 1000
             else:
                 this.raw_coffee_cost = 0
             if this.exchange_rate:

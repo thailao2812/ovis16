@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="inherit_view_wizard_in_out_stack" model="ir.ui.view">
+        <field name="name">inherit_view_wizard_in_out_stack</field>
+        <field name="model">wizard.in.out.stack</field>
+        <field name="inherit_id" ref="sd_inventory.view_wizard_in_out_stack"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='warehouse_id']" position="before">
+                <field name="bom_id"/>
+            </xpath>
+            <xpath expr="//field[@name='warehouse_id']" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

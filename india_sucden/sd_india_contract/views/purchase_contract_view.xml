@@ -39,6 +39,15 @@
 			 <xpath expr="//field[@name='contract_line']/tree/field[@name='product_uom']" position="after">
             	<field name="bag_no" attrs="{'readonly': [('parent.state', 'in', ['director', 'approved', 'done', 'cancel'])]}"/>
             </xpath>
+            <xpath expr="//button[@name='button_draft']" position="attributes">
+                <attribute name="groups">sd_india_master.group_admin_india</attribute>
+                <attribute name="invisible">0</attribute>
+                <attribute name="attrs">{'invisible': [('state', '=', 'draft')]}</attribute>
+            </xpath>
+            <xpath expr="//button[@name='button_cancel']" position="attributes">
+                <attribute name="states"></attribute>
+                <attribute name="groups">sd_india_master.group_admin_india</attribute>
+            </xpath>
             <xpath expr="//field[@name='origin']" position="attributes">
             	<attribute name="attrs">{'readonly': [('state', 'in', ['director', 'approved', 'done', 'cancel'])]}</attribute>
             </xpath>
@@ -55,7 +64,7 @@
             	<attribute name="attrs">{'readonly': [('parent.state', 'in', ['director', 'approved', 'done', 'cancel'])]}</attribute>
             </xpath>
             <xpath expr="//field[@name='contract_line']/tree/field[@name='packing_id']" position="attributes">
-            	<attribute name="attrs">{'readonly': [('parent.state', 'in', ['director', 'approved', 'done', 'cancel'])]}</attribute>
+            	<attribute name="attrs">{'readonly': [('parent.state', 'in', ['director', 'approved', 'done', 'cancel'])], 'required': True}</attribute>
             </xpath>
             <xpath expr="//field[@name='delivery_place_id']" position="attributes">
                 <attribute name="attrs">{'readonly': [('state', 'in', ['director', 'approved', 'done', 'cancel'])]}</attribute>
@@ -84,9 +93,9 @@
             </xpath>
             <xpath expr="//group[1]" position="after">
                 <group string="Reject Reason">
-                    <field name="reject_by_commercial" readonly="1"/>
-                    <field name="reject_by_accounting" readonly="1"/>
-                    <field name="reject_by_director" readonly="1"/>
+                    <field name="reject_by_commercial" attrs="{'readonly': [('state', '!=', 'commercial')]}"/>
+                    <field name="reject_by_accounting" attrs="{'readonly': [('state', '!=', 'accounting')]}"/>
+                    <field name="reject_by_director" attrs="{'readonly': [('state', '!=', 'director')]}"/>
                 </group>
             </xpath>
             <xpath expr="//page[2]" position="attributes">
@@ -137,7 +146,8 @@
                 <attribute name="invisible">1</attribute>
             </xpath>
             <xpath expr="//field[@name='trader_id']" position="replace">
-                <field name="agent_id" domain="[('agent', '=', True)]" options="{'no_create': True}" attrs="{'readonly': [('state', 'in', ['director', 'approved', 'done', 'cancel'])]}"/>
+                <field name="have_reference" invisible="1"/>
+                <field name="agent_id" attrs="{'required': [('have_reference', '=', True)]}" domain="[('agent', '=', True)]" options="{'no_create': True}"/>
             </xpath>
             <xpath expr="//field[@name='premium']" position="attributes">
                 <attribute name="string">Premium Certificate Price/Kg</attribute>
@@ -180,6 +190,10 @@
             <xpath expr="//field[@name='request_payment_ids']/form/group/group[2]/field[@name='partner_bank_id']" position="after">
                 <field name="related_holder"/>
             </xpath>
+            <xpath expr="//field[@name='request_payment_ids']/form/group/group[2]/field[@name='partner_bank_id']" position="attributes">
+                <attribute name="domain">[('partner_id', '=', partner_id), ('allow_out_payment', '=', True)]</attribute>
+                <attribute name="options">{'no_create': True}</attribute>
+            </xpath>
             <xpath expr="//field[@name='request_payment_ids']/form/group/group[2]/field[@name='chinhanh']" position="attributes">
                 <attribute name="string">Bank Name</attribute>
             </xpath>
@@ -198,16 +212,23 @@
                 <field name="vendor_invoice_date"/>
                 <field name="product_id"/>
                 <field name="price"/>
+                <field name="purchase_quantity"/>
+                <field name="interest_amount"/>
+                <field name="price_per_bag" attrs="{'invisible': [('use_payment_for', '=', 'advance')]}"/>
             </xpath>
             <xpath expr="//field[@name='request_payment_ids']/form/group/group[1]/field[@name='type_payment']" position="attributes">
                 <attribute name="readonly">1</attribute>
                 <attribute name="invisible">1</attribute>
             </xpath>
             <xpath expr="//field[@name='request_payment_ids']/form/group/group[1]/field[@name='type_payment']" position="after">
-                <field name="use_payment_for" required="1"/>
+                <field name="use_payment_for" required="1" readonly="1" force_save="1"/>
+            </xpath>
+            <xpath expr="//field[@name='request_payment_ids']/tree/field[@name='type_payment']" position="replace">
+                <field name="use_payment_for"/>
             </xpath>
             <xpath expr="//field[@name='request_payment_ids']/form/group/group[2]/field[@name='purchase_contract_id']" position="after">
-                <field name="financial_year_id" required="1" options="{'no_create': True}"/>
+                <field name="purchase_date" required="1"/>
+                <field name="financial_year_id" domain="[('current_year', '=', True)]" required="1" options="{'no_create': True}"/>
                 <field name="tds_assessable_value"/>
                 <field name="tds_amount"/>
                 <field name="final_request_payment"/>
@@ -223,6 +244,14 @@
                 <button name="print_cr" string="Print CR" type="object" class="oe_highlight"/>
                 <button name="print_cr_detail" string="Print Invoice" type="object" class="oe_highlight" attrs="{'invisible': [('state', '!=', 'approved')]}"/>
             </xpath>
+            <xpath expr="//field[@name='date_fix']" position="after">
+                <field name="gross_qty" attrs="{'invisible': [('origin', '=', False)], 'required': [('origin', '!=', False)]}"/>
+                <field name="quality_deduction" attrs="{'invisible': [('origin', '=', False)], 'required': [('origin', '!=', False)]}"/>
+                <field name="remark"/>
+            </xpath>
+<!--            <xpath expr="//field[@name='license_id']" position="attributes">-->
+<!--                <attribute name="domain">[]</attribute>-->
+<!--            </xpath>-->
         </field>
     </record>
 
@@ -262,6 +291,10 @@
             <xpath expr="//field[@name='request_payment_ids']/form/group/group[1]/field[@name='partner_bank_id']" position="after">
                 <field name="related_holder"/>
             </xpath>
+            <xpath expr="//field[@name='request_payment_ids']/form/group/group[2]/field[@name='partner_bank_id']" position="attributes">
+                <attribute name="domain">[('partner_id', '=', partner_id), ('allow_out_payment', '=', True)]</attribute>
+                <attribute name="options">{'no_create': True}</attribute>
+            </xpath>
             <xpath expr="//field[@name='request_payment_ids']/form/group/group[2]/field[@name='chinhanh']" position="attributes">
                 <attribute name="string">Bank Name</attribute>
             </xpath>
@@ -286,7 +319,10 @@
                 <attribute name="invisible">1</attribute>
             </xpath>
             <xpath expr="//field[@name='request_payment_ids']/form/group/group[1]/field[@name='type_payment']" position="after">
-                <field name="use_payment_for" required="1"/>
+                <field name="use_payment_for" readonly="1" required="1" force_save="1"/>
+            </xpath>
+            <xpath expr="//field[@name='request_payment_ids']/tree/field[@name='type_payment']" position="replace">
+                <field name="use_payment_for"/>
             </xpath>
             <xpath expr="//field[@name='request_payment_ids']/form/group/group[1]/field[@name='partner_id']" position="attributes">
                 <attribute name="readonly">1</attribute>
@@ -313,9 +349,9 @@
             </xpath>
             <xpath expr="//group[1]" position="after">
                 <group string="Reject Reason">
-                    <field name="reject_by_commercial" readonly="1"/>
-                    <field name="reject_by_accounting" readonly="1"/>
-                    <field name="reject_by_director" readonly="1"/>
+                    <field name="reject_by_commercial" attrs="{'readonly': [('state', '!=', 'commercial')]}"/>
+                    <field name="reject_by_accounting" attrs="{'readonly': [('state', '!=', 'accounting')]}"/>
+                    <field name="reject_by_director" attrs="{'readonly': [('state', '!=', 'director')]}"/>
                 </group>
             </xpath>
             <xpath expr="//field[@name='npe_contract_id']" position="attributes">
@@ -398,7 +434,16 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='partner_id']" position="after">
                 <field name="estate_name"/>
+                <field name="qty_unfixed" invisible="1"/>
             </xpath>
+            <xpath expr="//button[@name='button_draft']" position="attributes">
+                <attribute name="groups">sd_india_master.group_admin_india</attribute>
+                <attribute name="states"></attribute>
+                <attribute name="attrs">{'invisible': [('state', '=', 'draft')]}</attribute>
+            </xpath>
+<!--            <xpath expr="//field[@name='license_id']" position="attributes">-->
+<!--                <attribute name="domain">[]</attribute>-->
+<!--            </xpath>-->
             <xpath expr="//field[@name='contract_line']/tree/field[@name='product_id']" position="attributes">
             	<attribute name="attrs">{'readonly': [('parent.state', 'in', ['director', 'approved', 'done', 'cancel'])]}</attribute>
             </xpath>
@@ -409,7 +454,7 @@
             	<attribute name="attrs">{'readonly': [('parent.state', 'in', ['director', 'approved', 'done', 'cancel'])]}</attribute>
             </xpath>
             <xpath expr="//field[@name='contract_line']/tree/field[@name='packing_id']" position="attributes">
-            	<attribute name="attrs">{'readonly': [('parent.state', 'in', ['director', 'approved', 'done', 'cancel'])]}</attribute>
+            	<attribute name="attrs">{'readonly': [('parent.state', 'in', ['director', 'approved', 'done', 'cancel'])], 'required': True}</attribute>
             </xpath>
             <xpath expr="//field[@name='delivery_place_id']" position="attributes">
                 <attribute name="attrs">{'readonly': [('state', 'in', ['director', 'approved', 'done', 'cancel'])]}</attribute>
@@ -426,6 +471,10 @@
             </xpath>
             <xpath expr="//field[@name='request_payment_ids']/form/group/group[2]/field[@name='partner_bank_id']" position="after">
                 <field name="related_holder"/>
+            </xpath>
+            <xpath expr="//field[@name='request_payment_ids']/form/group/group[2]/field[@name='partner_bank_id']" position="attributes">
+                <attribute name="domain">[('partner_id', '=', partner_id), ('allow_out_payment', '=', True)]</attribute>
+                <attribute name="options">{'no_create': True}</attribute>
             </xpath>
             <xpath expr="//field[@name='request_payment_ids']/form/group/group[2]/field[@name='chinhanh']" position="attributes">
                 <attribute name="string">Bank Name</attribute>
@@ -445,6 +494,7 @@
                 <field name="vendor_invoice_date"/>
                 <field name="product_id"/>
                 <field name="price"/>
+                <field name="purchase_quantity"/>
             </xpath>
             <xpath expr="//field[@name='request_payment_ids']/form/group/group[1]/field[@name='partner_id']" position="attributes">
                 <attribute name="readonly">1</attribute>
@@ -455,7 +505,10 @@
                 <attribute name="invisible">1</attribute>
             </xpath>
             <xpath expr="//field[@name='request_payment_ids']/form/group/group[1]/field[@name='type_payment']" position="after">
-                <field name="use_payment_for" required="1"/>
+                <field name="use_payment_for" readonly="1" required="1" force_save="1"/>
+            </xpath>
+            <xpath expr="//field[@name='request_payment_ids']/tree/field[@name='type_payment']" position="replace">
+                <field name="use_payment_for"/>
             </xpath>
 			 <xpath expr="//field[@name='contract_line']/tree/field[@name='product_uom']" position="after">
             	<field name="bag_no" attrs="{'readonly': [('parent.state', 'in', ['director', 'approved', 'done', 'cancel'])]}"/>
@@ -464,6 +517,7 @@
                 <attribute name="readonly">1</attribute>
             </xpath>
             <xpath expr="//button[@name='button_approve']" position="after">
+                <button name="%(sd_india_contract.action_view_return_purchase_contract)d" string="Return Goods CS" type="action" class="oe_highlight" attrs="{'invisible': [('qty_unfixed', '&lt;=', 0)]}"/>
                 <button name="approve_commercial" states="draft" string="Submit" type="object" class="oe_highlight" groups="sd_india_master.group_purchase_india"/>
                 <button name="approve_account" states="commercial" string="Approve" type="object" class="oe_highlight" groups="sd_india_master.group_commercial_cm_india"/>
                 <button name="approve_director" states="accounting" string="Approve" type="object" class="oe_highlight" groups="sd_india_master.group_accounting_india"/>
@@ -481,9 +535,9 @@
             </xpath>
             <xpath expr="//group[1]" position="after">
                 <group string="Reject Reason">
-                    <field name="reject_by_commercial" readonly="1"/>
-                    <field name="reject_by_accounting" readonly="1"/>
-                    <field name="reject_by_director" readonly="1"/>
+                    <field name="reject_by_commercial" attrs="{'readonly': [('state', '!=', 'commercial')]}"/>
+                    <field name="reject_by_accounting" attrs="{'readonly': [('state', '!=', 'accounting')]}"/>
+                    <field name="reject_by_director" attrs="{'readonly': [('state', '!=', 'director')]}"/>
                 </group>
             </xpath>
             <xpath expr="//page[2]" position="attributes">
@@ -530,13 +584,41 @@
                 <button name="print_cs_detail" string="Print Invoice" type="object" class="oe_highlight" attrs="{'invisible': [('state', '!=', 'approved')]}"/>
             </xpath>
             <xpath expr="//field[@name='songay']" position="after">
-                <field name="agent_id" domain="[('agent', '=', True)]" options="{'no_create': True}" attrs="{'readonly': [('state', 'in', ['director', 'approved', 'done', 'cancel'])]}"/>
+                <field name="have_reference" invisible="1"/>
+                <field name="agent_id" attrs="{'required': [('have_reference', '=', True)]}" domain="[('agent', '=', True)]" options="{'no_create': True}"/>
+                <field name="remark"/>
             </xpath>
             <xpath expr="//field[@name='request_payment_ids']/form/group/group[2]/field[@name='purchase_contract_id']" position="after">
-                <field name="financial_year_id" required="1" options="{'no_create': True}"/>
+                <field name="purchase_date" required="1"/>
+                <field name="financial_year_id" domain="[('current_year', '=', True)]" required="1" options="{'no_create': True}"/>
                 <field name="tds_assessable_value"/>
                 <field name="tds_amount"/>
                 <field name="final_request_payment"/>
+            </xpath>
+            <xpath expr="//field[@name='total_qty_fixed']" position="after">
+                <field name="qty_unfixed"/>
+                <field name="state_return" widget="badge"/>
+                <field name="payment_advance_quantity"/>
+                <field name="return_qty"/>
+                <field name="picking_return_ids" widget="many2many_tags" readonly="1"/>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="Return Goods Request" name="return_goods_request">
+                    <field name="return_goods_contract_ids">
+                        <tree editable="bottom" create="false" delete="false">
+                            <field name="reason" readonly="1"/>
+                            <field name="quantity" readonly="1"/>
+                            <field name="create_uid" readonly="1" string="User Request"/>
+                            <field name="create_date" readonly="1" string="Requested On"/>
+                            <field name="reason_reject" attrs="{'readonly': [('state', '=', 'rejected')]}"/>
+                            <button name="approve_commercial" string="Approval by CM" type="object" groups="sd_india_master.group_commercial_cm_india"
+                                    attrs="{'invisible': [('state', '!=' , 'requested')]}" class="oe_highlight"/>
+                            <button name="action_reject" string="Reject" type="object" groups="sd_india_master.group_commercial_cm_india" attrs="{'invisible': [('state', '!=' , 'requested')]}"/>
+                            <field name="picking_id" readonly="1"/>
+                            <field name="state" widget="badge" decoration-success="state in ['commercial']"/>
+                        </tree>
+                    </field>
+                </page>
             </xpath>
         </field>
     </record>
@@ -574,7 +656,9 @@
             <xpath expr="//field[@name='certificate_id']" position="after">
                 <field name="remark_note_done" attrs="{'readonly': [('state', '=', 'done')]}"/>
             </xpath>
-
+            <xpath expr="//field[@name='stock_allocation_ids']/tree/field[@name='picking_id']" position="attributes">
+               <attribute name="context">{'stock_allocation_india': True, 'contract_id': parent.id}</attribute>
+            </xpath>
         </field>
     </record>
 
@@ -591,6 +675,7 @@
             </xpath>
             <xpath expr="//field[@name='partner_id']" position="after">
                 <field name="estate_name"/>
+                <field name="vendor_code"/>
             </xpath>
             <xpath expr="//field[@name='name']" position="after">
                 <field name="crop_id"/>
@@ -598,6 +683,7 @@
             <xpath expr="//field[@name='qty_unreceived']" position="after">
                 <field name="qty_received_net"/>
                 <field name="qty_unreceived_net"/>
+                <field name="unreceive_gross_value"/>
             </xpath>
             <xpath expr="//field[@name='total_advance']" position="before">
                 <field name="total_deduction_quantity"/>
@@ -629,7 +715,7 @@
             <xpath expr="//field[@name='name']" position="attributes">
                 <attribute name="string">Contract Number</attribute>
             </xpath>
-            <xpath expr="//field[@name='state']" position="after">
+            <xpath expr="//field[@name='note']" position="after">
                 <field name="remark_note_done"/>
             </xpath>
             <xpath expr="//field[@name='name']" position="after">
@@ -637,6 +723,7 @@
             </xpath>
             <xpath expr="//field[@name='partner_id']" position="after">
                 <field name="estate_name"/>
+                <field name="vendor_code"/>
             </xpath>
             <xpath expr="//field[@name='certificate_id']" position="after">
                 <field name="agent_id"/>
@@ -653,16 +740,22 @@
 
             </xpath>
             <xpath expr="//field[@name='qty_unreceived']" position="after">
-                <field name="qty_received_net"/>
-                <field name="qty_unreceived_net"/>
+                <field name="qty_received_net" sum="qty_received_net"/>
+                <field name="qty_unreceived_net" sum="qty_unreceived_net"/>
+                <field name="unreceive_gross_value" sum="unreceive_gross_value"/>
             </xpath>
             <xpath expr="//field[@name='amount_deposit']" position="after">
                 <field name="total_deduction_quantity"/>
                 <field name="total_deduction_amount"/>
+                <field name="allocation_amount"/>
             </xpath>
             <xpath expr="//field[@name='product_id']" position="after">
                 <field name="packing_id"/>
                 <field name="number_of_bags"/>
+            </xpath>
+            <xpath expr="//field[@name='origin']" position="before">
+                <field name="gross_qty" sum="gross_qty"/>
+                <field name="quality_deduction" sum="quality_deduction"/>
             </xpath>
         </field>
     </record>
@@ -699,8 +792,17 @@
             <xpath expr="//button[@name='button_convert']" position="attributes">
                 <attribute name="string">Convert CR</attribute>
             </xpath>
+            <xpath expr="//button[@name='button_convert_ptbf']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
             <xpath expr="//field[@name='contract_line_ids']/tree/field[@name='purchase_contract_id']" position="attributes">
                 <attribute name="string">CS Contract</attribute>
+            </xpath>
+            <xpath expr="//field[@name='contract_line_ids']/tree/field[@name='qty_unreceived']" position="after">
+                <field name="return_qty" readonly="1"/>
+            </xpath>
+            <xpath expr="//field[@name='price_unit']" position="after">
+                <field name="price_per_bag"/>
             </xpath>
         </field>
     </record>
@@ -725,6 +827,7 @@
 
     <record id="sd_purchase_contract.action_nvp_contract_allocation_invoiced" model="ir.actions.act_window">
         <field name="domain">[('state','=','approved')]</field>
+        <field name="context">{'bypass_validation': True}</field>
     </record>
 
     <function name="write" model="ir.model.data">

@@ -11,6 +11,13 @@
             <xpath expr="//field[@name='bags']" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
+            <xpath expr="//field[@name='certificate_id']" position="after">
+                <field name="s_contract_id"/>
+            </xpath>
+            <xpath expr="//field[@name='shipping_id']" position="after">
+                <field name="partner_id"/>
+                <field name="ship_to_id"/>
+            </xpath>
         </field>
     </record>
 
@@ -25,6 +32,7 @@
             </xpath>
             <xpath expr="//field[@name='trucking_no']" position="attributes">
                 <attribute name="string">Truck Number</attribute>
+                <attribute name="required">1</attribute>
             </xpath>
             <xpath expr="//button[@name='button_approve']" position="after">
                 <button name="button_cancel" string="Cancel" attrs="{'invisible': [('state', 'in', ['approve', 'cancel'])]}" type="object" confirm="Do you want to Cancel this DO?" groups="sd_india_master.group_admin_india"/>
@@ -34,6 +42,9 @@
             </xpath>
             <xpath expr="//field[@name='date_approve']" position="after">
                 <field name="note"/>
+            </xpath>
+            <xpath expr="//field[@name='delivery_order_ids']/tree/field[@name='certificate_id']" position="attributes">
+                <attribute name="readonly">1</attribute>
             </xpath>
         </field>
     </record>

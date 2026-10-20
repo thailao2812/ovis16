@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_import_mrn_form" model="ir.ui.view">
+        <field name="name">import.mrn.form</field>
+        <field name="model">import.mrn</field>
+        <field name="arch" type="xml">
+            <form string="Import Material Receipt Notes">
+                <div class="alert alert-info" role="alert">
+                    Upload the Excel export of MRN lines. Columns, in order:
+                    <strong>Reference, Contact, Estate Name, Date of Transfer,
+                    Vehicle No., Packing, Bag</strong>. One row becomes one MRN in
+                    the warehouse below, validated on import. The Reference goes
+                    into the note; the MRN number is assigned by the sequence.
+                    Estate Name is shown from the partner and is not imported.
+                </div>
+                <group>
+                    <group>
+                        <field name="warehouse_id" options="{'no_create': True, 'no_open': True}"/>
+                    </group>
+                    <group>
+                        <field name="file" filename="file_name" widget="binary"/>
+                        <field name="file_name" invisible="1"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="action_import" string="Import" type="object" class="btn-primary"
+                            confirm="Every row will be created and validated in the selected warehouse. Continue?"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_import_mrn" model="ir.actions.act_window">
+        <field name="name">Import MRN</field>
+        <field name="res_model">import.mrn</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <!-- Inventory > Operations > Good Notes, right after "Tranfers-Out"
+         (sequence 390; note the spelling, that is the menu's real name).
+         A child *of* Tranfers-Out would not render: it is already a leaf item
+         in a section, and the navbar draws nothing below an item. The next
+         slot in the same section is the closest position that actually shows. -->
+    <menuitem id="menu_import_mrn"
+              name="Import MRN"
+              parent="sd_inventory.menu_action_good_notes"
+              action="action_import_mrn"
+              groups="stock.group_stock_manager"
+              sequence="395"/>
+
+</odoo>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="action_move_in_invoice_type_in_purchase_contract" model="ir.actions.act_window">
+            <field name="name">Bills</field>
+            <field name="res_model">account.move</field>
+            <field name="view_mode">tree,kanban,form</field>
+            <field name="view_id" ref="account.view_in_invoice_bill_tree"/>
+            <field name="search_view_id" ref="account.view_account_invoice_filter"/>
+            <field name="domain">[('move_type', '=', 'in_invoice')]</field>
+            <field name="context">{'create': False, 'delete': False, 'edit': False, 'copy': False}</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Create a vendor bill
+              </p><p>
+                Create invoices, register payments and keep track of the discussions with your vendors.
+              </p>
+            </field>
+        </record>
+    <menuitem id="menu_action_bill_purchase_contract" action="action_move_in_invoice_type_in_purchase_contract" parent="sd_purchase_contract.menu_purchase_contract_root" sequence="10"/>
+</odoo>

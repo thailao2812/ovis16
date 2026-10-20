@@ -17,3 +17,4 @@ from . import sale_contract_base
 from . import shipping_instruction
 from . import contract_price_purchase
 from . import ned_certificate
+from . import post_shipment

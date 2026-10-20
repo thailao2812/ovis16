@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="product_pricelist_vendor_view_search">
+        <field name="name">product.vendor.parent.search</field>
+        <field name="model">product.supplier.parent</field>
+        <field name="arch" type="xml">
+            <search string="Products Price Search">
+                <field name="name" string="Products Price"/>
+                <field name="currency_id" groups="base.group_multi_currency"/>
+                <filter string="Approved" name="approved" domain="[('state','=','approve')]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="product_pricelist_vendor_view_tree" model="ir.ui.view">
+        <field name="name">product.supplier.parent.tree</field>
+        <field name="model">product.supplier.parent</field>
+        <field name="arch" type="xml">
+            <tree string="Products Price List" sample="1">
+                <field name="name"/>
+                <field name="valid_from"/>
+                <field name="valid_to"/>
+                <field name="partner_id"/>
+                <field name="warranty"/>
+                <field name="delivery_time"/>
+                <field name="delivery_cost"/>
+                <field name="payment_term_id"/>
+                <field name="currency_id"/>
+                <field name="state" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="product_pricelist_vendor_form_view" model="ir.ui.view">
+        <field name="name">product.pricelist.vendor.form</field>
+        <field name="model">product.supplier.parent</field>
+        <field name="arch" type="xml">
+            <form string="Products Price List">
+                <header>
+                    <button name="action_confirm" type="object" string="Confirm" states="draft"/>
+                    <button name="action_verify" states="confirm" type="object" string="Approve" data-hotkey="w"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirm,approve"/>
+            </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="e.g. Pricelist for SucdenCoffee in SaiGon" required="1"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="partner_id" attrs="{'readonly': [('state', 'in', ('confirm', 'approve'))]}" widget="selection" required="1"/>
+                            <label for="warranty" />
+                            <div>
+                                <field name="warranty" class="oe_inline" style="vertical-align:baseline" required="1" attrs="{'readonly': [('state', 'in', ('confirm', 'approve'))]}"/> months
+                            </div>
+                            <label for="delivery_time"/>
+                            <div>
+                                <field name="delivery_time" class="oe_inline" required="1" style="vertical-align:baseline" attrs="{'readonly': [('state', 'in', ('confirm', 'approve'))]}"/> days
+                            </div>
+                            <field name="payment_term_id" attrs="{'readonly': [('state', 'in', ('confirm', 'approve'))]}"/>
+                        </group>
+                        <group>
+                            <field name="valid_from" required="1" attrs="{'readonly': [('state', 'in', ('confirm', 'approve'))]}"/>
+                            <field name="valid_to" required="1" attrs="{'readonly': [('state', 'in', ('confirm', 'approve'))]}"/>
+                            <field name="delivery_cost" attrs="{'readonly': [('state', 'in', ('confirm', 'approve'))]}"/>
+                            <field name="currency_id" required="1" attrs="{'readonly': [('state', 'in', ('confirm', 'approve'))]}"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="pricelist_info" string="Price Information">
+                            <field name="child_ids" nolabel="1" attrs="{'readonly': [('state', 'in', ('confirm', 'approve'))]}" context="{'default_partner_id':partner_id, 'default_date_start':valid_from, 'default_date_end':valid_to, 'default_delay':delivery_time}">
+                                <tree editable="top">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="partner_id" invisible="1"/>
+                                    <field name="product_id" string="Item"/>
+                                    <field name="product_tmpl_id" string="Product" readonly="1" invisible="context.get('visible_product_tmpl_id', True)"/>
+                                    <field name="product_name" optional="hide" invisible="1"/>
+                                    <field name="product_uom"/>
+                                    <field name="min_qty"/>
+                                    <field name="product_code" optional="hide" invisible="1"/>
+                                    <field name="company_id"  invisible="1"/>
+                                    <field name="price" string="Price"/>
+                                    <field name="tax_ids" widget="many2many_tags"/>
+                                    <field name="date_start" optional="hide"/>
+                                    <field name="date_end" optional="hide"/>
+                                    <field name="delay" invisible="1"/>
+                                    <field name="currency_id" groups="base.group_multi_currency"/>
+                                </tree>
+                            </field>
+                            <field name="notes" widget="html" placeholder="Other terms"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                <field name="message_follower_ids"/>
+                <field name="activity_ids"/>
+                <field name="message_ids"/>
+            </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="product_pricelist_vendor_action" model="ir.actions.act_window">
+        <field name="name">Vendor Pricelists</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">product.supplier.parent</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="product_pricelist_vendor_view_search" />
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+            Create a new vendor pricelist
+            </p><p>
+            A price is a set of vendor prices or rules to compute the price of purchase order lines based on products, product categories, dates and ordered quantities.
+            This is the perfect tool to handle several pricings, seasonal discounts, etc.
+            </p><p>
+            You can assign pricelists to your vendor or select one when creating a new purchase quotation.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_product_pricelist_vendor_action" name="Vendor Pricelists"
+            parent="purchase.menu_procurement_management"
+            action="product_pricelist_vendor_action" sequence="150"/>
+
+    </data>
+</odoo>

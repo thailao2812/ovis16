@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="report_export_error_polygon" model="ir.actions.report">
+	        <field name="name">Export Error Polygon</field>
+	        <field name="type">ir.actions.report</field>
+	        <field name="model">wizard.export.error</field>
+	        <field name="binding_model_id" ref="sd_master_ned.model_wizard_export_error"/>
+	        <field name="report_name">report_export_error_polygon</field>
+	        <field name="report_type">aeroo</field>
+	        <field name="in_format">oo-ods</field>
+	        <field name="out_format" model="report.mimetypes" search="[('code','=','oo-xls'),('compatible_types','=','oo-ods')]"/>
+	        <field name="preview">True</field>
+	        <field name="parser_state">loc</field>
+	        <field name="parser_loc">sd_master_ned/report/report_export_error_polygon_parser.py</field>
+	        <field name="report_file">sd_master_ned/report/report_export_error_polygon.ods</field>
+	        <field name="tml_source">file</field>
+	        <field name="print_report_name">'Error Polygon'</field>
+	    </record>
+</odoo>

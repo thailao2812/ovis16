@@ -8,7 +8,7 @@ class ReportPSCtoSCLink(models.Model):
     _description = 'Report PSC to SC Linked'
 
     p_number = fields.Many2one('sale.contract.india', string='P Contract No')
-    p_qty = fields.Float(string='P Contract Qty Mt')
+    p_qty = fields.Float(string='P Contract Qty')
     p_price = fields.Float(string='P Contract price')
     currency_uom = fields.Char(string='Currency / UOM', default='USD/MT')
     p_amount = fields.Float(string='P Contract Total Amount')
@@ -26,3 +26,9 @@ class ReportPSCtoSCLink(models.Model):
     currency_uom_3rd = fields.Char(string='Currency / UOM', default='USD/MT')
     open_position = fields.Float(string='Open Position Qty')
     open_position_value = fields.Float(string='Open Position Value')
+
+    markup_value = fields.Float(string='Markup Value')
+    grade_premium = fields.Float(string='Grade Premium')
+    date_allocate = fields.Date(string='Date Allocate')
+
+    item_group_id = fields.Many2one('product.group', related='p_number.item_group_id', string='Item Group', store=True)

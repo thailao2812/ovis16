@@ -8,3 +8,4 @@ from . import stock_picking, stock_picking_type
 from . import import_stack
 from . import stock_warehouse, stock_zone
 from . import stock_move_line
+from . import request_material

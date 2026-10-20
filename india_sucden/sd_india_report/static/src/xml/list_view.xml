@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-inherit="web.ListView.Buttons" t-inherit-mode="extension">
+         <xpath expr="//div[hasclass('d-flex')]" position="inside">
+            <button type="button" t-on-click="wbButtonClickeEvent"
+                    t-if="model.root.resModel == 'purchase.report.consignment'" class="btn btn-primary" id="purchase_consignment">
+                <span>Refresh Data</span>
+            </button>
+        </xpath>
+    </t>
+</templates>

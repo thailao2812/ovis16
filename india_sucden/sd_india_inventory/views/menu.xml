@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="action_return_grn" model="ir.actions.act_window">
+            <field name="name">Return Goods CS</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">stock.picking</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('picking_type_id.code','=','return_supplier')]</field>
+            <field name="context">{'search_by_field_date': ['day_tz'], 'create': false, 'delete': false}</field>
+            <field name="search_view_id" ref="stock.view_picking_internal_search"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+              		Create a GRN Return Goods
+              </p>
+            </field>
+        </record>
+    <menuitem id="menu_grn_return_goods"
+            action="action_return_grn" sequence="21"
+            parent="sd_purchase_contract.purchase_contract_root_good_menu"
+            name="Return Goods"/>
+</odoo>

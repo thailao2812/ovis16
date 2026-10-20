@@ -1,2 +1,5 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_wizard_report_stack_merge,access_wizard_report_stack_merge,model_wizard_report_stack_merge,base.group_user,1,1,1,1
+access_iotthinks_token,access.iotthinks.token,model_iotthinks_token,base.group_user,1,1,1,1
+access_iotthinks_device_profile,access.iotthinks.device.profile,model_iotthinks_device_profile,base.group_user,1,1,1,1
+access_iotthinks_device_telemetry,access.iotthinks.device.telemetry,model_iotthinks_device_telemetry,base.group_user,1,1,1,1

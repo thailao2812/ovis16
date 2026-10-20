@@ -7,7 +7,7 @@ class ReportFOBStatement(models.Model):
     _name = 'report.fob.statement'
     _description = 'Report FOB Statement'
 
-    product_id = fields.Many2one('product.product', string='Item Group')
+    product_id = fields.Many2one('product.product', string='Item Name')
     item_id = fields.Many2one('product.group', string='Item Group')
     p_number = fields.Many2one('sale.contract.india', string='PSC No.')
     p_date = fields.Date(string='PSC Date')
@@ -16,10 +16,10 @@ class ReportFOBStatement(models.Model):
     purchase_contract = fields.Many2one('purchase.contract', string='PC No.')
     pc_date = fields.Date(string='PC Date')
     no_of_bag = fields.Float(string='No Of Bags')
-    pc_qty = fields.Float(string='PC Qty')
+    pc_qty = fields.Float(string='Raw Coffee (Kgs)')
     outturn = fields.Float(string='Outturn %')
-    green_coffee = fields.Float(string='Green Coffee (Kgs)')
-    fob_value = fields.Float(string='FOB Value')
+    green_coffee = fields.Float(string='Clean Coffee (Kgs)')
+    fob_value = fields.Float(string='FOB Price (USD)')
     currency_uom = fields.Char(string='Currency / UOM')
     value_usd = fields.Float(string='Value (USD)')
     forex = fields.Float(string='Forex')
@@ -33,3 +33,9 @@ class ReportFOBStatement(models.Model):
     contract_price = fields.Float(string='Contract Price')
     currency_uom_2nd = fields.Char(string='Currency / UOM')
     differential = fields.Float(string='Differential')
+    market_month = fields.Many2one('s.period', string='Market Month')
+
+    # New field
+    exchange_id = fields.Many2one('exchange.india', string='Exchange', related='product_id.exchange_id', store=True)
+    fob_value_usc = fields.Float(string='FOB Price (USC)', digits=(12, 2))
+    currency_uom_usc = fields.Char(string='Currency / UOM')

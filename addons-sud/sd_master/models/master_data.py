@@ -173,11 +173,11 @@ class NedCertificate(models.Model):
         currency_ids = self.env['res.currency'].search([], limit=1)
         return currency_ids
 
-    def name_get(self):
-        result = []
-        for cert in self:
-            result.append((cert.id, "%s" % ( cert.code and cert.code or cert.name)))
-        return result
+    # def name_get(self):
+    #     result = []
+    #     for cert in self:
+    #         result.append((cert.id, "%s" % ( cert.code and cert.code or cert.name)))
+    #     return result
     
     name = fields.Char(string='Certificate', required=True, copy=False, index=True, default='New')
     code = fields.Char(string='Code', required=True, copy=False, index=True)

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_wizard_generate_bank_account_form" model="ir.ui.view">
+        <field name="name">Generate Bank Account</field>
+        <field name="model">wizard.generate.bank.account</field>
+        <field name="arch" type="xml">
+             <form string="Generate Bank Account">
+                <group>
+                    <field name="journal_ids" invisible="1"/>
+                    <field name="request_payment_ids" invisible="1"/>
+					<field name="journal_id" options="{'no_create': True}" attrs="{'readonly': [('name', '!=', False)]}" domain="[('id', 'in', journal_ids)]"/>
+                </group>
+                 <field name="name" readonly="1"/>
+                <footer>
+                    <button name="action_generate_bank_account" string="Generate" type="object"
+                        class="btn-primary"/>
+                    <button string="Cancel" class="btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+     <record id="action_generate_bank_account" model="ir.actions.act_window">
+            <field name="name">Generate Bank Account</field>
+            <field name="res_model">wizard.generate.bank.account</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_wizard_generate_bank_account_form"/>
+            <field name="target">new</field>
+        </record>
+
+    <record model="ir.actions.server" id="generate_bank_account">
+        <field name="name">Generate Bank Account</field>
+        <field name="model_id" ref="sd_purchase_contract.model_request_payment"/>
+        <field name="binding_model_id" ref="sd_purchase_contract.model_request_payment"/>
+        <field name="state">code</field>
+        <field name="code">
+action = {
+    'type': 'ir.actions.act_window',
+    'res_model': 'wizard.generate.bank.account',
+    'target': 'new',
+    'views': [(env.ref('sd_contract_vietnam.view_wizard_generate_bank_account_form').id, 'form')],
+    'context': {'generate_bank_account': True}
+}
+        </field>
+    </record>
+</odoo>

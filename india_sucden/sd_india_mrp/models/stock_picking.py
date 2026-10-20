@@ -6,3 +6,4 @@ class StockPicking(models.Model):
     _inherit = 'stock.picking'
 
     transaction_no = fields.Char(string='Transaction No.', related='production_id.transaction_no', store=True)
+    picking_grn_id = fields.Many2one('stock.picking', string='GRN Allocated')

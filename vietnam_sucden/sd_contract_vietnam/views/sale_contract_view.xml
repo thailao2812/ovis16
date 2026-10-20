@@ -10,4 +10,15 @@
             </xpath>
         </field>
     </record>
+
+    <record id="view_sale_contract_tree_allocate_sp_qc_confirm_inherit_sd_vietnam" model="ir.ui.view">
+        <field name="name">view_sale_contract_tree_allocate_sp_qc_confirm_inherit_sd_vietnam</field>
+        <field name="model">sale.contract</field>
+        <field name="inherit_id" ref="sd_sale_contract.view_sale_contract_tree_allocate_sp_qc_confirm"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='si_qty_contract']" position="after">
+                <field name="total_real_qty"/>
+            </xpath>
+        </field>
+    </record>
 </odoo>

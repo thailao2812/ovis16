@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_invoice_purchase_contract_tree" model="ir.ui.view">
+            <field name="name">view_invoice_purchase_contract_tree</field>
+            <field name="model">invoice.purchase.contract</field>
+            <field name="arch" type="xml">
+                <tree string="Invoice Purchase Contract" editable="top" default_order="id desc">
+                	<field name="contract_id" required="1"/>
+                	<field name="invoice_number" required="1"/>
+                	<field name="invoice_date" required="1"/>
+                	<field name="picking_id" required="1"/>
+                	<field name="grn_date"/>
+                </tree>
+            </field>
+        </record>
+
+	<record id="view_invoice_purchase_contract_search" model="ir.ui.view">
+        <field name="name">view_invoice_purchase_contract_search</field>
+        <field name="model">invoice.purchase.contract</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="contract_id"/>
+                <field name="invoice_number"/>
+                <field name="invoice_date"/>
+                <field name="picking_id"/>
+                <separator/>
+                <group expand="0" string="Group By">
+                   <filter string="Contract" name="contract_id" context="{'group_by': 'contract_id'}"/>
+                   <filter string="GRN" name="picking_id" context="{'group_by': 'picking_id'}"/>
+               </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_invoice_purchase_contract" model="ir.actions.act_window">
+            <field name="name">Invoice Purchase Contract</field>
+            <field name="res_model">invoice.purchase.contract</field>
+            <field name="view_mode">tree</field>
+            <field name="context">{}</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+              		Create a Invoice Purchase Contract
+              </p>
+            </field>
+        </record>
+
+    <menuitem id="menu_invoice_purchase_contract"
+                action="action_invoice_purchase_contract"
+                sequence="27"
+                parent="sd_purchase_contract.menu_purchase_contract_root"/>
+</odoo>

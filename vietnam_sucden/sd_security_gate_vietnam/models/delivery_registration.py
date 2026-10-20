@@ -9,6 +9,31 @@ class DeliveryRegistration(models.Model):
 
     picking_ktn_id = fields.Many2one('stock.picking', string='GRN KTN Link')
 
+    arrivial_time = fields.Datetime('Arrival Time', readonly=False)
+    
+    def _compute_my_field_readonly(self):
+        self.block_request = self.env['res.users'].has_group('sd_purchase_contract.group_purchase_contract_user')
+
+    block_request = fields.Boolean(default=False, string="Truck block request")
+    weigh_block = fields.Boolean(default=False, string="Weigh & Block")
+
+    @api.onchange('block_request')
+    def _onchange_block_request(self):
+        if self.block_request:
+            if self.picking_ids and len(self.picking_ids)== 1:
+                picking_id = self.picking_ids and self.picking_ids[0]
+                if picking_id:
+                    for move in picking_id.move_line_ids_without_package:
+                        if move.first_weight > 0 and len(move) == 1 and picking_id.state == 'draft':
+                            self.weigh_block = True
+                            picks = self.env['stock.picking'].sudo().search([('vehicle_no','=',self.license_plate)], order='id desc')
+                            for line in picks.move_line_ids_without_package:
+                                if line.second_weight > 0 and len(move) == 1:
+                                    self.approx_quantity = round(move.first_weight - line.second_weight, -3)
+                                    break
+        else:
+            self.weigh_block = False
+
     def button_link_grn_ktn(self):
         for rec in self:
             if rec.picking_ktn_id:
@@ -36,7 +61,7 @@ class DeliveryRegistration(models.Model):
                         deliver_array = [int(x) for x in deliver_array if x.isdigit()]
                     delivery_temp_ids = self.search([
                         ('type_transfer', '=', 'queue'),
-                        ('state', 'not in', ['approved', 'cancel', 'closed', 'reject']),
+                        ('state', 'not in', ['cancel', 'closed', 'reject']),
                         ('supplier_id', '=', self._context.get('partner_id')),
                         ('id', 'not in', deliver_array)
                     ], limit=limit).filtered(
@@ -51,9 +76,10 @@ class DeliveryRegistration(models.Model):
                         if i.remain_qty == 0:
                             arr_done.append(i.delivery_id.id)
                     args += [('type_transfer', '=', 'queue'),
-                        ('state', 'not in', ['approved', 'cancel', 'closed', 'reject']),
+                        ('state', 'not in', ['cancel', 'closed', 'reject']),
                         ('supplier_id', '=', self._context.get('partner_id')),
                         ('id', 'not in', deliver_array),
+                        ('arrivial_time', '<=', self._context.get('date')),
                         ('id', 'not in', arr_done), ('product_ids', 'in', product.id)]
                     delivery_registration = self.search(domain+args, limit=limit)
 
@@ -81,6 +107,8 @@ class DeliveryRegistration(models.Model):
                     args += [('type_transfer', '=', 'other'),
                         ('supplier_id', '=', self._context.get('partner_id')),
                         ('id', 'not in', deliver_array),
+                        ('picking_ktn_id', '=', False),
+                        ('arrivial_time', '<=', self._context.get('date')),
                         ('id', 'not in', arr_done), ('product_ids', 'in', product.id)]
                     delivery_registration = self.search(domain+args, limit=limit)
             except ValidationError as e:
@@ -99,7 +127,7 @@ class DeliveryRegistration(models.Model):
                     deliver_array = [int(x) for x in deliver_array if x.isdigit()]
                 delivery_temp_ids = self.search([
                     ('type_transfer', '=', 'queue'),
-                    ('state', 'not in', ['approved', 'cancel', 'closed', 'reject']),
+                    ('state', 'not in', ['cancel', 'closed', 'reject']),
                     ('supplier_id', '=', self._context.get('partner_id')),
                     ('id', 'not in', deliver_array)
                 ], limit=limit).filtered(
@@ -116,9 +144,10 @@ class DeliveryRegistration(models.Model):
 
                 domain += [
                     ('type_transfer', '=', 'queue'),
-                    ('state', 'not in', ['approved', 'cancel', 'closed', 'reject']),
+                    ('state', 'not in', ['cancel', 'closed', 'reject']),
                     ('supplier_id', '=', self._context.get('partner_id')),
                     ('id', 'not in', deliver_array),
+                    ('arrivial_time', '<=', self._context.get('date')),
                     ('id', 'not in', arr_done), ('product_ids', 'in', product.id)]
 
             if self._context.get('delivery_ktn'):
@@ -147,6 +176,8 @@ class DeliveryRegistration(models.Model):
                     ('type_transfer', '=', 'other'),
                     ('supplier_id', '=', self._context.get('partner_id')),
                     ('id', 'not in', deliver_array),
+                    ('picking_ktn_id', '=', False),
+                    ('arrivial_time', '<=', self._context.get('date')),
                     ('id', 'not in', arr_done), ('product_ids', 'in', product.id)]
         return super(DeliveryRegistration, self).search_read(domain=domain, fields=fields, offset=offset, limit=limit,
                                                      order=order)

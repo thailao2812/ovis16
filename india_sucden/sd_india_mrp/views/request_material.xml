@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_request_materials_form_inherit_india" model="ir.ui.view">
+        <field name="name">view_request_materials_form_inherit_india</field>
+        <field name="model">request.materials</field>
+        <field name="inherit_id" ref="sd_inventory.view_request_materials_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='request_line']/tree/field[@name='stack_id']" position="after">
+                <field name="picking_grn_id" string="GRN/GRP" domain="[('id', 'in', domain_grn)]" required="0" options="{'no_create': True}"/>
+                <field name="domain_grn" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

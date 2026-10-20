@@ -11,6 +11,11 @@
             </xpath>
             <xpath expr="//field[@name='kcs_line']/tree/field[@name='deduction']" position="replace">
             </xpath>
+            <xpath expr="//field[@name='kcs_criterions_id']" position="after">
+                <field name="is_grp" invisible="1"/>
+                <field name="grn_id" string="GRN" domain="[('picking_type_id.code', '=', 'incoming')]" options="{'no_create': True}"
+                       attrs="{'invisible': [('is_grp', '=', False)], 'readonly': [('state_kcs', 'in', ['approved', 'rejected', 'cancel'])]}"/>
+            </xpath>
             <xpath expr="//group" position="after">
                 <group name="reject" string="Reject reason">
                     <field name="reject_in_qc" readonly="1"/>

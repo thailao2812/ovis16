@@ -29,13 +29,24 @@ class RequestPayment(models.Model):
                                   states={'draft': [('readonly', False)]}, default=_default_currency_id)
     amount_untaxed = fields.Monetary(string='Contract Value (not include Tax)', related='purchase_contract_id.amount_untaxed', store=True)
     total_value = fields.Float(string='Total', compute='compute_total_value', store=True, digits=(12, 0))
-    deposit_amount = fields.Float(string='Deposit Amount', related='purchase_contract_id.deposit_amount', store=True, digits=(12, 0))
+    deposit_amount = fields.Float(string='Deposit Amount', digits=(12, 0))
     liquidation_amount = fields.Float(string='Liquidation Amount', compute='compute_liquidation_amount', store=True, readonly=False, digits=(12, 0))
     total_payment = fields.Float(string='Total Payment', compute='compute_total_value', store=True)
     amount_in_text = fields.Char(string='Amount in text', compute='compute_amount_in_text', store=False)
     partner_id = fields.Many2one('res.partner', string='Partner', related='purchase_contract_id.partner_id', store=True)
-    # request_amount = fields.Float(string='Request Amount', digits=(12, 0), compute='_compute_request_amount',
-    #                               store=True, readonly=False)
+
+    # new field for NPE
+    fixation_ids = fields.One2many('npe.nvp.relation', 'request_payment_id')
+    fixed_qty = fields.Float(string='Fixed Qty', compute='compute_total_qty_fix', store=True)
+    remain_fix_qty = fields.Float(string='Remain Fix Qty', compute='compute_total_qty_fix', store=True)
+
+    account_no = fields.Char(related='partner_bank_id.acc_number', string='Account No', required=True, store=True)
+
+    @api.depends('payment_quantity', 'fixation_ids', 'fixation_ids.product_qty')
+    def compute_total_qty_fix(self):
+        for rec in self:
+            rec.fixed_qty = sum(rec.fixation_ids.mapped('product_qty'))
+            rec.remain_fix_qty = rec.payment_quantity - rec.fixed_qty
 
     @api.depends('purchase_contract_id', 'purchase_contract_id.type', 'purchase_contract_id.relation_price_unit',
                  'price_npe')
@@ -65,13 +76,11 @@ class RequestPayment(models.Model):
                 amount_in_words = amount_in_words + ' ' + 'đồng'
                 rec.amount_in_text = amount_in_words
 
+    # Remove old function
     @api.depends('name')
     def compute_liquidation_amount(self):
         for rec in self:
-            if int(rec.name) == 1:
-                rec.liquidation_amount = 10000000
-            else:
-                rec.liquidation_amount = 0
+            return True
 
     @api.depends('payment_quantity', 'fix_price', 'liquidation_amount', 'deposit_amount')
     def compute_total_value(self):
@@ -96,6 +105,9 @@ class RequestPayment(models.Model):
     # def compute_balance_quantity(self):
     #     for rec in self:
     #         rec.balance_quantity = rec.quantity_contract - rec.paid_quantity
+
+    def action_open_generate_bank_account(self):
+        return self.env.ref('sd_contract_vietnam.action_generate_bank_account').read()[0]
 
 
 class DeliveryKatoen(models.Model):

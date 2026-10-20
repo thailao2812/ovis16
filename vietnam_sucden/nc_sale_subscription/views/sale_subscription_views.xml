@@ -1,0 +1,464 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sale_subscription_view_kanban1" model="ir.ui.view">
+        <field name="name">sale.subscription.kanban.view.inherit</field>
+        <field name="model">sale.subscription</field>
+        <field name="inherit_id" ref="sale_subscription.sale_subscription_view_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='stage_id']" position='replace'>
+                <field name="stage_id" readonly="1"/>
+                <field name="approve_users"/>
+                <field name="create_uid"/>
+                <field name="create_date"/>
+                <field name="rhistory_id"/>
+                <field name="beneficiary"/>
+                <field name="beneficiary_bank"/>
+                <field name="beneficiary_account"/>
+            </xpath>
+            <templates position="replace">
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                            <div class="oe_kanban_content">
+                                <div>
+                                  <strong>
+                                        <div class="float-left">
+                                           <field name="code"/>
+                                        </div>
+                                        <div class="float-right">
+                                            <field name="recurring_amount_total" widget="monetary"/>
+                                        </div>
+                                  </strong>
+                                <div>
+                            </div>
+                        </div>
+                        <br/>
+                                <div>
+                                        <br/>
+                                        <field name="short_regarding_vn"/>
+                                        <br/><br/>
+                                        <span  style="font-weight:bold;"> <field name="beneficiary"/> </span>
+                                        <br/>
+                                        <span > <field name="beneficiary_bank"/> </span>
+                                        <br/>
+                                        <span > <field name="beneficiary_account"/> </span>
+                                        <br/><br/>
+                                        <div>
+                                          <strong> Created: </strong> <span style="color:blue;" class="float-right"> <field name="create_date"/>  </span> <br/>
+                                          <span style="color:blue;" class="float-right"> <field style="color:blue;" name="create_uid"/> </span>
+                                          <br/><br/>
+                                          <strong> Sent: </strong> <span style="color:red;" class="float-right">  <field name="write_date"/> </span> <br/>
+                                          <span style="color:red;" class="float-right"> <field name="approve_users"/> </span>
+                                          <br/><br/>
+                                          <strong> GM approver: </strong> <span style="color:red;" class="float-right">  <field name="gm_approver"/> </span> <br/>
+                                        </div>
+                                        <br/><br/>
+                                        <span> 
+                                        
+                                        </span>
+                                  
+                                </div>
+                                <div class="o_kanban_record_bottom">
+                                    <div class="oe_kanban_bottom_left">
+                                        <field name="starred" widget="boolean_favorite" nolabel="1" force_save="1"/>
+                                        <field name="activity_ids" widget="kanban_activity"/>
+                                        <b t-if="record.rating_ids.raw_value.length">
+                                            <span style="font-weight:bold;" class="fa fa-fw mt4 fa-smile-o text-success" t-if="record.rating_last_value.value == 10" title="Latest Rating: Satisfied" role="img" aria-label="Happy face"/>
+                                            <span style="font-weight:bold;" class="fa fa-fw mt4 fa-meh-o text-warning" t-if="record.rating_last_value.value == 5" title="Latest Rating: Not Satisfied" role="img" aria-label="Neutral face"/>
+                                            <span style="font-weight:bold;" class="fa fa-fw mt4 fa-frown-o text-danger" t-if="record.rating_last_value.value == 1" title="Latest Rating: Higly Dissatisfied" role="img" aria-label="Sad face"/>
+                                        </b>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="oe_clear"/>
+                        </div>
+                    </t>
+                </templates>
+            </templates>
+        </field>
+    </record>        
+
+    <!-- record id="sale_subscription.subtype_stage_change" model="mail.message.subtype">
+        <field name="name">Stage Change</field>
+        <field name="res_model">sale.subscription</field>
+        <field name="default" eval="True"/>
+        <field name="internal" eval="True"/>
+        <field name="description">Proposals stage has changed</field>
+    </record -->
+
+    <menuitem id="sale_subscription.menu_sale_subscription_root" name="Payment Request" sequence="8" web_icon="sale_subscription,static/description/icon.png" groups="sale_subscription.group_sale_subscription_view"/>
+    <menuitem id="sale_subscription.menu_sale_subscription" name="Payment Request" parent="sale_subscription.menu_sale_subscription_root" sequence="5"/>
+
+    
+    
+    <record id="sale_subscription_view_form1" model="ir.ui.view">
+        <field name="name">sale.subscription.form.view.inherit</field>
+        <field name="model">sale.subscription</field>
+        <field name="inherit_id" ref="sale_subscription.sale_subscription_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="replace"/>
+            <xpath expr="//field[@name='date_start']" position='replace'/>
+            <xpath expr="//field[@name='code']" position='replace'/>
+            <button name="prepare_renewal_order" position="replace"/>
+            <button name="%(sale_subscription.wizard_action)d" position="replace"/>
+            <button name="%(sale_subscription.sale_subscription_close_reason_wizard_action)d" position="replace"/>
+            <xpath expr="//field[@name='template_id']" position='replace'/>
+            
+            <xpath expr="//group[@name='main']" position='replace'>
+                <group name="main">
+                    <group>
+                        <field name="name" invisible="1"/>
+                        <field name="code" readonly="1" required="0"/>
+                        <field name="create_uid" readonly="1"/>
+                        <field name="create_email" readonly="1"/>
+                        <field name="date_start" readonly="1"/>
+                        <field name="stage_ids" invisible="1"/>
+                        <field name="template_id" />
+                        <field name="template_code"/>
+                        <field name="pricelist_id" invisible="1"/>
+                        <field name="in_progress" invisible="1"/>
+                        <field name="version" readonly="1" groups="base.group_no_one"/>
+                        <field name="budget_type" attrs="{'readonly': [('stage_id', '&lt;&gt;', 1)]}" widget="radio"/>
+                    </group>
+                    <group>
+                        <field name="stage_name" readonly="1"/>
+                        <field name="approve_users" widget="many2many_tags" readonly="1" />
+                        <field name="revertive_users" widget="many2many_tags" readonly="1" groups="base.group_no_one"/>
+                        <!-- <field name="fassign_user_id" readonly="1" invisible="1"/>
+                        <field name="assign_user_id" readonly="1" invisible="1"/> -->
+                        <field name="accept_recan" invisible="1"/>
+                        <!-- <field name="approve_emails" readonly="1"/> -->
+                        <field name="rest_appr" readonly="1" invisible="1"/>
+                        <field name="appr_time" readonly="1" invisible="1"/>
+                        <field name="exp_date" readonly="1"/>
+                        <field name="company_id" invisible="1"/>
+                        <field name="to_renew" invisible="1"/>
+                        <field name="currency_id" invisible="1"/>
+                        <field name="recurring_rule_boundary" invisible="1"/>
+                        <field name="cur_user_id" invisible="0"/>
+                        <field name="stage_code" invisible="1"/>
+                        <field name="admin_debug" invisible="1"/>
+                        <field name="beneficiary" required="1" attrs="{'readonly': [('stage_id', '&lt;&gt;', 1)]}"/>
+                        <field name="beneficiary_bank" attrs="{'readonly': [('stage_id', '&lt;&gt;', 1)]}"/>
+                        <field name="beneficiary_account" attrs="{'readonly': [('stage_id', '&lt;&gt;', 1)]}"/>
+                        <field name="transfer_method" required="1" attrs="{'readonly': [('stage_id', '&lt;&gt;', 1)]}"/>
+                        <field name="off_launch_from" string="Form" attrs="{'readonly': [('stage_id', '&lt;&gt;', 1)], 'invisible': [('template_code', 'not in', ('cash_advance_request'))]}"/>
+                        <field name="off_launch_to"   string="To" attrs="{'readonly': [('stage_id', '&lt;&gt;', 1)], 'invisible': [('template_code', 'not in', ('cash_advance_request'))]}"/> 
+                    </group>
+                </group>
+                <group name="descript">
+                    <group>
+                        <group string="Về việc" colspan="2" cols="2">
+                            <field name="regarding_vn" required="1" nolabel="1" attrs="{'readonly': [('stage_id', '&lt;&gt;', 1)]}"/>
+                        </group>
+                       
+                        <!-- <separator string="Định nghĩa" colspan="2"/> -->
+                        <!-- <field name="definition_vn" style="height:50px;" required="1" colspan="2" attrs="{'readonly': [('stage_id', '&lt;&gt;', 1)]}"/>
+                        <separator string="Office Launch From" colspan="2"/>
+                        <field name="off_launch_from" required="1" attrs="{'readonly': [('stage_id', '&lt;&gt;', 1)]}"/> -->
+                        <!-- <separator string="Đối tượng mục tiêu" colspan="2"/>
+                        <field name="target_au_vn" style="height:50px;" required="1" colspan="2" attrs="{'readonly': [('stage_id', '&lt;&gt;', 1)]}"/>
+                        <separator string="Nội dung chương trình" colspan="2"/> -->
+                        <!-- <field name="content_vn" required="1" colspan="2" attrs="{'readonly': [('stage_id', '&lt;&gt;', 1)]}"/> -->
+                        <!-- <separator string="Office Launch From" colspan="2"/>
+                        <field name="off_launch_from" required="1" attrs="{'readonly': [('stage_id', '&lt;&gt;', 1)]}"/>
+                        <separator string="Thể lệ và điều kiện" colspan="2"/>
+                        <field name="term_vn" required="1" colspan="2" attrs="{'readonly': [('stage_id', '&lt;&gt;', 1)]}"/>                        
+                        <separator string="Vai trò và nhiệm vụ" colspan="2"/>
+                        <field name="rol_resp_vn" required="1" colspan="2" attrs="{'readonly': [('stage_id', '&lt;&gt;', 1)]}"/> -->
+                    </group>
+                    <group>
+                        <group string="Regarding" colspan="2" cols="2">
+                            <field name="regarding" style="height:50px;" required="0" nolabel="1" attrs="{'readonly': [('stage_id', '&lt;&gt;', 1)]}"/>
+                        </group>
+                        
+                        <!-- <separator string="Definition" colspan="2"/> -->
+                        <!-- <field name="definition" style="height:50px;" required="1" colspan="2" attrs="{'readonly': [('stage_id', '&lt;&gt;', 1)]}"/>
+                        <separator string="Office Launch To" colspan="2"/>
+                        <field name="off_launch_to"  required="1" attrs="{'readonly': [('stage_id', '&lt;&gt;', 1)]}"/> -->
+                        <!-- <separator string="Target Audience" colspan="2"/>
+                        <field name="target_au" style="height:50px;" required="1" colspan="2" attrs="{'readonly': [('stage_id', '&lt;&gt;', 1)]}"/>
+                        <separator string="Program Scheme" colspan="2"/> -->
+                        <!-- <field name="content" required="1" colspan="2" attrs="{'readonly': [('stage_id', '&lt;&gt;', 1)]}"/> -->
+                        <!-- <separator string="Office Launch To" colspan="2"/>
+                        <field name="off_launch_to"  required="1" attrs="{'readonly': [('stage_id', '&lt;&gt;', 1)]}"/>
+                        <separator string="Term and Conditions" colspan="2"/>
+                        <field name="term" required="1" colspan="2" attrs="{'readonly': [('stage_id', '&lt;&gt;', 1)]}"/>
+                        <separator string="Role and Respond" colspan="2"/>
+                        <field name="rol_resp" required="1" colspan="2" attrs="{'readonly': [('stage_id', '&lt;&gt;', 1)]}"/> -->
+                    </group>
+                </group>
+            </xpath>            
+            <xpath expr="//field[@name='description']" position='replace'/>
+            <xpath expr="//button[@name='recurring_invoice']" position="after">
+                <button name="submit" 
+                    type="object" 
+                    string="Send" 
+                    class="oe_highlight" 
+                    attrs="{'invisible': [('stage_id', '&lt;&gt;', 1)]}"
+                />
+                <button name="approve_next_stage" 
+                    type="object" 
+                    string="Submit" 
+                    class="oe_highlight" 
+                    groups="nc_sale_subscription.group_sale_subscription_approve"
+                    attrs="{'invisible': ['|', ('cur_user_id', '=', False),('stage_code', '!=', 'submit')]}"
+                />
+                <!-- <button name="approve_next_stage" 
+                    type="object" 
+                    string="Comment" 
+                    class="oe_highlight" 
+                    groups="nc_sale_subscription.group_sale_subscription_approve"
+                    attrs="{'invisible': ['|', ('cur_user_id', '=', False),('stage_code', '!=', 'comment')]}"
+                /> -->
+                <button name="approve_next_stage" 
+                    type="object" 
+                    string="Review" 
+                    class="oe_highlight" 
+                    groups="nc_sale_subscription.group_sale_subscription_approve"
+                    attrs="{'invisible': ['|',('cur_user_id', '=', False),('stage_code', '!=', 'review')]}"
+                />
+                <button name="approve_next_stage" 
+                    type="object" 
+                    string="Approve" 
+                    class="oe_highlight" 
+                    groups="nc_sale_subscription.group_sale_subscription_approve"
+                    attrs="{'invisible': ['|', ('cur_user_id', '=', False), ('stage_code', 'in', ['draft','submit','paid'])]}"
+                />
+                <button name="refuse_previous_stage" 
+                    type="object" 
+                    string="Revert" 
+                    groups="nc_sale_subscription.group_sale_subscription_approve"
+                    attrs="{'invisible': ['|', ('cur_user_id', '=', False),('stage_code', '==', 'draft')]}"
+                />
+                <!-- <button name="assign_user" 
+                    type="object" 
+                    string="Assign" 
+                    groups="nc_sale_subscription.group_sale_subscription_approve"
+                    attrs="{'invisible': [('cur_user_id', '=', False)]}" -->
+                />
+                <button name="reject" 
+                    type="object" 
+                    string="Reject" 
+                    groups="nc_sale_subscription.group_sale_subscription_approve"
+                    attrs="{'invisible': [('accept_recan', '=', False)]}"
+                />                
+             </xpath>
+            <xpath expr="//page[@id='lines']" position='replace'>
+                <page string="Cost and Budget" id="lines">
+                    <div attrs="{'invisible': [('template_code', 'not in', ('settlement_cash_advance','cash_advance_request'))]}">
+                        <label for="recurring_advance_invoice_line_ids" string="Advance Amount"/>
+                        <field name="recurring_advance_invoice_line_ids">
+                            <tree editable="bottom">
+                                <field name="product_id"/>
+                                <field name="invoice_number"/>
+                                <field name="invoice_date"/>
+                                <field name="name" widget="section_and_note_text"/>
+                                <field name="quantity"/>
+                                <field name="price_unit"/>
+                                <field name="tax_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                                <field name="price_subtotal"/>
+                            </tree>
+                        </field>
+                        <group class="oe_subtotal_footer oe_right" >
+                            <field name="recurring_advance_total" string="Untaxed Amount" widget="monetary" options="{'currency_field': 'currency_id'}" modifiers="{'readonly': true}"/>
+                            <field name="advance_recurring_amount_tax" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <div class="oe_subtotal_footer_separator oe_inline o_td_label">
+                                <label for="advance_recurring_amount_total"/>
+                            </div>
+                            <field name="advance_recurring_amount_total" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                        </group>
+                        
+                        <div class="clearfix"></div>
+                    </div>
+                    
+                    <div attrs="{'invisible': [('template_code', 'not in', ('settlement_cash_advance', 'request_for_payment'))]}">
+                        <label for="recurring_invoice_line_ids" string="Actual Cost"/>
+                        <field name="recurring_invoice_line_ids">
+                            <tree editable="bottom">
+                                <field name="product_id"/>
+                                <field name="invoice_number"/>
+                                <field name="invoice_date"/>
+                                <field name="name" widget="section_and_note_text"/>
+                                <field name="display_type" invisible="1"/>
+                                <field name="product_updatable" invisible="1"/>
+                                <!-- <field name="name"/> -->
+                                
+                                <field name="quantity"/>
+                                <!-- <field name="uom_id" groups="uom.group_uom" attrs="{
+                                            'readonly': [('product_updatable', '=', False)],
+                                            'required': [('display_type', '=', False)],
+                                        }"/> -->
+                                <field name="price_unit"/>
+                                <field name="tax_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                                <!-- <field name="smp_discount" attrs="{'readonly': ['discount', '!=', False]}"/> -->
+                                <!-- <field name="discount" groups="sale.group_discount_per_so_line" attrs="{'readonly': ['smp_discount', '!=', False]}"/> -->
+                                <field name="price_subtotal"/>
+                                <field name="budget_item"/>
+                            </tree>
+                        </field>
+                        <group class="oe_subtotal_footer oe_right">
+                            <field name="recurring_total" string="Untaxed Amount" widget="monetary" options="{'currency_field': 'currency_id'}" modifiers="{'readonly': true}"/>
+                            <field name="amount_tax" widget="monetary" options="{'currency_field': 'currency_id'}" attrs="{'readonly': [('stage_name','!=','Draft'),('update_amount','!=','0')]}"/>
+                            <field name="acutual_cost_recurring_amount_tax" widget="monetary" options="{'currency_field': 'currency_id'}" invisible="1"/>
+                            <div class="oe_subtotal_footer_separator oe_inline o_td_label">
+                                <label for="actual_cost_recurring_amount_total"/>
+                            </div>
+                            <field name="amount_total" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}" attrs="{'readonly': [('stage_name','!=','Draft'),('update_amount','!=','0')]}"/>
+                            <field name="actual_cost_recurring_amount_total" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}" invisible="1"/>
+                            <field name="update_amount"  attrs="{'readonly': [('stage_name','!=','Draft')]}"/>
+                        </group>
+                    </div>
+                    <div class="clearfix"></div>
+                    <group attrs="{'invisible': [('template_code', 'not in', ('settlement_cash_advance',))]}">
+                        <field name="recurring_amount_total" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}" string = "Refunto/(Claim from) the company"/> 
+                        
+                    </group>
+                </page>
+                <page name="role" string="Workflow">
+                    <field name="role_ids" widget="one2many_list" colspan="4" attrs="{'readonly': [('admin_debug','=',False)]}">
+                        <tree string="Stages and Security" editable="bottom">
+                            <field name="sequence" widget="handle"/>
+                            <field name="stage_id" required="1"/>
+                            <field name="approval_ids" widget="many2many_tags" options="{'not_delete': True}"/>
+                            <field name="alert_time" groups="base.group_no_one"/> 
+                            <field name="amount_limit" groups="base.group_no_one"/>
+                            <field name="appr_by" readonly="1" invisible="1"/>
+                            <field name="appr_time" readonly="1" invisible="1"/>                            
+                            <field name="appr_num" groups="base.group_no_one"/>
+                            <!-- <field name="need_appr"/> -->
+                            <field name="appr_man" groups="base.group_no_one"/>
+                            <field name="rev_num" groups="base.group_no_one"/>
+                            <!-- <field name="need_rev"/> -->
+                            <field name="rev_man" groups="base.group_no_one"/>
+                            <field name="auto_approval" groups="base.group_no_one"/>
+                            <field name="name" invisible="1"/>
+                            <field name="state" readonly="1"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="sub_id" invisible="1"/>
+                        </tree>
+                    </field>
+                </page>
+                <page name="history" string="History">
+                    <field name="rhistory_id" colspan="4" readonly="1">
+                        <tree string="History" editable="bottom">
+                            <field name="stage_id" required="1"/>
+                            <field name="appr_by" readonly="1"/>
+                            <field name="appr_time" readonly="1"/>
+                            <field name="name"/>
+                            <field name="is_bypass" readonly="1"/>
+                            <field name="state" readonly="1"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="sub_id" invisible="1"/>
+                            <field name="version" readonly="1" groups="base.group_no_one"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+            <field name="stage_id" position="replace">
+                <field name="stage_id" widget="statusbar" domain="[('id', 'in',stage_ids)]"/>
+            </field>
+        </field>
+    </record>
+    
+
+    <function model="sale.subscription" name="get_roles"/>
+
+    <record id="sale_subscription.sale_subscription_action" model="ir.actions.act_window">
+        <field name="name">Created new request</field>
+        <field name="res_model">sale.subscription</field>
+        <!-- <field name="view_mode">form</field> -->
+        <field name="view_mode">form,kanban,tree,pivot,graph,activity</field>
+        <field name="context">{
+            "group_by": "stage_id",
+            "search_default_my_subscriptions":1
+        }</field>
+        <field name="domain">[]</field>
+        <field name="search_view_id" eval='False'/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Created new proposal: Người trình soạn thảo và gửi tờ trình.
+            </p>
+        </field>
+    </record>
+
+    <menuitem action="sale_subscription.sale_subscription_action" 
+        id="sale_subscription.menu_sale_subscription_action" 
+        sequence="48" 
+        parent="sale_subscription.menu_sale_subscription"/>
+
+    <record id="sale_subscription_action_me" model="ir.actions.act_window">
+        <field name="name">My request</field>
+        <field name="res_model">sale.subscription</field>
+        <field name="view_mode">form</field>
+        <field name="view_mode">kanban,tree,form,pivot,graph,activity</field>
+        <field name="context">{
+            "group_by": "stage_id"
+        }</field>
+        <field name="domain">[('create_uid','=',uid)]</field>
+        <field name="search_view_id" eval='False'/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                My proposal: Liệt kê tất cả các tờ trình đã được gửi đi bởi người dùng đó.
+            </p>
+        </field>
+    </record>
+
+    <menuitem action="sale_subscription_action_me" 
+        id="menu_sale_subscription_action_me" sequence="1"
+        parent="sale_subscription.menu_sale_subscription"/>
+
+    <record id="sale_subscription_action_as2me" model="ir.actions.act_window">
+        <field name="name">Assigned to me</field>
+        <field name="res_model">sale.subscription</field>
+        <field name="view_mode">form</field>
+        <field name="view_mode">kanban,tree,form,pivot,graph,activity</field>
+        <field name="context">{
+            "group_by": "stage_id"
+        }</field>
+        <field name="domain">[('approve_users','in',uid)]</field>
+        <field name="search_view_id" eval='False'/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Assigned to me: Tất cả tờ trình được chuyển cho người dùng xem xét, đưa ý kiến.
+            </p>
+        </field>
+    </record>
+
+    <menuitem action="sale_subscription_action_as2me" 
+        id="menu_sale_subscription_action_as2me" 
+        parent="sale_subscription.menu_sale_subscription"/>
+
+    <record id="sale_subscription_action_re2me" model="ir.actions.act_window">
+        <field name="name">Related to me</field>
+        <field name="res_model">sale.subscription</field>
+        <field name="view_mode">form</field>
+        <field name="view_mode">kanban,tree,form,pivot,graph,activity</field>
+        <field name="context">{
+            "group_by": "stage_id"
+        }</field>
+        <field name="domain">[('message_follower_ids.partner_id.user_ids','in',uid)]</field>
+        <field name="search_view_id" eval='False'/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Related to me: Tất cả tờ trình mà người dùng có vai trò như người theo dõi hoặc người
+đưa ý kiến nhưng các thao tác thực hiện sẽ không được hệ thống ghi nhận để chuyển
+sang bước tiếp theo.
+            </p>
+        </field>
+    </record>
+
+    <menuitem action="sale_subscription_action_re2me" 
+        id="menu_sale_subscription_action_re2me" 
+        parent="sale_subscription.menu_sale_subscription"/>
+
+    <menuitem action="sale_subscription.sale_subscription_action_pending" 
+    id="sale_subscription.menu_sale_subscription_pending" sequence="50" 
+    parent="sale_subscription.menu_sale_subscription" groups="base.group_no_one"/>
+
+    <menuitem action="sale_subscription.product_action_subscription" 
+    id="sale_subscription.menu_sale_subscription_product" sequence="51" 
+    parent="sale_subscription.menu_sale_subscription" groups="base.group_no_one"/>
+</odoo>
+

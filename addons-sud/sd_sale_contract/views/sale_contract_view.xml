@@ -139,16 +139,16 @@
 					            <field name="type" invisible="1"/>
 			                    <field name="certificate_id_list" widget="many2many_tags"/>
 			                    <field name="license_certificate_ids" widget="many2many_tags"/>
-			                    <field name="si"/>
-			                    <field name="sd"/>
-	                    		<field name="currency_id"/>
             					<field name="exchange_rate" invisible="1"/>	
 	                    	</group>
-	                    	<group>
+	                    	<group name="date_crop">
 	                    		<field name="date"/>
 	                    		<field name="deadline"/>
 	                    		<field name="crop_id"/>
-                    			<field name="origin" invisible="1"/>
+                    			<field name="si"/>
+			                    <field name="sd"/>
+			                    <field name="currency_id"/>
+	                    		<field name="origin" invisible="1"/>
                     			<field name="p_contract" attrs="{'invisible': [('p_contract','=',False)]}"/>
 	                    	</group>
 	                    </group>

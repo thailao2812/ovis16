@@ -5,10 +5,13 @@
     'version' : '16.0.1.0',
     'author': 'SUCDEN VIETNAM',
     'website': 'https://www.sucden.com',
-    'depends': ['base', 'sd_report', 'sd_inventory_vietnam'],
+    'depends': ['base', 'sd_report', 'sd_inventory_vietnam', 'sd_mrp'],
     'description': """
     """,
     'data': [
+        'views/mrp_bom_premium.xml',
+        'views/result_scale_line.xml',
+        'views/menu.xml',
     ],
     'assets': {
 

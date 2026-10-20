@@ -31,9 +31,9 @@ class ProductionAnalysis(models.Model):
         prod = []
         where = '1 = 1'
         if self._context.get('normal', False):
-            where += "AND name ilike 'BTA%'"
+            where += " AND name ilike 'BTA%'"
         if self._context.get('upgrade', False):
-            where += "AND name not like 'BTA%'"
+            where += " AND name not like 'BTA%'"
 
         sql = '''
             SELECT id
@@ -304,9 +304,17 @@ class ProductionAnalysis(models.Model):
             self.action_allocation_price()
             self.update_allocation_price()
             self.compute_price_premium()
+            self.load_diff_to_supplier_for_npe()
             if this.production_id and this.production_id.date_planned_start:
                 this.week = res_user._convert_user_datetime(this.production_id.date_planned_start).strftime("%U")
         return True
+
+    def load_diff_to_supplier_for_npe(self):
+        for this in self:
+            for npe in this.input_value_ids.filtered(lambda x: x.contract_id.type == 'consign'):
+                npe.update({
+                    'diff_price': npe.diff - this.cost_price
+                })
 
     
     def load_data_upgrade(self):

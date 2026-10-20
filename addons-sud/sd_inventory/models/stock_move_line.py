@@ -30,7 +30,7 @@ class StockMoveLine(models.Model):
     @api.constrains('bag_no', 'lot_id', 'state')
     def _contrains_bag_no(self):
         for obj in self:
-            if obj.picking_id.picking_type_id.code not in ('material_in','material_out','phys_adj', 'outgoing') and obj.bag_no <= 0 and obj.state != 'draft':
+            if obj.picking_id.picking_type_id.code not in ('material_in','material_out','phys_adj', 'outgoing', 'production_out') and obj.bag_no <= 0 and obj.state != 'draft':
                 if obj.lot_id:
                     raise ValidationError(_('Bag Qty> 0'))
             if obj.picking_id.picking_type_id.code == 'outgoing':
@@ -58,7 +58,7 @@ class StockMoveLine(models.Model):
     second_weight = fields.Float(string="Second Weight",digits=(12, 0), tracking=True)
     packing_id = fields.Many2one('ned.packing', string='Packing', tracking=True)
     bag_no = fields.Float(string="Bag nos.",digits=(12, 0), tracking=True)
-    tare_weight = fields.Float(string="Tare Weight",digits=(12, 0), tracking=True)
+    tare_weight = fields.Float(string="Tare Weight",digits=(12, 2), tracking=True)
     weight_scale_id = fields.Char(string='Weight Scale No.')
     
     @api.onchange('first_weight','second_weight','packing_id','bag_no','tare_weight')

@@ -73,8 +73,94 @@ class Parser(models.AbstractModel):
             'get_data_analysis': self.get_data_analysis,
             'get_mill_analysis': self.get_mill_analysis,
             'get_qc_analysis': self.get_qc_analysis,
+            'get_processing_loss': self.get_processing_loss,
+            'get_instore_loss': self.get_instore_loss,
+            'get_data_grn_stack': self.get_data_grn_stack
         })
         return localcontext
+
+    def get_data_grn_stack(self, batch_report):
+        if batch_report:
+            data = []
+            input_ids = batch_report.input_ids
+            for i in input_ids:
+                data.append({
+                    'picking_name': i.picking_id.picking_grn_id.name if i.picking_id.picking_grn_id else False,
+                    'kcs_date': self.get_date(i.picking_id.picking_grn_id.date_kcs) if i.picking_id.picking_grn_id else False,
+                    'st_slip': i.picking_id.picking_grn_id.quality_slip_no if i.picking_id.picking_grn_id else False,
+                    'product': i.product_id.display_name,
+                    'zone': i.zone_id.name,
+                    'stack': i.stack_id.name,
+                    'bag_no': i.stack_id.bag_qty,
+                    'net_weight': i.stack_id.init_qty,
+                    'issue_bag': i.bag_no,
+                    'issue_weight': i.real_qty,
+                    'balance_bag': i.stack_id.bag_qty - i.bag_no,
+                    'balance_quantity': i.stack_id.init_qty - i.real_qty,
+                    'moisture': round(i.moisture_percent or 0, 2),
+                    'outturn': round(i.outturn_percent or 0, 2),
+
+                    'aaa': round(i.aaa_percent or 0, 2),
+
+                    'aa': round(i.aa_percent or 0, 2),
+
+                    'a': round(i.a_percent or 0, 2),
+
+                    'b': round(i.b_percent or 0, 2),
+
+                    'c': round(i.c_percent or 0, 2),
+
+                    'pb': round(i.pb_percent or 0, 2),
+
+                    'bb': round(i.bb_percent or 0, 2),
+
+                    'bit': round(i.bits_percent or 0, 2),
+
+                    'bleach': round(i.bleached_percent or 0, 2),
+
+                    'idb': round(i.idb_percent or 0, 2),
+
+                    'husk': round(i.hulks_percent or 0, 2),
+
+                    'stone': round(i.stone_percent or 0, 2),
+
+                    'skin_out': round(i.skin_out_percent or 0, 2),
+
+                    'wet_beans': round(i.wet_bean_percent or 0, 2),
+
+                    'red_beans': round(i.red_beans_percent or 0, 2),
+
+                    'unhulled': round(i.unhulled_percent or 0, 2),
+
+                    'triage': round(i.triage_percent or 0, 2),
+
+                    'stinker': round(i.stinker_percent or 0, 2),
+
+                    'pb1': round(i.pb1_percent or 0, 2),
+
+                    'pb2': round(i.pb2_percent or 0, 2),
+
+                    'flat': round(i.flat_percent or 0, 2),
+
+                    'faded': round(i.faded_percent or 0, 2),
+
+                    'fm': round(0, 2),
+
+                    'up_6': round(i.sleeve_6_up_percent or 0, 2),
+
+                    'up_5_5': round(i.sleeve_5_5_up_percent or 0, 2),
+
+                    'down_5_5': round(i.sleeve_5_5_down_percent or 0, 2),
+
+                    'up_5': round(i.sleeve_5_up_percent or 0, 2),
+
+                    'down_5': round(i.sleeve_5_down_percent or 0, 2),
+
+                    'good_beans': round(i.good_beans_percent or 0, 2),
+
+                    'remaining_coffee': round(i.remaining_coffee_percent or 0, 2),
+                })
+            return data
     
     def get_date(self, date):
         if date:
@@ -372,7 +458,16 @@ class Parser(models.AbstractModel):
                     FROM batch_report_output bo
                         JOIN product_product pp ON pp.id = bo.product_id
                         JOIN product_category pc ON pc.id = bo.categ_id
-                    WHERE batch_id = %s and (pp.default_code between '13000' AND '14299' and pp.default_code not in ('14101', '14102', '14103', '14104'))
+                    WHERE batch_id = %s AND (
+        (
+            pp.default_code BETWEEN '13000' AND '14399'
+            AND pp.default_code NOT IN (
+                '14101', '14102', '14103',
+                '14104', '14107', '14108'
+            )
+        )
+        OR pp.default_code IN ('12001', '12002')
+    )
                     GROUP BY pp.display_wb,
                             pc.code
                 ''' % (batch_id)
@@ -384,22 +479,25 @@ class Parser(models.AbstractModel):
             per_qty += total_qty and (line['sum_qty']/total_qty)*100 if line['sum_qty'] != None else 0.0
         return total_qty, per_qty
 
-    def total_out_qty_down(self, batch_id):
-        total_qty = per_qty = 0
+    def total_out_qty_down(self, batch_id, total_qty):
+        total_qty_down = per_qty = 0
         sql = '''
                             SELECT pp.display_wb,
                                     sum(net_qty) sum_qty
                             FROM batch_report_output bo
                                 JOIN product_product pp ON pp.id = bo.product_id
                                 JOIN product_category pc ON pc.id = bo.categ_id
-                            WHERE batch_id = %s and pp.default_code in ('14101', '14102', '14103', '14104')
+                            WHERE batch_id = %s and pp.default_code in ('14101', '14102', '14103', '14104', '14107', '14108')
                             GROUP BY pp.display_wb,
                                     pc.code
                         ''' % (batch_id)
         self.env.cr.execute(sql)
         for tot in self.env.cr.dictfetchall():
-            total_qty += tot['sum_qty']
-        return total_qty
+            total_qty_down += tot['sum_qty']
+        self.env.cr.execute(sql)
+        for line in self.env.cr.dictfetchall():
+            per_qty += total_qty and (line['sum_qty'] / total_qty) * 100 if line['sum_qty'] != None else 0.0
+        return total_qty_down, per_qty
 
 
     def get_total_out_qty_up(self, batch_id, total_qty):
@@ -411,7 +509,16 @@ class Parser(models.AbstractModel):
             FROM batch_report_output bo
                 JOIN product_product pp ON pp.id = bo.product_id
                 JOIN product_category pc ON pc.id = bo.categ_id
-            WHERE batch_id = %s and (pp.default_code between '13000' AND '14299' and pp.default_code not in ('14101', '14102', '14103', '14104'))
+            WHERE batch_id = %s AND (
+        (
+            pp.default_code BETWEEN '13000' AND '14399'
+            AND pp.default_code NOT IN (
+                '14101', '14102', '14103',
+                '14104', '14107', '14108'
+            )
+        )
+        OR pp.default_code IN ('12001', '12002')
+    )
             GROUP BY pp.display_wb,
                     pc.code
             ORDER BY pp.display_wb
@@ -436,7 +543,7 @@ class Parser(models.AbstractModel):
             FROM batch_report_output bo
                 JOIN product_product pp ON pp.id = bo.product_id
                 JOIN product_category pc ON pc.id = bo.categ_id
-            WHERE batch_id = %s and pp.default_code in ('14101','14102','14103','14104')
+            WHERE batch_id = %s and pp.default_code in ('14101','14102','14103','14104','14107', '14108')
             GROUP BY pp.display_wb,
                     pc.code
             ORDER BY pp.display_wb
@@ -453,25 +560,44 @@ class Parser(models.AbstractModel):
     def get_total_stack_in(self, batch_id):
         var = []
         sql = '''
+            WITH agg AS (
+                SELECT bi.stack_id,
+                        sum(bi.net_qty) net_qty,
+                        sum(bi.bag_no) bag_no
+                FROM batch_report_input bi
+                WHERE bi.batch_id = %s
+                GROUP BY bi.stack_id
+            ),
+            first_line AS (
+                SELECT DISTINCT ON (bi.stack_id)
+                        bi.stack_id,
+                        bi.date,
+                        bi.product_id,
+                        bi.packing_id,
+                        bi.zone_id
+                FROM batch_report_input bi
+                WHERE bi.batch_id = %s
+                ORDER BY bi.stack_id, bi.date ASC
+            )
             SELECT ss.name stack_name,
-                    bi.net_qty,
-                    bi.date,
+                    agg.net_qty,
+                    fl.date,
                     pp.display_wb,
                     pu.name uom_name,
                     np.name packing_name,
-                    bi.bag_no,
+                    agg.bag_no,
                     sz.name zone_name,
-                    bi.stack_id stack_id
-            FROM batch_report_input bi
-                JOIN stock_lot ss ON bi.stack_id = ss.id
-                JOIN product_product pp ON pp.id = bi.product_id
+                    agg.stack_id stack_id
+            FROM agg
+                JOIN first_line fl ON fl.stack_id = agg.stack_id
+                JOIN stock_lot ss ON agg.stack_id = ss.id
+                JOIN product_product pp ON pp.id = fl.product_id
                     JOIN product_template tmpl ON tmpl.id = pp.product_tmpl_id
                     JOIN uom_uom pu ON pu.id = tmpl.uom_id
-                LEFT JOIN ned_packing np ON np.id = bi.packing_id
-                JOIN stock_zone sz ON sz.id = bi.zone_id
-            WHERE batch_id = %s
-            ORDER BY bi.date ASC
-        '''%(batch_id)
+                LEFT JOIN ned_packing np ON np.id = fl.packing_id
+                JOIN stock_zone sz ON sz.id = fl.zone_id
+            ORDER BY fl.date ASC
+        '''%(batch_id, batch_id)
         self.env.cr.execute(sql)
         for line in self.env.cr.dictfetchall():
             uom = line['uom_name']['en_US']
@@ -588,7 +714,18 @@ class Parser(models.AbstractModel):
             FROM batch_report_output bo
                 JOIN product_product pp ON bo.product_id = pp.id
             WHERE bo.batch_id = %(batch_id)s
-                AND pp.default_code between '13000' and '13999' and pp.default_code not in ('13005', '13006', '13105', '13106', '13205', '13206', '13305', '13306')
+                AND (
+        (
+            pp.default_code BETWEEN '13000' AND '13999'
+            AND pp.default_code NOT IN (
+                '13005', '13006',
+                '13105', '13106',
+                '13205', '13206',
+                '13305', '13306'
+            )
+        )
+        OR pp.default_code IN ('12001', '12002')
+    )
         ''' % ({'batch_id': batch_id})
         self.env.cr.execute(sql)
         for line in self.env.cr.dictfetchall():
@@ -859,3 +996,21 @@ class Parser(models.AbstractModel):
             return total_quality / total_qty
         return 0
 
+    def get_processing_loss(self, batch):
+        if batch:
+            production_id = batch.production_id
+            finish_line = production_id.move_line_finished_good_ids.filtered(lambda x: x.product_id.default_code == '16001')
+            if finish_line:
+                return finish_line[0].product_id.display_wb, sum(finish_line.mapped('init_qty'))
+            else:
+                return '', 0
+
+    def get_instore_loss(self, batch):
+        if batch:
+            allocated_gross_qty = batch.production_id.allocated_gross_quantity
+            total_real_qty = batch.total_real_qty
+            if allocated_gross_qty <= 0:
+                raise UserError(_("Please check your data Allocated Gross Quantity in MO!!"))
+            return total_real_qty - allocated_gross_qty, ((total_real_qty - allocated_gross_qty) / allocated_gross_qty) * 100
+        else:
+            return 0, 0

@@ -113,9 +113,8 @@ class wizard_stock_picking(models.TransientModel):
             if result_obj.request_id.production_id.state =='done':
                 raise UserError(_('Manufacturing Order %s is Done, Cannot GIP anymore into production') %(result_obj.request_id.production_id.name))
             
-            if this.product_qty > 0 > this.bag_qty:
-                raise UserError(_('Number of bag cannot < 0'))
-        
+            # if this.product_qty > 0 > this.bag_qty:
+            #     raise UserError(_('Number of bag cannot < 0'))
         
             if this.product_qty > result_obj.product_qty -result_obj.basis_qty:
                 raise UserError(u'Request Qty is over')

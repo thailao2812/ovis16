@@ -31,9 +31,21 @@ class Parser(models.AbstractModel):
         localcontext = super(Parser, self)._set_localcontext()
         localcontext.update({
             'get_date': self.get_date,
-            'get_data_quality': self.get_data_quality
+            'get_data_quality': self.get_data_quality,
+            'get_license': self.get_license,
         })
         return localcontext
+
+    def get_license(self, picking):
+        if picking:
+            stock_allocation = self.env['stock.allocation'].search([
+                ('picking_id', '=', picking.id),
+            ])
+            if stock_allocation:
+                license_ids = stock_allocation.mapped('contract_id.license_id')
+                license_1 = license_ids[0].name if license_ids else ''
+                return license_1
+        return ''
 
     def get_date(self, date):
         if date:

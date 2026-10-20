@@ -14,57 +14,57 @@ _logger = logging.getLogger(__name__)
 
 native_write_api = BaseModel.write
 
-def new_native_write_api(self, vals):
-    """
-    Inherit funtion write BaseModel để check xử lý cho tất cả các model
-    """
-    native = native_write_api(self, vals)
-    for rcs in self:
-        model_id = self.env['ir.model'].sudo().search([
-            ('model', '=', 'api.synchronize.data')
-        ])
-        if not model_id:
-            continue
-        model_api_id = self.env['ir.model'].sudo().search([
-            ('model', '=', rcs._name)
-        ])
-        fields = model_api_id.fields_get()
-        if model_api_id and 'restful_api' in fields:
-            if not model_api_id.restful_api:
-                continue
-        sql = '''
-        SELECT id
-        FROM api_synchronize_data
-        WHERE model = '%(model)s'
-        AND res_id = %(res_id)s
-        AND state = 'done'
-        ''' % ({
-            'model': rcs._name,
-            'res_id': rcs.id,
-        })
-        self.env.cr.execute(sql)
-        for synchronize in self.env.cr.dictfetchall():
-            # allocation = synchronize['id']
-            synchronize_id = self.env['api.synchronize.data'].browse(synchronize['id'])
-            config_id = self.env['api.synchronize.data.config'].search([
-                ('model', '=', self._name),
-                ('state', '=', 'post'),
-            ], limit=1)
-            if config_id and any(
-                    field in config_id.mapped('line_ids.fields_name') \
-                    for field in vals):
-                # create data line để đợi update
-                self.env['api.synchronize.data.line'].create({
-                    'synchronize_id': synchronize_id.id,
-                    'slc_method': 'put',
-                    'result': 'Waiting',
-                    'state': 'waiting'
-                })
-                synchronize_id.write({
-                    'state': 'waiting',
-                    'result': 'Waiting',
-                })
-    return native
+# def new_native_write_api(self, vals):
+#     """
+#     Inherit funtion write BaseModel để check xử lý cho tất cả các model
+#     """
+#     native = native_write_api(self, vals)
+#     for rcs in self:
+#         model_id = self.env['ir.model'].sudo().search([
+#             ('model', '=', 'api.synchronize.data')
+#         ])
+#         if not model_id:
+#             continue
+#         model_api_id = self.env['ir.model'].sudo().search([
+#             ('model', '=', rcs._name)
+#         ])
+#         fields = model_api_id.fields_get()
+#         if model_api_id and 'restful_api' in fields:
+#             if not model_api_id.restful_api:
+#                 continue
+#         sql = '''
+#         SELECT id
+#         FROM api_synchronize_data
+#         WHERE model = '%(model)s'
+#         AND res_id = %(res_id)s
+#         AND state = 'done'
+#         ''' % ({
+#             'model': rcs._name,
+#             'res_id': rcs.id,
+#         })
+#         self.env.cr.execute(sql)
+#         for synchronize in self.env.cr.dictfetchall():
+#             # allocation = synchronize['id']
+#             synchronize_id = self.env['api.synchronize.data'].browse(synchronize['id'])
+#             config_id = self.env['api.synchronize.data.config'].search([
+#                 ('model', '=', self._name),
+#                 ('state', '=', 'post'),
+#             ], limit=1)
+#             if config_id and any(
+#                     field in config_id.mapped('line_ids.fields_name') \
+#                     for field in vals):
+#                 # create data line để đợi update
+#                 self.env['api.synchronize.data.line'].create({
+#                     'synchronize_id': synchronize_id.id,
+#                     'slc_method': 'put',
+#                     'result': 'Waiting',
+#                     'state': 'waiting'
+#                 })
+#                 synchronize_id.write({
+#                     'state': 'waiting',
+#                     'result': 'Waiting',
+#                 })
+#     return native
 
 
 @api.model
@@ -72,6 +72,7 @@ def synchronize_data_by_fields(self, new_model, domain_set, extend_action="write
     if extend_action == "write":
         self.synchronize_data_write(new_model, domain_set, doall)
     if extend_action == "create":
+        print(domain_set)
         self.synchronize_data_create(new_model, domain_set, doall)
 
 
@@ -123,7 +124,8 @@ def synchronize_data_create(self, new_model, domain_set, doall=True):
     if not url:
         return
     sync_domain = self.get_doall_domain_model(doall)
-    sync_domain += self.get_sync_domain_model(new_model)
+    if new_model != 'account.account':
+        sync_domain += self.get_sync_domain_model(new_model)
     for r in self.with_context(active_test=False).search(sync_domain, limit=1):
         values = {'sync_id': r.id}
         for a, b in domain_set:
@@ -233,5 +235,5 @@ BaseModel.synchronize_data_write = synchronize_data_write
 BaseModel.default_request = default_request
 BaseModel.get_sync_domain_model = get_sync_domain_model
 BaseModel.action_api_sync_parent_id = action_api_sync_parent_id
-BaseModel.write = new_native_write_api
+# BaseModel.write = new_native_write_api
 BaseModel.get_doall_domain_model = get_doall_domain_model

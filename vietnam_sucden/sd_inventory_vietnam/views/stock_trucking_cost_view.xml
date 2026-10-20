@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_ned_stock_truccking_cost_tree_inherit_vietnam_sucden" model="ir.ui.view">
+        <field name="name">view_ned_stock_truccking_cost_tree_inherit_vietnam_sucden</field>
+        <field name="model">stock.trucking.cost</field>
+        <field name="inherit_id" ref="sd_inventory.view_ned_stock_truccking_cost_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+            	<field name="place"/>
+            	<field name="date_from"/>
+            	<field name="date_to"/>
+            </xpath>
+
+        </field>
+    </record>
+</odoo>

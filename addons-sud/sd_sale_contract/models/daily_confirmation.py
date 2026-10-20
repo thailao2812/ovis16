@@ -49,7 +49,7 @@ class DailyConfirmation(models.Model):
         warning = False
         for this in self:
             try:
-                recordlist = base64.decodestring(this.file)
+                recordlist = base64.b64decode(this.file)
                 excel = xlrd.open_workbook(file_contents = recordlist)
                 sh = excel.sheet_by_index(0)
             except Exception:

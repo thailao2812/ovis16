@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_lot_stack_allocation_tree_readonly" model="ir.ui.view">
+            <field name="name">view.lot.stack.allocation.tree.readonly</field>
+            <field name="model">lot.stack.allocation</field>
+            <field name="inherit_id" ref="sd_quality.view_lot_stack_allocation_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//tree" position="attributes">
+                    <attribute name="editable" delete="0"/>
+                </xpath>
+                <xpath expr="//field[@name='state']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='lot_id']" position="before">
+                    <field name="state" widget="badge" class="my_state_badge"/>
+                </xpath>
+                <xpath expr="//tree/button[@name='btt_confirm']" position="replace"/>
+                <xpath expr="//tree/button[@name='btt_settodraft']" position="replace"/>
+                <xpath expr="//tree/button[@name='action_cancel_confirm']" position="replace"/>
+            </field>
+        </record>
+
+        <record id="action_lot_stack_allocation_tree_only" model="ir.actions.act_window">
+            <field name="name">Lot Stack Allocation</field>
+            <field name="res_model">lot.stack.allocation</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_lot_stack_allocation_tree_readonly"/>
+            <field name="context">{'disable_open_record': 1}</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Create a DO, the first step of a new DO.
+                </p>
+            </field>
+        </record>
+    </data>
+</odoo>

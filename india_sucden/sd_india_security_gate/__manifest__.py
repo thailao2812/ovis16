@@ -12,6 +12,7 @@
         'security/ir.model.access.csv',
         'security/data.xml',
         'wizard/wizard_reject_security_view.xml',
+        'wizard/import_mrn_view.xml',
         'views/security_gate_view.xml',
         'views/quality_control_view.xml',
         'views/request_kcs_line_view.xml',

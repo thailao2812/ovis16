@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sale_subscription_stage_view_form1" model="ir.ui.view">
+        <field name="name">sale.subscription.stage.form.view.inherit</field>
+        <field name="model">sale.subscription.stage</field>
+        <field name="inherit_id" ref="sale_subscription.sale_subscription_stage_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="code"/>
+                <field name="approval_ids" widget="many2many_tags"/>
+            </xpath>
+            <xpath expr="//field[@name='in_progress']" position="after">
+                <field name="on_reject"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -79,7 +79,7 @@ class StockIntakeQtySupplier(models.Model):
                 LEFT  JOIN res_partner rp ON sp.partner_id = rp.id
                 LEFT  JOIN res_district rd ON sc.districts_id=rd.id
                 JOIN res_country_state rcs ON rd.state_id = rcs.id
-            Where spt.code in ('incoming','transfer_in') and rkl.product_qty != 0
+            Where spt.code = 'incoming' and rkl.product_qty != 0
             Group by rp.id, rp.shortname, pp.default_code, rcs.name, (SELECT EXTRACT(week FROM sp.date_done::TIMESTAMP)),
                 (SELECT EXTRACT(year FROM sp.date_done::TIMESTAMP))
             Order by (SELECT EXTRACT(year FROM sp.date_done::TIMESTAMP)) desc, (SELECT EXTRACT(week FROM  sp.date_done::TIMESTAMP)) desc

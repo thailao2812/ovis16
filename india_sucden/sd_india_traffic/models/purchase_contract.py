@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 from odoo import api, fields, models, tools, _, SUPERUSER_ID
 from odoo.exceptions import ValidationError, UserError
-
+import math
 
 class PurchaseContract(models.Model):
     _inherit = 'purchase.contract'
 
     fob_management_id = fields.Many2one('fob.management.india', string='FOB Number')
-    outturn = fields.Float(string='Outturn %')
-    differential_india = fields.Float(string='Differential')
+    outturn = fields.Float(string='Outturn %', compute='_compute_outturn_differential', store=True)
+    differential_india = fields.Float(string='Differential', compute='_compute_outturn_differential', store=True)
     state_fob = fields.Selection([
         ('draft', 'Draft'),
         ('submit', 'Submit')
@@ -18,20 +18,49 @@ class PurchaseContract(models.Model):
     finished_qty = fields.Float(string='Finished Qty/PC', compute='_compute_finished_qty', store=True)
     finished_receive_qty = fields.Float(string='Finished Qty/Actual Qty', compute='_compute_finished_qty', store=True)
     total_allocated_qty = fields.Float(string='Total Allocated', compute='_compute_allocated_qty', store=True)
-    open_qty_check = fields.Boolean(string='Hide Allocation')
+    open_qty_check = fields.Boolean(string='Hide Allocation', default=False)
     remark_contract = fields.Char(string='Remarks')
+
+    contract_price_purchase_ids = fields.One2many('contract.price.purchase', 'contract_id')
+
+    @api.depends('contract_price_purchase_ids', 'contract_price_purchase_ids.outturn',
+                 'contract_price_purchase_ids.a_differential', 'contract_price_purchase_ids.ab_differential',
+                 'contract_price_purchase_ids.exchange', 'contract_price_purchase_ids.exchange.coffee_type')
+    def _compute_outturn_differential(self):
+        for rec in self:
+            if rec.contract_price_purchase_ids:
+                rec.outturn = rec.contract_price_purchase_ids[0].outturn
+                if rec.contract_price_purchase_ids[0].exchange and rec.contract_price_purchase_ids[0].exchange.coffee_type == 'parchment':
+                    rec.differential_india = rec.contract_price_purchase_ids[0].a_differential
+                if rec.contract_price_purchase_ids[0].exchange and rec.contract_price_purchase_ids[0].exchange.coffee_type in ['cherry', 'none']:
+                    rec.differential_india = rec.contract_price_purchase_ids[0].ab_differential
+            else:
+                rec.outturn = 0
+                rec.differential_india = 0
 
     @api.depends('psc_to_pc_linked_ids', 'psc_to_pc_linked_ids.current_allocated', 'psc_to_pc_linked_ids.state')
     def _compute_allocated_qty(self):
         for record in self:
-            record.total_allocated_qty = sum(i.current_allocated for i in record.psc_to_pc_linked_ids.filtered(
-                lambda x: x.state == 'approve_allocation'))
+            record.total_allocated_qty = sum(i.current_allocated for i in record.psc_to_pc_linked_ids)
 
-    @api.depends('total_qty', 'outturn', 'qty_received')
+    def custom_round(self, number: float) -> int:
+        if number - round(number) == 0.5:
+            return math.ceil(number)
+        else:
+            return round(number)
+
+    def truncate(self, number, decimals=2):
+        factor = 10 ** decimals
+        return int(number * factor) / factor
+
+    @api.depends('total_qty', 'outturn', 'qty_received', 'origin', 'gross_qty', 'psc_to_pc_linked_ids', 'psc_to_pc_linked_ids.current_allocated')
     def _compute_finished_qty(self):
         for record in self:
-            record.finished_receive_qty = record.qty_received * (record.outturn/100)
-            record.finished_qty = record.total_qty * (record.outturn/100)
+            record.finished_receive_qty = self.truncate(record.qty_received * (record.outturn/100))
+            if not record.origin:
+                record.finished_qty = self.truncate(record.total_qty * (record.outturn/100))
+            else:
+                record.finished_qty = self.truncate(record.gross_qty * (record.outturn/100))
 
     @api.depends('psc_to_pc_linked_ids', 'finished_qty', 'total_qty', 'total_allocated_qty',
                  'psc_to_pc_linked_ids.state')
@@ -45,6 +74,10 @@ class PurchaseContract(models.Model):
             if not record.fob_management_id:
                 raise UserError(_("You have to select FOB Number!"))
             record.state_fob = 'submit'
+
+    def button_reset_submit_fob_link(self):
+        for record in self:
+            record.state_fob = 'draft'
 
     @api.onchange('certificate_id')
     def onchange_certificate_id(self):
@@ -64,3 +97,96 @@ class PurchaseContract(models.Model):
         for rec in self:
             if not rec.product_id:
                 rec.certificate_id = False
+
+
+    def cron_auto_calculate_open_qty(self):
+        purchase_contract = self.env['purchase.contract'].search([
+        ])
+        for i in purchase_contract:
+            i._compute_allocated_qty()
+            i._compute_finished_qty()
+            i._compute_open_qty()
+
+    def button_draft(self):
+        for rec in self:
+            if rec.state in ['commercial', 'accounting', 'director', 'approved']:
+                contract_price_purchase = self.env['contract.price.purchase'].search([
+                    ('contract_id', '=', rec.id),
+                ])
+                if contract_price_purchase:
+                    if any(x.total_allocated_qty > 0 for x in contract_price_purchase):
+                        raise UserError("You cannot set to draft this contract, it already have allocated quantity.")
+
+        return super(PurchaseContract, self).button_draft()
+
+    def button_cancel(self):
+        for rec in self:
+            if rec.state != 'cancel':
+                contract_price_purchase = self.env['contract.price.purchase'].search([
+                    ('contract_id', '=', rec.id),
+                ])
+                if contract_price_purchase:
+                    if any(x.total_allocated_qty > 0 for x in contract_price_purchase):
+                        raise UserError("You cannot cancel this contract, it already have allocated quantity.")
+
+        return super(PurchaseContract, self).button_cancel()
+
+    # Inherit core in sd_india_contract
+    def button_done(self):
+        for contract in self:
+            if not contract.remark_note_done:
+                raise UserError(_("You have to input Remark for setting this Contract Close/Done"))
+            contract.with_context(bypass_validation=True).write({'state': 'done'})
+        return 1
+
+    def write(self, vals):
+        if self.env.context.get('bypass_validation'):
+            return super().write(vals)
+        else:
+            bypass_states = ['commercial', 'accounting', 'director', 'approved', 'done']
+
+            for rec in self:
+
+                # State sau khi write hoàn tất
+                final_state = vals.get('state', rec.state)
+
+                # Nếu state cuối thuộc bypass -> skip
+                if final_state in bypass_states:
+                    continue
+
+                if any(
+                        x.total_allocated_qty > 0
+                        for x in rec.contract_price_purchase_ids
+                ):
+                    raise UserError(
+                        "You cannot edit this contract, it already have allocated quantity."
+                    )
+
+            return super().write(vals)
+
+    # @api.model
+    # def name_search(self, name, args=None, operator='ilike', limit=100):
+    #     args = args or []
+    #     if name:
+    #         args = [('name', operator, name)]
+    #     if self._context.get('purchase_contract_fob_link'):
+    #             args += [('type', '=', 'purchase'),
+    #                   ('fob_management_id', '=', False),
+    #                   ('state_fob', '=', 'draft'),
+    #                   ('state', 'not in', ['cancel'])]
+    #     purchase_contract = self.with_context(from_name_search=True).search(args, limit=limit)
+    #     return purchase_contract.name_get()
+    #
+    # @api.model
+    # def search_read(self, domain=None, fields=None, offset=0, limit=None, order=None):
+    #     if self._context.get('purchase_contract_fob_link'):
+    #         domain = [('type', '=', 'purchase'),
+    #                   ('fob_management_id', '=', False),
+    #                   ('state_fob', '=', 'draft'),
+    #                   ('state', 'not in', ['cancel'])]
+    #         return super(PurchaseContract, self).search_read(domain=domain, fields=fields, offset=offset,
+    #                                                              limit=limit,
+    #                                                              order=order)
+    #     return super(PurchaseContract, self).search_read(domain=domain, fields=fields, offset=offset,
+    #                                                      limit=limit,
+    #                                                      order=order)
