@@ -10,7 +10,7 @@ services:
     volumes:
       - /opt/filestore/pg_data:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      - "5433:5432"
 
   odoo:
     image: odoo:16
@@ -25,7 +25,7 @@ services:
       - /opt/ovis16:/opt/ovis16
       - /opt/filestore/india16_pro:/var/lib/odoo/filestore/india16_pro
     ports:
-      - "8069:8069"
-      - "8072:8072"
+      - "8169:8069"
+      - "8172:8072"
     links:
       - db
